@@ -1,0 +1,196 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="3.5" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>9.0.30729</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{4B343291-DB03-4ADA-96CD-3CFFA3C838D7}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Caliburn.PresentationFramework</RootNamespace>
+    <AssemblyName>Caliburn.PresentationFramework</AssemblyName>
+    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Microsoft.Practices.ServiceLocation, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\lib\net-3.5\Microsoft.Practices.ServiceLocation.dll</HintPath>
+    </Reference>
+    <Reference Include="PresentationCore">
+      <RequiredTargetFramework>3.0</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="PresentationFramework">
+      <RequiredTargetFramework>3.0</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Core">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="System.Data" />
+    <Reference Include="System.XML" />
+    <Reference Include="WindowsBase">
+      <RequiredTargetFramework>3.0</RequiredTargetFramework>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Actions\Action.cs" />
+    <Compile Include="Actions\ActionBase.cs" />
+    <Compile Include="Actions\ActionFactory.cs" />
+    <Compile Include="Actions\ActionHost.cs" />
+    <Compile Include="Actions\ActionMessage.silverlight.cs" />
+    <Compile Include="Actions\ActionMessage.wpf.cs" />
+    <Compile Include="Actions\ActionMessageHandler.cs" />
+    <Compile Include="Actions\ActionMessageParser.cs" />
+    <Compile Include="Actions\AsyncActionAttribute.cs" />
+    <Compile Include="Actions\AsynchronousAction.cs" />
+    <Compile Include="Actions\ExtensionMethods.cs" />
+    <Compile Include="Actions\IAction.cs" />
+    <Compile Include="Actions\IActionFactory.cs" />
+    <Compile Include="Actions\IActionHost.cs" />
+    <Compile Include="Actions\OverloadedAction.cs" />
+    <Compile Include="Actions\SynchronousAction.cs" />
+    <Compile Include="ApplicationModel\CaliburnApplication.silverlight.cs" />
+    <Compile Include="ApplicationModel\CaliburnApplication.wpf.cs" />
+    <Compile Include="ApplicationModel\DeepLinkStateManager.silverlight.cs" />
+    <Compile Include="ApplicationModel\DefaultBinder.cs" />
+    <Compile Include="ApplicationModel\DefaultWindowManager.cs" />
+    <Compile Include="ApplicationModel\DefaultViewStrategy.cs" />
+    <Compile Include="ApplicationModel\ExtensionMethods.cs" />
+    <Compile Include="ApplicationModel\IBinder.cs" />
+    <Compile Include="ApplicationModel\IExtendedPresenter.cs" />
+    <Compile Include="ApplicationModel\IPresenterNode.cs" />
+    <Compile Include="ApplicationModel\IWindowManager.cs" />
+    <Compile Include="ApplicationModel\ILifecycleNotifier.cs" />
+    <Compile Include="ApplicationModel\INavigator.cs" />
+    <Compile Include="ApplicationModel\IPresenter.cs" />
+    <Compile Include="ApplicationModel\IPresenterHost.cs" />
+    <Compile Include="ApplicationModel\IPresenterManager.cs" />
+    <Compile Include="ApplicationModel\IsolatedStorageStateManager.cs" />
+    <Compile Include="ApplicationModel\IStateManager.cs" />
+    <Compile Include="ApplicationModel\ISubordinate.cs" />
+    <Compile Include="ApplicationModel\ISubordinateComposite.cs" />
+    <Compile Include="ApplicationModel\ISupportCustomShutdown.cs" />
+    <Compile Include="ApplicationModel\IViewStrategy.cs" />
+    <Compile Include="ApplicationModel\MultiPresenter.cs" />
+    <Compile Include="ApplicationModel\MultiPresenterManager.cs" />
+    <Compile Include="ApplicationModel\Navigator.cs" />
+    <Compile Include="ApplicationModel\Presenter.cs" />
+    <Compile Include="ApplicationModel\PresenterBase.cs" />
+    <Compile Include="ApplicationModel\PresenterManager.cs" />
+    <Compile Include="ApplicationModel\SubordinateContainer.cs" />
+    <Compile Include="ApplicationModel\SubordinateGroup.cs" />
+    <Compile Include="ApplicationModel\View.cs" />
+    <Compile Include="ApplicationModel\ViewAttribute.cs" />
+    <Compile Include="ApplicationModel\ViewStrategyAttribute.cs" />
+    <Compile Include="AvailabilityEffect.cs" />
+    <Compile Include="AvailabilityEffectConverter.cs" />
+    <Compile Include="BaseMessageTrigger.cs" />
+    <Compile Include="BindableCollection.cs" />
+    <Compile Include="CancelResult.cs" />
+    <Compile Include="Commands\AllCommand.cs" />
+    <Compile Include="Commands\AnyCommand.cs" />
+    <Compile Include="Commands\Command.cs" />
+    <Compile Include="Commands\CommandAttribute.cs" />
+    <Compile Include="Commands\CommandMessage.silverlight.cs" />
+    <Compile Include="Commands\CommandMessage.wpf.cs" />
+    <Compile Include="Commands\CommandMessageParser.cs" />
+    <Compile Include="Commands\CommandSource.cs" />
+    <Compile Include="Commands\ICompositeCommand.cs" />
+    <Compile Include="Filters\DependencyObserver.cs" />
+    <Compile Include="Invocation\DispatcherOperationProxy.cs" />
+    <Compile Include="IObservableCollection.cs" />
+    <Compile Include="IViewAware.cs" />
+    <Compile Include="MessageProcessingOutcome.cs" />
+    <Compile Include="Parsers\AttachedEventTriggerParser.wpf.cs" />
+    <Compile Include="RequiredParameter.cs" />
+    <Compile Include="SequentialResult.cs" />
+    <Compile Include="DefaultResult.cs" />
+    <Compile Include="ExtensionMethods.cs" />
+    <Compile Include="Filters\AutoCheckAvailabilityAttribute.wpf.cs" />
+    <Compile Include="Filters\DependenciesAttribute.cs" />
+    <Compile Include="Filters\FilterManager.cs" />
+    <Compile Include="Filters\IFilter.cs" />
+    <Compile Include="Filters\IFilterManager.cs" />
+    <Compile Include="Filters\IInitializable.cs" />
+    <Compile Include="Filters\IHandlerAware.cs" />
+    <Compile Include="Filters\IPostProcessor.cs" />
+    <Compile Include="Filters\IPreProcessor.cs" />
+    <Compile Include="Filters\IRescue.cs" />
+    <Compile Include="Filters\MethodCallFilterBase.cs" />
+    <Compile Include="Filters\PreviewAttribute.cs" />
+    <Compile Include="Filters\RescueAttribute.cs" />
+    <Compile Include="GenericInteractionDefaults.cs" />
+    <Compile Include="IAvailabilityEffect.cs" />
+    <Compile Include="IResult.cs" />
+    <Compile Include="IInteractionNode.cs" />
+    <Compile Include="IRoutedMessageWithOutcome.cs" />
+    <Compile Include="IMessageTrigger.cs" />
+    <Compile Include="IMessageBinder.cs" />
+    <Compile Include="InteractionDefaults.cs" />
+    <Compile Include="InteractionNode.cs" />
+    <Compile Include="IRoutedMessage.cs" />
+    <Compile Include="IRoutedMessageController.cs" />
+    <Compile Include="IRoutedMessageHandler.cs" />
+    <Compile Include="Message.cs" />
+    <Compile Include="Metadata\ExtensionMethods.cs" />
+    <Compile Include="Invocation\BatchingDispatcher.wpf.cs" />
+    <Compile Include="Invocation\DispatcherImplementation.silverlight.cs" />
+    <Compile Include="Invocation\DispatcherImplementation.wpf.cs" />
+    <Compile Include="Metadata\ViewMetadata.cs" />
+    <Compile Include="MessageBinder.cs" />
+    <Compile Include="Parameter.silverlight.cs" />
+    <Compile Include="Parameter.wpf.cs" />
+    <Compile Include="Parsers\CommandTriggerParser.wpf.cs" />
+    <Compile Include="Parsers\EventTriggerParser.cs" />
+    <Compile Include="Parsers\GestureTriggerParser.cs" />
+    <Compile Include="Parsers\IMessageParser.cs" />
+    <Compile Include="Parsers\IParser.cs" />
+    <Compile Include="Parsers\ITriggerParser.cs" />
+    <Compile Include="Parsers\MessageParserBase.cs" />
+    <Compile Include="Parsers\Parser.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="ResolveExtension.wpf.cs" />
+    <Compile Include="RoutedMessageController.cs" />
+    <Compile Include="RoutedMessageTriggerCollection.cs" />
+    <Compile Include="PresentationFrameworkModule.cs" />
+    <Compile Include="Triggers\AttachedEventMessageTrigger.wpf.cs" />
+    <Compile Include="Triggers\CommandMessageTrigger.wpf.cs" />
+    <Compile Include="Triggers\EventMessageTrigger.cs" />
+    <Compile Include="Triggers\GestureMessageTrigger.silverlight.cs" />
+    <Compile Include="Triggers\GestureMessageTrigger.wpf.cs" />
+    <Compile Include="Triggers\MouseAction.silverlight.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Caliburn.Core\Caliburn.Core.csproj">
+      <Project>{D7357C4C-BFFF-4EE4-8D40-0803FAAFF38A}</Project>
+      <Name>Caliburn.Core</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

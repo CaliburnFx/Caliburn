@@ -1,0 +1,6 @@
+﻿<NUnitProject>
+  <Settings activeconfig="Default" />
+  <Config name="Default" configfile="Tests.Caliburn.dll.config" binpathtype="Auto">
+    <assembly path="bin\Debug\Tests.Caliburn.dll" />
+  </Config>
+</NUnitProject>
