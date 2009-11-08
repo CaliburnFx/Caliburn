@@ -1,0 +1,76 @@
+﻿<Window x:Class="CompositeCommands.Window1"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:cal="http://www.caliburnproject.org"
+        Title="Window1">
+    <Window.Resources>
+        <!--Note: A composite command that must have all children vote yes to execute.-->
+        <cal:AllCommand x:Key="Grandfather" />
+        <cal:AllCommand x:Key="All" />
+        <!--Note: A composite command that can execute if any child votes yes.-->
+        <cal:AnyCommand x:Key="Any" />
+    </Window.Resources>
+
+    <StackPanel>
+
+        <!--Note: Executes the command retrieved from resources.  The framework infers the trigger type.-->
+        <Button Content="Grandfather Composite"
+                cal:Message.Attach="ResourceCommand Grandfather" />
+
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition />
+                <ColumnDefinition />
+            </Grid.ColumnDefinitions>
+
+            <GroupBox Header="All Composite">
+
+                <StackPanel>
+                    <TextBox x:Name="allMessage" />
+                    <TextBox x:Name="allTitle" />
+
+                    <!--Note: Executes the command retrieved from resources.  The framework infers the trigger type.-->
+                    <!--Note: This command is a child of Grandfather.-->
+                    <Button Content="All Composite"
+                            cal:Command.Parent="{StaticResource Grandfather}"
+                            cal:Message.Attach="ResourceCommand All" />
+                    <!--Note: Executes the command retrieved from the container.  The framework infers the trigger type.-->
+                    <!--Note: This command is a child of All.-->
+                    <Button Content="Attached Container Command w/ 1 Parameter"
+                            cal:Command.Parent="{StaticResource All}"
+                            cal:Message.Attach="ContainerCommand ShowMessage(allMessage.Text)" />
+                    <!--Note: Executes the command retrieved from the container.  The framework infers the trigger type.-->
+                    <!--Note: This command is a child of All.-->
+                    <Button Content="Attached Container Command w/ 2 Parameters"
+                            cal:Command.Parent="{StaticResource All}"
+                            cal:Message.Attach="ContainerCommand ShowTitledMessage(allMessage.Text, allTitle.Text)" />
+                </StackPanel>
+
+            </GroupBox>
+
+            <GroupBox Header="Any Composite"
+                      Grid.Column="1">
+                <StackPanel>
+                    <TextBox x:Name="anyMessage" />
+                    <TextBox x:Name="anyTitle" />
+                    
+                    <!--Note: Executes the command retrieved from resources.  The framework infers the trigger type.-->
+                    <!--Note: This command is a child of Grandfather.-->
+                    <Button Content="Any Composite"
+                            cal:Command.Parent="{StaticResource Grandfather}"
+                            cal:Message.Attach="ResourceCommand Any" />
+                    <!--Note: Executes the command retrieved from the container.  The framework infers the trigger type.-->
+                    <!--Note: This command is a child of Any.-->
+                    <Button Content="Attached Container Command w/ 1 Parameter"
+                            cal:Command.Parent="{StaticResource Any}"
+                            cal:Message.Attach="ContainerCommand ShowMessage(anyMessage.Text)" />
+                    <!--Note: Executes the command retrieved from the container.  The framework infers the trigger type.-->
+                    <!--Note: This command is a child of Any.-->
+                    <Button Content="Attached Container Command w/ 2 Parameters"
+                            cal:Command.Parent="{StaticResource Any}"
+                            cal:Message.Attach="ContainerCommand ShowTitledMessage(anyMessage.Text, anyTitle.Text)" />
+                </StackPanel>
+            </GroupBox>
+        </Grid>
+    </StackPanel>
+</Window>

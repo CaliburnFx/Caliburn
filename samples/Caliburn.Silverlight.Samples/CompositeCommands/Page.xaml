@@ -1,0 +1,73 @@
+﻿<UserControl x:Class="CompositeCommands.Page"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:cc="clr-namespace:Caliburn.PresentationFramework.Commands;assembly=Caliburn.PresentationFramework"
+             xmlns:pf="clr-namespace:Caliburn.PresentationFramework;assembly=Caliburn.PresentationFramework"
+             Width="600"
+             Height="300">
+    <UserControl.Resources>
+        <!--Note: A composite command that must have all children vote yes to execute.-->
+        <cc:AllCommand x:Key="Grandfather" />
+        <cc:AllCommand x:Key="All" />
+        <!--Note: A composite command that can execute if any child votes yes.-->
+        <cc:AnyCommand x:Key="Any" />
+    </UserControl.Resources>
+
+    <StackPanel>
+
+        <!--Note: Executes the command retrieved from resources.  The framework infers the trigger type.-->
+        <Button Content="Grandfather Composite"
+                pf:Message.Attach="ResourceCommand Grandfather" />
+
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition />
+                <ColumnDefinition />
+            </Grid.ColumnDefinitions>
+
+            <StackPanel>
+                <TextBlock Text="All Composite" />
+                <TextBox x:Name="allMessage" />
+                <TextBox x:Name="allTitle" />
+
+                <!--Note: Executes the command retrieved from resources.  The framework infers the trigger type.-->
+                <!--Note: This command is a child of Grandfather.-->
+                <Button Content="All Composite"
+                        cc:Command.Parent="{StaticResource Grandfather}"
+                        pf:Message.Attach="ResourceCommand All" />
+                <!--Note: Executes the command retrieved from the container.  The framework infers the trigger type.-->
+                <!--Note: This command is a child of All.-->
+                <Button Content="Attached Container Command w/ 1 Parameter"
+                        cc:Command.Parent="{StaticResource All}"
+                        pf:Message.Attach="ContainerCommand ShowMessage(allMessage.Text)" />
+                <!--Note: Executes the command retrieved from the container.  The framework infers the trigger type.-->
+                <!--Note: This command is a child of All.-->
+                <Button Content="Attached Container Command w/ 2 Parameters"
+                        cc:Command.Parent="{StaticResource All}"
+                        pf:Message.Attach="ContainerCommand ShowTitledMessage(allMessage.Text, allTitle.Text)" />
+            </StackPanel>
+
+            <StackPanel Grid.Column="1">
+                <TextBlock Text="Any Composite" />
+                <TextBox x:Name="anyMessage" />
+                <TextBox x:Name="anyTitle" />
+
+                <!--Note: Executes the command retrieved from resources.  The framework infers the trigger type.-->
+                <!--Note: This command is a child of Grandfather.-->
+                <Button Content="Any Composite"
+                        cc:Command.Parent="{StaticResource Grandfather}"
+                        pf:Message.Attach="ResourceCommand Any" />
+                <!--Note: Executes the command retrieved from the container.  The framework infers the trigger type.-->
+                <!--Note: This command is a child of Any.-->
+                <Button Content="Attached Container Command w/ 1 Parameter"
+                        cc:Command.Parent="{StaticResource Any}"
+                        pf:Message.Attach="ContainerCommand ShowMessage(anyMessage.Text)" />
+                <!--Note: Executes the command retrieved from the container.  The framework infers the trigger type.-->
+                <!--Note: This command is a child of Any.-->
+                <Button Content="Attached Container Command w/ 2 Parameters"
+                        cc:Command.Parent="{StaticResource Any}"
+                        pf:Message.Attach="ContainerCommand ShowTitledMessage(anyMessage.Text, anyTitle.Text)" />
+            </StackPanel>
+        </Grid>
+    </StackPanel>
+</UserControl>

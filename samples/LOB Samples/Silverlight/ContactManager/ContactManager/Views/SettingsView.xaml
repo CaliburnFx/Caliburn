@@ -1,0 +1,44 @@
+﻿<UserControl x:Class="ContactManager.Views.SettingsView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             Width="250"
+             Margin="10"
+             HorizontalAlignment="Center">
+    <Grid x:Name="LayoutRoot">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto" />
+            <ColumnDefinition Width="*" />
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+        
+        <TextBlock Text="Earliest Appointment"
+                   Style="{StaticResource label}" />
+        <TextBox Text="{Binding EarliestAppointment, Mode=TwoWay}"
+                 Grid.Column="1" 
+                 Style="{StaticResource textBox}"/>
+        
+        <TextBlock Text="Latest Appointment"
+                   Style="{StaticResource label}" 
+                   Grid.Row="1"/>
+        <TextBox Text="{Binding LatestAppointment, Mode=TwoWay}"
+                 Grid.Column="1" 
+                 Grid.Row="1"
+                 Style="{StaticResource textBox}"/>
+        
+        <StackPanel Orientation="Horizontal"
+                    HorizontalAlignment="Right"
+                    Grid.Row="2"
+                    Grid.ColumnSpan="2">
+            <Button Content="Save" 
+                    x:Name="Save"
+                    Style="{StaticResource button}"/>
+            <Button Content="Cancel" 
+                    x:Name="Cancel"
+                    Style="{StaticResource button}"/>
+        </StackPanel>
+    </Grid>
+</UserControl>

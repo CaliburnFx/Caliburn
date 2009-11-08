@@ -1,0 +1,64 @@
+﻿<UserControl x:Class="ContactManager.Views.ShellView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:pf="clr-namespace:Caliburn.PresentationFramework;assembly=Caliburn.PresentationFramework"
+             xmlns:am="clr-namespace:Caliburn.PresentationFramework.ApplicationModel;assembly=Caliburn.PresentationFramework"
+             xmlns:Controls="clr-namespace:Caliburn.Silverlight.ApplicationFramework.Controls;assembly=Caliburn.Silverlight.ApplicationFramework"
+             Height="600"
+             Width="750">
+    <Grid>
+        <Grid.RenderTransform>
+            <TransformGroup>
+                <ScaleTransform x:Name="rootScaleTransform"
+                                ScaleX="1"
+                                ScaleY="1" />
+                <TranslateTransform x:Name="rootTranslateTransform"
+                                    X="0"
+                                    Y="0" />
+            </TransformGroup>
+        </Grid.RenderTransform>
+        <StackPanel x:Name="LayoutRoot">
+
+            <TextBlock Margin="5"
+                       FontSize="28"
+                       Foreground="{StaticResource darkBlueBrush}"
+                       HorizontalAlignment="Center"
+                       Cursor="Hand"
+                       ToolTipService.ToolTip="Go to the Contact Manager Home Screen"
+                       pf:Message.Attach="[Event MouseLeftButtonDown] = [Action GoHome]">Contact Manager</TextBlock>
+
+            <TextBlock Text="{Binding CurrentPresenter.DisplayName}"
+                       HorizontalAlignment="Center"
+                       FontSize="18"
+                       Foreground="{StaticResource lightBlueBrush}"
+                       Margin="5" />
+
+            <Controls:TransitionPresenter x:Name="CurrentPresenter">
+                <Controls:TransitionPresenter.Transition>
+                    <Controls:CrossFade />
+                </Controls:TransitionPresenter.Transition>
+            </Controls:TransitionPresenter>
+        </StackPanel>
+        <Grid x:Name="overlay"
+              Visibility="{Binding DialogModel, Converter={StaticResource collapsedWhenNullConverter}}"
+              Background="#55FFFFFF"
+              IsHitTestVisible="True">
+            <Grid Margin="2"
+                  VerticalAlignment="Center"
+                  HorizontalAlignment="Center">
+                <Border Margin="2 2 0 0"
+                        CornerRadius="4"
+                        Background="Gray"
+                        Opacity=".5" />
+                <Border BorderBrush="{StaticResource redBrush}"
+                        BorderThickness="2"
+                        CornerRadius="4"
+                        Background="White"
+                        Margin="0 0 2 2"
+                        Padding="4">
+                    <ContentControl am:View.Model="{Binding DialogModel}" />
+                </Border>
+            </Grid>
+        </Grid>
+    </Grid>
+</UserControl>

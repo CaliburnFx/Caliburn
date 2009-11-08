@@ -1,0 +1,73 @@
+﻿<UserControl x:Class="CaliBrism.Modules.Calculator.Views.CalculatorView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:cal="http://www.caliburnproject.org"
+             Height="Auto" 
+             Width="Auto"
+             Background="AliceBlue">
+    <StackPanel>
+        <Grid Margin="10">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+
+            <TextBox x:Name="left" 
+                     Grid.Column="0"/>
+            <TextBlock Text="/"
+                       Margin="10 0"
+                       Grid.Column="1"/>
+            <TextBox x:Name="right" 
+                     Grid.Column="2"/>
+            <Border BorderBrush="Black"
+                    BorderThickness="0 0 0 1"
+                    Margin="10 0 0 0"
+                    Grid.Column="3">
+                <TextBlock x:Name="DivideResult" />
+            </Border>
+
+        </Grid>
+
+        <Button Content="Divide (Attachment w/ Defaults)"
+                cal:Message.Attach="Divide" />
+
+        <Button Content="Divide (Attachment w/ Default Trigger/Message and Explicit Parameters)"
+                cal:Message.Attach="Divide(left.Text, right.Text) : DivideResult.Text" />
+
+        <Button Content="Divide (Attachment w/ Inferred Parameters)"
+                cal:Message.Attach="[Event Click] = [Action Divide]" />
+
+        <Button Content="Divide (Attachment w/ Explicit Parameters)"
+                cal:Message.Attach="[Event Click] = [Action Divide(left.Text, right.Text) : DivideResult.Text]" />
+
+        <Button Content="Divide (Trigger Collection w/ Inferred Parameters)">
+            <cal:Message.Triggers>
+                <cal:RoutedMessageTriggerCollection>
+                    <cal:EventMessageTrigger EventName="Click">
+                        <cal:EventMessageTrigger.Message>
+                            <cal:ActionMessage MethodName="Divide" />
+                        </cal:EventMessageTrigger.Message>
+                    </cal:EventMessageTrigger>
+                </cal:RoutedMessageTriggerCollection>
+            </cal:Message.Triggers>
+        </Button>
+
+        <Button Content="Divide (Trigger Collection w/ Explicit Parameters)">
+            <cal:Message.Triggers>
+                <cal:RoutedMessageTriggerCollection>
+                    <cal:EventMessageTrigger EventName="Click">
+                        <cal:EventMessageTrigger.Message>
+                            <cal:ActionMessage MethodName="Divide"
+                                           OutcomePath="DivideResult.Text">
+                                <cal:Parameter Value="{Binding ElementName=left, Path=Text}"/>
+                                <cal:Parameter Value="{Binding ElementName=right, Path=Text}"/>
+                            </cal:ActionMessage>
+                        </cal:EventMessageTrigger.Message>
+                    </cal:EventMessageTrigger>
+                </cal:RoutedMessageTriggerCollection>
+            </cal:Message.Triggers>
+        </Button>
+    </StackPanel>
+</UserControl>

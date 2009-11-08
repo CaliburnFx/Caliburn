@@ -1,0 +1,43 @@
+﻿<Window x:Class="Commands.Window1"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:local="clr-namespace:Commands"
+        xmlns:cal="http://www.caliburnproject.org"
+        Title="Window1"
+        SizeToContent="Height">
+    <Window.Resources>
+        <!--Note: Adding a command to resources.-->
+        <local:ShowTitledMessageCommand x:Key="ShowTitledMessage" />
+    </Window.Resources>
+
+    <StackPanel>
+        <TextBox x:Name="title" />
+        <TextBox x:Name="message" />
+        
+        <!--Note: Executes the command retrieved from the container.  The framework infers the trigger type.-->
+        <Button Content="Attached Container Command w/ 1 Parameter" 
+                cal:Message.Attach="ContainerCommand ShowMessage(message.Text)"/>
+        
+        <!--Note: Executes the command retrieved from resources.  The framework infers the trigger type.-->
+        <Button Content="Attached Resource Command w/ 2 Parameters"
+                cal:Message.Attach="ResourceCommand ShowTitledMessage(title.Text, message.Text)" />
+
+        <!--Note: Executes the command retrieved from the container.-->
+        <Button Content="Triggers: Container Command With 1 Explicit Parameters">
+            <cal:Message.Triggers>
+                <cal:RoutedMessageTriggerCollection>
+                    <cal:EventMessageTrigger EventName="Click">
+                        <cal:EventMessageTrigger.Message>
+                            <!--Note ResolveExtension doesn't exist in Silverlight, but you can auto resolve by string key. See SL samples.-->
+                            <cal:CommandMessage Command="{cal:Resolve Key=ShowMessage}">
+                                <!--Note: The declaration of parameters is different from Silverlight.-->
+                                <cal:Parameter Value="{Binding ElementName=message, Path=Text}"/>
+                            </cal:CommandMessage>
+                        </cal:EventMessageTrigger.Message>
+                    </cal:EventMessageTrigger>
+                </cal:RoutedMessageTriggerCollection>
+            </cal:Message.Triggers>
+        </Button>
+
+    </StackPanel>
+</Window>

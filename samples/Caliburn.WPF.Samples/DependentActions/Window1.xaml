@@ -1,0 +1,46 @@
+﻿<Window x:Class="DependentActions.Window1"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:local="clr-namespace:DependentActions"
+        xmlns:cal="http://www.caliburnproject.org"
+        Title="Window1"
+        Width="250"
+        SizeToContent="Height">
+    <!--Note: Sets a target for the actions.  -->
+    <!--Note: This can be done with databinding, resources or by using the ResolveExtension to grab an instance.-->
+    <cal:Action.Target>
+        <local:Calculator />
+    </cal:Action.Target>
+
+    <StackPanel>
+        <Grid Margin="10">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+
+            <TextBox Grid.Column="0" 
+                     Text="{Binding Left, UpdateSourceTrigger=PropertyChanged}"/>
+            <TextBlock Text="/"
+                       Margin="10 0"
+                       Grid.Column="1" />
+            <TextBox Grid.Column="2" 
+                     Text="{Binding Right, UpdateSourceTrigger=PropertyChanged}"/>
+            <Border BorderBrush="Black"
+                    BorderThickness="0 0 0 1"
+                    Margin="10 0 0 0"
+                    Grid.Column="3">
+                <TextBlock Text="{Binding Result}"/>
+            </Border>
+
+        </Grid>
+
+        <!--Note: Calls the Divide action.  The framework must infer the trigger and message type.-->
+        <!--Note: The UI availability will be updated based on declared dependents.-->
+        <Button Content="Divide"
+                cal:Message.Attach="Divide" />
+
+    </StackPanel>
+</Window>

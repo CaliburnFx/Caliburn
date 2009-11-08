@@ -1,0 +1,55 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 10.00
+# Visual Studio 2008
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FluentConfig.Shell.Desktop", "Desktop\FluentConfig.Shell\FluentConfig.Shell.Desktop.csproj", "{3F1E65B5-BF50-4B4A-8D5F-6AB87B3753CC}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CaliBrism.Modules.Calculator.Desktop", "Desktop\CaliBrism.Modules.Calculator\CaliBrism.Modules.Calculator.Desktop.csproj", "{B2CFC5F5-D862-4E17-A160-F6A44DD2DE14}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Desktop", "Desktop", "{C37AC7BD-2E3C-4063-B5AC-C34DC6617718}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Silverlight", "Silverlight", "{5537275B-080B-4094-984B-D8E26D109930}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FluentConfig.Shell.SL3", "Silverlight\FluentConfig.Shell\FluentConfig.Shell.SL3.csproj", "{AE8D322F-C10E-4FBB-8241-A91C68E71CFF}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FluentConfig.Shell.Web", "Silverlight\FluentConfig.Shell.Web\FluentConfig.Shell.Web.csproj", "{8302F999-E03A-47B8-A1EA-F75B4EBA9082}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CaliBrism.Modules.Calculator.SL3", "Silverlight\Calibrism.Modules.Calculator\CaliBrism.Modules.Calculator.SL3.csproj", "{49ADF56D-17E8-40F8-A2A8-BB0474415D33}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{3F1E65B5-BF50-4B4A-8D5F-6AB87B3753CC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3F1E65B5-BF50-4B4A-8D5F-6AB87B3753CC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3F1E65B5-BF50-4B4A-8D5F-6AB87B3753CC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3F1E65B5-BF50-4B4A-8D5F-6AB87B3753CC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B2CFC5F5-D862-4E17-A160-F6A44DD2DE14}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B2CFC5F5-D862-4E17-A160-F6A44DD2DE14}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B2CFC5F5-D862-4E17-A160-F6A44DD2DE14}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B2CFC5F5-D862-4E17-A160-F6A44DD2DE14}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AE8D322F-C10E-4FBB-8241-A91C68E71CFF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AE8D322F-C10E-4FBB-8241-A91C68E71CFF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AE8D322F-C10E-4FBB-8241-A91C68E71CFF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AE8D322F-C10E-4FBB-8241-A91C68E71CFF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8302F999-E03A-47B8-A1EA-F75B4EBA9082}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8302F999-E03A-47B8-A1EA-F75B4EBA9082}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8302F999-E03A-47B8-A1EA-F75B4EBA9082}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8302F999-E03A-47B8-A1EA-F75B4EBA9082}.Release|Any CPU.Build.0 = Release|Any CPU
+		{49ADF56D-17E8-40F8-A2A8-BB0474415D33}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{49ADF56D-17E8-40F8-A2A8-BB0474415D33}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{49ADF56D-17E8-40F8-A2A8-BB0474415D33}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{49ADF56D-17E8-40F8-A2A8-BB0474415D33}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{3F1E65B5-BF50-4B4A-8D5F-6AB87B3753CC} = {C37AC7BD-2E3C-4063-B5AC-C34DC6617718}
+		{B2CFC5F5-D862-4E17-A160-F6A44DD2DE14} = {C37AC7BD-2E3C-4063-B5AC-C34DC6617718}
+		{AE8D322F-C10E-4FBB-8241-A91C68E71CFF} = {5537275B-080B-4094-984B-D8E26D109930}
+		{8302F999-E03A-47B8-A1EA-F75B4EBA9082} = {5537275B-080B-4094-984B-D8E26D109930}
+		{49ADF56D-17E8-40F8-A2A8-BB0474415D33} = {5537275B-080B-4094-984B-D8E26D109930}
+	EndGlobalSection
+EndGlobal

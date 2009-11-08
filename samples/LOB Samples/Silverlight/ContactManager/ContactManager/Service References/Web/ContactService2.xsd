@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xs:schema xmlns:tns="http://schemas.datacontract.org/2004/07/ContactManager.Web" xmlns:ser="http://schemas.microsoft.com/2003/10/Serialization/" elementFormDefault="qualified" targetNamespace="http://schemas.datacontract.org/2004/07/ContactManager.Web" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:import schemaLocation="http://localhost:6377/ContactService.svc?xsd=xsd1" namespace="http://schemas.microsoft.com/2003/10/Serialization/" />
+  <xs:complexType name="ArrayOfContactDto">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="ContactDto" nillable="true" type="tns:ContactDto" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="ArrayOfContactDto" nillable="true" type="tns:ArrayOfContactDto" />
+  <xs:complexType name="ContactDto">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="Address" nillable="true" type="tns:AddressDto" />
+      <xs:element minOccurs="0" name="FirstName" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="ID" type="ser:guid" />
+      <xs:element minOccurs="0" name="LastName" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="Numbers" nillable="true" type="tns:ArrayOfPhoneNumberDto" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="ContactDto" nillable="true" type="tns:ContactDto" />
+  <xs:complexType name="AddressDto">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="City" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="State" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="Street1" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="Street2" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="Zip" nillable="true" type="xs:string" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="AddressDto" nillable="true" type="tns:AddressDto" />
+  <xs:complexType name="ArrayOfPhoneNumberDto">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="PhoneNumberDto" nillable="true" type="tns:PhoneNumberDto" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="ArrayOfPhoneNumberDto" nillable="true" type="tns:ArrayOfPhoneNumberDto" />
+  <xs:complexType name="PhoneNumberDto">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="Number" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="Type" type="tns:PhoneNumberType" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="PhoneNumberDto" nillable="true" type="tns:PhoneNumberDto" />
+  <xs:simpleType name="PhoneNumberType">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="Home" />
+      <xs:enumeration value="Cell" />
+      <xs:enumeration value="Work" />
+      <xs:enumeration value="Fax" />
+      <xs:enumeration value="Other" />
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:element name="PhoneNumberType" nillable="true" type="tns:PhoneNumberType" />
+</xs:schema>

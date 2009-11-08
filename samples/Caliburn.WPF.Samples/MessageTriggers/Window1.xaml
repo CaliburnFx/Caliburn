@@ -1,0 +1,137 @@
+﻿<Window x:Class="MessageTriggers.Window1"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:local="clr-namespace:MessageTriggers"
+        xmlns:cal="http://www.caliburnproject.org"
+        Title="Window1"
+        SizeToContent="WidthAndHeight">
+    <!--Note: Sets a target for the actions.  -->
+    <!--Note: This can be done with databinding, resources or by using the ResolveExtension to grab an instance.-->
+    <cal:Action.Target>
+        <local:Calculator />
+    </cal:Action.Target>
+
+    <StackPanel>
+        <Grid Margin="10">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+
+            <TextBox x:Name="left"
+                     Grid.Column="0" />
+            <TextBlock Text="/"
+                       Margin="10 0"
+                       Grid.Column="1" />
+            <TextBox x:Name="right"
+                     Grid.Column="2" />
+            <Border BorderBrush="Black"
+                    BorderThickness="0 0 0 1"
+                    Margin="10 0 0 0"
+                    Grid.Column="3">
+                <TextBlock x:Name="DivideResult" />
+            </Border>
+
+        </Grid>
+
+        <!--Note: Calls the Divide action.  The framework must infer the trigger, message type and parameters.-->
+        <!--Note: The UI availability cannot be updated when using inferred parameters.-->
+        <Button Content="Divide (Attachment w/ Defaults)"
+                cal:Message.Attach="Divide" />
+
+        <!--Note: Calls the Divide action.  The framework must infer the trigger ande message type.-->
+        <!--Note: UI availability will be updated.-->
+        <!--Note: This is the preferred mechanism.-->
+        <Button Content="Divide (Attachment w/ Default Trigger/Message and Explicit Parameters)"
+                cal:Message.Attach="Divide(left.Text, right.Text) : DivideResult.Text" />
+
+        <!--Note: Calls the Divide action.-->
+        <!--Note: A gesture of Control + Left Click executes the action.-->
+        <!--Note: UI availability will be updated.-->
+        <Ellipse Width="20"
+                 Height="20"
+                 Fill="Red"
+                 ToolTip="Divide (Attachment Gesture: Control + Left Click)"
+                 cal:Message.Attach="[Gesture MouseAction: LeftClick, Modifiers: Control] = [Action Divide(left.Text, right.Text) : DivideResult.Text]" />
+
+        <!--Note: Calls the Divide action (long form).-->
+        <!--Note: A gesture of Control + Left Click executes the action.-->
+        <!--Note: UI availability will be updated.-->
+        <Ellipse Width="20"
+                 Height="20"
+                 Fill="Yellow"
+                 ToolTip="Divide (Trigger Collection Gesture: Control + Left Click)">
+            <cal:Message.Triggers>
+                <cal:RoutedMessageTriggerCollection>
+                    <cal:GestureMessageTrigger MouseAction="LeftClick"
+                                           Modifiers="Control">
+                        <cal:GestureMessageTrigger.Message>
+                            <cal:ActionMessage MethodName="Divide"
+                                           OutcomePath="DivideResult.Text">
+                                <cal:Parameter Value="{Binding ElementName=left, Path=Text}" />
+                                <cal:Parameter  Value="{Binding ElementName=right, Path=Text}" />
+                            </cal:ActionMessage>
+                        </cal:GestureMessageTrigger.Message>
+                    </cal:GestureMessageTrigger>
+                </cal:RoutedMessageTriggerCollection>
+            </cal:Message.Triggers>
+        </Ellipse>
+
+        <!--Note: Calls the Divide action.-->
+        <!--Note: An attached event executes the action. Any Button in the StackPanel will execute this action.-->
+        <!--Note: UI availability will be updated.-->
+        <StackPanel>
+            <cal:Message.Triggers>
+                <cal:RoutedMessageTriggerCollection>
+                    <cal:AttachedEventMessageTrigger RoutedEvent="Button.Click">
+                        <cal:AttachedEventMessageTrigger.Message>
+                            <cal:ActionMessage MethodName="Divide"
+                                           OutcomePath="DivideResult.Text">
+                                <cal:Parameter Value="{Binding ElementName=left, Path=Text}" />
+                                <cal:Parameter  Value="{Binding ElementName=right, Path=Text}" />
+                            </cal:ActionMessage>
+                        </cal:AttachedEventMessageTrigger.Message>
+                    </cal:AttachedEventMessageTrigger>
+                </cal:RoutedMessageTriggerCollection>
+            </cal:Message.Triggers>
+
+            <Button Content="Divide (Stack)" />
+            <Button Content="Divide (Stack)" />
+        </StackPanel>
+
+        <!--Note: Calls the Divide action.-->
+        <!--Note: Multiple triggers are used.  This is the primary user case for Message.Triggers over other more convenient mechanisms.-->
+        <!--Note: UI availability will be updated.-->
+        <Ellipse Width="20"
+                 Height="20"
+                 Fill="Yellow"
+                 ToolTip="Divide (Multiple Triggers Gesture: Control + Left Click, Event: Mouse Right Button Down)">
+            <cal:Message.Triggers>
+                <cal:RoutedMessageTriggerCollection>
+                    <cal:EventMessageTrigger EventName="MouseRightButtonDown">
+                        <cal:EventMessageTrigger.Message>
+                            <cal:ActionMessage MethodName="Divide"
+                                           OutcomePath="DivideResult.Text">
+                                <cal:Parameter Value="{Binding ElementName=left, Path=Text}" />
+                                <cal:Parameter  Value="{Binding ElementName=right, Path=Text}" />
+                            </cal:ActionMessage>
+                        </cal:EventMessageTrigger.Message>
+                    </cal:EventMessageTrigger>
+                    <cal:GestureMessageTrigger MouseAction="LeftClick"
+                                           Modifiers="Control">
+                        <cal:GestureMessageTrigger.Message>
+                            <cal:ActionMessage MethodName="Divide"
+                                           OutcomePath="DivideResult.Text">
+                                <cal:Parameter Value="{Binding ElementName=left, Path=Text}" />
+                                <cal:Parameter  Value="{Binding ElementName=right, Path=Text}" />
+                            </cal:ActionMessage>
+                        </cal:GestureMessageTrigger.Message>
+                    </cal:GestureMessageTrigger>
+                </cal:RoutedMessageTriggerCollection>
+            </cal:Message.Triggers>
+        </Ellipse>
+
+    </StackPanel>
+</Window>

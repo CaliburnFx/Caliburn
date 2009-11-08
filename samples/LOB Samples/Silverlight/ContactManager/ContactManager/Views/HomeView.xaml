@@ -1,0 +1,18 @@
+﻿<UserControl x:Class="ContactManager.Views.HomeView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <Grid x:Name="LayoutRoot">
+        <StackPanel MaxWidth="150"
+                    Margin="0 20 0 0">
+            <Button Content="Contacts"
+                    x:Name="GotoCustomerList" 
+                    Style="{StaticResource button}"/>
+            <Button Content="Daily Schedule"
+                    x:Name="GotoAppointments"
+                    Style="{StaticResource button}"/>
+            <Button Content="Settings"
+                    x:Name="GotoSettings" 
+                    Style="{StaticResource button}"/>
+        </StackPanel>
+    </Grid>
+</UserControl>

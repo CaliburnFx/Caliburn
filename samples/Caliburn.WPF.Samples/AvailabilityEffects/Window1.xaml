@@ -1,0 +1,83 @@
+﻿<Window x:Class="AvailabilityEffects.Window1"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:local="clr-namespace:AvailabilityEffects"
+        xmlns:cal="http://www.caliburnproject.org"
+        Title="Window1"
+        SizeToContent="WidthAndHeight">
+    <!--Note: Sets a target for the actions.  -->
+    <!--Note: This can be done with databinding, resources or by using the ResolveExtension to grab an instance.-->
+    <cal:Action.Target>
+        <local:Calculator />
+    </cal:Action.Target>
+
+    <StackPanel>
+        <Grid Margin="10">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+
+            <TextBox x:Name="left"
+                     Grid.Column="0" />
+            <TextBlock Text="/"
+                       Margin="10 0"
+                       Grid.Column="1" />
+            <TextBox x:Name="right"
+                     Grid.Column="2" />
+            <Border BorderBrush="Black"
+                    BorderThickness="0 0 0 1"
+                    Margin="10 0 0 0"
+                    Grid.Column="3">
+                <TextBlock x:Name="DivideResult" />
+            </Border>
+
+        </Grid>
+
+        <!--Note: The UI will be enabled/disabled based on the action.-->
+        <Button Content="Divide (Attachment w/ Default (Disable) Availability)"
+                cal:Message.Attach="Divide(left.Text, right.Text) : DivideResult.Text" />
+
+        <!--Note: The UI will not be affected by the state of the action.-->
+        <Button Content="Divide (Attachment w/ None Availability)"
+                cal:Message.AvailabilityEffect="None"
+                cal:Message.Attach="Divide(left.Text, right.Text) : DivideResult.Text" />
+
+        <!--Note: The UI will be hidden when the action is not available.-->
+        <Button Content="Divide (Attachment w/ Hide Availability)"
+                cal:Message.AvailabilityEffect="Hide"
+                cal:Message.Attach="Divide(left.Text, right.Text) : DivideResult.Text" />
+
+        <!--Note: The Ui will be collapsed when the action is not available.-->
+        <Button Content="Divide (Attachment w/ Collapse Availability)"
+                cal:Message.AvailabilityEffect="Collapse"
+                cal:Message.Attach="Divide(left.Text, right.Text) : DivideResult.Text" />
+
+        <!--Note: Custom availability applies by key.-->
+        <Button Content="Divide (Attachment w/ Custom Availability)"
+                cal:Message.AvailabilityEffect="Opacity"
+                cal:Message.Attach="Divide(left.Text, right.Text) : DivideResult.Text" />
+
+        <!--Note: IAvailabilityEffect can be applied on a per message basis.-->
+        <Button Content="Divide (Trigger Collection w/ Hide Availability)">
+            <cal:Message.Triggers>
+                <cal:RoutedMessageTriggerCollection>
+                    <cal:EventMessageTrigger EventName="Click">
+                        <cal:EventMessageTrigger.Message>
+                            <cal:ActionMessage MethodName="Divide"
+                                           OutcomePath="DivideResult.Text"
+                                           AvailabilityEffect="Hide">
+                                <!--Note: The declaration of parameters is different from Silverlight.-->
+                                <cal:Parameter Value="{Binding ElementName=left, Path=Text}" />
+                                <cal:Parameter  Value="{Binding ElementName=right, Path=Text}" />
+                            </cal:ActionMessage>
+                        </cal:EventMessageTrigger.Message>
+                    </cal:EventMessageTrigger>
+                </cal:RoutedMessageTriggerCollection>
+            </cal:Message.Triggers>
+        </Button>
+
+    </StackPanel>
+</Window>

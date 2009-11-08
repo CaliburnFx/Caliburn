@@ -1,0 +1,113 @@
+﻿<UserControl x:Class="ContactManager.Views.ScheduleView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:cal="http://www.caliburnproject.org"
+             xmlns:Framework="clr-namespace:Caliburn.WPF.ApplicationFramework;assembly=Caliburn.WPF.ApplicationFramework"
+             Height="400"
+             Width="750">
+    <Grid x:Name="LayoutRoot"
+          Width="350">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+        
+        <StackPanel Orientation="Horizontal"
+                    HorizontalAlignment="Center">
+            <Button Content="Previous"
+                    Style="{StaticResource button}"
+                    x:Name="GotoPreviousDay"/>
+            <TextBlock Text="{Binding CurrentSchedule.Date, Converter={StaticResource stringFormatConverter}, ConverterParameter='{}{0:MM/dd/yyyy}'}" 
+                       Style="{StaticResource label}"/>
+            <Button Content="Next"
+                    Style="{StaticResource button}"
+                    x:Name="GotoNextDay" />
+        </StackPanel>
+        
+        <ScrollViewer Grid.Row="1">
+            <ItemsControl ItemsSource="{Binding CurrentSchedule.Appointments}">
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <Grid Margin="2">
+                            <Border Margin="2 2 0 0"
+                                    CornerRadius="4"
+                                    Background="Gray"
+                                    Opacity=".5" />
+                            <Border BorderBrush="{StaticResource redBrush}"
+                                    BorderThickness="2"
+                                    CornerRadius="4"
+                                    Background="White"
+                                    Margin="0 0 2 2"
+                                    Padding="3">
+                                <Grid Height="100">
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="Auto"/>
+                                        <RowDefinition Height="*" />
+                                    </Grid.RowDefinitions>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition />
+                                        <ColumnDefinition />
+                                    </Grid.ColumnDefinitions>
+
+                                    <ComboBox Style="{StaticResource comboBox}"
+                                              ItemsSource="{Binding AllContacts}"
+                                              Framework:Bind.SelectedItem="Contact">
+                                        <ComboBox.ItemTemplate>
+                                            <DataTemplate>
+                                                <StackPanel Orientation="Horizontal">
+                                                    <TextBlock Text="{Binding LastName}" />
+                                                    <TextBlock Text=", " />
+                                                    <TextBlock Text="{Binding FirstName}" />
+                                                </StackPanel>
+                                            </DataTemplate>
+                                        </ComboBox.ItemTemplate>
+                                    </ComboBox>
+                                    
+                                    <StackPanel Orientation="Horizontal"
+                                                Grid.Column="1">
+                                        <TextBlock Text="@" 
+                                                   Style="{StaticResource label}"/>
+                                        <TextBox Framework:Bind.Text="Time"
+                                                 Style="{StaticResource textBox}"
+                                                 HorizontalAlignment="Left" />
+                                    </StackPanel>
+                                    
+                                    <TextBox Framework:Bind.Text="Description"
+                                             Grid.Row="1"
+                                             Grid.ColumnSpan="2"
+                                             TextWrapping="Wrap" 
+                                             Style="{StaticResource textBox}"/>
+
+                                </Grid>
+                            </Border>
+
+                            <Button Content="+"
+                                    Style="{StaticResource openButton}"
+                                    cal:Message.Attach="RemoveAppointment($datacontext)" />
+                        </Grid>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+        </ScrollViewer>
+        
+        <StackPanel Orientation="Horizontal"
+                    HorizontalAlignment="Center"
+                    Grid.Row="2">
+            <Button Content="Undo"
+                    Style="{StaticResource button}"
+                    x:Name="UndoScheduleChange"
+                    IsEnabled="{Binding UndoRedoManager.CanUndo}" />
+            <Button Content="Add Appointment"
+                    Style="{StaticResource button}"
+                    x:Name="AddAppointment" />
+            <Button Content="Save Changes"
+                    Style="{StaticResource button}"
+                    x:Name="SaveChanges" />
+            <Button Content="Redo"
+                    Style="{StaticResource button}"
+                    x:Name="RedoScheduleChange" 
+                    IsEnabled="{Binding UndoRedoManager.CanRedo}"/>
+        </StackPanel>
+    </Grid>
+</UserControl>

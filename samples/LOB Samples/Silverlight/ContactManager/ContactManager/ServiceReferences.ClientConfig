@@ -1,0 +1,15 @@
+﻿<configuration>
+    <system.serviceModel>
+        <bindings>
+            <basicHttpBinding>
+              <binding name="BasicHttpBinding_IContactService" maxBufferSize="2147483647"
+                  maxReceivedMessageSize="2147483647" />
+            </basicHttpBinding>
+        </bindings>
+        <client>
+            <endpoint address="http://localhost:6377/ContactService.svc"
+                binding="basicHttpBinding" bindingConfiguration="BasicHttpBinding_IContactService"
+                contract="Web.IContactService" name="BasicHttpBinding_IContactService" />
+        </client>
+    </system.serviceModel>
+</configuration>

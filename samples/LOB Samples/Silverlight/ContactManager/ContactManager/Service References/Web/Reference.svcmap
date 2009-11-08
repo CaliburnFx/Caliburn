@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ReferenceGroup xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" ID="094e3e0a-af0d-44c3-9520-fe58fa17481f" xmlns="urn:schemas-microsoft-com:xml-wcfservicemap">
+  <ClientOptions>
+    <GenerateAsynchronousMethods>true</GenerateAsynchronousMethods>
+    <EnableDataBinding>true</EnableDataBinding>
+    <ExcludedTypes />
+    <ImportXmlTypes>false</ImportXmlTypes>
+    <GenerateInternalTypes>false</GenerateInternalTypes>
+    <GenerateMessageContracts>false</GenerateMessageContracts>
+    <NamespaceMappings />
+    <CollectionMappings>
+      <CollectionMapping TypeName="System.Collections.ObjectModel.ObservableCollection`1" Category="List" />
+    </CollectionMappings>
+    <GenerateSerializableTypes>false</GenerateSerializableTypes>
+    <Serializer>Auto</Serializer>
+    <ReferenceAllAssemblies>true</ReferenceAllAssemblies>
+    <ReferencedAssemblies />
+    <ReferencedDataContractTypes />
+    <ServiceContractMappings />
+  </ClientOptions>
+  <MetadataSources>
+    <MetadataSource Address="http://localhost:6377/ContactService.svc" Protocol="http" SourceId="1" />
+  </MetadataSources>
+  <Metadata>
+    <MetadataFile FileName="ContactService.disco" MetadataType="Disco" ID="c2bd5cfb-c5cd-4606-a88a-a0877413792c" SourceId="1" SourceUrl="http://localhost:6377/ContactService.svc?disco" />
+    <MetadataFile FileName="ContactService.xsd" MetadataType="Schema" ID="a3300fed-7481-4453-93a0-759145144b0d" SourceId="1" SourceUrl="http://localhost:6377/ContactService.svc?xsd=xsd1" />
+    <MetadataFile FileName="ContactService1.xsd" MetadataType="Schema" ID="86a331f0-be23-45b3-ab4c-55b49c2c2627" SourceId="1" SourceUrl="http://localhost:6377/ContactService.svc?xsd=xsd0" />
+    <MetadataFile FileName="ContactService2.xsd" MetadataType="Schema" ID="e0204340-3de9-43ca-9544-5701995ad580" SourceId="1" SourceUrl="http://localhost:6377/ContactService.svc?xsd=xsd2" />
+    <MetadataFile FileName="ContactService.wsdl" MetadataType="Wsdl" ID="6f03347f-cd39-4928-a4c1-da111c9f98af" SourceId="1" SourceUrl="http://localhost:6377/ContactService.svc?wsdl" />
+  </Metadata>
+  <Extensions>
+    <ExtensionFile FileName="configuration91.svcinfo" Name="configuration91.svcinfo" />
+    <ExtensionFile FileName="configuration.svcinfo" Name="configuration.svcinfo" />
+  </Extensions>
+</ReferenceGroup>

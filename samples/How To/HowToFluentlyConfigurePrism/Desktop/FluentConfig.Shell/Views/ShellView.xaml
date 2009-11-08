@@ -1,0 +1,11 @@
+﻿<Window x:Class="FluentConfig.Shell.Views.ShellView"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:prism="http://www.codeplex.com/CompositeWPF"
+        Title="ShellView" 
+        Height="Auto" 
+        Width="Auto">
+    <Grid>
+        <ItemsControl prism:RegionManager.RegionName="MainRegion"/>
+    </Grid>
+</Window>

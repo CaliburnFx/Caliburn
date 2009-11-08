@@ -1,0 +1,47 @@
+﻿<Window x:Class="Configuration.Window1"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:local="clr-namespace:Configuration"
+        xmlns:cal="http://www.caliburnproject.org"
+        Title="Window1"
+        SizeToContent="WidthAndHeight">
+    <!--Note: Sets a target for the actions.  -->
+    <!--Note: This can be done with databinding, resources or by using the ResolveExtension to grab an instance.-->
+    <cal:Action.Target>
+        <local:Calculator />
+    </cal:Action.Target>
+
+    <StackPanel>
+        <Grid Margin="10">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+
+            <TextBox x:Name="left"
+                     Grid.Column="0" />
+            <TextBlock Text="/"
+                       Margin="10 0"
+                       Grid.Column="1" />
+            <TextBox x:Name="right"
+                     Grid.Column="2" />
+            <Border BorderBrush="Black"
+                    BorderThickness="0 0 0 1"
+                    Margin="10 0 0 0"
+                    Grid.Column="3">
+                <TextBlock x:Name="DivideResult" />
+            </Border>
+
+        </Grid>
+
+        <!--Note: Calls the Divide action.  The framework must infer the trigger ande message type.-->
+        <!--Note: UI availability will be updated.-->
+        <!--Note: This is the preferred mechanism.-->
+        <!--Note: The configuration change will cause this to wire to the MouseEnter event.-->
+        <Button Content="Divide (Attachment w/ Default Trigger/Message and Explicit Parameters)"
+                cal:Message.Attach="Divide(left.Text, right.Text) : DivideResult.Text" />
+
+    </StackPanel>
+</Window>
