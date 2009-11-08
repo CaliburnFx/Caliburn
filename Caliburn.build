@@ -1,0 +1,637 @@
+<?xml version="1.0" encoding="utf-8"?>
+<project name="Caliburn" default="all">
+
+	<property name="path.base" value="${project::get-base-directory()}"/>
+	<property name="path.bin" value="${path.base}/bin"/>
+	<property name="path.lib" value="${path.base}/lib"/>
+	<property name="path.dist" value="${path.base}/dist"/>
+	<property name="path.docs" value="${path.base}/docs"/>
+	<property name="path.src" value="${path.base}/src"/>
+	<property name="path.tools" value="${path.base}/tools"/>
+	<property name="path.tools.nunit" value="${path.tools}/NUnit/bin"/>
+	<property name="path.tools.rhino" value="${path.tools}/Rhino.Mocks"/>
+	<property name="path.tools.doxygen" value="${path.tools}/Doxygen"/>
+
+	<property name="version" value="1.0.0.0" overwrite="false"/>
+	<property name="version.major" value="${version::get-major(version::parse(version))}" dynamic="true"/>
+	<property name="version.minor" value="${version::get-minor(version::parse(version))}" dynamic="true"/>
+	<property name="version.build" value="${version::get-build(version::parse(version))}" dynamic="true"/>
+	<property name="version.revision" value="${version::get-revision(version::parse(version))}" dynamic="true"/>
+	<property name="build.version" value="${version.major}.${version.minor}.${version.build}.${version.revision}" dynamic="true"/>
+
+	<property name="package" value="false" readonly="false" overwrite="false"/>
+	<property name="skip.tests" value="false" readonly="false" overwrite="false"/>
+	<property name="build.asminfo" value="SharedBuildAssemblyInfo.cs"/>
+
+	<property name="generate.docs" value="false" />
+	
+	<target name="rebuild" depends="clean, all"/>
+
+	<target name="debug">
+		<property name="build.config" value="debug"/>
+	</target>
+
+	<target name="release">
+		<property name="build.config" value="release"/>
+	</target>
+
+	<target name="all" depends="config">
+		<call target="platform-net35"/>
+		<call target="platform-silverlight20"/>
+		<call target="platform-silverlight30"/>
+		<call target="generate-docs" />
+	</target>
+
+	<target name="clean">
+		<delete dir="${path.bin}" if="${directory::exists(path.bin)}"/>
+		<delete dir="${path.dist}" if="${directory::exists(path.dist)}"/>
+	</target>
+
+	<target name="init" depends="create-assembly-info">
+		<mkdir dir="${path.bin}" if="${not(directory::exists(path.bin))}"/>
+		<mkdir dir="${path.dist}" if="${not(directory::exists(path.dist))}"/>
+	</target>
+
+	<target name="config" depends="init">
+		<property name="build.config" value="debug" overwrite="false"/>
+		<call target="config-build-${build.config}"/>
+	</target>
+
+	<target name="config-build-debug">
+		<property name="build.debug" value="true"/>
+		<property name="build.optimize" value="false" overwrite="false"/>
+		<property name="global.build.defines" value="DEBUG,TRACE"/>
+	</target>
+
+	<target name="config-build-release">
+		<property name="build.debug" value="false"/>
+		<property name="build.optimize" value="true" overwrite="false"/>
+		<property name="global.build.defines" value="TRACE,STRONG"/>
+	</target>
+
+	<target name="get-subversion-revision-number">
+		<if test="${version.revision=='0'}">
+			<!-- Credit to Ayende Rahien -->
+			<exec program="svn" commandline='info "${project::get-base-directory()}" --xml' output="_svn.xml" failonerror="false"/>
+			<xmlpeek file="_svn.xml" xpath="/info/entry/@revision" property="version.revision" failonerror="false"/>
+			<delete file="_svn.xml" failonerror="false"/>
+		</if>
+	</target>
+
+	<target name="create-assembly-info" depends="get-subversion-revision-number">
+		<asminfo output="${path.src}/${build.asminfo}" language="CSharp">
+			<imports>
+				<import namespace="System"/>
+				<import namespace="System.Reflection"/>
+				<import namespace="System.Runtime.InteropServices"/>
+			</imports>
+			<attributes>
+				<attribute type="AssemblyProductAttribute" value="Caliburn"/>
+				<attribute type="AssemblyCompanyAttribute" value="Blue Spire Consulting, Inc."/>
+				<attribute type="AssemblyCopyrightAttribute" value="Copyright © 2008"/>
+				<attribute type="AssemblyVersionAttribute" value="${build.version}"/>
+				<attribute type="ComVisibleAttribute" value="false"/>
+			</attributes>
+		</asminfo>
+	</target>
+
+	<target name="generate-docs" depends="core">
+		<if test="${generate.docs=='true'}">
+			<exec program="doxygen.exe" basedir="${path.tools.doxygen}">
+				<arg value="doxyfile" />
+			</exec>
+		</if>
+	</target>
+
+	<target name="config-platform-net35">
+		<property name="nant.settings.currentframework" value="net-3.5"/>
+		<property name="build.platform" value="net-3.5"/>
+		<property name="build.defines" value="${global.build.defines},NET,NET_35"/>
+		<property name="current.path.bin" value="${path.bin}/net-3.5/${build.config}"/>
+		<property name="current.path.test" value="${path.bin}/net-3.5/tests" />
+		<property name="current.path.lib" value="${path.lib}/net-3.5" />
+	</target>
+
+	<target name="config-platform-silverlight20">
+		<property name="nant.settings.currentframework" value="silverlight-2.0"/>
+		<property name="build.platform" value="silverlight-2.0"/>
+		<property name="build.defines" value="${global.build.defines},SILVERLIGHT,SILVERLIGHT_20,NO_WEB,NO_REMOTING,NO_CONVERT,NO_PARTIAL_TRUST,NO_EXCEPTION_SERIALIZATION,NO_SKIP_VISIBILITY,NO_DEBUG_SYMBOLS"/>
+		<property name="current.path.bin" value="${path.bin}/Silverlight-2.0/${build.config}"/>
+		<property name="current.path.test" value="${path.bin}/Silverlight-2.0/tests" />
+		<property name="current.path.lib" value="${path.lib}/Silverlight-2.0" />
+	</target>
+
+  <target name="config-platform-silverlight30">
+    <property name="nant.settings.currentframework" value="silverlight-3.0"/>
+    <property name="build.platform" value="silverlight-3.0"/>
+    <property name="build.defines" value="${global.build.defines},SILVERLIGHT,SILVERLIGHT_30,NO_WEB,NO_REMOTING,NO_CONVERT,NO_PARTIAL_TRUST,NO_EXCEPTION_SERIALIZATION,NO_SKIP_VISIBILITY,NO_DEBUG_SYMBOLS"/>
+    <property name="current.path.bin" value="${path.bin}/Silverlight-3.0/${build.config}"/>
+    <property name="current.path.test" value="${path.bin}/Silverlight-3.0/tests" />
+    <property name="current.path.lib" value="${path.lib}/Silverlight-3.0" />
+  </target>
+
+	<target name="ensure-platform-selected">
+		<if test="${not(property::exists('build.platform'))}">
+			<call target="config-platform-net35"/>
+		</if>
+	</target>
+
+	<target name="platform-net35" depends="config">
+		<if test="${framework::exists('net-3.5')}">
+			<echo message="Building Caliburn ${build.version} for .NET Framework v3.5."/>
+			<call target="config-platform-net35"/>
+			<copy todir="${current.path.bin}">
+				<fileset basedir="${current.path.lib}">
+					<include name="*.dll"/>
+					<include name="*.xml"/>
+				</fileset>
+			</copy>
+			<call target="core"/>
+			<call target="presentationframework"/>
+			<call target="modelframework"/>
+			<call target="testability"/>
+			<call target="castle"/>
+			<call target="spring"/>
+			<call target="structuremap"/>
+			<call target="unity"/>
+			<call target="mef"/>
+			<call target="ninject"/>
+			<call target="autofac"/>
+			<call target="prism"/>
+			<call target="test" />
+			<call target="package-platform"/>
+		</if>
+		<if test="${not(framework::exists('net-3.5'))}">
+			<echo message="The .NET Framework v3.5 compiler is required. Skipping platform."/>
+		</if>
+	</target>
+
+	<target name="platform-silverlight20" depends="config">
+		<if test="${framework::exists('silverlight-2.0')}">
+			<echo message="Building Caliburn ${build.version} for Silverlight v2.0."/>
+			<call target="config-platform-silverlight20"/>
+			<copy todir="${current.path.bin}">
+				<fileset basedir="${current.path.lib}">
+					<include name="*.dll"/>
+					<include name="*.xml"/>
+				</fileset>
+			</copy>
+			<call target="core"/>
+      <call target="presentationframework"/>
+      <call target="modelframework"/>
+      <call target="unity"/>
+      <call target="ninject"/>
+      <call target="autofac"/>
+			<call target="package-platform"/>
+		</if>
+		<if test="${not(framework::exists('silverlight-2.0'))}">
+			<echo message="Silverlight v2.0 is not available. Skipping platform."/>
+		</if>
+	</target>
+
+  <target name="platform-silverlight30" depends="config">
+    <if test="${framework::exists('silverlight-3.0')}">
+      <echo message="Building Caliburn ${build.version} for Silverlight v3.0."/>
+      <call target="config-platform-silverlight30"/>
+      <copy todir="${current.path.bin}">
+        <fileset basedir="${current.path.lib}">
+          <include name="*.dll"/>
+          <include name="*.xml"/>
+        </fileset>
+      </copy>
+      <call target="core"/>
+      <call target="presentationframework"/>
+      <call target="modelframework"/>
+      <call target="unity"/>
+      <call target="ninject"/>
+      <call target="mef"/>
+      <call target="autofac"/>
+      <call target="prism"/>
+      <call target="package-platform"/>
+    </if>
+    <if test="${not(framework::exists('silverlight-3.0'))}">
+      <echo message="Silverlight v3.0 is not available. Skipping platform."/>
+    </if>
+  </target>
+
+	<target name="core" depends="config, ensure-platform-selected">
+		<mkdir dir="${current.path.bin}"/>
+		<csc keyfile="${path.src}/Caliburn.snk" noconfig="true" warnaserror="false" target="library" debug="${build.debug}" optimize="${build.optimize}" define="${build.defines}"
+         output="${current.path.bin}/Caliburn.Core.dll"
+         doc="${current.path.bin}/Caliburn.Core.xml">
+			<sources basedir="${path.src}">
+				<include name="${build.asminfo}"/>
+				<include name="Caliburn.Core/**/*.cs"/>
+			</sources>
+			<references basedir="${current.path.bin}">
+				<include name="mscorlib.dll"/>
+				<include name="System.dll"/>
+				<include name="System.Core.dll"/>
+				<include name="Microsoft.Practices.ServiceLocation.dll"/>
+			</references>
+			<nowarn>
+				<warning number="1584"/>
+			</nowarn>
+		</csc>
+	</target>
+
+	<target name="presentationframework" depends="core">
+		<mkdir dir="${current.path.bin}"/>
+		<csc keyfile="${path.src}/Caliburn.snk" noconfig="true" warnaserror="false" target="library" debug="${build.debug}" optimize="${build.optimize}" define="${build.defines}"
+         output="${current.path.bin}/Caliburn.PresentationFramework.dll"
+         doc="${current.path.bin}/Caliburn.PresentationFramework.xml">
+			<sources basedir="${path.src}">
+				<include name="${build.asminfo}"/>
+				<include name="Caliburn.PresentationFramework/**/*.cs"/>
+			</sources>
+			<references basedir="${current.path.bin}">
+				<include name="mscorlib.dll"/>
+				<include name="System.dll"/>
+				<include name="System.Core.dll"/>
+				<include name="System.Xml.dll"/>
+				<include name="Caliburn.Core.dll"/>
+        <include name="Microsoft.Practices.ServiceLocation.dll"/>
+				<!--WPF-->
+				<include name="PresentationCore.dll"/>
+				<include name="PresentationFramework.dll"/>
+				<include name="WindowsBase.dll"/>		
+				<!--Silverlight-->
+				<include name="System.Windows.dll" />
+				<include name="System.Windows.Browser.dll" />
+			</references>
+			<nowarn>
+				<warning number="1584"/>
+			</nowarn>
+		</csc>
+	</target>
+
+	<target name="modelframework" depends="presentationframework">
+		<mkdir dir="${current.path.bin}"/>
+		<csc keyfile="${path.src}/Caliburn.snk" noconfig="true" warnaserror="false" target="library" debug="${build.debug}" optimize="${build.optimize}" define="${build.defines}"
+         output="${current.path.bin}/Caliburn.ModelFramework.dll"
+         doc="${current.path.bin}/Caliburn.ModelFramework.xml">
+			<sources basedir="${path.src}">
+				<include name="${build.asminfo}"/>
+				<include name="Caliburn.ModelFramework/**/*.cs"/>
+			</sources>
+			<references basedir="${current.path.bin}">
+				<include name="mscorlib.dll"/>
+				<include name="System.dll"/>
+				<include name="System.Core.dll"/>
+				<include name="Caliburn.Core.dll"/>
+				<include name="Caliburn.PresentationFramework.dll"/>
+        <include name="Microsoft.Practices.ServiceLocation.dll"/>
+				<!--WPF-->
+				<include name="PresentationCore.dll"/>
+				<include name="PresentationFramework.dll"/>
+				<include name="WindowsBase.dll"/>
+				<!--Silverlight-->
+				<include name="System.Windows.dll" />
+			</references>
+			<nowarn>
+				<warning number="1584"/>
+			</nowarn>
+		</csc>
+	</target>
+
+	<target name="testability" depends="presentationframework">
+		<mkdir dir="${current.path.bin}"/>
+		<csc keyfile="${path.src}/Caliburn.snk" noconfig="true" warnaserror="false" target="library" debug="${build.debug}" optimize="${build.optimize}" define="${build.defines}"
+         output="${current.path.bin}/Caliburn.Testability.dll"
+         doc="${current.path.bin}/Caliburn.Testability.xml">
+			<sources basedir="${path.src}">
+				<include name="${build.asminfo}"/>
+				<include name="Caliburn.Testability/**/*.cs"/>
+			</sources>
+			<references basedir="${current.path.bin}">
+				<include name="mscorlib.dll"/>
+				<include name="System.dll"/>
+				<include name="System.Core.dll"/>
+				<include name="Caliburn.Core.dll"/>
+				<include name="Caliburn.PresentationFramework.dll"/>
+				<include name="Caliburn.ModelFramework.dll"/>
+        <include name="Microsoft.Practices.ServiceLocation.dll"/>
+				<!--WPF-->
+				<include name="PresentationCore.dll"/>
+				<include name="PresentationFramework.dll"/>
+				<include name="WindowsBase.dll"/>
+				<!--Silverlight-->
+				<include name="System.Windows.dll" />
+			</references>
+			<nowarn>
+				<warning number="1584"/>
+			</nowarn>
+		</csc>
+	</target>
+
+	<target name="castle" depends="core">
+		<mkdir dir="${current.path.bin}"/>
+		<csc keyfile="${path.src}/Caliburn.snk" noconfig="true" warnaserror="false" target="library" debug="${build.debug}" optimize="${build.optimize}" define="${build.defines}"
+         output="${current.path.bin}/Caliburn.Castle.dll"
+         doc="${current.path.bin}/Caliburn.Castle.xml">
+			<sources basedir="${path.src}">
+				<include name="${build.asminfo}"/>
+				<include name="Caliburn.Castle/**/*.cs"/>
+			</sources>
+			<references basedir="${current.path.bin}">
+				<include name="mscorlib.dll"/>
+				<include name="System.dll"/>
+				<include name="System.Core.dll"/>
+				<include name="Caliburn.Core.dll"/>
+				<include name="Castle.Core.dll"/>
+				<include name="Castle.MicroKernel.dll"/>
+				<include name="Castle.Windsor.dll"/>
+				<include name="Castle.DynamicProxy2.dll"/>
+        <include name="Microsoft.Practices.ServiceLocation.dll"/>
+        <!--Silverlight-->
+        <include name="Castle.Core-Silverlight.dll"/>
+			</references>
+			<nowarn>
+				<warning number="1584"/>
+			</nowarn>
+		</csc>
+	</target>
+
+	<target name="spring" depends="core">
+		<mkdir dir="${current.path.bin}"/>
+		<csc keyfile="${path.src}/Caliburn.snk" noconfig="true" warnaserror="false" target="library" debug="${build.debug}" optimize="${build.optimize}" define="${build.defines}"
+         output="${current.path.bin}/Caliburn.Spring.dll"
+         doc="${current.path.bin}/Caliburn.Spring.xml">
+			<sources basedir="${path.src}">
+				<include name="${build.asminfo}"/>
+				<include name="Caliburn.Spring/**/*.cs"/>
+			</sources>
+			<references basedir="${current.path.bin}">
+				<include name="mscorlib.dll"/>
+				<include name="System.dll"/>
+				<include name="System.Core.dll"/>
+				<include name="Caliburn.Core.dll"/>
+				<include name="Spring.Core.dll"/>
+        <include name="Microsoft.Practices.ServiceLocation.dll"/>
+			</references>
+			<nowarn>
+				<warning number="1584"/>
+			</nowarn>
+		</csc>
+	</target>
+
+	<target name="structuremap" depends="core">
+		<mkdir dir="${current.path.bin}"/>
+		<csc keyfile="${path.src}/Caliburn.snk" noconfig="true" warnaserror="false" target="library" debug="${build.debug}" optimize="${build.optimize}" define="${build.defines}"
+         output="${current.path.bin}/Caliburn.StructureMap.dll"
+         doc="${current.path.bin}/Caliburn.StructureMap.xml">
+			<sources basedir="${path.src}">
+				<include name="${build.asminfo}"/>
+				<include name="Caliburn.StructureMap/**/*.cs"/>
+			</sources>
+			<references basedir="${current.path.bin}">
+				<include name="mscorlib.dll"/>
+				<include name="System.dll"/>
+				<include name="System.Core.dll"/>
+				<include name="Caliburn.Core.dll"/>
+				<include name="StructureMap.dll"/>
+        <include name="Microsoft.Practices.ServiceLocation.dll"/>
+			</references>
+			<nowarn>
+				<warning number="1584"/>
+			</nowarn>
+		</csc>
+	</target>
+
+	<target name="unity" depends="core">
+		<mkdir dir="${current.path.bin}"/>
+		<csc keyfile="${path.src}/Caliburn.snk" noconfig="true" warnaserror="false" target="library" debug="${build.debug}" optimize="${build.optimize}" define="${build.defines}"
+         output="${current.path.bin}/Caliburn.Unity.dll"
+         doc="${current.path.bin}/Caliburn.Unity.xml">
+			<sources basedir="${path.src}">
+				<include name="${build.asminfo}"/>
+				<include name="Caliburn.Unity/**/*.cs"/>
+			</sources>
+			<references basedir="${current.path.bin}">
+				<include name="mscorlib.dll"/>
+				<include name="System.dll"/>
+				<include name="System.Core.dll"/>
+				<include name="Caliburn.Core.dll"/>
+				<include name="Microsoft.Practices.ObjectBuilder2.dll"/>
+				<include name="Microsoft.Practices.Unity.dll"/>
+				<include name="Microsoft.Practices.Unity.Configuration.dll"/>
+				<include name="Microsoft.Practices.Unity.StaticFactory.dll"/>
+        <include name="Microsoft.Practices.ServiceLocation.dll"/>
+			</references>
+			<nowarn>
+				<warning number="1584"/>
+			</nowarn>
+		</csc>
+	</target>
+
+  <target name="mef" depends="core">
+    <mkdir dir="${current.path.bin}"/>
+    <csc noconfig="true" warnaserror="false" target="library" debug="${build.debug}" optimize="${build.optimize}" define="${build.defines}"
+         output="${current.path.bin}/Caliburn.MEF.dll"
+         doc="${current.path.bin}/Caliburn.MEF.xml">
+      <sources basedir="${path.src}">
+        <include name="${build.asminfo}"/>
+        <include name="Caliburn.MEF/**/*.cs"/>
+      </sources>
+      <references basedir="${current.path.bin}">
+        <include name="mscorlib.dll"/>
+        <include name="System.dll"/>
+        <include name="System.Core.dll"/>
+        <include name="Caliburn.Core.dll"/>
+        <include name="System.ComponentModel.Composition.dll"/>
+        <include name="Microsoft.Practices.ServiceLocation.dll"/>
+      </references>
+      <nowarn>
+        <warning number="1584"/>
+      </nowarn>
+    </csc>
+  </target>
+
+  <target name="ninject" depends="core">
+    <mkdir dir="${current.path.bin}"/>
+    <csc keyfile="${path.src}/Caliburn.snk" noconfig="true" warnaserror="false" target="library" debug="${build.debug}" optimize="${build.optimize}" define="${build.defines}"
+         output="${current.path.bin}/Caliburn.Ninject.dll"
+         doc="${current.path.bin}/Caliburn.Ninject.xml">
+      <sources basedir="${path.src}">
+        <include name="${build.asminfo}"/>
+        <include name="Caliburn.Ninject/**/*.cs"/>
+      </sources>
+      <references basedir="${current.path.bin}">
+        <include name="mscorlib.dll"/>
+        <include name="System.dll"/>
+        <include name="System.Core.dll"/>
+        <include name="Caliburn.Core.dll"/>
+        <include name="Ninject.dll"/>
+        <include name="Microsoft.Practices.ServiceLocation.dll"/>
+      </references>
+      <nowarn>
+        <warning number="1584"/>
+      </nowarn>
+    </csc>
+  </target>
+
+  <target name="autofac" depends="core">
+    <mkdir dir="${current.path.bin}"/>
+    <csc keyfile="${path.src}/Caliburn.snk" noconfig="true" warnaserror="false" target="library" debug="${build.debug}" optimize="${build.optimize}" define="${build.defines}"
+         output="${current.path.bin}/Caliburn.Autofac.dll"
+         doc="${current.path.bin}/Caliburn.Autofac.xml">
+      <sources basedir="${path.src}">
+        <include name="${build.asminfo}"/>
+        <include name="Caliburn.Autofac/**/*.cs"/>
+      </sources>
+      <references basedir="${current.path.bin}">
+        <include name="mscorlib.dll"/>
+        <include name="System.dll"/>
+        <include name="System.Core.dll"/>
+        <include name="Caliburn.Core.dll"/>
+        <include name="Autofac.dll"/>
+        <include name="Microsoft.Practices.ServiceLocation.dll"/>
+      </references>
+      <nowarn>
+        <warning number="1584"/>
+      </nowarn>
+    </csc>
+  </target>
+
+  <target name="prism" depends="core">
+    <mkdir dir="${current.path.bin}"/>
+    <csc noconfig="true" warnaserror="false" target="library" debug="${build.debug}" optimize="${build.optimize}" define="${build.defines}"
+         output="${current.path.bin}/Caliburn.Prism.dll"
+         doc="${current.path.bin}/Caliburn.Prism.xml">
+      <sources basedir="${path.src}">
+        <include name="${build.asminfo}"/>
+        <include name="Caliburn.Prism/**/*.cs"/>
+      </sources>
+      <references basedir="${current.path.bin}">
+        <include name="mscorlib.dll"/>
+        <include name="System.dll"/>
+        <include name="System.Core.dll"/>
+        <include name="Caliburn.Core.dll"/>
+        <include name="Microsoft.Practices.ServiceLocation.dll"/>
+        <include name="Microsoft.Practices.Composite.dll"/>
+        <include name="Microsoft.Practices.Composite.Presentation.dll"/>
+        <include name="Microsoft.Practices.Composite.UnityExtensions.dll"/>
+        <include name="Microsoft.Practices.Unity.dll"/>
+        <!--WPF-->
+        <include name="PresentationCore.dll"/>
+        <include name="PresentationFramework.dll"/>
+        <include name="WindowsBase.dll"/>
+        <!--Silverlight-->
+        <include name="System.Windows.dll" />
+        <include name="System.Windows.Controls.dll" />
+      </references>
+      <nowarn>
+        <warning number="1584"/>
+      </nowarn>
+    </csc>
+  </target>
+	
+	<target name="compile-tests">
+		<mkdir dir="${current.path.test}"/>
+		<copy todir="${current.path.test}">
+			<fileset basedir="${current.path.bin}">
+				<include name="*.dll"/>
+			</fileset>
+		</copy>
+		<copy todir="${current.path.test}">
+			<fileset basedir="${path.src}/Tests.Caliburn">
+				<include name="*.config"/>
+				<include name="*.nunit"/>
+			</fileset>
+		</copy>
+		<copy todir="${current.path.test}">
+			<fileset basedir="${path.tools.nunit}">
+				<include name="nunit.framework.dll"/>
+			</fileset>
+		</copy>
+		<copy todir="${current.path.test}">
+			<fileset basedir="${path.tools.rhino}">
+				<include name="Rhino.Mocks.dll"/>
+			</fileset>
+		</copy>
+		<csc noconfig="true" warnaserror="true" target="library" debug="${build.debug}" optimize="${build.optimize}" define="${build.defines}"
+         output="${current.path.test}/Tests.Caliburn.dll">
+			<sources basedir="${path.src}">
+				<include name="${build.asminfo}"/>
+				<include name="Tests.Caliburn/**/*.cs"/>
+			</sources>
+			<references basedir="${current.path.test}">
+				<include name="mscorlib.dll"/>
+				<include name="System.dll"/>
+				<include name="System.Core.dll"/>
+				<include name="Caliburn.Core.dll"/>
+				<include name="Caliburn.PresentationFramework.dll"/>
+				<include name="Caliburn.ModelFramework.dll"/>
+				<include name="Caliburn.Testability.dll"/>
+        <include name="Microsoft.Practices.ServiceLocation.dll"/>
+				<!--Adapters-->
+				<include name="Caliburn.Castle.dll"/>
+				<include name="Castle.Core.dll"/>
+				<include name="Castle.Windsor.dll"/>
+				<include name="Castle.MicroKernel.dll"/>
+				<include name="Caliburn.Spring.dll"/>
+				<include name="Spring.Core.dll"/>
+				<include name="Common.Logging.dll"/>
+				<include name="Caliburn.StructureMap.dll"/>
+				<include name="StructureMap.dll"/>
+				<include name="Caliburn.Unity.dll"/>
+				<include name="Microsoft.Practices.ObjectBuilder2.dll"/>
+				<include name="Microsoft.Practices.Unity.dll"/>
+				<include name="Microsoft.Practices.Unity.Configuration.dll"/>
+				<include name="Microsoft.Practices.Unity.StaticFactory.dll"/>
+        <include name="Caliburn.MEF.dll"/>
+        <include name="System.ComponentModel.Composition.dll"/>
+        <include name="Ninject.dll"/>
+        <include name="Caliburn.Ninject.dll"/>
+        <include name="Autofac.dll"/>
+        <include name="Caliburn.Autofac.dll"/>
+				<!--Test Framework-->
+				<include name="nunit.framework.dll"/>
+				<include name="Rhino.Mocks.dll"/>
+				<!--WPF-->
+				<include name="PresentationCore.dll"/>
+				<include name="PresentationFramework.dll"/>
+				<include name="WindowsBase.dll"/>
+				<!--Silverlight-->
+				<include name="System.Windows.dll" />
+			</references>
+			<nowarn>
+				<warning number="1584"/>
+			</nowarn>
+		</csc>
+	</target>
+
+	<target name="test" depends="compile-tests">
+		<nunit2 unless="${skip.tests}">
+			<formatter type="Plain"/>
+			<test appconfig="${current.path.test}\Tests.Caliburn.dll.config">
+				<assemblies basedir="${current.path.test}">
+					<include name="Tests.Caliburn.dll"/>
+				</assemblies>
+			</test>
+		</nunit2>
+	</target>
+
+	<target name="package-platform" if="${package}">
+		<zip zipfile="${path.dist}\Caliburn-${build.version}-${build.config}-${build.platform}.zip" ziplevel="9">
+			<fileset basedir="${current.path.bin}">
+				<include name="*.dll"/>
+				<include name="*.pdb"/>
+				<include name="*.xml"/>
+			</fileset>
+		</zip>
+	</target>
+
+	<target name="package-source" if="${package}">
+		<zip zipfile="${path.dist}\Caliburn-${build.version}-source.zip" ziplevel="9">
+			<fileset basedir="${path.src}">
+				<include name="**/*.cs"/>
+				<include name="**/*.csproj"/>
+				<include name="**/*.sln"/>
+				<include name="**/*.txt"/>
+				<include name="**/*.build"/>
+			</fileset>
+		</zip>
+	</target>
+
+</project>
