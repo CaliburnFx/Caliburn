@@ -5,6 +5,8 @@ using NUnit.Framework.SyntaxHelpers;
 
 namespace Tests.Caliburn.Core
 {
+    using global::Caliburn.Core.IoC;
+
     [TestFixture]
     public class The_CaliburnApplication_object : TestBase
     {

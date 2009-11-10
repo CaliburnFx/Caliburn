@@ -1,6 +1,7 @@
-﻿namespace Caliburn.Core.Metadata
+﻿namespace Caliburn.Core.IoC
 {
     using System;
+    using Metadata;
 
     /// <summary>
     /// An attribute that gives directions to Caliburn concerning component registration.
@@ -12,6 +13,6 @@
         /// Registers the type with the specified container.
         /// </summary>
         /// <param name="decoratedType">The decorated type.</param>
-        public abstract ComponentInfo GetComponentInfo(Type decoratedType);
+        public abstract IComponentRegistration GetComponentInfo(Type decoratedType);
     }
 }

@@ -45,20 +45,26 @@
   <ItemGroup>
     <Compile Include="CaliburnFramework.cs" />
     <Compile Include="CaliburnException.cs" />
-    <Compile Include="ComponentInfo.cs" />
-    <Compile Include="ComponentLifetime.cs" />
     <Compile Include="CoreConfiguration.cs" />
     <Compile Include="CaliburnModule.cs" />
     <Compile Include="DefaultAssemblySource.cs" />
     <Compile Include="ExtensionMethods.cs" />
     <Compile Include="IAssemblySource.cs" />
     <Compile Include="IConfigurationHook.cs" />
-    <Compile Include="IConfigurator.cs" />
-    <Compile Include="IContainer.cs" />
+    <Compile Include="IoC\ComponentRegistrationBase.cs" />
+    <Compile Include="IoC\CustomLifetime.cs" />
+    <Compile Include="IoC\ExtensionMethods.cs" />
+    <Compile Include="IoC\Instance.cs" />
+    <Compile Include="IoC\IRegistry.cs" />
+    <Compile Include="IoC\IContainer.cs" />
     <Compile Include="Invocation\DelegateFactory.cs" />
     <Compile Include="Invocation\Execute.cs" />
     <Compile Include="Invocation\IDispatcher.cs" />
     <Compile Include="Invocation\IDispatcherOperation.cs" />
+    <Compile Include="IoC\ContainerBase.cs" />
+    <Compile Include="IoC\IComponentRegistration.cs" />
+    <Compile Include="IoC\PerRequest.cs" />
+    <Compile Include="IoC\Singleton.cs" />
     <Compile Include="MemoryManagement\BaseDictionary.cs" />
     <Compile Include="MemoryManagement\GenericWeakReference.cs" />
     <Compile Include="MemoryManagement\WeakKeyedDictionary.cs" />
@@ -67,12 +73,12 @@
     <Compile Include="Metadata\IMetadataContainer.cs" />
     <Compile Include="Metadata\MetadataContainer.cs" />
     <Compile Include="Metadata\IMetadata.cs" />
-    <Compile Include="Metadata\PerRequestAttribute.cs" />
-    <Compile Include="Metadata\SingletonAttribute.cs" />
+    <Compile Include="IoC\PerRequestAttribute.cs" />
+    <Compile Include="IoC\SingletonAttribute.cs" />
     <Compile Include="Metadata\TypeDescriptor.silverlight.cs" />
-    <Compile Include="Metadata\CustomAttribute.cs" />
+    <Compile Include="IoC\CustomLifetimeAttribute.cs" />
     <Compile Include="PropertyChangedBase.cs" />
-    <Compile Include="Metadata\RegisterAttribute.cs" />
+    <Compile Include="IoC\RegisterAttribute.cs" />
     <Compile Include="Threading\BackgroundTask.cs" />
     <Compile Include="Invocation\IEventHandler.cs" />
     <Compile Include="Invocation\EventHandlerFactory.cs" />
@@ -85,7 +91,7 @@
     <Compile Include="Threading\IBackgroundTask.cs" />
     <Compile Include="Invocation\MethodFactory.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="SimpleContainer.cs" />
+    <Compile Include="IoC\SimpleContainer.cs" />
     <Compile Include="Threading\DefaultThreadPool.cs" />
     <Compile Include="Threading\IThreadPool.cs" />
   </ItemGroup>

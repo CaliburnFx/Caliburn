@@ -5,7 +5,7 @@ namespace Caliburn.Core
     using System.Collections.Generic;
     using System.Reflection;
     using Invocation;
-    using Metadata;
+    using IoC;
     using Threading;
     using Microsoft.Practices.ServiceLocation;
 
@@ -16,7 +16,7 @@ namespace Caliburn.Core
     {
         private static readonly Type _configType = typeof(CaliburnModule);
         private readonly IServiceLocator _serviceLocator;
-        private readonly Action<IEnumerable<ComponentInfo>> _configurator;
+        private readonly Action<IEnumerable<IComponentRegistration>> _registrar;
         private readonly List<CaliburnModule> _modules = new List<CaliburnModule>();
         private readonly List<Action> _afterStart = new List<Action>();
 
@@ -32,11 +32,11 @@ namespace Caliburn.Core
         /// Initializes a new instance of the <see cref="CoreConfiguration"/> class.
         /// </summary>
         /// <param name="serviceLocator">The container.</param>
-        /// <param name="configurator">Receives the components requested for configuration.</param>
-        public CoreConfiguration(IServiceLocator serviceLocator, Action<IEnumerable<ComponentInfo>> configurator)
+        /// <param name="registrar">Receives the components requested for configuration.</param>
+        public CoreConfiguration(IServiceLocator serviceLocator, Action<IEnumerable<IComponentRegistration>> registrar)
         {
             _serviceLocator = serviceLocator;
-            _configurator = configurator;
+            _registrar = registrar;
 
             UsingThreadPool<DefaultThreadPool>();
             UsingMethodFactory<MethodFactory>();
@@ -138,7 +138,7 @@ namespace Caliburn.Core
                 return;
 
             var components = module.GetComponents();
-            _configurator(components);
+            _registrar(components);
             module.Initialize();
             ExecuteCustomActions();
         }
@@ -190,7 +190,7 @@ namespace Caliburn.Core
              from info in child.GetComponents()
              select info).Apply(toRegister.Add);
 
-            _configurator(toRegister);
+            _registrar(toRegister);
 
             Execute.Initialize(_serviceLocator.GetInstance<IDispatcher>());
 
@@ -214,12 +214,12 @@ namespace Caliburn.Core
 
         private void NewAssemblyAdded(Assembly assembly)
         {
-            var toRegister = new List<ComponentInfo>();
+            var toRegister = new List<IComponentRegistration>();
             var configurationChildren = new List<Type>();
 
             InspectAssembly(assembly, toRegister, configurationChildren);
 
-            _configurator(toRegister);
+            _registrar(toRegister);
 
             foreach (var type in configurationChildren)
             {
@@ -227,7 +227,7 @@ namespace Caliburn.Core
             }
         }
 
-        private void InspectAssembly(Assembly assembly, ICollection<ComponentInfo> componentList, ICollection<Type> configs)
+        private void InspectAssembly(Assembly assembly, ICollection<IComponentRegistration> componentList, ICollection<Type> configs)
         {
             var types = assembly.GetExportedTypes();
 
@@ -244,39 +244,34 @@ namespace Caliburn.Core
             }
         }
 
-        private List<ComponentInfo> SetupDefaultComponents()
+        private List<IComponentRegistration> SetupDefaultComponents()
         {
-            return new List<ComponentInfo>
+            return new List<IComponentRegistration>
             {
-                new ComponentInfo
+                new Singleton
                 {
                     Service = typeof(IDispatcher),
                     Implementation = _dispatcherType,
-                    Lifetime = ComponentLifetime.Singleton
                 },
-                new ComponentInfo
+                new Singleton
                 {
                     Service = typeof(IThreadPool),
                     Implementation = _threadPoolType,
-                    Lifetime = ComponentLifetime.Singleton
                 },
-                new ComponentInfo
+                new Singleton
                 {
                     Service = typeof(IMethodFactory),
                     Implementation = _methodFactoryType,
-                    Lifetime = ComponentLifetime.Singleton
                 },
-                new ComponentInfo
+                new Singleton
                 {
                     Service = typeof(IEventHandlerFactory),
                     Implementation = _eventHandlerFactoryType,
-                    Lifetime = ComponentLifetime.Singleton
                 },
-                new ComponentInfo
+                new Singleton
                 {
                     Service = typeof(IAssemblySource),
                     Implementation = _assemblySourceType,
-                    Lifetime = ComponentLifetime.Singleton
                 }
             };
         }

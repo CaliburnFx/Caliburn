@@ -12,6 +12,8 @@ using Tests.Caliburn.Fakes;
 
 namespace Tests.Caliburn.Core
 {
+    using global::Caliburn.Core.IoC;
+
     [TestFixture]
     public class The_core_configuration : TestBase
     {
@@ -96,7 +98,7 @@ namespace Tests.Caliburn.Core
                 {
                     configuratorWasCalled = true;
 
-                    var found = (from info in infos
+                    var found = (from info in infos.OfType<Singleton>()
                                  where info.Service == typeof(IDispatcher)
                                  select info).FirstOrDefault();
 
@@ -120,7 +122,7 @@ namespace Tests.Caliburn.Core
                 {
                     configuratorWasCalled = true;
 
-                    var found = (from info in infos
+                    var found = (from info in infos.OfType<Singleton>()
                                  where info.Service == typeof(IThreadPool)
                                  select info).FirstOrDefault();
 
@@ -144,7 +146,7 @@ namespace Tests.Caliburn.Core
                 {
                     configuratorWasCalled = true;
 
-                    var found = (from info in infos
+                    var found = (from info in infos.OfType<Singleton>()
                                  where info.Service == typeof(IMethodFactory)
                                  select info).FirstOrDefault();
 
@@ -168,7 +170,7 @@ namespace Tests.Caliburn.Core
                 {
                     configuratorWasCalled = true;
 
-                    var found = (from info in infos
+                    var found = (from info in infos.OfType<Singleton>()
                                  where info.Service == typeof(IEventHandlerFactory)
                                  select info).FirstOrDefault();
 
@@ -189,7 +191,7 @@ namespace Tests.Caliburn.Core
             public bool GetComponentsWasCalled { get; set; }
             public bool ConfigureWasCalled { get; set; }
 
-            protected override IEnumerable<ComponentInfo> GetComponents()
+            protected override IEnumerable<IComponentRegistration> GetComponents()
             {
                 GetComponentsWasCalled = true;
                 yield break;

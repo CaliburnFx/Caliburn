@@ -2,17 +2,20 @@
 {
     using System;
     using System.Collections.Generic;
-    using Core;
+    using Core.IoC;
+    using global::StructureMap;
     using global::StructureMap.Attributes;
     using Microsoft.Practices.ServiceLocation;
-    using IContainer=Core.IContainer;
+    using IContainer=Core.IoC.IContainer;
+    using IRegistry=Core.IoC.IRegistry;
 
     /// <summary>
-    /// An adapter allowing an <see cref="IContainer"/> to plug into Caliburn via <see cref="IServiceLocator"/> and <see cref="IConfigurator"/>.
+    /// An adapter allowing an <see cref="IContainer"/> to plug into Caliburn via <see cref="IServiceLocator"/> and <see cref="Core.IoC.IRegistry"/>.
     /// </summary>
-    public class StructureMapAdapter : ServiceLocatorImplBase, IContainer
+    public class StructureMapAdapter : ContainerBase
     {
         private readonly global::StructureMap.IContainer _container;
+        private ConfigurationExpression _exp;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="StructureMapAdapter"/> class.
@@ -23,9 +26,12 @@
             _container = container;
 
             _container.Configure(reg => reg.InstanceOf<IServiceLocator>().IsThis(this));
-            _container.Configure(reg => reg.InstanceOf<IConfigurator>().IsThis(this));
+            _container.Configure(reg => reg.InstanceOf<IRegistry>().IsThis(this));
             _container.Configure(reg => reg.InstanceOf<IContainer>().IsThis(this));
             _container.Configure(reg => reg.InstanceOf<global::StructureMap.IContainer>().IsThis(_container));
+
+            AddRegistrationHandler<Singleton>(HandleSingleton);
+            AddRegistrationHandler<PerRequest>(HandlePerRequest);
         }
 
         /// <summary>
@@ -71,52 +77,49 @@
         }
 
         /// <summary>
-        /// Configures the container with the provided components.
+        /// Configures the container using the provided component registrations.
         /// </summary>
-        /// <param name="components">The components.</param>
-        public void ConfigureWith(IEnumerable<ComponentInfo> components)
+        /// <param name="registrations">The component registrations.</param>
+        public override void Register(IEnumerable<IComponentRegistration> registrations)
         {
             _container.Configure(
-                reg =>{
-                    foreach(var info in components)
-                    {
-                        switch(info.Lifetime)
-                        {
-                            case ComponentLifetime.Singleton:
-                                if (string.IsNullOrEmpty(info.Key))
-                                    reg.ForRequestedType(info.Service)
-                                        .CacheBy(InstanceScope.Singleton)
-                                        .TheDefaultIsConcreteType(info.Implementation);
-                                else if (info.Service == null)
-                                    reg.ForRequestedType(typeof(object))
-                                        .AddConcreteType(info.Implementation, info.Key)
-                                        .CacheBy(InstanceScope.Singleton);
-                                else
-                                    reg.ForRequestedType(info.Service)
-                                        .AddConcreteType(info.Implementation, info.Key)
-                                        .CacheBy(InstanceScope.Singleton);
-                                break;
-                            case ComponentLifetime.PerRequest:
-                                if (string.IsNullOrEmpty(info.Key))
-                                    reg.ForRequestedType(info.Service)
-                                        .CacheBy(InstanceScope.PerRequest)
-                                        .TheDefaultIsConcreteType(info.Implementation);
-                                else if (info.Service == null)
-                                    reg.ForRequestedType(typeof(object))
-                                        .AddConcreteType(info.Implementation, info.Key)
-                                        .CacheBy(InstanceScope.PerRequest);
-                                else
-                                    reg.ForRequestedType(info.Service)
-                                        .AddConcreteType(info.Implementation, info.Key)
-                                        .CacheBy(InstanceScope.PerRequest);
-                                break;
-                            default:
-                                throw new NotSupportedException(
-                                    string.Format("{0} is not supported in StructureMap.", info.Lifetime)
-                                    );
-                        }
-                    }
+                exp =>{
+                    _exp = exp;
+                    base.Register(registrations);
+                    _exp = null;
                 });
+        }
+
+        private void HandleSingleton(Singleton singleton)
+        {
+            if(!singleton.HasName())
+                _exp.ForRequestedType(singleton.Service)
+                    .CacheBy(InstanceScope.Singleton)
+                    .TheDefaultIsConcreteType(singleton.Implementation);
+            else if(!singleton.HasService())
+                _exp.ForRequestedType(typeof(object))
+                    .AddConcreteType(singleton.Implementation, singleton.Name)
+                    .CacheBy(InstanceScope.Singleton);
+            else
+                _exp.ForRequestedType(singleton.Service)
+                    .AddConcreteType(singleton.Implementation, singleton.Name)
+                    .CacheBy(InstanceScope.Singleton);
+        }
+
+        private void HandlePerRequest(PerRequest perRequest)
+        {
+            if(!perRequest.HasName())
+                _exp.ForRequestedType(perRequest.Service)
+                    .CacheBy(InstanceScope.PerRequest)
+                    .TheDefaultIsConcreteType(perRequest.Implementation);
+            else if (!perRequest.HasService())
+                _exp.ForRequestedType(typeof(object))
+                    .AddConcreteType(perRequest.Implementation, perRequest.Name)
+                    .CacheBy(InstanceScope.PerRequest);
+            else
+                _exp.ForRequestedType(perRequest.Service)
+                    .AddConcreteType(perRequest.Implementation, perRequest.Name)
+                    .CacheBy(InstanceScope.PerRequest);
         }
     }
 }

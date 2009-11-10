@@ -1,6 +1,7 @@
 namespace Caliburn.Core
 {
     using System.Collections.Generic;
+    using IoC;
     using Microsoft.Practices.ServiceLocation;
     using System;
 
@@ -59,7 +60,7 @@ namespace Caliburn.Core
         /// <summary>
         /// Gets the component information for this module.
         /// </summary>
-        protected internal abstract IEnumerable<ComponentInfo> GetComponents();
+        protected internal abstract IEnumerable<IComponentRegistration> GetComponents();
 
         /// <summary>
         /// Initializes this module.
@@ -67,28 +68,38 @@ namespace Caliburn.Core
         protected internal abstract void Initialize();
 
         /// <summary>
-        /// Creates a <see cref="ComponentInfo"/> with a Singleton lifetime.
+        /// Creates a <see cref="Singleton"/>.
         /// </summary>
-        protected ComponentInfo Singleton(Type service, Type implementation)
+        protected IComponentRegistration Singleton(Type service, Type implementation)
         {
-            return new ComponentInfo
+            return new Singleton
             {
                 Service = service, 
                 Implementation = implementation, 
-                Lifetime = ComponentLifetime.Singleton
             };
         }
 
         /// <summary>
-        /// Creates a <see cref="ComponentInfo"/> with a PerRequest lifetime.
+        /// Creates a <see cref="PerRequest"/>.
         /// </summary>
-        protected ComponentInfo PerRequest(Type service, Type implementation)
+        protected IComponentRegistration PerRequest(Type service, Type implementation)
         {
-            return new ComponentInfo
+            return new PerRequest
             {
                 Service = service,
                 Implementation = implementation,
-                Lifetime = ComponentLifetime.PerRequest
+            };
+        }
+
+        /// <summary>
+        /// Creates an <see cref="Instance"/>.
+        /// </summary>
+        protected IComponentRegistration Instance(Type service, object implementation)
+        {
+            return new Instance
+            {
+                Service = service,
+                Implementation = implementation,
             };
         }
     }

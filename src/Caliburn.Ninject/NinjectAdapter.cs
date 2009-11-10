@@ -2,15 +2,15 @@
 {
     using System;
     using System.Collections.Generic;
-    using Core;
+    using Core.IoC;
     using global::Ninject;
     using Microsoft.Practices.ServiceLocation;
     using ActivationException=global::Ninject.ActivationException;
 
     /// <summary>
-    /// An adapter allowing an <see cref="IKernel"/> to plug into Caliburn via <see cref="IServiceLocator"/> and <see cref="IConfigurator"/>.
+    /// An adapter allowing an <see cref="IKernel"/> to plug into Caliburn via <see cref="IServiceLocator"/> and <see cref="IRegistry"/>.
     /// </summary>
-    public class NinjectAdapter : ServiceLocatorImplBase, IContainer
+    public class NinjectAdapter : ContainerBase
     {
         /// <summary>
         /// Gets or sets the kernel.
@@ -27,9 +27,13 @@
             Kernel = kernel;
 
             Kernel.Bind<IServiceLocator>().ToConstant(this);
-            Kernel.Bind<IConfigurator>().ToConstant(this);
+            Kernel.Bind<IRegistry>().ToConstant(this);
             Kernel.Bind<IContainer>().ToConstant(this);
             Kernel.Bind<IKernel>().ToConstant(Kernel);
+
+            AddRegistrationHandler<Singleton>(HandleSingleton);
+            AddRegistrationHandler<PerRequest>(HandlePerRequest);
+            AddRegistrationHandler<Instance>(HandleInstance);
         }
 
         /// <summary>
@@ -60,36 +64,31 @@
             return Kernel.GetAll(serviceType);
         }
 
-        /// <summary>
-        /// Configures the container with the provided components.
-        /// </summary>
-        /// <param name="components">The components.</param>
-        public void ConfigureWith(IEnumerable<ComponentInfo> components)
+        private void HandleSingleton(Singleton singleton)
         {
-            foreach (var info in components)
-            {
-                switch (info.Lifetime)
-                {
-                    case ComponentLifetime.Singleton:
-                        if(string.IsNullOrEmpty(info.Key))
-                            Kernel.Bind(info.Service).To(info.Implementation).InSingletonScope();
-                        else if(info.Service == null)
-                            Kernel.Bind(typeof(object)).To(info.Implementation).InSingletonScope().Named(info.Key);
-                        else Kernel.Bind(info.Service).To(info.Implementation).InSingletonScope().Named(info.Key);
-                        break;
-                    case ComponentLifetime.PerRequest:
-                        if(string.IsNullOrEmpty(info.Key))
-                            Kernel.Bind(info.Service).To(info.Implementation).InTransientScope();
-                        else if(info.Service == null)
-                            Kernel.Bind(typeof(object)).To(info.Implementation).InTransientScope().Named(info.Key);
-                        else Kernel.Bind(info.Service).To(info.Implementation).InTransientScope().Named(info.Key);
-                        break;
-                    default:
-                        throw new NotSupportedException(
-                            string.Format("{0} is not supported in Ninject.", info.Lifetime)
-                            );
-                }
-            }
+            if (!singleton.HasName())
+                Kernel.Bind(singleton.Service).To(singleton.Implementation).InSingletonScope();
+            else if (!singleton.HasService())
+                Kernel.Bind(typeof(object)).To(singleton.Implementation).InSingletonScope().Named(singleton.Name);
+            else Kernel.Bind(singleton.Service).To(singleton.Implementation).InSingletonScope().Named(singleton.Name);
+        }
+
+        private void HandlePerRequest(PerRequest perRequest)
+        {
+            if (!perRequest.HasName())
+                Kernel.Bind(perRequest.Service).To(perRequest.Implementation).InTransientScope();
+            else if (!perRequest.HasService())
+                Kernel.Bind(typeof(object)).To(perRequest.Implementation).InTransientScope().Named(perRequest.Name);
+            else Kernel.Bind(perRequest.Service).To(perRequest.Implementation).InTransientScope().Named(perRequest.Name);
+        }
+
+        private void HandleInstance(Instance instance)
+        {
+            if (!instance.HasName())
+                Kernel.Bind(instance.Service).ToConstant(instance.Implementation);
+            else if (!instance.HasService())
+                Kernel.Bind(typeof(object)).ToConstant(instance.Implementation).Named(instance.Name);
+            else Kernel.Bind(instance.Service).ToConstant(instance.Implementation).Named(instance.Name);
         }
     }
 }

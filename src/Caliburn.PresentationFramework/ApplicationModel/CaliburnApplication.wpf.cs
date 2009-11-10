@@ -7,6 +7,7 @@ namespace Caliburn.PresentationFramework.ApplicationModel
     using System.Reflection;
     using System.Windows;
     using Core;
+    using Core.IoC;
     using Microsoft.Practices.ServiceLocation;
 
     /// <summary>
@@ -104,17 +105,17 @@ namespace Caliburn.PresentationFramework.ApplicationModel
         /// <summary>
         /// Configures Caliburn's components.
         /// </summary>
-        /// <param name="components">The components.</param>
-        protected virtual void ConfigureCaliburn(IEnumerable<ComponentInfo> components)
+        /// <param name="registrations">The component registrations.</param>
+        protected virtual void ConfigureCaliburn(IEnumerable<IComponentRegistration> registrations)
         {
-            var configurator = _container as IConfigurator;
+            var registry = _container as IRegistry;
 
-            if (configurator == null)
+            if (registry == null)
                 throw new CaliburnException(
-                    "Cannot configure Caliburn. Override ConfigureCaliburn or provide an IServiceLocator that also implements IConfigurator."
+                    "Cannot configure Caliburn. Override ConfigureCaliburn or provide an IServiceLocator that also implements IRegistry."
                     );
 
-            configurator.ConfigureWith(components);
+            registry.Register(registrations);
         }
 
         /// <summary>

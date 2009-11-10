@@ -6,7 +6,7 @@ using Tests.Caliburn.Adapters.Components;
 
 namespace Tests.Caliburn.Adapters
 {
-    using global::Caliburn.Core;
+    using global::Caliburn.Core.IoC;
     using NUnit.Framework.SyntaxHelpers;
 
     public abstract class ServiceLocatorTests
@@ -113,7 +113,7 @@ namespace Tests.Caliburn.Adapters
         [Test]
         public void can_resolve_IConfigurator()
         {
-            var sl = locator.GetInstance<IConfigurator>();
+            var sl = locator.GetInstance<IRegistry>();
             Assert.That(sl, Is.EqualTo(locator));
         }
 

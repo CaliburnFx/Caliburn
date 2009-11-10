@@ -1,8 +1,7 @@
 ﻿namespace Caliburn.PresentationFramework.Commands
 {
     using System;
-    using Core;
-    using Core.Metadata;
+    using Core.IoC;
 
     /// <summary>
     /// Specifies a command which should be registered with the container and optionally allows customization of the executiion method.
@@ -46,13 +45,12 @@
         /// </summary>
         /// <param name="decoratedType">The decorated type.</param>
         /// <returns></returns>
-        public override ComponentInfo GetComponentInfo(Type decoratedType)
+        public override IComponentRegistration GetComponentInfo(Type decoratedType)
         {
-            return new ComponentInfo
+            return new PerRequest
             {
-                Key = GetCommandName(decoratedType),
-                Implementation = decoratedType,
-                Lifetime = ComponentLifetime.PerRequest
+                Name = GetCommandName(decoratedType),
+                Implementation = decoratedType
             };
         }
 

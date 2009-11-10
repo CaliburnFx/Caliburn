@@ -6,14 +6,14 @@ namespace Caliburn.MEF
     using System.ComponentModel.Composition.Primitives;
     using System.Linq;
     using System.Reflection;
-    using Core;
+    using Core.IoC;
 
     /// <summary>
     /// A <see cref="ComposablePart"/> used to configure MEF with Caliburn's required services.
     /// </summary>
     public class ComponentPart : ComposablePart
     {
-        private readonly ComponentInfo _info;
+        private readonly IComponentRegistration _registration;
         private readonly List<ImportDefinition> _imports = new List<ImportDefinition>();
         private readonly ExportDefinition[] _exports;
 
@@ -26,12 +26,12 @@ namespace Caliburn.MEF
         /// <summary>
         /// Initializes a new instance of the <see cref="ComponentPart"/> class.
         /// </summary>
-        /// <param name="info">The info.</param>
-        public ComponentPart(ComponentInfo info)
+        /// <param name="registration">The registration.</param>
+        public ComponentPart(IComponentRegistration registration)
         {
-            _info = info;
+            _registration = registration;
 
-            _greedyConstructor = (from c in info.Implementation.GetConstructors()
+            _greedyConstructor = (from c in GetImplementation(registration).GetConstructors()
                                   orderby c.GetParameters().Length descending
                                   select c).FirstOrDefault();
 
@@ -53,9 +53,9 @@ namespace Caliburn.MEF
                 }
             }
 
-            string contractName = string.IsNullOrEmpty(info.Key)
-                                      ? AttributedModelServices.GetContractName(info.Service)
-                                      : info.Key;
+            string contractName = !registration.HasName()
+                                      ? AttributedModelServices.GetContractName(registration.Service)
+                                      : registration.Name;
 
             var export = new ExportDefinition(
                 contractName,
@@ -93,7 +93,7 @@ namespace Caliburn.MEF
         /// </exception>
         public override object GetExportedValue(ExportDefinition definition)
         {
-            if(_info.Lifetime == ComponentLifetime.PerRequest)
+            if(_registration is PerRequest)
                 return CreateInstance(definition);
 
             if(_cachedInstance == null)
@@ -126,8 +126,8 @@ namespace Caliburn.MEF
             }
 
             return args.Count > 0
-                       ? Activator.CreateInstance(_info.Implementation, args.ToArray())
-                       : Activator.CreateInstance(_info.Implementation);
+                       ? Activator.CreateInstance(GetImplementation(_registration), args.ToArray())
+                       : Activator.CreateInstance(GetImplementation(_registration));
         }
 
         /// <summary>
@@ -238,6 +238,17 @@ namespace Caliburn.MEF
         public override IEnumerable<ImportDefinition> ImportDefinitions
         {
             get { return _imports; }
+        }
+
+        private static Type GetImplementation(IComponentRegistration registration)
+        {
+            var singleton = registration as Singleton;
+            if (singleton != null) return singleton.Implementation;
+
+            var perRequest = registration as PerRequest;
+            if (perRequest != null) return perRequest.Implementation;
+
+            throw new NotSupportedException();
         }
     }
 }

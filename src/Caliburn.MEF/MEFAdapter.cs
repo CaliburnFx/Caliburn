@@ -5,15 +5,16 @@
     using System.ComponentModel.Composition;
     using System.ComponentModel.Composition.Hosting;
     using System.Linq;
-    using Core;
+    using Core.IoC;
     using Microsoft.Practices.ServiceLocation;
 
     /// <summary>
-    /// An adapter allowing a <see cref="CompositionContainer"/> to plug into Caliburn via <see cref="IServiceLocator"/> and <see cref="IConfigurator"/>.
+    /// An adapter allowing a <see cref="CompositionContainer"/> to plug into Caliburn via <see cref="IServiceLocator"/> and <see cref="IRegistry"/>.
     /// </summary>
-    public class MEFAdapter : ServiceLocatorImplBase, IContainer
+    public class MEFAdapter : ContainerBase
     {
         private readonly CompositionContainer _container;
+        private CompositionBatch _batch;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="MEFAdapter"/> class.
@@ -26,11 +27,15 @@
             var batch = new CompositionBatch();
 
             batch.AddExportedValue(AttributedModelServices.GetContractName(typeof(IServiceLocator)), this);
-            batch.AddExportedValue(AttributedModelServices.GetContractName(typeof(IConfigurator)), this);
+            batch.AddExportedValue(AttributedModelServices.GetContractName(typeof(IRegistry)), this);
             batch.AddExportedValue(AttributedModelServices.GetContractName(typeof(IContainer)), this);
             batch.AddExportedValue(AttributedModelServices.GetContractName(typeof(CompositionContainer)), _container);
 
             _container.Compose(batch);
+
+            AddRegistrationHandler<Singleton>(HandleSingleton);
+            AddRegistrationHandler<PerRequest>(HandleSingleton);
+            AddRegistrationHandler<Instance>(HandleInstance);
         }
 
         /// <summary>
@@ -63,19 +68,34 @@
         }
 
         /// <summary>
-        /// Configures the container with the provided components.
+        /// Configures the container using the provided component registrations.
         /// </summary>
-        /// <param name="components">The components.</param>
-        public void ConfigureWith(IEnumerable<ComponentInfo> components)
+        /// <param name="registrations">The component registrations.</param>
+        public override void Register(IEnumerable<IComponentRegistration> registrations)
         {
-            var batch = new CompositionBatch();
+            _batch = new CompositionBatch();
 
-            foreach(var componentInfo in components)
-            {
-                batch.AddPart(new ComponentPart(componentInfo));
-            }
+            base.Register(registrations);
 
-            _container.Compose(batch);
+            _container.Compose(_batch);
+            _batch = null;
+        }
+
+        private void HandleSingleton(Singleton singleton)
+        {
+            _batch.AddPart(new ComponentPart(singleton));
+        }
+
+        private void HandleSingleton(PerRequest perRequest)
+        {
+            _batch.AddPart(new ComponentPart(perRequest));
+        }
+
+        private void HandleInstance(Instance instance)
+        {
+            if(!instance.HasName())
+                _batch.AddExportedValue(AttributedModelServices.GetContractName(instance.Service), instance.Implementation);
+            else _batch.AddExportedValue(instance.Name, instance.Implementation);
         }
     }
 }

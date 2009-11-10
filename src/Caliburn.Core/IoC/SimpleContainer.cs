@@ -1,4 +1,4 @@
-﻿namespace Caliburn.Core
+﻿namespace Caliburn.Core.IoC
 {
     using System;
     using System.Collections.Generic;
@@ -8,7 +8,7 @@
     /// <summary>
     /// A simple dependency injection container.
     /// </summary>
-    public class SimpleContainer : ServiceLocatorImplBase, IContainer
+    public class SimpleContainer : ContainerBase
     {
         private readonly Dictionary<string, Func<object>> _typeToHandler
             = new Dictionary<string, Func<object>>();
@@ -21,35 +21,32 @@
             AddHandler(typeof (IServiceLocator), () => this);
             AddHandler(typeof (SimpleContainer), () => this);
             AddHandler(typeof (IContainer), () => this);
-            AddHandler(typeof (IConfigurator), () => this);
+            AddHandler(typeof (IRegistry), () => this);
+
+            AddRegistrationHandler<Singleton>(HandleSingleton);
+            AddRegistrationHandler<PerRequest>(HandlePerRequest);
+            AddRegistrationHandler<Instance>(HandleInstance);
         }
 
-        /// <summary>
-        /// Configures the container with the provided components.
-        /// </summary>
-        /// <param name="components">The components.</param>
-        public void ConfigureWith(IEnumerable<ComponentInfo> components)
+        private void HandleSingleton(Singleton singleton)
         {
-            foreach (var info in components)
-            {
-                switch (info.Lifetime)
-                {
-                    case ComponentLifetime.Singleton:
-                        if(string.IsNullOrEmpty(info.Key))
-                            RegisterSingleton(info.Service, info.Implementation);
-                        else RegisterSingleton(info.Key, info.Implementation);
-                        break;
-                    case ComponentLifetime.PerRequest:
-                        if(string.IsNullOrEmpty(info.Key))
-                            Register(info.Service, info.Implementation);
-                        else Register(info.Key, info.Implementation);
-                        break;
-                    default:
-                        throw new NotSupportedException(
-                            string.Format("{0} is not supported in the simple container.", info.Lifetime)
-                            );
-                }
-            }
+            if(singleton.HasName())
+                RegisterSingleton(singleton.Name, singleton.Implementation);
+            else RegisterSingleton(singleton.Service, singleton.Implementation);
+        }
+
+        private void HandlePerRequest(PerRequest perRequest)
+        {
+            if(perRequest.HasName())
+                Register(perRequest.Name, perRequest.Implementation);
+            else Register(perRequest.Service, perRequest.Implementation);
+        }
+
+        private void HandleInstance(Instance instance)
+        {
+            if (instance.HasName())
+                AddHandler(instance.Name, () => instance.Implementation);
+            else AddHandler(instance.Service, () => instance.Implementation);
         }
 
         /// <summary>

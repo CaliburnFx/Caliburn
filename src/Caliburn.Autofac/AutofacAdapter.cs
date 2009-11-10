@@ -4,18 +4,19 @@
     using System.Collections;
     using System.Collections.Generic;
     using System.Linq;
-    using Core;
+    using Core.IoC;
     using global::Autofac;
     using global::Autofac.Builder;
     using Microsoft.Practices.ServiceLocation;
     using IContainer=global::Autofac.IContainer;
 
     /// <summary>
-    /// An adapter allowing an <see cref="IContext"/> to plug into Caliburn via <see cref="IServiceLocator"/> and <see cref="IConfigurator"/>.
+    /// An adapter allowing an <see cref="IContext"/> to plug into Caliburn via <see cref="IServiceLocator"/> and <see cref="IRegistry"/>.
     /// </summary>
-    public class AutofacAdapter : ServiceLocatorImplBase, Core.IContainer
+    public class AutofacAdapter : ContainerBase
     {
         private readonly IContainer _container;
+        private ContainerBuilder _builder;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="AutofacAdapter"/> class.
@@ -30,11 +31,15 @@
             var builder = new ContainerBuilder();
 
             builder.Register<IServiceLocator>(this);
-            builder.Register<IConfigurator>(this);
-            builder.Register<Core.IContainer>(this);
+            builder.Register<IRegistry>(this);
+            builder.Register<Core.IoC.IContainer>(this);
             builder.Register<IContainer>(_container);
 
             builder.Build(_container);
+
+            AddRegistrationHandler<Singleton>(HandleSingleton);
+            AddRegistrationHandler<PerRequest>(HandlePerRequest);
+            AddRegistrationHandler<Instance>(HandleInstance);
         }
 
         /// <summary>
@@ -73,39 +78,44 @@
         }
 
         /// <summary>
-        /// Configures the container with the provided components.
+        /// Configures the container using the provided component registrations.
         /// </summary>
-        /// <param name="components">The components.</param>
-        public void ConfigureWith(IEnumerable<ComponentInfo> components)
+        /// <param name="registrations">The component registrations.</param>
+        public override void Register(IEnumerable<Core.IoC.IComponentRegistration> registrations)
         {
-            var builder = new ContainerBuilder();
+            _builder = new ContainerBuilder();
 
-            foreach (var info in components)
-            {
-                switch (info.Lifetime)
-                {
-                    case ComponentLifetime.Singleton:
-                        if (string.IsNullOrEmpty(info.Key))
-                            builder.Register(info.Implementation).As(info.Service).SingletonScoped();
-                        else if (info.Service == null)
-                            builder.Register(info.Implementation).As(typeof(object)).Named(info.Key).SingletonScoped();
-                        else builder.Register(info.Implementation).As(info.Service).Named(info.Key).SingletonScoped();
-                        break;
-                    case ComponentLifetime.PerRequest:
-                        if (string.IsNullOrEmpty(info.Key))
-                            builder.Register(info.Implementation).As(info.Service).FactoryScoped();
-                        else if (info.Service == null)
-                            builder.Register(info.Implementation).As(typeof(object)).Named(info.Key).FactoryScoped();
-                        else builder.Register(info.Implementation).As(info.Service).Named(info.Key).FactoryScoped();
-                        break;
-                    default:
-                        throw new NotSupportedException(
-                            string.Format("{0} is not supported in Autofac.", info.Lifetime)
-                            );
-                }
-            }
+            base.Register(registrations);
 
-            builder.Build(_container);
+            _builder.Build(_container);
+            _builder = null;
+        }
+
+        private void HandleSingleton(Singleton singleton)
+        {
+            if (!singleton.HasName())
+                _builder.Register(singleton.Implementation).As(singleton.Service).SingletonScoped();
+            else if (!singleton.HasService())
+                _builder.Register(singleton.Implementation).As(typeof(object)).Named(singleton.Name).SingletonScoped();
+            else _builder.Register(singleton.Implementation).As(singleton.Service).Named(singleton.Name).SingletonScoped();
+        }
+
+        private void HandlePerRequest(PerRequest perRequest)
+        {
+            if (!perRequest.HasName())
+                _builder.Register(perRequest.Implementation).As(perRequest.Service).FactoryScoped();
+            else if (!perRequest.HasService())
+                _builder.Register(perRequest.Implementation).As(typeof(object)).Named(perRequest.Name).FactoryScoped();
+            else _builder.Register(perRequest.Implementation).As(perRequest.Service).Named(perRequest.Name).FactoryScoped();
+        }
+
+        private void HandleInstance(Instance instance)
+        {
+            if (!instance.HasName())
+                _builder.Register(instance.Implementation).As(instance.Service);
+            else if (!instance.HasService())
+                _builder.Register(instance.Implementation).As(typeof(object)).Named(instance.Name);
+            else _builder.Register(instance.Implementation).As(instance.Service).Named(instance.Name);
         }
     }
 }

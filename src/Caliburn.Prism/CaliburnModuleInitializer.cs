@@ -3,6 +3,7 @@
     using System;
     using System.Linq;
     using System.Reflection;
+    using Core.IoC;
     using Microsoft.Practices.Composite.Logging;
     using Microsoft.Practices.Composite.Modularity;
     using Core;
@@ -40,13 +41,12 @@
             {
                 var type = Type.GetType(typeName);
 
-                _caliburnContainer.ConfigureWith(new[]
+                _caliburnContainer.Register(new[]
                 {
-                    new ComponentInfo
+                    new PerRequest
                     {
                         Service = type,
-                        Implementation = type,
-                        Lifetime = ComponentLifetime.PerRequest
+                        Implementation = type
                     },
                 });
 

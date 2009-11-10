@@ -2,7 +2,7 @@
 {
     using System;
     using System.Collections.Generic;
-    using Core;
+    using Core.IoC;
     using global::Spring.Context.Support;
     using global::Spring.Objects.Factory;
     using global::Spring.Objects.Factory.Config;
@@ -10,9 +10,9 @@
     using Microsoft.Practices.ServiceLocation;
 
     /// <summary>
-    /// An adapter allowing an <see cref="GenericApplicationContext"/> to plug into Caliburn via <see cref="IServiceLocator"/> and <see cref="IConfigurator"/>.
+    /// An adapter allowing an <see cref="GenericApplicationContext"/> to plug into Caliburn via <see cref="IServiceLocator"/> and <see cref="IRegistry"/>.
     /// </summary>
-    public class SpringAdapter : ServiceLocatorImplBase, IContainer
+    public class SpringAdapter : ContainerBase
     {
         private readonly GenericApplicationContext _context;
         private readonly AutoWiringMode _autoWiringMode;
@@ -43,6 +43,10 @@
                 typeof(GenericApplicationContext).FullName,
                 _context
                 );
+
+            AddRegistrationHandler<Singleton>(HandleSingleton);
+            AddRegistrationHandler<PerRequest>(HandlePerRequest);
+            AddRegistrationHandler<Instance>(HandleInstance);
         }
 
         /// <summary>
@@ -95,34 +99,36 @@
             }
         }
 
-        /// <summary>
-        /// Configures the container with the provided components.
-        /// </summary>
-        /// <param name="components">The components.</param>
-        public void ConfigureWith(IEnumerable<ComponentInfo> components)
+        private void HandleSingleton(Singleton singleton)
         {
-            foreach (var info in components)
-            {
-                var key = string.IsNullOrEmpty(info.Key) ? info.Service.FullName : info.Key;
+            _context.RegisterObjectDefinition(
+                GetName(singleton),
+                new RootObjectDefinition(
+                    singleton.Implementation,
+                    true
+                    ) {AutowireMode = _autoWiringMode}
+                );
+        }
 
-                switch(info.Lifetime)
-                {
-                    case ComponentLifetime.PerRequest:
-                    case ComponentLifetime.Singleton:
-                        _context.RegisterObjectDefinition(
-                            key,
-                            new RootObjectDefinition(
-                                info.Implementation,
-                                info.Lifetime == ComponentLifetime.Singleton
-                                ) {AutowireMode = _autoWiringMode}
-                            );
-                        break;
-                    default:
-                        throw new NotSupportedException(
-                            string.Format("{0} is not supported in Spring.NET.", info.Lifetime)
-                            );
-                }
-            }
+        private void HandlePerRequest(PerRequest perRequest)
+        {
+            _context.RegisterObjectDefinition(
+                GetName(perRequest),
+                new RootObjectDefinition(
+                    perRequest.Implementation,
+                    false
+                    ) {AutowireMode = _autoWiringMode}
+                );
+        }
+
+        private void HandleInstance(Instance instance)
+        {
+            _context.ObjectFactory.RegisterSingleton(GetName(instance), this);
+        }
+
+        private static string GetName(IComponentRegistration registration)
+        {
+            return !registration.HasName() ? registration.Service.FullName : registration.Name;
         }
     }
 }

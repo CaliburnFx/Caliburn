@@ -12,7 +12,7 @@
 	<property name="path.tools.rhino" value="${path.tools}/Rhino.Mocks"/>
 	<property name="path.tools.doxygen" value="${path.tools}/Doxygen"/>
 
-	<property name="version" value="1.0.0.0" overwrite="false"/>
+	<property name="version" value="2.0.0.0" overwrite="false"/>
 	<property name="version.major" value="${version::get-major(version::parse(version))}" dynamic="true"/>
 	<property name="version.minor" value="${version::get-minor(version::parse(version))}" dynamic="true"/>
 	<property name="version.build" value="${version::get-build(version::parse(version))}" dynamic="true"/>

@@ -2,7 +2,7 @@
 {
     using System;
     using System.Collections.Generic;
-    using Core;
+    using Core.IoC;
     using global::Castle.Core;
     using global::Castle.MicroKernel;
     using global::Castle.MicroKernel.Registration;
@@ -11,9 +11,9 @@
     using Microsoft.Practices.ServiceLocation;
 
     /// <summary>
-    /// An adapter allowing an <see cref="IWindsorContainer"/> to plug into Caliburn via <see cref="IServiceLocator"/> and <see cref="IConfigurator"/>.
+    /// An adapter allowing an <see cref="IWindsorContainer"/> to plug into Caliburn via <see cref="IServiceLocator"/> and <see cref="IRegistry"/>.
     /// </summary>
-    public class WindsorAdapter : ServiceLocatorImplBase, IContainerAccessor, IContainer
+    public class WindsorAdapter : ContainerBase, IContainerAccessor
     {
         private readonly IWindsorContainer _container;
 
@@ -26,10 +26,15 @@
             _container = container;
 
             _container.Kernel.AddComponentInstance<IServiceLocator>(this);
-            _container.Kernel.AddComponentInstance<IConfigurator>(this);
+            _container.Kernel.AddComponentInstance<IRegistry>(this);
             _container.Kernel.AddComponentInstance<IContainer>(this);
             _container.Kernel.AddComponentInstance<IContainerAccessor>(this);
             _container.Kernel.AddComponentInstance<IWindsorContainer>(_container);
+
+            AddRegistrationHandler<Singleton>(HandleSingleton);
+            AddRegistrationHandler<PerRequest>(HandlePerRequest);
+            AddRegistrationHandler<CustomLifetime>(HandleCustom);
+            AddRegistrationHandler<Instance>(HandleInstance);
         }
 
         /// <summary>
@@ -74,60 +79,47 @@
             return (object[])_container.ResolveAll(serviceType);
         }
 
-        /// <summary>
-        /// Configures the container with the provided components.
-        /// </summary>
-        /// <param name="components">The components.</param>
-        public void ConfigureWith(IEnumerable<ComponentInfo> components)
+        private void HandleSingleton(Singleton singleton)
         {
-            foreach(var info in components)
-            {
-                switch (info.Lifetime)
-                {
-                    case ComponentLifetime.Singleton:
-                        if(string.IsNullOrEmpty(info.Key))
-                            _container.Register(
-                                Component.For(info.Service).ImplementedBy(info.Implementation).LifeStyle.Singleton
-                                );
-                        else if(info.Service == null)
-                            _container.AddComponentLifeStyle(info.Key, info.Implementation, LifestyleType.Singleton);
-                        else
-                            _container.AddComponentLifeStyle(info.Key, info.Service, info.Implementation,
-                                                             LifestyleType.Singleton);
-                        break;
-                    case ComponentLifetime.Custom:
-                        {
-                            if(!string.IsNullOrEmpty(info.Key))
-                                throw new NotSupportedException();
+            if (!singleton.HasName())
+                _container.Register(Component.For(singleton.Service).ImplementedBy(singleton.Implementation).LifeStyle.Singleton);
+            else if (!singleton.HasService())
+                _container.AddComponentLifeStyle(singleton.Name, singleton.Implementation, LifestyleType.Singleton);
+            else _container.AddComponentLifeStyle(singleton.Name, singleton.Service, singleton.Implementation, LifestyleType.Singleton);
+        }
 
-                            var method = typeof(LifestyleGroup<object>).GetMethod(
-                                "Custom",
-                                new[] {typeof(ILifestyleManager)}
-                                );
+        private void HandlePerRequest(PerRequest perRequest)
+        {
+            if (!perRequest.HasName())
+                _container.Register(Component.For(perRequest.Service).ImplementedBy(perRequest.Implementation).LifeStyle.Transient);
+            else if (!perRequest.HasService())
+                _container.AddComponentLifeStyle(perRequest.Name, perRequest.Implementation, LifestyleType.Transient);
+            else _container.AddComponentLifeStyle(perRequest.Name, perRequest.Service, perRequest.Implementation, LifestyleType.Transient);
+        }
 
-                            var genericMethod = method.MakeGenericMethod(info.CustomLifetimeType);
+        private void HandleCustom(CustomLifetime customLifetime)
+        {
+            if (!customLifetime.HasName())
+                throw new NotSupportedException();
 
-                            var lifestyle = Component.For(info.Service).ImplementedBy(info.Implementation).LifeStyle;
-                            _container.Register(
-                                (ComponentRegistration<object>)genericMethod.Invoke(lifestyle, new object[0]));
-                        }
-                        break;
-                    case ComponentLifetime.PerRequest:
-                        if(string.IsNullOrEmpty(info.Key))
-                            _container.Register(
-                                Component.For(info.Service).ImplementedBy(info.Implementation).LifeStyle.Transient
-                                );
-                        else if(info.Service == null)
-                            _container.AddComponentLifeStyle(info.Key, info.Implementation, LifestyleType.Transient);
-                        else
-                            _container.AddComponentLifeStyle(info.Key, info.Service, info.Implementation, LifestyleType.Transient);
-                        break;
-                    default:
-                        throw new NotSupportedException(
-                            string.Format("{0} is not supported in Windsor.", info.Lifetime)
-                            );
-                }
-            }
+            var method = typeof(LifestyleGroup<object>).GetMethod(
+                "Custom",
+                new[] {typeof(ILifestyleManager)}
+                );
+
+            var genericMethod = method.MakeGenericMethod(customLifetime.Lifetime);
+
+            var lifestyle = Component.For(customLifetime.Service).ImplementedBy(customLifetime.Implementation).LifeStyle;
+            _container.Register((ComponentRegistration<object>)genericMethod.Invoke(lifestyle, new object[0]));
+        }
+
+        private void HandleInstance(Instance instance)
+        {
+            if (!instance.HasName())
+                _container.Register(Component.For(instance.Service).Instance(instance.Implementation));
+            else if (!instance.HasService())
+                _container.Kernel.AddComponentInstance(instance.Name, instance.Implementation);
+            else _container.Register(Component.For(instance.Service).Named(instance.Name).Instance(instance.Implementation));
         }
     }
 }

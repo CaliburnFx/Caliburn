@@ -6,6 +6,7 @@
     using System.Reflection;
     using System.Windows;
     using global::Caliburn.Core;
+    using global::Caliburn.Core.IoC;
     using global::Caliburn.PresentationFramework;
     using global::Caliburn.PresentationFramework.Parsers;
     using Microsoft.Practices.ServiceLocation;
@@ -48,7 +49,7 @@
             var config = new PresentationFrameworkModule(_hook);
             var infos =
                 config.GetType().GetMethod("GetComponents", BindingFlags.NonPublic | BindingFlags.Instance).Invoke(
-                    config, null) as IEnumerable<ComponentInfo>;
+                    config, null) as IEnumerable<IComponentRegistration>;
 
             var found = (from info in infos
                          where info.Service == typeof(IRoutedMessageController)
@@ -79,7 +80,7 @@
 
             var infos =
                 config.GetType().GetMethod("GetComponents", BindingFlags.NonPublic | BindingFlags.Instance).Invoke(
-                    config, null) as IEnumerable<ComponentInfo>;
+                    config, null) as IEnumerable<IComponentRegistration>;
 
             var found = (from info in infos
                          where info.Service == typeof(IRoutedMessageController)
@@ -98,7 +99,7 @@
 
             var infos =
                 config.GetType().GetMethod("GetComponents", BindingFlags.NonPublic | BindingFlags.Instance).Invoke(
-                    config, null) as IEnumerable<ComponentInfo>;
+                    config, null) as IEnumerable<IComponentRegistration>;
 
             var found = (from info in infos
                          where info.Service == typeof(IMessageBinder)
@@ -117,7 +118,7 @@
 
             var infos =
                 config.GetType().GetMethod("GetComponents", BindingFlags.NonPublic | BindingFlags.Instance).Invoke(
-                    config, null) as IEnumerable<ComponentInfo>;
+                    config, null) as IEnumerable<IComponentRegistration>;
 
             var found = (from info in infos
                          where info.Service == typeof(IParser)

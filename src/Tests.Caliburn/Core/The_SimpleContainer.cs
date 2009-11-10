@@ -1,5 +1,4 @@
 ﻿using System;
-using Caliburn.Core;
 using Microsoft.Practices.ServiceLocation;
 using NUnit.Framework;
 using NUnit.Framework.SyntaxHelpers;
@@ -7,6 +6,8 @@ using Tests.Caliburn.Fakes;
 
 namespace Tests.Caliburn.Core
 {
+    using global::Caliburn.Core.IoC;
+
     [TestFixture]
     public class The_SimpleContainer
     {

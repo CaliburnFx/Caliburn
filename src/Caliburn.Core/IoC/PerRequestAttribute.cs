@@ -1,4 +1,4 @@
-namespace Caliburn.Core.Metadata
+namespace Caliburn.Core.IoC
 {
     using System;
 
@@ -8,7 +8,7 @@ namespace Caliburn.Core.Metadata
     [AttributeUsage(AttributeTargets.Class)]
     public class PerRequestAttribute : RegisterAttribute
     {
-        private readonly string _key;
+        private readonly string _name;
         private readonly Type _service;
 
         /// <summary>
@@ -23,21 +23,21 @@ namespace Caliburn.Core.Metadata
         /// <summary>
         /// Initializes a new instance of the <see cref="PerRequestAttribute"/> class.
         /// </summary>
-        /// <param name="key">The key.</param>
-        /// <param name="service">The type key.</param>
-        public PerRequestAttribute(string key, Type service)
+        /// <param name="name">The key.</param>
+        /// <param name="service">The type name.</param>
+        public PerRequestAttribute(string name, Type service)
         {
-            _key = key;
+            _name = name;
             _service = service;
         }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="SingletonAttribute"/> class.
         /// </summary>
-        /// <param name="key">The key.</param>
-        public PerRequestAttribute(string key)
+        /// <param name="name">The key.</param>
+        public PerRequestAttribute(string name)
         {
-            _key = key;
+            _name = name;
         }
 
         /// <summary>
@@ -53,41 +53,36 @@ namespace Caliburn.Core.Metadata
         /// Gets the key.
         /// </summary>
         /// <value>The key.</value>
-        public string Key
+        public string Name
         {
-            get { return _key; }
+            get { return _name; }
         }
 
         /// <summary>
         /// Registers the type with the specified container.
         /// </summary>
         /// <param name="decoratedType">The decorated type.</param>
-        public override ComponentInfo GetComponentInfo(Type decoratedType)
+        public override IComponentRegistration GetComponentInfo(Type decoratedType)
         {
-            if (string.IsNullOrEmpty(Key))
-                return new ComponentInfo
+            if(string.IsNullOrEmpty(Name))
+                return new PerRequest
                 {
                     Service = Service,
                     Implementation = decoratedType,
-                    Lifetime = ComponentLifetime.PerRequest
                 };
 
-            if (Service == null)
-            {
-                return new ComponentInfo
+            if(Service == null)
+                return new PerRequest
                 {
-                    Key = Key,
+                    Name = Name,
                     Implementation = decoratedType,
-                    Lifetime = ComponentLifetime.PerRequest
                 };
-            }
 
-            return new ComponentInfo
+            return new PerRequest
             {
-                Key = Key,
+                Name = Name,
                 Service = Service,
                 Implementation = decoratedType,
-                Lifetime = ComponentLifetime.PerRequest
             };
         }
     }

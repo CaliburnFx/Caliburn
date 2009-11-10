@@ -6,6 +6,7 @@
     using System.Windows.Controls;
     using System.Windows.Controls.Primitives;
     using Core;
+    using Core.IoC;
     using Microsoft.Practices.Composite;
     using Microsoft.Practices.Composite.Events;
     using Microsoft.Practices.Composite.Logging;
@@ -212,7 +213,7 @@
         /// Gets the component information for this module.
         /// </summary>
         /// <returns></returns>
-        protected override IEnumerable<ComponentInfo> GetComponents()
+        protected override IEnumerable<IComponentRegistration> GetComponents()
         {
             yield return Singleton(typeof(ILoggerFacade), _loggerFacade);
             yield return Singleton(typeof(IModuleInitializer), _moduleInitializer);

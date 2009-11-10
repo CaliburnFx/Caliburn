@@ -1,4 +1,4 @@
-namespace Caliburn.Core.Metadata
+namespace Caliburn.Core.IoC
 {
     using System;
 
@@ -6,43 +6,43 @@ namespace Caliburn.Core.Metadata
     /// An attribute that directs Caliburn to register the component with a custom lifetime.
     /// </summary>
     [AttributeUsage(AttributeTargets.Class)]
-    public class CustomAttribute : RegisterAttribute
+    public class CustomLifetimeAttribute : RegisterAttribute
     {
-        private readonly string _key;
+        private readonly string _name;
         private readonly Type _service;
         private readonly Type _customLifetimeType;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="CustomAttribute"/> class.
+        /// Initializes a new instance of the <see cref="CustomLifetimeAttribute"/> class.
         /// </summary>
         /// <param name="service">The type key.</param>
         /// <param name="customLifetimeType">The custom lifetime type.</param>
-        public CustomAttribute(Type service, Type customLifetimeType)
+        public CustomLifetimeAttribute(Type service, Type customLifetimeType)
         {
             _service = service;
             _customLifetimeType = customLifetimeType;
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="CustomAttribute"/> class.
+        /// Initializes a new instance of the <see cref="CustomLifetimeAttribute"/> class.
         /// </summary>
-        /// <param name="key">The key.</param>
+        /// <param name="name">The key.</param>
         /// <param name="customLifetimeType">Type of the custom lifetime.</param>
-        public CustomAttribute(string key, Type customLifetimeType)
+        public CustomLifetimeAttribute(string name, Type customLifetimeType)
         {
-            _key = key;
+            _name = name;
             _customLifetimeType = customLifetimeType;
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="CustomAttribute"/> class.
+        /// Initializes a new instance of the <see cref="CustomLifetimeAttribute"/> class.
         /// </summary>
-        /// <param name="key">The key.</param>
+        /// <param name="name">The key.</param>
         /// <param name="service">The service.</param>
         /// <param name="customLifetimeType">Type of the custom lifetime.</param>
-        public CustomAttribute(string key, Type service, Type customLifetimeType)
+        public CustomLifetimeAttribute(string name, Type service, Type customLifetimeType)
         {
-            _key = key;
+            _name = name;
             _service = service;
             _customLifetimeType = customLifetimeType;
         }
@@ -60,9 +60,9 @@ namespace Caliburn.Core.Metadata
         /// Gets the key.
         /// </summary>
         /// <value>The key.</value>
-        public string Key
+        public string Name
         {
-            get { return _key; }
+            get { return _name; }
         }
 
         /// <summary>
@@ -78,35 +78,30 @@ namespace Caliburn.Core.Metadata
         /// Registers the type with the specified container.
         /// </summary>
         /// <param name="decoratedType">The decorated type.</param>
-        public override ComponentInfo GetComponentInfo(Type decoratedType)
+        public override IComponentRegistration GetComponentInfo(Type decoratedType)
         {
-            if (string.IsNullOrEmpty(Key))
-                return new ComponentInfo
+            if(string.IsNullOrEmpty(Name))
+                return new CustomLifetime
                 {
                     Service = Service,
                     Implementation = decoratedType,
-                    Lifetime = ComponentLifetime.Custom,
-                    CustomLifetimeType = CustomLifetimeType
+                    Lifetime = CustomLifetimeType
                 };
 
-            if (Service == null)
-            {
-                return new ComponentInfo
+            if(Service == null)
+                return new CustomLifetime
                 {
-                    Key = Key,
+                    Name = Name,
                     Implementation = decoratedType,
-                    Lifetime = ComponentLifetime.Custom,
-                    CustomLifetimeType = CustomLifetimeType
+                    Lifetime = CustomLifetimeType
                 };
-            }
 
-            return new ComponentInfo
+            return new CustomLifetime
             {
-                Key = Key,
+                Name = Name,
                 Service = Service,
                 Implementation = decoratedType,
-                Lifetime = ComponentLifetime.Custom,
-                CustomLifetimeType = CustomLifetimeType
+                Lifetime = CustomLifetimeType
             };
         }
     }

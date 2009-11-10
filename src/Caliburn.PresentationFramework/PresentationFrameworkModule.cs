@@ -13,6 +13,7 @@ namespace Caliburn.PresentationFramework
     using Commands;
     using Core;
     using Core.Invocation;
+    using Core.IoC;
     using Invocation;
     using Parsers;
 
@@ -170,7 +171,7 @@ namespace Caliburn.PresentationFramework
         /// Gets the component information for this module.
         /// </summary>
         /// <returns></returns>
-        protected override IEnumerable<ComponentInfo> GetComponents()
+        protected override IEnumerable<IComponentRegistration> GetComponents()
         {
             yield return Singleton(typeof(IRoutedMessageController), _routedMessageControllerType);
             yield return Singleton(typeof(IMessageBinder), _messsageBinderType);

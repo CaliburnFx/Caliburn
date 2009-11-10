@@ -2,14 +2,14 @@
 {
     using System;
     using System.Collections.Generic;
-    using Core;
+    using Core.IoC;
     using Microsoft.Practices.ServiceLocation;
     using Microsoft.Practices.Unity;
 
     /// <summary>
-    /// An adapter allowing an <see cref="IUnityContainer"/> to plug into Caliburn via <see cref="IServiceLocator"/> and <see cref="IConfigurator"/>.
+    /// An adapter allowing an <see cref="IUnityContainer"/> to plug into Caliburn via <see cref="IServiceLocator"/> and <see cref="IRegistry"/>.
     /// </summary>
-    public class UnityAdapter : ServiceLocatorImplBase, IContainer
+    public class UnityAdapter : ContainerBase
     {
         private readonly IUnityContainer _container;
 
@@ -22,9 +22,14 @@
             _container = container;
 
             _container.RegisterInstance<IServiceLocator>(this);
-            _container.RegisterInstance<IConfigurator>(this);
+            _container.RegisterInstance<IRegistry>(this);
             _container.RegisterInstance<IContainer>(this);
             _container.RegisterInstance(_container);
+
+            AddRegistrationHandler<Singleton>(HandleSingleton);
+            AddRegistrationHandler<PerRequest>(HandlePerRequest);
+            AddRegistrationHandler<CustomLifetime>(HandleCustomLifetime);
+            AddRegistrationHandler<Instance>(HandleInstance);
         }
 
         /// <summary>
@@ -57,46 +62,40 @@
             return _container.ResolveAll(serviceType);
         }
 
-        /// <summary>
-        /// Configures the container with the provided components.
-        /// </summary>
-        /// <param name="components">The components.</param>
-        public void ConfigureWith(IEnumerable<ComponentInfo> components)
+        private void HandleSingleton(Singleton singleton)
         {
-            //HACK: Unity doesn't support component registration with string key only
-            //		Named service are registered as object
+            if (!singleton.HasName())
+                _container.RegisterType(singleton.Service, singleton.Implementation, new ContainerControlledLifetimeManager());
+            else if (!singleton.HasService())
+                _container.RegisterType(typeof(object), singleton.Implementation, singleton.Name, new ContainerControlledLifetimeManager());
+            else _container.RegisterType(singleton.Service, singleton.Implementation, singleton.Name, new ContainerControlledLifetimeManager());
+        }
 
-            foreach(var info in components)
-            {
-                switch(info.Lifetime)
-                {
-                    case ComponentLifetime.Singleton:
-                        if(string.IsNullOrEmpty(info.Key))
-                            _container.RegisterType(info.Service, info.Implementation, new ContainerControlledLifetimeManager());
-                        else if(info.Service != null)
-                            _container.RegisterType(info.Service, info.Implementation, info.Key, new ContainerControlledLifetimeManager());
-                        else _container.RegisterType(typeof(object), info.Implementation, info.Key, new ContainerControlledLifetimeManager());
-                        break;
-                    case ComponentLifetime.Custom:
-                        if (string.IsNullOrEmpty(info.Key))
-                            _container.RegisterType(info.Service, info.Implementation, (LifetimeManager)Activator.CreateInstance(info.CustomLifetimeType));
-                        else if (info.Service != null)
-                            _container.RegisterType(info.Service, info.Implementation, info.Key, (LifetimeManager)Activator.CreateInstance(info.CustomLifetimeType));
-                        else _container.RegisterType(typeof(object), info.Implementation, info.Key, (LifetimeManager)Activator.CreateInstance(info.CustomLifetimeType));
-                        break;
-                    case ComponentLifetime.PerRequest:
-                        if (string.IsNullOrEmpty(info.Key))
-                            _container.RegisterType(info.Service, info.Implementation);
-                        else if (info.Service != null)
-                            _container.RegisterType(info.Service, info.Implementation, info.Key);
-                        else _container.RegisterType(typeof(object), info.Implementation, info.Key);
-                        break;
-                    default:
-                        throw new NotSupportedException(
-                            string.Format("{0} is not supported in Unity.", info.Lifetime)
-                            );
-                }
-            }
+        private void HandlePerRequest(PerRequest perRequest)
+        {
+            if (!perRequest.HasName())
+                _container.RegisterType(perRequest.Service, perRequest.Implementation);
+            else if (!perRequest.HasService())
+                _container.RegisterType(typeof(object), perRequest.Implementation, perRequest.Name);
+            else _container.RegisterType(perRequest.Service, perRequest.Implementation, perRequest.Name);
+        }
+
+        private void HandleCustomLifetime(CustomLifetime customLifetime)
+        {
+            if (!customLifetime.HasName())
+                _container.RegisterType(customLifetime.Service, customLifetime.Implementation, (LifetimeManager)Activator.CreateInstance(customLifetime.Lifetime));
+            else if (!customLifetime.HasService())
+                _container.RegisterType(typeof(object), customLifetime.Implementation, customLifetime.Name, (LifetimeManager)Activator.CreateInstance(customLifetime.Lifetime));
+            else _container.RegisterType(customLifetime.Service, customLifetime.Implementation, customLifetime.Name, (LifetimeManager)Activator.CreateInstance(customLifetime.Lifetime));
+        }
+
+        private void HandleInstance(Instance instance)
+        {
+            if(!instance.HasName())
+                _container.RegisterInstance(instance.Service, instance.Implementation);
+            else if(!instance.HasService())
+                _container.RegisterInstance(typeof(object), instance.Name, instance.Implementation);
+            else _container.RegisterInstance(instance.Service, instance.Name, instance.Implementation);
         }
     }
 }
