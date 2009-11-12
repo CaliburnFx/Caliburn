@@ -1,8 +1,6 @@
 namespace Caliburn.PresentationFramework.ApplicationModel
 {
     using System;
-    using System.Collections.Generic;
-    using System.Windows;
     using Core.Metadata;
     using Metadata;
 
@@ -85,65 +83,6 @@ namespace Caliburn.PresentationFramework.ApplicationModel
                 NotifyOfPropertyChange("DisplayName");
             }
         }
-
-        /// <summary>
-        /// Executes the specified <see cref="IResult"/> on the <see cref="IInteractionNode"/> 
-        /// associated with the view tied to the context.
-        /// </summary>
-        /// <param name="viewContext">The view context.</param>
-        /// <param name="result">The result.</param>
-        public virtual void Execute(object viewContext, IResult result)
-        {
-            ExecuteCore(this, viewContext, new[] {result});
-        }
-
-        /// <summary>
-        /// Executes the specified <see cref="IResult"/> on the <see cref="IInteractionNode"/>
-        /// associated with the default view.
-        /// </summary>
-        /// <param name="result">The result.</param>
-        public virtual void Execute(IResult result)
-        {
-            ExecuteCore(this, null, new[] {result});
-        }
-
-        /// <summary>
-        /// Executes the specified instances of <see cref="IResult"/> on the <see cref="IInteractionNode"/> 
-        /// associated with the default view.
-        /// </summary>
-        /// <param name="results">The results to execute.</param>
-        public virtual void Execute(IEnumerable<IResult> results)
-        {
-            ExecuteCore(this, null, results);
-        }
-
-        /// <summary>
-        /// Executes the specified instances of <see cref="IResult"/> on the <see cref="IInteractionNode"/> 
-        /// associated with the view tied to the context.
-        /// </summary>
-        /// <param name="viewContext">The view context.</param>
-        /// <param name="results">The results to execute.</param>
-        public virtual void Execute(object viewContext, IEnumerable<IResult> results)
-        {
-            ExecuteCore(this, viewContext, results);
-        }
-
-        /// <summary>
-        /// Executes the specified instances of <see cref="IResult"/> on the <see cref="IInteractionNode"/> 
-        /// associated with the view tied to the context and <see cref="IMetadataContainer"/>.
-        /// This delegate is provided in order to facilitate Unit Testing.  Set it to hijack
-        /// the execution of results.
-        /// </summary>
-        public Action<IMetadataContainer, object, IEnumerable<IResult>> ExecuteCore =
-            (presenter, viewContext, results) =>{
-                var view = presenter.GetView<DependencyObject>(viewContext);
-
-                IInteractionNode node = null;
-                if(view != null)
-                    node = view.GetValue(RoutedMessageController.NodeProperty) as IInteractionNode;
-
-                new SequentialResult(results).Execute(null, node);
-            };
 
         /// <summary>
         /// Determines whether this instance can shutdown.

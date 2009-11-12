@@ -115,6 +115,7 @@
     <Compile Include="Commands\CommandMessageParser.cs" />
     <Compile Include="Commands\CommandSource.cs" />
     <Compile Include="Commands\ICompositeCommand.cs" />
+    <Compile Include="EnumerableResults.cs" />
     <Compile Include="Filters\DependencyObserver.cs" />
     <Compile Include="Invocation\DispatcherOperationProxy.cs" />
     <Compile Include="IObservableCollection.cs" />
