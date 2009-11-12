@@ -54,25 +54,25 @@ namespace Tests.Caliburn.Core
                 infos => {
                     configuratorWasCalled = true;
 
-                    var found = (from info in infos
+                    var found = (from info in infos.OfType<ComponentRegistrationBase>()
                                  where info.Service == typeof(IDispatcher)
                                  select info).FirstOrDefault();
 
                     Assert.That(found, Is.Not.Null);
 
-                    found = (from info in infos
+                    found = (from info in infos.OfType<ComponentRegistrationBase>()
                              where info.Service == typeof(IThreadPool)
                              select info).FirstOrDefault();
 
                     Assert.That(found, Is.Not.Null);
 
-                    found = (from info in infos
+                    found = (from info in infos.OfType<ComponentRegistrationBase>()
                              where info.Service == typeof(IMethodFactory)
                              select info).FirstOrDefault();
 
                     Assert.That(found, Is.Not.Null);
 
-                    found = (from info in infos
+                    found = (from info in infos.OfType<ComponentRegistrationBase>()
                              where info.Service == typeof(IEventHandlerFactory)
                              select info).FirstOrDefault();
 

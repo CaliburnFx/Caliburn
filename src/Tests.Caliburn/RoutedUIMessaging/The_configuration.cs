@@ -51,19 +51,19 @@
                 config.GetType().GetMethod("GetComponents", BindingFlags.NonPublic | BindingFlags.Instance).Invoke(
                     config, null) as IEnumerable<IComponentRegistration>;
 
-            var found = (from info in infos
+            var found = (from info in infos.OfType<ComponentRegistrationBase>()
                          where info.Service == typeof(IRoutedMessageController)
                          select info).FirstOrDefault();
 
             Assert.That(found, Is.Not.Null);
 
-            found = (from info in infos
+            found = (from info in infos.OfType<ComponentRegistrationBase>()
                      where info.Service == typeof(IMessageBinder)
                      select info).FirstOrDefault();
 
             Assert.That(found, Is.Not.Null);
 
-            found = (from info in infos
+            found = (from info in infos.OfType<ComponentRegistrationBase>()
                      where info.Service == typeof(IParser)
                      select info).FirstOrDefault();
 
@@ -82,7 +82,7 @@
                 config.GetType().GetMethod("GetComponents", BindingFlags.NonPublic | BindingFlags.Instance).Invoke(
                     config, null) as IEnumerable<IComponentRegistration>;
 
-            var found = (from info in infos
+            var found = (from info in infos.OfType<ComponentRegistrationBase>()
                          where info.Service == typeof(IRoutedMessageController)
                          select info).FirstOrDefault();
 
@@ -101,7 +101,7 @@
                 config.GetType().GetMethod("GetComponents", BindingFlags.NonPublic | BindingFlags.Instance).Invoke(
                     config, null) as IEnumerable<IComponentRegistration>;
 
-            var found = (from info in infos
+            var found = (from info in infos.OfType<ComponentRegistrationBase>()
                          where info.Service == typeof(IMessageBinder)
                          select info).FirstOrDefault();
 
@@ -120,7 +120,7 @@
                 config.GetType().GetMethod("GetComponents", BindingFlags.NonPublic | BindingFlags.Instance).Invoke(
                     config, null) as IEnumerable<IComponentRegistration>;
 
-            var found = (from info in infos
+            var found = (from info in infos.OfType<ComponentRegistrationBase>()
                          where info.Service == typeof(IParser)
                          select info).FirstOrDefault();
 

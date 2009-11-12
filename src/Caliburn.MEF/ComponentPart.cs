@@ -27,7 +27,7 @@ namespace Caliburn.MEF
         /// Initializes a new instance of the <see cref="ComponentPart"/> class.
         /// </summary>
         /// <param name="registration">The registration.</param>
-        public ComponentPart(IComponentRegistration registration)
+        public ComponentPart(ComponentRegistrationBase registration)
         {
             _registration = registration;
 

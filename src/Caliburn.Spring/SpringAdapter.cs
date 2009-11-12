@@ -126,7 +126,7 @@
             _context.ObjectFactory.RegisterSingleton(GetName(instance), this);
         }
 
-        private static string GetName(IComponentRegistration registration)
+        private static string GetName(ComponentRegistrationBase registration)
         {
             return !registration.HasName() ? registration.Service.FullName : registration.Name;
         }

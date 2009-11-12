@@ -12,7 +12,7 @@
         /// <returns>
         /// 	<c>true</c> if the specified registration has key; otherwise, <c>false</c>.
         /// </returns>
-        public static bool HasName(this IComponentRegistration registration)
+        public static bool HasName(this ComponentRegistrationBase registration)
         {
             return !string.IsNullOrEmpty(registration.Name);
         }
@@ -24,7 +24,7 @@
         /// <returns>
         /// 	<c>true</c> if the specified registration has service; otherwise, <c>false</c>.
         /// </returns>
-        public static bool HasService(this IComponentRegistration registration)
+        public static bool HasService(this ComponentRegistrationBase registration)
         {
             return registration.Service != null;
         }
