@@ -27,6 +27,8 @@ namespace Caliburn.PresentationFramework.ApplicationModel
         /// </exception>
         public CaliburnApplication()
         {
+			BeforeFrameworkInitialize();
+
             UnhandledException += OnUnhandledException;
             Exit += OnExit;
             Startup += OnStartup;
@@ -139,6 +141,11 @@ namespace Caliburn.PresentationFramework.ApplicationModel
 
             RootVisual = view;
         }
+
+		/// <summary>
+		/// Called before Caliburn initialization phase. 
+		/// </summary>
+		protected virtual void BeforeFrameworkInitialize() { }
 
         /// <summary>
         /// Configures additional modules befores the starting the framework.

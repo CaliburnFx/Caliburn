@@ -25,6 +25,8 @@ namespace Caliburn.PresentationFramework.ApplicationModel
         /// </exception>
         public CaliburnApplication()
         {
+			BeforeFrameworkInitialize();
+
             _container = CreateContainer();
 
             var core = CaliburnFramework
@@ -126,6 +128,12 @@ namespace Caliburn.PresentationFramework.ApplicationModel
         {
             return new[] {Assembly.GetEntryAssembly()};
         }
+
+
+		/// <summary>
+		/// Called before Caliburn initialization phase. 
+		/// </summary>
+		protected virtual void BeforeFrameworkInitialize() { }
 
         /// <summary>
         /// Configures the presentation framework.
