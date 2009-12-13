@@ -10,17 +10,17 @@
     /// <summary>
     /// An implementation of <see cref="IActionFactory"/>.
     /// </summary>
-    public class ActionFactory : IActionFactory
+    public class DefaultActionFactory : IActionFactory
     {
         private readonly IMethodFactory _methodFactory;
         private readonly IMessageBinder _messageBinder;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="ActionFactory"/> class.
+        /// Initializes a new instance of the <see cref="DefaultActionFactory"/> class.
         /// </summary>
         /// <param name="methodFactory">The method factory.</param>
         /// <param name="messageBinder">The parameter binder used by actions.</param>
-        public ActionFactory(IMethodFactory methodFactory, IMessageBinder messageBinder)
+        public DefaultActionFactory(IMethodFactory methodFactory, IMessageBinder messageBinder)
         {
             _methodFactory = methodFactory;
             _messageBinder = messageBinder;

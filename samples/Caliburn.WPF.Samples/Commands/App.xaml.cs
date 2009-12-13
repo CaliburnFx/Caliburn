@@ -3,7 +3,10 @@
     using System.Reflection;
     using System.Windows;
     using Caliburn.Core;
+    using Caliburn.Core.Configuration;
+    using Caliburn.Core.IoC;
     using Caliburn.PresentationFramework;
+    using Caliburn.PresentationFramework.Configuration;
 
     /// <summary>
     /// Interaction logic for App.xaml
@@ -16,9 +19,10 @@
             var container = new SimpleContainer();
 
             CaliburnFramework
-                .ConfigureCore(container) //Note: Setting the container.
-                .WithAssemblies(Assembly.GetExecutingAssembly())
-                .WithPresentationFramework()
+                .Configure(container) //Note: Setting the container.
+                .With.Core()
+                .With.Assemblies(Assembly.GetExecutingAssembly())
+                .With.PresentationFramework()
                 .Start();
         }
     }

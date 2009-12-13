@@ -3,7 +3,7 @@
     using System;
     using System.Collections.Generic;
     using System.Linq;
-    using Caliburn.Core.Metadata;
+    using Caliburn.Core.IoC;
     using Caliburn.PresentationFramework;
     using Caliburn.PresentationFramework.ApplicationModel;
     using Framework;

@@ -4,6 +4,7 @@ namespace Caliburn.PresentationFramework
 {
     using System;
     using System.Windows.Markup;
+    using Configuration;
     using Microsoft.Practices.ServiceLocation;
 
     /// <summary>
@@ -52,7 +53,7 @@ namespace Caliburn.PresentationFramework
         /// </returns>
         public override object ProvideValue(IServiceProvider serviceProvider)
         {
-            if (PresentationFrameworkModule.IsInDesignMode) return DesignTimeValue;
+            if (PresentationFrameworkConfiguration.IsInDesignMode) return DesignTimeValue;
 
             if (string.IsNullOrEmpty(Key)) return ServiceLocator.Current.GetInstance(Type);
             return Type == null ? ServiceLocator.Current.GetInstance(null, Key) : ServiceLocator.Current.GetInstance(Type, Key);

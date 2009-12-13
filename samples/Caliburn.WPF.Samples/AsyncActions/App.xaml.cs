@@ -1,8 +1,8 @@
 ﻿namespace AsyncActions
 {
     using System.Windows;
-    using Caliburn.Core;
-    using Caliburn.PresentationFramework;
+    using Caliburn.Core.Configuration;
+    using Caliburn.PresentationFramework.Configuration;
 
     /// <summary>
     /// Interaction logic for App.xaml
@@ -13,8 +13,9 @@
         {
             //Note: This is the most basic configuration needed to get started using Actions.
             CaliburnFramework
-                .ConfigureCore()
-                .WithPresentationFramework()
+                .Configure()
+                .With.Core()
+                .With.PresentationFramework()
                 .Start();
         }
     }

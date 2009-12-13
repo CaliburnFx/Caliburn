@@ -3,132 +3,128 @@
     using System;
     using System.Collections.Generic;
     using System.Linq;
-    using System.Reflection;
     using System.Windows;
-    using global::Caliburn.Core;
+    using global::Caliburn.Core.Configuration;
     using global::Caliburn.Core.IoC;
     using global::Caliburn.PresentationFramework;
+    using global::Caliburn.PresentationFramework.Actions;
+    using global::Caliburn.PresentationFramework.ApplicationModel;
+    using global::Caliburn.PresentationFramework.Configuration;
     using global::Caliburn.PresentationFramework.Parsers;
-    using Microsoft.Practices.ServiceLocation;
     using NUnit.Framework;
     using NUnit.Framework.SyntaxHelpers;
-    using Rhino.Mocks;
 
     [TestFixture]
     public class The_configuration : TestBase
     {
-        private IConfigurationHook _hook;
-        private IServiceLocator _container;
+        private PresentationFrameworkConfiguration _config;
+        private IModule _module;
 
         protected override void given_the_context_of()
         {
-            _hook = Mock<IConfigurationHook>();
-            _container = Mock<IServiceLocator>();
-        }
-
-        [Test]
-        public void is_a_CaliburnConfiguration()
-        {
-            _hook.Expect(x => x.Core).Return(new CoreConfiguration(_container, delegate { })).Repeat.Any();
-            var config = new PresentationFrameworkModule(_hook);
-            Assert.That(config, Is.InstanceOfType(typeof(CaliburnModule)));
-        }
-
-        [Test]
-        public void can_be_created_using_an_extension_method()
-        {
-            _hook.Expect(x => x.Core).Return(new CoreConfiguration(_container, delegate { })).Repeat.Any();
-            var config = _hook.WithPresentationFramework();
+            _config = ConventionalModule<PresentationFrameworkConfiguration, IPresentationFrameworkServicesDescription>.Instance;
+            _module = _config;
         }
 
         [Test]
         public void when_started_configures_required_components_and_defaults()
         {
-            _hook.Expect(x => x.Core).Return(new CoreConfiguration(_container, delegate { })).Repeat.Any();
+            var registrations = _module.GetComponents();
 
-            var config = new PresentationFrameworkModule(_hook);
-            var infos =
-                config.GetType().GetMethod("GetComponents", BindingFlags.NonPublic | BindingFlags.Instance).Invoke(
-                    config, null) as IEnumerable<IComponentRegistration>;
-
-            var found = (from info in infos.OfType<ComponentRegistrationBase>()
-                         where info.Service == typeof(IRoutedMessageController)
-                         select info).FirstOrDefault();
+            var found = (from reg in registrations.OfType<Singleton>()
+                         where reg.Service == typeof(IRoutedMessageController)
+                         select reg).FirstOrDefault();
 
             Assert.That(found, Is.Not.Null);
+            Assert.That(found.Implementation, Is.Not.Null);
 
-            found = (from info in infos.OfType<ComponentRegistrationBase>()
-                     where info.Service == typeof(IMessageBinder)
-                     select info).FirstOrDefault();
-
-            Assert.That(found, Is.Not.Null);
-
-            found = (from info in infos.OfType<ComponentRegistrationBase>()
-                     where info.Service == typeof(IParser)
-                     select info).FirstOrDefault();
+            found = (from reg in registrations.OfType<Singleton>()
+                     where reg.Service == typeof(IMessageBinder)
+                     select reg).FirstOrDefault();
 
             Assert.That(found, Is.Not.Null);
+            Assert.That(found.Implementation, Is.Not.Null);
+
+            found = (from reg in registrations.OfType<Singleton>()
+                     where reg.Service == typeof(IParser)
+                     select reg).FirstOrDefault();
+
+            Assert.That(found, Is.Not.Null);
+            Assert.That(found.Implementation, Is.Not.Null);
+
+            found = (from reg in registrations.OfType<Singleton>()
+                     where reg.Service == typeof(IActionFactory)
+                     select reg).FirstOrDefault();
+
+            Assert.That(found, Is.Not.Null);
+            Assert.That(found.Implementation, Is.Not.Null);
+
+            found = (from reg in registrations.OfType<Singleton>()
+                     where reg.Service == typeof(IViewStrategy)
+                     select reg).FirstOrDefault();
+
+            Assert.That(found, Is.Not.Null);
+            Assert.That(found.Implementation, Is.Not.Null);
+
+            found = (from reg in registrations.OfType<Singleton>()
+                     where reg.Service == typeof(IBinder)
+                     select reg).FirstOrDefault();
+
+            Assert.That(found, Is.Not.Null);
+            Assert.That(found.Implementation, Is.Not.Null);
+
+            found = (from reg in registrations.OfType<Singleton>()
+                     where reg.Service == typeof(IWindowManager)
+                     select reg).FirstOrDefault();
+
+            Assert.That(found, Is.Not.Null);
+            Assert.That(found.Implementation, Is.Not.Null);
         }
 
         [Test]
         public void can_provide_a_custom_routed_message_handler()
         {
-            _hook.Expect(x => x.Core).Return(new CoreConfiguration(_container, delegate { })).Repeat.Any();
+            _config.Using(x => x.RoutedMessageController<FakeRoutedMessageController>());
 
-            var config = new PresentationFrameworkModule(_hook)
-                .UsingRoutedMessageController<FakeRoutedMessageController>();
+            var registrations = _module.GetComponents();
 
-            var infos =
-                config.GetType().GetMethod("GetComponents", BindingFlags.NonPublic | BindingFlags.Instance).Invoke(
-                    config, null) as IEnumerable<IComponentRegistration>;
+            var found = (from reg in registrations.OfType<Singleton>()
+                         where reg.Service == typeof(IRoutedMessageController)
+                         select reg).FirstOrDefault();
 
-            var found = (from info in infos.OfType<ComponentRegistrationBase>()
-                         where info.Service == typeof(IRoutedMessageController)
-                         select info).FirstOrDefault();
-
-            Assert.That(found, Is.Not.EqualTo(typeof(FakeRoutedMessageController)));
+            Assert.That(found.Implementation, Is.EqualTo(typeof(FakeRoutedMessageController)));
         }
 
         [Test]
         public void can_provide_a_custom_method_binder()
         {
-            _hook.Expect(x => x.Core).Return(new CoreConfiguration(_container, delegate { })).Repeat.Any();
+            _config.Using(x => x.MessageBinder<FakeMessageBinder>());
 
-            var config = new PresentationFrameworkModule(_hook)
-                .UsingMessageBinder<FakeMethodBinder>();
+            var registrations = _module.GetComponents();
 
-            var infos =
-                config.GetType().GetMethod("GetComponents", BindingFlags.NonPublic | BindingFlags.Instance).Invoke(
-                    config, null) as IEnumerable<IComponentRegistration>;
+            var found = (from reg in registrations.OfType<Singleton>()
+                         where reg.Service == typeof(IMessageBinder)
+                         select reg).FirstOrDefault();
 
-            var found = (from info in infos.OfType<ComponentRegistrationBase>()
-                         where info.Service == typeof(IMessageBinder)
-                         select info).FirstOrDefault();
-
-            Assert.That(found, Is.Not.EqualTo(typeof(FakeMethodBinder)));
+            Assert.That(found.Implementation, Is.EqualTo(typeof(FakeMessageBinder)));
         }
 
         [Test]
         public void can_provide_a_custom_parser()
         {
-            _hook.Expect(x => x.Core).Return(new CoreConfiguration(_container, delegate { })).Repeat.Any();
+            _config.Using(x => x.Parser<FakeMessageParser>());
 
-            var config = new PresentationFrameworkModule(_hook)
-                .UsingParser<FakeMessageParser>();
+            var registrations = _module.GetComponents();
 
-            var infos =
-                config.GetType().GetMethod("GetComponents", BindingFlags.NonPublic | BindingFlags.Instance).Invoke(
-                    config, null) as IEnumerable<IComponentRegistration>;
+            var found = (from reg in registrations.OfType<Singleton>()
+                         where reg.Service == typeof(IParser)
+                         select reg).FirstOrDefault();
 
-            var found = (from info in infos.OfType<ComponentRegistrationBase>()
-                         where info.Service == typeof(IParser)
-                         select info).FirstOrDefault();
-
-            Assert.That(found, Is.Not.EqualTo(typeof(FakeMessageParser)));
+            Assert.That(found.Implementation, Is.EqualTo(typeof(FakeMessageParser)));
         }
     }
 
-    internal class FakeMethodBinder : IMessageBinder
+    internal class FakeMessageBinder : IMessageBinder
     {
         public bool IsSpecialValue(string potential)
         {
@@ -140,7 +136,8 @@
             throw new NotImplementedException();
         }
 
-        public object[] DetermineParameters(IRoutedMessage message, IList<RequiredParameter> requiredParameters, IInteractionNode handlingNode, object context)
+        public object[] DetermineParameters(IRoutedMessage message, IList<RequiredParameter> requiredParameters,
+                                            IInteractionNode handlingNode, object context)
         {
             throw new NotImplementedException();
         }

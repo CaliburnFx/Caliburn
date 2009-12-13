@@ -51,7 +51,7 @@ namespace Tests.Caliburn.RoutedUIMessaging.Triggers
         [Test]
         public void can_trigger_message_processing()
         {
-            var trigger = new EventMessageTrigger(new EventHandlerFactory())
+            var trigger = new EventMessageTrigger(new DefaultEventHandlerFactory())
             {
                 Message = _message,
                 EventName = FakeElement.EventName

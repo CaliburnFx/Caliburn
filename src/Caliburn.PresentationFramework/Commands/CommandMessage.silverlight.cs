@@ -10,9 +10,10 @@ namespace Caliburn.PresentationFramework.Commands
 
     using System.Windows.Controls;
     using System.Collections.Generic;
-    using Caliburn.PresentationFramework.Actions;
-    using Caliburn.Core;
-    using Caliburn.Core.Metadata;
+    using Actions;
+    using Configuration;
+    using Core;
+    using Core.Metadata;
     using Triggers;
     using Microsoft.Practices.ServiceLocation;
 
@@ -70,7 +71,7 @@ namespace Caliburn.PresentationFramework.Commands
         /// </summary>
         public CommandMessage()
         {
-            if (!PresentationFrameworkModule.IsInDesignMode)
+            if (!PresentationFrameworkConfiguration.IsInDesignMode)
                 _actionFactory = ServiceLocator.Current.GetInstance<IActionFactory>();
         }
 

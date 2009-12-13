@@ -4,7 +4,7 @@
     using System.Collections.Generic;
     using System.ComponentModel;
     using Caliburn.Core;
-    using Caliburn.Core.Metadata;
+    using Caliburn.Core.IoC;
     using Caliburn.ModelFramework;
     using Caliburn.PresentationFramework;
     using Caliburn.PresentationFramework.ApplicationModel;

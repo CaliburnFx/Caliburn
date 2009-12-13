@@ -2,6 +2,7 @@
 {
     using System;
     using System.Linq;
+    using Core.IoC;
     using Core.Metadata;
 
     public class HistoryKeyAttribute : Attribute
@@ -17,10 +18,10 @@
         {
             return new HistoryInfo(
                 _historyKey,
-                decoratedType.GetCustomAttributes(typeof(RegisterAttribute), true)
+                ((ComponentRegistrationBase)decoratedType.GetCustomAttributes(typeof(RegisterAttribute), true)
                     .Cast<RegisterAttribute>()
                     .FirstOrDefault()
-                    .GetComponentInfo(decoratedType).Service
+                    .GetComponentInfo(decoratedType)).Service
                 );
         }
     }

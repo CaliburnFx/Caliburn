@@ -14,8 +14,8 @@ namespace Tests.Caliburn.RoutedUIMessaging
     [TestFixture]
     public class When_binding_return_values : TestBase
     {
-        private MethodFactory _factory;
-        private MessageBinder _binder;
+        private DefaultMethodFactory _factory;
+        private DefaultMessageBinder _binder;
         private IInteractionNode _handlingNode;
         private IInteractionNode _sourceNode;
         private IRoutedMessageController _routedMessageController;
@@ -23,9 +23,9 @@ namespace Tests.Caliburn.RoutedUIMessaging
 
         protected override void given_the_context_of()
         {
-            _factory = new MethodFactory(new DefaultThreadPool());
+            _factory = new DefaultMethodFactory(new DefaultThreadPool());
             _routedMessageController = Mock<IRoutedMessageController>();
-            _binder = new MessageBinder(_routedMessageController);
+            _binder = new DefaultMessageBinder(_routedMessageController);
             _handlingNode = Stub<IInteractionNode>();
             _sourceNode = Stub<IInteractionNode>();
             _host = new ControlHost();

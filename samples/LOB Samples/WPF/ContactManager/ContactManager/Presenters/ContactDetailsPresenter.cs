@@ -2,7 +2,7 @@
 {
     using System;
     using System.ComponentModel;
-    using Caliburn.Core.Metadata;
+    using Caliburn.Core.IoC;
     using Caliburn.ModelFramework;
     using Caliburn.PresentationFramework;
     using Caliburn.PresentationFramework.ApplicationModel;
@@ -152,8 +152,8 @@
                 if(question.Answer == Answer.Cancel)
                     return false;
 
-                if(question.Answer == Answer.Yes)
-                    Execute(Apply());
+                if (question.Answer == Answer.Yes)
+                    Apply().Execute();
 
                 return true;
             }

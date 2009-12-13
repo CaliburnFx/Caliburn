@@ -19,7 +19,7 @@ namespace Tests.Caliburn.Core.Invocation
             MethodInvokeTarget.Reset();
 
             _threadPool = Mock<IThreadPool>();
-            _factory = new MethodFactory(_threadPool);
+            _factory = new DefaultMethodFactory(_threadPool);
         }
 
         [Test]

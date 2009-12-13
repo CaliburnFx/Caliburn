@@ -19,14 +19,14 @@ namespace Tests.Caliburn.Actions
 
         protected override void given_the_context_of()
         {
-            var methodFactory = new MethodFactory(
+            var methodFactory = new DefaultMethodFactory(
                 new DefaultThreadPool()
                 );
 
-            var actionFactory = new ActionFactory(
+            var actionFactory = new DefaultActionFactory(
                 methodFactory,
-                new MessageBinder(
-                    new RoutedMessageController()
+                new DefaultMessageBinder(
+                    new DefaultRoutedMessageController()
                     )
                 );
 

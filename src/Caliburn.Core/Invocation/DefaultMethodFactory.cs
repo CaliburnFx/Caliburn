@@ -9,16 +9,16 @@ namespace Caliburn.Core.Invocation
     /// <summary>
     /// An implementation of <see cref="IMethodFactory"/>.
     /// </summary>
-    public class MethodFactory : IMethodFactory
+    public class DefaultMethodFactory : IMethodFactory
     {
         private readonly IThreadPool _threadPool;
         private readonly Dictionary<MethodInfo, IMethod> _cache = new Dictionary<MethodInfo, IMethod>();
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="MethodFactory"/> class.
+        /// Initializes a new instance of the <see cref="DefaultMethodFactory"/> class.
         /// </summary>
         /// <param name="threadPool">The thread pool.</param>
-        public MethodFactory(IThreadPool threadPool)
+        public DefaultMethodFactory(IThreadPool threadPool)
         {
             _threadPool = threadPool;
         }

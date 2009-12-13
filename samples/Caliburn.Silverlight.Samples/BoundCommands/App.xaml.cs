@@ -5,7 +5,9 @@
     using System.Windows;
     using System.Windows.Browser;
     using Caliburn.Core;
+    using Caliburn.Core.Configuration;
     using Caliburn.PresentationFramework;
+    using Caliburn.PresentationFramework.Configuration;
 
     public partial class App : Application
     {
@@ -21,8 +23,9 @@
         private void Application_Startup(object sender, StartupEventArgs e)
         {
             CaliburnFramework
-                .ConfigureCore()
-                .WithPresentationFramework()
+                .Configure()
+                .With.Core()
+                .With.PresentationFramework()
                 .Start();
 
             RootVisual = new Page();

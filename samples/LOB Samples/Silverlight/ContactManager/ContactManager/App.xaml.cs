@@ -1,7 +1,7 @@
 ﻿namespace ContactManager
 {
     using System.Reflection;
-    using Caliburn.Core;
+    using Caliburn.Core.IoC;
     using Caliburn.PresentationFramework.ApplicationModel;
     using Microsoft.Practices.ServiceLocation;
     using Presenters.Interfaces;

@@ -2,7 +2,7 @@
 {
     using System;
     using Caliburn.Core;
-    using Caliburn.Core.Metadata;
+    using Caliburn.Core.IoC;
     using Caliburn.PresentationFramework;
     using Caliburn.PresentationFramework.ApplicationModel;
     using Caliburn.Silverlight.ApplicationFramework;

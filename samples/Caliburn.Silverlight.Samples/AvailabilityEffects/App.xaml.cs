@@ -4,8 +4,9 @@
     using System.Diagnostics;
     using System.Windows;
     using System.Windows.Browser;
-    using Caliburn.Core;
-    using Caliburn.PresentationFramework;
+    using Caliburn.Core.Configuration;
+    using Caliburn.Core.IoC;
+    using Caliburn.PresentationFramework.Configuration;
 
     public partial class App : Application
     {
@@ -24,8 +25,9 @@
             var container = new SimpleContainer();
 
             CaliburnFramework
-                .ConfigureCore(container) //Note: Setting the container.
-                .WithPresentationFramework()
+                .Configure(container)
+                .With.Core()
+                .With.PresentationFramework()
                 .Start();
 
             //Note: Register the custom IAvailabilityEffect by key.

@@ -8,6 +8,7 @@ namespace Caliburn.PresentationFramework.Commands
     using System.Windows;
     using System.Windows.Markup;
     using Actions;
+    using Configuration;
     using Core;
     using Core.Metadata;
     using Microsoft.Practices.ServiceLocation;
@@ -91,7 +92,7 @@ namespace Caliburn.PresentationFramework.Commands
         /// </summary>
         public CommandMessage()
         {
-            if(!PresentationFrameworkModule.IsInDesignMode)
+            if(!PresentationFrameworkConfiguration.IsInDesignMode)
                 _actionFactory = ServiceLocator.Current.GetInstance<IActionFactory>();
 
             SetValue(ParametersProperty, new FreezableCollection<Parameter>());

@@ -4,8 +4,8 @@
     using System.Diagnostics;
     using System.Windows;
     using System.Windows.Browser;
-    using Caliburn.Core;
-    using Caliburn.PresentationFramework;
+    using Caliburn.Core.Configuration;
+    using Caliburn.PresentationFramework.Configuration;
 
     public partial class App : Application
     {
@@ -22,8 +22,9 @@
         {
             //Note: This is the most basic configuration needed to get started using Actions.
             CaliburnFramework
-                .ConfigureCore()
-                .WithPresentationFramework()
+                .Configure()
+                .With.Core()
+                .With.PresentationFramework()
                 .Start();
 
             RootVisual = new Page();

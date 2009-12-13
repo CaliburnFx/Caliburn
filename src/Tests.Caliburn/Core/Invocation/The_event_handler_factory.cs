@@ -13,7 +13,7 @@ namespace Tests.Caliburn.Core.Invocation
 
         protected override void given_the_context_of()
         {
-            _factory = new EventHandlerFactory();
+            _factory = new DefaultEventHandlerFactory();
             _theInvokeTarget = new MethodInvokeTarget();
             MethodInvokeTarget.Reset();
         }

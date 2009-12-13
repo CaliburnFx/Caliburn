@@ -3,8 +3,9 @@
     using System.Windows;
     using System.Windows.Controls;
     using Caliburn.Castle;
-    using Caliburn.Core;
+    using Caliburn.Core.Configuration;
     using Caliburn.PresentationFramework;
+    using Caliburn.PresentationFramework.Configuration;
     using Castle.Windsor;
 
     /// <summary>
@@ -20,12 +21,13 @@
             var adapter = new WindsorAdapter(container);
 
             CaliburnFramework
-                .ConfigureCore(adapter) //Note: Set the container.
-                .WithPresentationFramework()
+                .Configure(adapter)
+                .With.Core()
+                .With.PresentationFramework()
                 .Start();
 
             //Note: Retrieve one of Caliburn's services.
-            var controller = container.Resolve<IRoutedMessageController>();
+            var controller = adapter.GetInstance<IRoutedMessageController>();
 
             //Note: Customize the default behavior of button elements.
             controller.SetupDefaults(

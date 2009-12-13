@@ -73,16 +73,6 @@
 #endif
 
         /// <summary>
-        /// Adds the routed UI messaging module's configuration to the system.
-        /// </summary>
-        /// <param name="hook">The hook.</param>
-        /// <returns>The configuration.</returns>
-        public static PresentationFrameworkModule WithPresentationFramework(this IConfigurationHook hook)
-        {
-            return new PresentationFrameworkModule(hook);
-        }
-
-        /// <summary>
         /// Finds the interaction defaults or fail.
         /// </summary>
         /// <param name="controller">The controller.</param>

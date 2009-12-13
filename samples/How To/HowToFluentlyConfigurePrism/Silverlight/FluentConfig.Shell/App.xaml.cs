@@ -6,8 +6,10 @@
     using System.Windows.Browser;
     using CaliBrism.Modules.Calculator;
     using Caliburn.Core;
+    using Caliburn.Core.Configuration;
     using Caliburn.PresentationFramework;
     using Caliburn.PresentationFramework.ApplicationModel;
+    using Caliburn.PresentationFramework.Configuration;
     using Caliburn.Prism;
     using Microsoft.Practices.Composite.Modularity;
     using Microsoft.Practices.ServiceLocation;
@@ -27,9 +29,10 @@
         private void Application_Startup(object sender, StartupEventArgs e)
         {
             CaliburnFramework
-                .ConfigureCore()
-                .WithPresentationFramework()
-                .WithCompositeApplicationLibrary(CreateShell)
+                .Configure()
+                .With.Core()
+                .With.PresentationFramework()
+                .With.CompositeApplicationLibrary(CreateShell)
                 .WithModuleCatalog(new ModuleCatalog().AddModule(typeof(CalculatorModule)))
                 .Start();
         }

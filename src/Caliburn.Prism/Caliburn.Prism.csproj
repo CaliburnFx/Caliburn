@@ -67,7 +67,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CaliburnModuleInitializer.cs" />
-    <Compile Include="CompositeApplicationLibraryModule.cs" />
+    <Compile Include="CompositeApplicationLibraryConfiguration.cs" />
     <Compile Include="ConsoleLogger.cs" />
     <Compile Include="ExtensionMethods.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

@@ -4,8 +4,10 @@
     using System.Windows;
     using CaliBrism.Modules.Calculator;
     using Caliburn.Core;
+    using Caliburn.Core.Configuration;
     using Caliburn.PresentationFramework;
     using Caliburn.PresentationFramework.ApplicationModel;
+    using Caliburn.PresentationFramework.Configuration;
     using Caliburn.Prism;
     using Microsoft.Practices.Composite.Modularity;
     using Microsoft.Practices.ServiceLocation;
@@ -19,14 +21,15 @@
         public App()
         {
             CaliburnFramework
-                .ConfigureCore()
+                .Configure()
+                .With.Core()
                 .AfterStart(() =>{
                     var binder = (DefaultBinder)ServiceLocator.Current.GetInstance<IBinder>();
                     binder.EnableMessageConventions();
                     binder.EnableBindingConventions();
                 })
-                .WithPresentationFramework()
-                .WithCompositeApplicationLibrary(CreateShell)
+                .With.PresentationFramework()
+                .With.CompositeApplicationLibrary(CreateShell)
                 .WithModuleCatalog(new ModuleCatalog().AddModule(typeof(CalculatorModule)))
                 .Start();
         }

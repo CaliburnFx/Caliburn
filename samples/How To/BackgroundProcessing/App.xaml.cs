@@ -2,8 +2,8 @@
 {
     using System.Reflection;
     using System.Windows;
-    using Caliburn.Core;
-    using Caliburn.PresentationFramework;
+    using Caliburn.Core.Configuration;
+    using Caliburn.PresentationFramework.Configuration;
 
     /// <summary>
     /// Interaction logic for App.xaml
@@ -13,9 +13,10 @@
         public App()
         {
             CaliburnFramework
-                .ConfigureCore()
-                .WithAssemblies(Assembly.GetExecutingAssembly())
-                .WithPresentationFramework()
+                .Configure()
+                .With.Core()
+                .With.Assemblies(Assembly.GetExecutingAssembly())
+                .With.PresentationFramework()
                 .Start();
         }
     }

@@ -2,7 +2,7 @@
 {
     using System;
     using System.Linq;
-    using Caliburn.Core.Metadata;
+    using Caliburn.Core.IoC;
     using Caliburn.PresentationFramework.ApplicationModel;
     using Caliburn.WPF.ApplicationFramework;
     using Interfaces;

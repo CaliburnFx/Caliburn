@@ -16,16 +16,16 @@
     /// <summary>
     /// The default implementation of <see cref="IMessageBinder"/>.
     /// </summary>
-    public class MessageBinder : IMessageBinder
+    public class DefaultMessageBinder : IMessageBinder
     {
         private readonly IRoutedMessageController _routedMessageController;
         private readonly IDictionary<string, Func<IInteractionNode, object, object>> _valueHandlers;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="MessageBinder"/> class.
+        /// Initializes a new instance of the <see cref="DefaultMessageBinder"/> class.
         /// </summary>
         /// <param name="routedMessageController">The routed message controller.</param>
-        public MessageBinder(IRoutedMessageController routedMessageController)
+        public DefaultMessageBinder(IRoutedMessageController routedMessageController)
         {
             _routedMessageController = routedMessageController;
             _valueHandlers = new Dictionary<string, Func<IInteractionNode, object, object>>();

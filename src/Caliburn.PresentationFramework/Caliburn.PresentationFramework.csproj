@@ -54,7 +54,7 @@
   <ItemGroup>
     <Compile Include="Actions\Action.cs" />
     <Compile Include="Actions\ActionBase.cs" />
-    <Compile Include="Actions\ActionFactory.cs" />
+    <Compile Include="Actions\DefaultActionFactory.cs" />
     <Compile Include="Actions\ActionHost.cs" />
     <Compile Include="Actions\ActionMessage.silverlight.cs" />
     <Compile Include="Actions\ActionMessage.wpf.cs" />
@@ -115,6 +115,9 @@
     <Compile Include="Commands\CommandMessageParser.cs" />
     <Compile Include="Commands\CommandSource.cs" />
     <Compile Include="Commands\ICompositeCommand.cs" />
+    <Compile Include="Configuration\ExtensionMethods.cs" />
+    <Compile Include="Configuration\IPresentationFrameworkServicesDescription.cs" />
+    <Compile Include="Configuration\PresentationFrameworkConfiguration.cs" />
     <Compile Include="EnumerableResults.cs" />
     <Compile Include="Filters\DependencyObserver.cs" />
     <Compile Include="Invocation\DispatcherOperationProxy.cs" />
@@ -157,7 +160,7 @@
     <Compile Include="Invocation\DispatcherImplementation.silverlight.cs" />
     <Compile Include="Invocation\DispatcherImplementation.wpf.cs" />
     <Compile Include="Metadata\ViewMetadata.cs" />
-    <Compile Include="MessageBinder.cs" />
+    <Compile Include="DefaultMessageBinder.cs" />
     <Compile Include="Parameter.silverlight.cs" />
     <Compile Include="Parameter.wpf.cs" />
     <Compile Include="Parsers\CommandTriggerParser.wpf.cs" />
@@ -167,12 +170,11 @@
     <Compile Include="Parsers\IParser.cs" />
     <Compile Include="Parsers\ITriggerParser.cs" />
     <Compile Include="Parsers\MessageParserBase.cs" />
-    <Compile Include="Parsers\Parser.cs" />
+    <Compile Include="Parsers\DefaultParser.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ResolveExtension.wpf.cs" />
-    <Compile Include="RoutedMessageController.cs" />
+    <Compile Include="DefaultRoutedMessageController.cs" />
     <Compile Include="RoutedMessageTriggerCollection.cs" />
-    <Compile Include="PresentationFrameworkModule.cs" />
     <Compile Include="Triggers\AttachedEventMessageTrigger.wpf.cs" />
     <Compile Include="Triggers\CommandMessageTrigger.wpf.cs" />
     <Compile Include="Triggers\EventMessageTrigger.cs" />

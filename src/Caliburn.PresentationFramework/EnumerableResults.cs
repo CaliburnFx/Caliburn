@@ -35,7 +35,7 @@
             view =>{
                 IInteractionNode node = null;
                 if (view != null)
-                    node = view.GetValue(RoutedMessageController.NodeProperty) as IInteractionNode;
+                    node = view.GetValue(DefaultRoutedMessageController.NodeProperty) as IInteractionNode;
                 return node;
             };
 

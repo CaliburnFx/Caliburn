@@ -6,6 +6,7 @@
     using System.Windows.Controls;
     using System.Windows.Controls.Primitives;
     using Core;
+    using Core.Configuration;
     using Core.IoC;
     using Microsoft.Practices.Composite;
     using Microsoft.Practices.Composite.Events;
@@ -15,11 +16,12 @@
     using Microsoft.Practices.Composite.Presentation.Regions.Behaviors;
     using Microsoft.Practices.Composite.Regions;
     using Microsoft.Practices.ServiceLocation;
+    using IModule=Microsoft.Practices.Composite.Modularity.IModule;
 
     /// <summary>
     /// The configuration for the composite application library.
     /// </summary>
-    public class CompositeApplicationLibraryModule : CaliburnModule
+    public class CompositeApplicationLibraryConfiguration : CaliburnModule<CompositeApplicationLibraryConfiguration>
     {
         private Type _loggerFacade;
         private Type _moduleInitializer;
@@ -28,7 +30,7 @@
         private Type _regionViewRegistry;
         private Type _regionBehaviorFactory;
 
-        private readonly Func<DependencyObject> _createShell;
+        private Func<DependencyObject> _createShell = () => null;
         private Action<IRegionBehaviorFactory> _afterConfigureBehaviors;
         private Action<IRegionBehaviorFactory> _overrideRegionBehavior;
         private Action<RegionAdapterMappings> _afterConfigureRegionAdapterMappings;
@@ -39,12 +41,9 @@
         private Action _overrideModuleInit;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="CompositeApplicationLibraryModule"/> class.
+        /// Initializes a new instance of the <see cref="CompositeApplicationLibraryConfiguration"/> class.
         /// </summary>
-        /// <param name="hook">The hook.</param>
-        /// <param name="createShell">The create shell.</param>
-        public CompositeApplicationLibraryModule(IConfigurationHook hook, Func<DependencyObject> createShell)
-            : base(hook)
+        public CompositeApplicationLibraryConfiguration()
         {
             UsingLoggerFacade<ConsoleLogger>();
 
@@ -56,8 +55,17 @@
             UsingEventAggregator<EventAggregator>();
             UsingRegionViewRegistry<RegionViewRegistry>();
             UsingRegionBehaviorFactory<RegionBehaviorFactory>();
+        }
 
+        /// <summary>
+        /// Creates the shell using the provided function.
+        /// </summary>
+        /// <param name="createShell">The create shell function.</param>
+        /// <returns></returns>
+        public CompositeApplicationLibraryConfiguration CreateShellUsing(Func<DependencyObject> createShell)
+        {
             _createShell = createShell;
+            return this;
         }
 
         /// <summary>
@@ -65,7 +73,7 @@
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <returns></returns>
-        public CompositeApplicationLibraryModule UsingLoggerFacade<T>()
+        public CompositeApplicationLibraryConfiguration UsingLoggerFacade<T>()
             where T : ILoggerFacade
         {
             _loggerFacade = typeof(T);
@@ -77,7 +85,7 @@
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <returns></returns>
-        public CompositeApplicationLibraryModule UsingModuleInitializer<T>()
+        public CompositeApplicationLibraryConfiguration UsingModuleInitializer<T>()
             where T : IModuleInitializer
         {
             _moduleInitializer = typeof(T);
@@ -89,7 +97,7 @@
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <returns></returns>
-        public CompositeApplicationLibraryModule UsingRegionManager<T>()
+        public CompositeApplicationLibraryConfiguration UsingRegionManager<T>()
             where T : IRegionManager
         {
             _regionManager = typeof(T);
@@ -101,7 +109,7 @@
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <returns></returns>
-        public CompositeApplicationLibraryModule UsingEventAggregator<T>()
+        public CompositeApplicationLibraryConfiguration UsingEventAggregator<T>()
             where T : IEventAggregator
         {
             _eventAggregator = typeof(T);
@@ -113,7 +121,7 @@
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <returns></returns>
-        public CompositeApplicationLibraryModule UsingRegionViewRegistry<T>()
+        public CompositeApplicationLibraryConfiguration UsingRegionViewRegistry<T>()
             where T : IRegionViewRegistry
         {
             _regionViewRegistry = typeof(T);
@@ -125,7 +133,7 @@
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <returns></returns>
-        public CompositeApplicationLibraryModule UsingRegionBehaviorFactory<T>()
+        public CompositeApplicationLibraryConfiguration UsingRegionBehaviorFactory<T>()
             where T : IRegionBehaviorFactory
         {
             _regionBehaviorFactory = typeof(T);
@@ -137,7 +145,7 @@
         /// </summary>
         /// <param name="modules">The modules.</param>
         /// <returns></returns>
-        public CompositeApplicationLibraryModule WithModuleTypes(params Type[] modules)
+        public CompositeApplicationLibraryConfiguration WithModuleTypes(params Type[] modules)
         {
             _moduleTypes = modules;
             return this;
@@ -148,7 +156,7 @@
         /// </summary>
         /// <param name="moduleCatalog">The module catalog.</param>
         /// <returns></returns>
-        public CompositeApplicationLibraryModule WithModuleCatalog(IModuleCatalog moduleCatalog)
+        public CompositeApplicationLibraryConfiguration WithModuleCatalog(IModuleCatalog moduleCatalog)
         {
             _moduleCatalog = moduleCatalog;
             return this;
@@ -159,7 +167,7 @@
         /// </summary>
         /// <param name="doThisInstead">The action to perform.</param>
         /// <returns></returns>
-        public CompositeApplicationLibraryModule OverrideModuleInitializationWith(Action doThisInstead)
+        public CompositeApplicationLibraryConfiguration OverrideModuleInitializationWith(Action doThisInstead)
         {
             _overrideModuleInit = doThisInstead;
             return this;
@@ -170,7 +178,7 @@
         /// </summary>
         /// <param name="doThisInstead">The do this instead.</param>
         /// <returns></returns>
-        public CompositeApplicationLibraryModule OverrideRegionBehaviorsWith(Action<IRegionBehaviorFactory> doThisInstead)
+        public CompositeApplicationLibraryConfiguration OverrideRegionBehaviorsWith(Action<IRegionBehaviorFactory> doThisInstead)
         {
             _overrideRegionBehavior = doThisInstead;
             return this;
@@ -181,7 +189,7 @@
         /// </summary>
         /// <param name="configureBehaviors">The configure behaviors.</param>
         /// <returns></returns>
-        public CompositeApplicationLibraryModule AfterConfigureRegionBehaviors(Action<IRegionBehaviorFactory> configureBehaviors)
+        public CompositeApplicationLibraryConfiguration AfterConfigureRegionBehaviors(Action<IRegionBehaviorFactory> configureBehaviors)
         {
             _afterConfigureBehaviors = configureBehaviors;
             return this;
@@ -192,7 +200,7 @@
         /// </summary>
         /// <param name="doThisInstead">The do this instead.</param>
         /// <returns></returns>
-        public CompositeApplicationLibraryModule OverrideRegionAdapterMappingsWith(Action<RegionAdapterMappings> doThisInstead)
+        public CompositeApplicationLibraryConfiguration OverrideRegionAdapterMappingsWith(Action<RegionAdapterMappings> doThisInstead)
         {
             _overrideRegionAdapterMappings = doThisInstead;
             return this;
@@ -203,7 +211,7 @@
         /// </summary>
         /// <param name="configureRegionAdapterMappings">The configure region adapter mappings.</param>
         /// <returns></returns>
-        public CompositeApplicationLibraryModule AfterConfigureRegionAdapterMappings(Action<RegionAdapterMappings> configureRegionAdapterMappings)
+        public CompositeApplicationLibraryConfiguration AfterConfigureRegionAdapterMappings(Action<RegionAdapterMappings> configureRegionAdapterMappings)
         {
             _afterConfigureRegionAdapterMappings = configureRegionAdapterMappings;
             return this;
@@ -213,7 +221,7 @@
         /// Gets the component information for this module.
         /// </summary>
         /// <returns></returns>
-        protected override IEnumerable<IComponentRegistration> GetComponents()
+        protected override IEnumerable<IComponentRegistration> GetComponentsCore()
         {
             yield return Singleton(typeof(ILoggerFacade), _loggerFacade);
             yield return Singleton(typeof(IModuleInitializer), _moduleInitializer);
@@ -248,17 +256,17 @@
         /// <summary>
         /// Initializes this module.
         /// </summary>
-        protected override void Initialize()
+        protected override void InitializeCore(IServiceLocator serviceLocator)
         {
             ConfigureRegionAdapterMappings();
             ConfigureRegionBehaviors();
             RegisterFrameworkExceptionTypes();
 
-            Core.AfterStart(CreateShell);
+            CaliburnModule<CoreConfiguration>.Instance.AfterStart(CreateShell);
 
             // Initialize modules after caliburn has started in order for the DefaultBinder
             // conventions to work
-            Core.AfterStart(InitializeModules);
+            CaliburnModule<CoreConfiguration>.Instance.AfterStart(InitializeModules);
         }
 
         private void CreateShell()
@@ -269,7 +277,7 @@
 
             RegionManager.SetRegionManager(
                 shell,
-                ServiceLocator.GetInstance<IRegionManager>()
+                ServiceLocator.Current.GetInstance<IRegionManager>()
                 );
 
             RegionManager.UpdateRegions();
@@ -293,7 +301,7 @@
 
             if(_moduleTypes != null)
                 _moduleTypes.Apply(x =>{
-                    var module = ServiceLocator.GetInstance(x) as IModule;
+                    var module = ServiceLocator.Current.GetInstance(x) as IModule;
                     if(module != null)
                         module.Initialize();
                 });
@@ -305,9 +313,9 @@
             // specific IoC container. So this implementation is currently dependent on the 
             // default prism ModuleManager.  
             var manager = new ModuleManager(
-                ServiceLocator.GetInstance<IModuleInitializer>(),
+                ServiceLocator.Current.GetInstance<IModuleInitializer>(),
                 _moduleCatalog,
-                ServiceLocator.GetInstance<ILoggerFacade>()
+                ServiceLocator.Current.GetInstance<ILoggerFacade>()
                 );
 
             manager.Run();
@@ -315,7 +323,7 @@
 
         private void ConfigureRegionAdapterMappings()
         {
-            var regionAdapterMappings = ServiceLocator.TryResolve<RegionAdapterMappings>();
+            var regionAdapterMappings = ServiceLocator.Current.TryResolve<RegionAdapterMappings>();
             if (regionAdapterMappings == null)
                 return;
 
@@ -328,22 +336,22 @@
 #if SILVERLIGHT
             regionAdapterMappings.RegisterMapping(
                 typeof(TabControl), 
-                ServiceLocator.GetInstance<TabControlRegionAdapter>()
+                ServiceLocator.Current.GetInstance<TabControlRegionAdapter>()
                 );
 #endif
             regionAdapterMappings.RegisterMapping(
                 typeof(Selector),
-                ServiceLocator.GetInstance<SelectorRegionAdapter>()
+                ServiceLocator.Current.GetInstance<SelectorRegionAdapter>()
                 );
 
             regionAdapterMappings.RegisterMapping(
                 typeof(ItemsControl),
-                ServiceLocator.GetInstance<ItemsControlRegionAdapter>()
+                ServiceLocator.Current.GetInstance<ItemsControlRegionAdapter>()
                 );
 
             regionAdapterMappings.RegisterMapping(
                 typeof(ContentControl),
-                ServiceLocator.GetInstance<ContentControlRegionAdapter>()
+                ServiceLocator.Current.GetInstance<ContentControlRegionAdapter>()
                 );
 
             if(_afterConfigureRegionAdapterMappings != null)
@@ -352,7 +360,7 @@
 
         private void ConfigureRegionBehaviors()
         {
-            var defaultRegionBehaviorTypesDictionary = ServiceLocator.TryResolve<IRegionBehaviorFactory>();
+            var defaultRegionBehaviorTypesDictionary = ServiceLocator.Current.TryResolve<IRegionBehaviorFactory>();
 
             if(defaultRegionBehaviorTypesDictionary == null) 
                 return;

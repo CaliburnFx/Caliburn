@@ -14,7 +14,7 @@ namespace Tests.Caliburn.Actions
     [TestFixture]
     public class The_default_action_factory : TestBase
     {
-        private ActionFactory _factory;
+        private DefaultActionFactory _factory;
         private IMethodFactory _methodFactory;
         private IMessageBinder _messageBinder;
         private IActionHost _host;
@@ -25,7 +25,7 @@ namespace Tests.Caliburn.Actions
             _messageBinder = Mock<IMessageBinder>();
             _host = Mock<IActionHost>();
 
-            _factory = new ActionFactory(_methodFactory, _messageBinder);
+            _factory = new DefaultActionFactory(_methodFactory, _messageBinder);
         }
 
         [Test]

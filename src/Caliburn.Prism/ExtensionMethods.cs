@@ -2,7 +2,7 @@
 {
     using System;
     using System.Windows;
-    using Core;
+    using Core.Configuration;
 
     /// <summary>
     /// Extension methods related to Prism integration.
@@ -15,9 +15,11 @@
         /// <param name="hook">The hook.</param>
         /// <param name="createShell">The create shell.</param>
         /// <returns></returns>
-        public static CompositeApplicationLibraryModule WithCompositeApplicationLibrary(this IConfigurationHook hook, Func<DependencyObject> createShell)
+        public static CompositeApplicationLibraryConfiguration CompositeApplicationLibrary(this IModuleHook hook, Func<DependencyObject> createShell)
         {
-            return new CompositeApplicationLibraryModule(hook, createShell);
+            var module = CaliburnModule<CompositeApplicationLibraryConfiguration>.Instance;
+            module.CreateShellUsing(createShell);
+            return hook.Module(module);
         }
     }
 }

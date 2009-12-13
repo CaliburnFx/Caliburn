@@ -164,7 +164,7 @@ namespace Caliburn.PresentationFramework
                 {
                     return value => propertyInfo.SetValue(
                                         target,
-                                        MessageBinder.CoerceValueCore(
+                                        DefaultMessageBinder.CoerceValueCore(
                                             propertyInfo.PropertyType,
                                             value
                                             ),

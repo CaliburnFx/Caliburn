@@ -15,7 +15,7 @@
 
         protected override void given_the_context_of()
         {
-            _controller = new RoutedMessageController();
+            _controller = new DefaultRoutedMessageController();
         }
 
         [Test]
@@ -65,7 +65,7 @@
                 trigger
                 );
 
-            var node = dp.GetValue(RoutedMessageController.NodeProperty) as InteractionNode;
+            var node = dp.GetValue(DefaultRoutedMessageController.NodeProperty) as InteractionNode;
 
             Assert.That(node, Is.Not.Null);
             Assert.That(node.Triggers.Contains(trigger));
@@ -86,7 +86,7 @@
                 true
                 );
 
-            var node = dp.GetValue(RoutedMessageController.NodeProperty) as InteractionNode;
+            var node = dp.GetValue(DefaultRoutedMessageController.NodeProperty) as InteractionNode;
 
             Assert.That(node, Is.Not.Null);
             Assert.That(node.MessageHandler, Is.EqualTo(handler));
@@ -105,7 +105,7 @@
                 false
                 );
 
-            var node = dp.GetValue(RoutedMessageController.NodeProperty) as InteractionNode;
+            var node = dp.GetValue(DefaultRoutedMessageController.NodeProperty) as InteractionNode;
 
             Assert.That(node, Is.Not.Null);
             Assert.That(node.MessageHandler, Is.EqualTo(handler));
@@ -120,7 +120,7 @@
 
             panel.Children.Add(button);
             panel.SetValue(
-                RoutedMessageController.NodeProperty,
+                DefaultRoutedMessageController.NodeProperty,
                 new InteractionNode(panel, _controller)
                 );
 

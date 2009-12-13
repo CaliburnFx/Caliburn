@@ -5,8 +5,10 @@
     using Core.IoC;
     using global::StructureMap;
     using global::StructureMap.Attributes;
+    using global::StructureMap.Pipeline;
     using Microsoft.Practices.ServiceLocation;
     using IContainer=Core.IoC.IContainer;
+    using Instance=Core.IoC.Instance;
     using IRegistry=Core.IoC.IRegistry;
 
     /// <summary>
@@ -32,6 +34,7 @@
 
             AddRegistrationHandler<Singleton>(HandleSingleton);
             AddRegistrationHandler<PerRequest>(HandlePerRequest);
+            AddRegistrationHandler<Instance>(HandleInstance);
         }
 
         /// <summary>
@@ -93,33 +96,61 @@
         private void HandleSingleton(Singleton singleton)
         {
             if(!singleton.HasName())
-                _exp.ForRequestedType(singleton.Service)
+                _exp.For(singleton.Service)
                     .CacheBy(InstanceScope.Singleton)
                     .TheDefaultIsConcreteType(singleton.Implementation);
             else if(!singleton.HasService())
-                _exp.ForRequestedType(typeof(object))
-                    .AddConcreteType(singleton.Implementation, singleton.Name)
-                    .CacheBy(InstanceScope.Singleton);
+                _exp.For(typeof(object))
+                    .CacheBy(InstanceScope.Singleton)
+                    .TheDefaultIsConcreteType(singleton.Implementation)
+                    .WithName(singleton.Name);
             else
-                _exp.ForRequestedType(singleton.Service)
-                    .AddConcreteType(singleton.Implementation, singleton.Name)
-                    .CacheBy(InstanceScope.Singleton);
+                _exp.For(singleton.Service)
+                    .CacheBy(InstanceScope.Singleton)
+                    .TheDefaultIsConcreteType(singleton.Implementation)
+                    .WithName(singleton.Name);
         }
 
         private void HandlePerRequest(PerRequest perRequest)
         {
-            if(!perRequest.HasName())
-                _exp.ForRequestedType(perRequest.Service)
+            if (!perRequest.HasName())
+                _exp.For(perRequest.Service)
                     .CacheBy(InstanceScope.PerRequest)
                     .TheDefaultIsConcreteType(perRequest.Implementation);
             else if (!perRequest.HasService())
-                _exp.ForRequestedType(typeof(object))
-                    .AddConcreteType(perRequest.Implementation, perRequest.Name)
-                    .CacheBy(InstanceScope.PerRequest);
+                _exp.For(typeof(object))
+                    .CacheBy(InstanceScope.PerRequest)
+                    .TheDefaultIsConcreteType(perRequest.Implementation)
+                    .WithName(perRequest.Name);
             else
-                _exp.ForRequestedType(perRequest.Service)
-                    .AddConcreteType(perRequest.Implementation, perRequest.Name)
-                    .CacheBy(InstanceScope.PerRequest);
+                _exp.For(perRequest.Service)
+                    .CacheBy(InstanceScope.PerRequest)
+                    .TheDefaultIsConcreteType(perRequest.Implementation)
+                    .WithName(perRequest.Name);
+        }
+
+        private void HandleInstance(Instance instance)
+        {
+            if (!instance.HasName())
+                _exp.For(instance.Service)
+                    .Add(new CustomInstance(instance.Implementation));
+            else if (!instance.HasService())
+                _exp.For(typeof(object))
+                    .Add(new CustomInstance(instance.Implementation).WithName(instance.Name));
+            else
+                _exp.For(instance.Service)
+                    .Add(new CustomInstance(instance.Implementation).WithName(instance.Name));
+        }
+
+        private class CustomInstance : LiteralInstance
+        {
+            public CustomInstance(object anObject) : 
+                base(anObject) {}
+
+            protected override bool canBePartOfPluginFamily(global::StructureMap.Graph.PluginFamily family)
+            {
+                return true;
+            }
         }
     }
 }

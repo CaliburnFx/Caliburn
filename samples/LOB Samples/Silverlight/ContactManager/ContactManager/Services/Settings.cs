@@ -1,7 +1,7 @@
 ﻿namespace ContactManager.Services
 {
     using System;
-    using Caliburn.Core.Metadata;
+    using Caliburn.Core.IoC;
     using Caliburn.PresentationFramework.ApplicationModel;
     using Caliburn.Silverlight.ApplicationFramework;
     using Interfaces;

@@ -8,7 +8,7 @@
     /// <summary>
     /// An implementation of <see cref="IRoutedMessageController"/>.
     /// </summary>
-    public class RoutedMessageController : IRoutedMessageController
+    public class DefaultRoutedMessageController : IRoutedMessageController
     {
         /// <summary>
         /// Used to maintain the state of the interaction hierarchy.
@@ -17,7 +17,7 @@
             DependencyProperty.RegisterAttached(
                 "Node",
                 typeof(IInteractionNode),
-                typeof(RoutedMessageController),
+                typeof(DefaultRoutedMessageController),
                 null
                 );
 

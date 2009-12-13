@@ -5,7 +5,9 @@ namespace Caliburn.PresentationFramework.ApplicationModel
     using System.Collections.Generic;
     using System.Reflection;
     using System.Windows;
+    using Configuration;
     using Core;
+    using Core.Configuration;
     using Core.IoC;
     using Microsoft.Practices.ServiceLocation;
     using System;
@@ -27,7 +29,7 @@ namespace Caliburn.PresentationFramework.ApplicationModel
         /// </exception>
         public CaliburnApplication()
         {
-			BeforeFrameworkInitialize();
+			BeforeConfiguration();
 
             UnhandledException += OnUnhandledException;
             Exit += OnExit;
@@ -35,18 +37,15 @@ namespace Caliburn.PresentationFramework.ApplicationModel
 
             _container = CreateContainer();
 
-            var core = CaliburnFramework
-                .ConfigureCore(_container, ConfigureCaliburn);
+            var builder = CaliburnFramework
+                .Configure(_container, Register);
 
-            core.WithAssemblies(SelectAssemblies());
+            builder.With.Assemblies(SelectAssemblies());
 
-            var frameworkConfiguration = core.WithPresentationFramework();
+            ConfigureCore(builder.With.Core());
+            ConfigurePresentationFramework(builder.With.PresentationFramework());
 
-            ConfigurePresentationFramework(frameworkConfiguration);
-
-            BeforeStart(core);
-
-            core.Start();    
+            builder.Start();   
         }
 
         /// <summary>
@@ -71,13 +70,13 @@ namespace Caliburn.PresentationFramework.ApplicationModel
         /// Configures Caliburn's components.
         /// </summary>
         /// <param name="registrations">The component registrations.</param>
-        protected virtual void ConfigureCaliburn(IEnumerable<IComponentRegistration> registrations)
+        protected virtual void Register(IEnumerable<IComponentRegistration> registrations)
         {
             var registry = _container as IRegistry;
 
             if (registry == null)
                 throw new CaliburnException(
-                    "Cannot configure Caliburn. Override ConfigureCaliburn or provide an IServiceLocator that also implements IRegistry."
+                    "Cannot configure Caliburn. Override Register or provide an IServiceLocator that also implements IRegistry."
                     );
 
             registry.Register(registrations);
@@ -93,10 +92,21 @@ namespace Caliburn.PresentationFramework.ApplicationModel
         }
 
         /// <summary>
-        /// Configures the presentation framework.
+		/// Called before the Caliburn initialization phase. 
+		/// </summary>
+		protected virtual void BeforeConfiguration() { }
+
+        /// <summary>
+        /// Configures the presentation framework module.
         /// </summary>
-        /// <param name="configuration">The configuration.</param>
-        protected virtual void ConfigurePresentationFramework(PresentationFrameworkModule configuration) { }
+        /// <param name="module">The module.</param>
+        protected virtual void ConfigurePresentationFramework(PresentationFrameworkConfiguration module) {}
+
+        /// <summary>
+        /// Configures the core module.
+        /// </summary>
+        /// <param name="module">The module.</param>
+        protected virtual void ConfigureCore(CoreConfiguration module) { }
 
         /// <summary>
         /// Creates the root application model.
@@ -141,17 +151,6 @@ namespace Caliburn.PresentationFramework.ApplicationModel
 
             RootVisual = view;
         }
-
-		/// <summary>
-		/// Called before Caliburn initialization phase. 
-		/// </summary>
-		protected virtual void BeforeFrameworkInitialize() { }
-
-        /// <summary>
-        /// Configures additional modules befores the starting the framework.
-        /// </summary>
-        /// <param name="core">The core.</param>
-        protected virtual void BeforeStart(CoreConfiguration core) {}
 
         /// <summary>
         /// Called when the application exits.

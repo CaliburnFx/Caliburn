@@ -12,7 +12,7 @@
     /// <summary>
     /// An implementation of <see cref="IParser"/>.
     /// </summary>
-    public class Parser : IParser
+    public class DefaultParser : IParser
     {
         private readonly Dictionary<string, ITriggerParser> _triggerParsers = new Dictionary<string, ITriggerParser>();
         private readonly Dictionary<string, IMessageParser> _messageParsers = new Dictionary<string, IMessageParser>();
@@ -21,10 +21,10 @@
         private string _messageDelimiter = ";";
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="Parser"/> class.
+        /// Initializes a new instance of the <see cref="DefaultParser"/> class.
         /// </summary>
         /// <param name="controller">The controller.</param>
-        public Parser(IRoutedMessageController controller)
+        public DefaultParser(IRoutedMessageController controller)
         {
             _controller = controller;
 

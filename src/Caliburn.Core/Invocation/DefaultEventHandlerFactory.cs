@@ -6,7 +6,7 @@
     /// <summary>
     /// An implementation of <see cref="IEventHandlerFactory"/>.
     /// </summary>
-    public class EventHandlerFactory : IEventHandlerFactory
+    public class DefaultEventHandlerFactory : IEventHandlerFactory
     {
         private static readonly Type genericEventHandlerType = typeof(GenericEventHandler<,>);
 

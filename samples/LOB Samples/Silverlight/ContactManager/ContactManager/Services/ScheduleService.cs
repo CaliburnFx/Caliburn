@@ -2,7 +2,7 @@
 {
     using System;
     using System.Collections.Generic;
-    using Caliburn.Core.Metadata;
+    using Caliburn.Core.IoC;
     using Interfaces;
     using Model;
 

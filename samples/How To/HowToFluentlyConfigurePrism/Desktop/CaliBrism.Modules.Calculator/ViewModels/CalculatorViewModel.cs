@@ -1,11 +1,12 @@
 using System;
 using System.Windows;
-using Caliburn.Core.Metadata;
 using Caliburn.PresentationFramework.ApplicationModel;
 using Caliburn.PresentationFramework.Filters;
 
 namespace CaliBrism.Modules.Calculator.ViewModels
 {
+    using Caliburn.Core.IoC;
+
     [Rescue("GeneralRescue")]
     [PerRequest(typeof(ICalculatorViewModel))]
     public class CalculatorViewModel : Presenter, ICalculatorViewModel
