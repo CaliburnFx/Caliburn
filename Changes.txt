@@ -4,6 +4,7 @@ V2 Alpha
 -Added pre-initialization hooks to CaliburnApplication via Marco Amendola's patch.
 -Updated StructureMap to trunk version
 -Re-designed entire module and configuration mechanism.  Reworked feature modules and updated unit tests.  Fixed all samples.
+-Moved SafeToString to the PresentationFramework assembly and made it internal so that it would stop showing up on all objects.
 
 V1 RTW
 -The DefaultBinder will now throw on type activation failure.

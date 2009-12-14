@@ -21,15 +21,5 @@
                 action(item);
             }
         }
-
-        /// <summary>
-        /// Safely converts an object to a string.
-        /// </summary>
-        /// <param name="value">The value to convert.</param>
-        /// <returns>The converted string or null, if the value was null.</returns>
-        public static string SafeToString(this object value)
-        {
-            return value == null ? null : value.ToString();
-        }
     }
 }
