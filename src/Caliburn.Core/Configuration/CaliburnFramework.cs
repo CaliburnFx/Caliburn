@@ -118,7 +118,7 @@
             var registrations = new List<IComponentRegistration>();
             var modules = new List<IModule>();
 
-            _assembliesToInspect.Apply(x => x.Insepct(registrations, modules));
+            _assembliesToInspect.Apply(x => x.Inspect(registrations, modules));
             modules.Apply(AddModule);
 
             var components = _modules.SelectMany(x => x.GetComponents())
@@ -149,7 +149,7 @@
             var registrations = new List<IComponentRegistration>();
             var modules = new List<IModule>();
 
-            assembly.Insepct(registrations, modules);
+            assembly.Inspect(registrations, modules);
 
             _register(registrations);
 

@@ -23,7 +23,7 @@
             return CaliburnModule<CoreConfiguration>.Instance;
         }
 
-        public static void Insepct(this Assembly assembly, ICollection<IComponentRegistration> componentList, ICollection<IModule> modules)
+        public static void Inspect(this Assembly assembly, ICollection<IComponentRegistration> componentList, ICollection<IModule> modules)
         {
             var types = assembly.GetExportedTypes();
 
