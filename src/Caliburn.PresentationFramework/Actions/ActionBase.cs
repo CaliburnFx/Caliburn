@@ -78,6 +78,15 @@ namespace Caliburn.PresentationFramework.Actions
         }
 
         /// <summary>
+        /// Gets the method.
+        /// </summary>
+        /// <value>The method.</value>
+        public IMethod Method
+        {
+            get { return _method; }
+        }
+
+        /// <summary>
         /// Determines whether this action matches the specified message.
         /// </summary>
         /// <param name="message">The message.</param>

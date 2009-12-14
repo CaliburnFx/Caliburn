@@ -147,7 +147,7 @@
                               });
 
 			Interlocked.Increment(ref _runningCount);
-            CurrentTask.Enqueue(null);
+            CurrentTask.Enqueue(this);
             CurrentTask = null;
         }
 

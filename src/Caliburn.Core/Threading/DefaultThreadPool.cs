@@ -11,10 +11,11 @@
         /// Queues the user work item.
         /// </summary>
         /// <param name="callback">The work callback.</param>
+        /// <param name="userState">The user state.</param>
         /// <returns></returns>
-        public bool QueueUserWorkItem(WaitCallback callback)
+        public bool QueueUserWorkItem(WaitCallback callback, object userState)
         {
-            return ThreadPool.QueueUserWorkItem(callback);
+            return ThreadPool.QueueUserWorkItem(callback, userState);
         }
     }
 }

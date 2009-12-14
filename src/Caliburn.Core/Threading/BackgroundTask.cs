@@ -94,7 +94,7 @@ namespace Caliburn.Core.Threading
                     {
                         _context.Teardown();
                     }
-                });
+                }, userState);
         }
 
         /// <summary>

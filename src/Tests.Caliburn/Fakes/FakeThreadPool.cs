@@ -5,9 +5,9 @@ namespace Tests.Caliburn.Fakes
 {
     public class FakeThreadPool : IThreadPool
     {
-        public bool QueueUserWorkItem(WaitCallback callback)
+        public bool QueueUserWorkItem(WaitCallback callback, object state)
         {
-            callback(null);
+            callback(state);
             return true;
         }
     }
