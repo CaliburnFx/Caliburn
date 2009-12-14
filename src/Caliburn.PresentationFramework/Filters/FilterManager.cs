@@ -34,7 +34,7 @@
             _metadataContainer = metadataContainer;
             _serviceLocator = serviceLocator;
 
-            var filters = metadataContainer.GetMatchingMetadata<IFilter>()
+            var filters = metadataContainer.FindMetadata<IFilter>()
                 .OrderByDescending(x => x.Priority);
 
             filters.OfType<IInitializable>()

@@ -6,6 +6,8 @@ using Tests.Caliburn.Fakes;
 
 namespace Tests.Caliburn.Core.Invocation
 {
+    using global::Caliburn.Core.Metadata;
+
     [TestFixture]
     public class The_method_factory : TestBase
     {

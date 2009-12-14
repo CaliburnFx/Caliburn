@@ -35,24 +35,11 @@ namespace Caliburn.Core.Metadata
         }
 
         /// <summary>
-        /// Retrieves metadata from the store.
-        /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <returns></returns>
-        public virtual T GetMetadata<T>()
-            where T : IMetadata
-        {
-            return _metadata == null
-                       ? default(T)
-                       : _metadata.OfType<T>().FirstOrDefault();
-        }
-
-        /// <summary>
-        /// Gets the matching metadata.
+        /// Finds the matching metadata.
         /// </summary>
         /// <typeparam name="T">The type to match.</typeparam>
         /// <returns>The matches</returns>
-        public virtual IEnumerable<T> GetMatchingMetadata<T>()
+        public virtual IEnumerable<T> FindMetadata<T>()
             where T : IMetadata
         {
             return _metadata == null

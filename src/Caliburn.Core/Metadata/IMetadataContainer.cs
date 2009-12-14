@@ -14,17 +14,10 @@ namespace Caliburn.Core.Metadata
         void AddMetadata(IMetadata metadata);
 
         /// <summary>
-        /// Retrieves metadata from the store.
-        /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <returns></returns>
-        T GetMetadata<T>() where T : IMetadata;
-
-        /// <summary>
-        /// Gets the matching metadata.
+        /// Finds the matching metadata.
         /// </summary>
         /// <typeparam name="T">The type to match.</typeparam>
         /// <returns>The matches</returns>
-        IEnumerable<T> GetMatchingMetadata<T>() where T : IMetadata;
+        IEnumerable<T> FindMetadata<T>() where T : IMetadata;
     }
 }

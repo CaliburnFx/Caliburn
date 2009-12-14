@@ -148,7 +148,7 @@ namespace Caliburn.ModelFramework
         public void UseInterrogators<T>(Action<IEnumerable<T>> borrower)
             where T : IMetadata
         {
-            borrower(_definition.GetMatchingMetadata<T>());
+            borrower(_definition.FindMetadata<T>());
         }
 
         /// <summary>

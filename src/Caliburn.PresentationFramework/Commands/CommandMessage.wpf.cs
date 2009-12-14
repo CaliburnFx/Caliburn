@@ -368,25 +368,14 @@ namespace Caliburn.PresentationFramework.Commands
         }
 
         /// <summary>
-        /// Gets the metadata.
+        /// Finds the matching metadata.
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <returns></returns>
-        public T GetMetadata<T>()
+        public IEnumerable<T> FindMetadata<T>()
             where T : IMetadata
         {
-            return _metadataContainer.GetMetadata<T>();
-        }
-
-        /// <summary>
-        /// Gets the matching metadata.
-        /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <returns></returns>
-        public IEnumerable<T> GetMatchingMetadata<T>()
-            where T : IMetadata
-        {
-            return _metadataContainer.GetMatchingMetadata<T>();
+            return _metadataContainer.FindMetadata<T>();
         }
 
         /// <summary>

@@ -376,10 +376,10 @@ namespace Caliburn.ModelFramework
         /// </summary>
         /// <typeparam name="K"></typeparam>
         /// <returns></returns>
-        public IEnumerable<K> GetMatchingMetadata<K>()
+        public IEnumerable<K> FindMetadata<K>()
             where K : IMetadata
         {
-            return _metadataContainer.GetMatchingMetadata<K>();
+            return _metadataContainer.FindMetadata<K>();
         }
     }
 }

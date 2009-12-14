@@ -254,7 +254,7 @@ namespace Caliburn.ModelFramework
         {
             _isInterrogating = true;
 
-            borrower(_definition.GetMatchingMetadata<K>());
+            borrower(_definition.FindMetadata<K>());
 
             _isInterrogating = false;
         }

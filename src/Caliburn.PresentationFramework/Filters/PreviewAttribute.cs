@@ -3,6 +3,7 @@
     using System;
     using System.ComponentModel;
     using Core.Invocation;
+    using Core.Metadata;
 
     /// <summary>
     /// A basic pre execution filter.

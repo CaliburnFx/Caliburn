@@ -7,6 +7,7 @@ using Rhino.Mocks;
 
 namespace Tests.Caliburn.Actions
 {
+    using global::Caliburn.Core.Metadata;
     using global::Caliburn.PresentationFramework;
     using global::Caliburn.PresentationFramework.Actions;
     using global::Caliburn.PresentationFramework.Filters;
@@ -113,13 +114,13 @@ namespace Tests.Caliburn.Actions
             _host.Stub(x => x.TargetType).Return(typeof(T));
             _methodFactory.Expect(x => x.CreateFrom(Arg<MethodInfo>.Is.NotNull)).Return(method);
 
-            if(isAsync)
-                method.Expect(x => x.GetMetadata<AsyncActionAttribute>()).Return(new AsyncActionAttribute{ BlockInteraction = asyncBlocksInteraction});
-            else method.Expect(x => x.GetMetadata<AsyncActionAttribute>()).Return(null);
+            if (isAsync)
+                method.Expect(x => x.FindMetadata<AsyncActionAttribute>()).Return(new[] { new AsyncActionAttribute { BlockInteraction = asyncBlocksInteraction } });
+            else method.Expect(x => x.FindMetadata<AsyncActionAttribute>()).Return(new AsyncActionAttribute[] {});
 
             method.Stub(x => x.Info).Return(typeof(T).GetMethods().First()).Repeat.Any();
 
-            method.Expect(x => x.GetMatchingMetadata<PreviewAttribute>()).Return(
+            method.Expect(x => x.FindMetadata<PreviewAttribute>()).Return(
                 new System.Collections.Generic.List<PreviewAttribute>());
 
             _host.Expect(x => x.GetFilterManager(method)).Return(null);

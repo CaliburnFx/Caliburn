@@ -5,6 +5,8 @@ using Tests.Caliburn.Fakes;
 
 namespace Tests.Caliburn.Core.Metadata
 {
+    using global::Caliburn.Core.Metadata;
+
     [TestFixture]
     public class A_metadata_container : TestBase
     {
@@ -51,7 +53,7 @@ namespace Tests.Caliburn.Core.Metadata
             _container.AddMetadata(new FakeMetadata());
             _container.AddMetadata(new FakeMetadata2());
 
-            var found = _container.GetMatchingMetadata<IFakeMetadata>().ToList();
+            var found = _container.FindMetadata<IFakeMetadata>().ToList();
 
             Assert.That(found.Count, Is.EqualTo(2));
         }

@@ -5,6 +5,7 @@
     using System.Linq;
     using System.Reflection;
     using Core.Invocation;
+    using Core.Metadata;
     using Filters;
 
     /// <summary>
@@ -106,7 +107,7 @@
         /// <param name="method">The method.</param>
         protected void TryAddCanExecute(IFilterManager manager, IMethod method)
         {
-            var found = method.GetMatchingMetadata<PreviewAttribute>()
+            var found = method.FindMetadata<PreviewAttribute>()
                 .Where(x => x.MethodName == "Can" + method.Info.Name
                 );
 
