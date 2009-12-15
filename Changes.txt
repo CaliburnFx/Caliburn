@@ -9,6 +9,7 @@ V2 Alpha
 V1.1 RTW
 -Added pre-initialization hooks to CaliburnApplication via Marco Amendola's patch.
 -Redesign of IThreadPool.  AsynchronousAction will now pass itself as state when enqueing the background task.
+-Closed ticket #4672 by making PropertyChangedBase.PropertyChanged virtual.
 
 V1 RTW
 -The DefaultBinder will now throw on type activation failure.

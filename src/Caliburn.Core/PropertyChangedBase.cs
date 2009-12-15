@@ -18,7 +18,7 @@
 #if !SILVERLIGHT
         [field: NonSerialized]
 #endif
-        public event PropertyChangedEventHandler PropertyChanged = delegate { };
+        public virtual event PropertyChangedEventHandler PropertyChanged = delegate { };
 
         /// <summary>
         /// Notifies subscribers of the property change.
