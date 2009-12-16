@@ -5,6 +5,7 @@ namespace Caliburn.PresentationFramework.ApplicationModel
     using System;
     using System.ComponentModel;
     using System.Windows;
+    using System.Windows.Data;
 
     /// <summary>
     /// An implementation of <see cref="IWindowManager"/>.
@@ -72,7 +73,8 @@ namespace Caliburn.PresentationFramework.ApplicationModel
 
                 view.Closing += (s, e) => OnShutdownAttempted(presenter, view, handleShutdownModel, e);
 
-                view.Closed += delegate{
+                view.Closed += delegate
+                {
                     presenter.Deactivate();
                     presenter.Shutdown();
                 };
@@ -91,7 +93,7 @@ namespace Caliburn.PresentationFramework.ApplicationModel
         {
             var window = view as Window;
 
-            if(window == null)
+            if (window == null)
             {
                 window = new Window
                 {
@@ -99,20 +101,25 @@ namespace Caliburn.PresentationFramework.ApplicationModel
                     SizeToContent = SizeToContent.WidthAndHeight
                 };
 
-                if(Application.Current != null
+                if (Application.Current != null
                    && Application.Current.MainWindow != null)
                 {
+                    window.WindowStartupLocation = WindowStartupLocation.CenterOwner;
                     window.Owner = Application.Current.MainWindow;
                 }
+                else window.WindowStartupLocation = WindowStartupLocation.CenterScreen;
 
                 var presenter = model as IPresenter;
-                if(presenter != null)
-                    window.Title = presenter.DisplayName;
+                if (presenter != null)
+                {
+                    var binding = new Binding("DisplayName") { Mode = BindingMode.TwoWay };
+                    window.SetBinding(Window.TitleProperty, binding);
+                }
             }
             else if (Application.Current != null
                    && Application.Current.MainWindow != null)
             {
-                if(Application.Current.MainWindow != window)
+                if (Application.Current.MainWindow != window)
                     window.Owner = Application.Current.MainWindow;
             }
 
@@ -137,14 +144,15 @@ namespace Caliburn.PresentationFramework.ApplicationModel
             bool runningAsync = false;
 
             var custom = rootModel as ISupportCustomShutdown;
-            if(custom != null && handleShutdownModel != null)
+            if (custom != null && handleShutdownModel != null)
             {
                 var shutdownModel = custom.CreateShutdownModel();
                 var shouldEnd = false;
 
                 handleShutdownModel(
                     shutdownModel,
-                    () =>{
+                    () =>
+                    {
                         var canShutdown = custom.CanShutdown(shutdownModel);
                         if (runningAsync && canShutdown)
                         {
