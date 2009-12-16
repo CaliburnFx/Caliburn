@@ -1,17 +1,21 @@
 namespace Caliburn.Testability
 {
-    /// <summary>
+	using System;
+	using System.Linq.Expressions;
+
+	/// <summary>
     /// A type specific implementation of <see cref="BindingValidator"/>,
     /// </summary>
     /// <typeparam name="T"></typeparam>
     public class BindingValidator<T> : BindingValidator
     {
+
         /// <summary>
         /// Initializes a new instance of the <see cref="BindingValidator&lt;T&gt;"/> class.
         /// </summary>
         /// <param name="element">The data bound item.</param>
-        public BindingValidator(IElement element)
-            : base(element) {}
+		public BindingValidator(IBoundElement element)
+			: base(element) { }
 
         /// <summary>
         /// Validates the bound item.
@@ -26,5 +30,23 @@ namespace Caliburn.Testability
 
             return typedResult;
         }
+
+
+		
+		/// <summary>
+        /// Add a type hint for a property path, specifying the actual type returned 
+		/// by the last property of the property path chain
+        /// </summary>
+        /// <typeparam name="K"></typeparam>
+        /// <param name="propertyPath">The property path.</param>
+		/// <param name="hint">The Type actually returned.</param>
+        /// <returns></returns>
+		public BindingValidator<T> WithHint<K>(Expression<Func<T, K>> property, Type hint)
+		{
+			this.WithHint(ExpressionHelper.GetPathFromExpression(property), hint);
+			return this;
+		}
+
+		
     }
 }

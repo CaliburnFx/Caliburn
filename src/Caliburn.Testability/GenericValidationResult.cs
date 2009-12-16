@@ -17,7 +17,7 @@ namespace Caliburn.Testability
         /// <returns></returns>
         public bool WasBoundTo<K>(Expression<Func<T, K>> property)
         {
-            string propertyPath = GetPathFromExpression(property);
+			string propertyPath = ExpressionHelper.GetPathFromExpression(property);
             return WasBoundTo(propertyPath);
         }
 
@@ -53,7 +53,7 @@ namespace Caliburn.Testability
             throw new ValidationException(
                 string.Format(
                     "No binding {0} on {1} was found.",
-                    GetPathFromExpression(property),
+                    ExpressionHelper.GetPathFromExpression(property),
                     typeof(T).Name
                     )
                 );
@@ -71,17 +71,12 @@ namespace Caliburn.Testability
             throw new ValidationException(
                 string.Format(
                     "The binding {0} on {1} was found, but should not exist.",
-                    GetPathFromExpression(property),
+                    ExpressionHelper.GetPathFromExpression(property),
                     typeof(T).Name
                     )
                 );
         }
 
-        private static string GetPathFromExpression<K>(Expression<Func<T, K>> property)
-        {
-            var expressionString = property.ToString();
-            var dotIndex = expressionString.IndexOf('.');
-            return expressionString.Substring(dotIndex + 1);
-        }
+      
     }
 }

@@ -7,7 +7,7 @@
     /// <summary>
     /// Represents a data bound <see cref="Style"/>.
     /// </summary>
-    public class StyleElement : IElement
+	public class StyleElement : IBoundElement
     {
         private readonly Style _style;
         private readonly BoundType _type;

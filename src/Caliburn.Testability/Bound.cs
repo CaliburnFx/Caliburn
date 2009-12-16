@@ -15,7 +15,7 @@ namespace Caliburn.Testability
         /// <param name="element">The element.</param>
         /// <param name="boundType">Type of the bound object.</param>
         /// <returns></returns>
-        public static IElement DependencyObject(DependencyObject element, BoundType boundType)
+        public static IBoundElement DependencyObject(DependencyObject element, BoundType boundType)
         {
             return DependencyObject(element, boundType, string.Empty);
         }
@@ -27,7 +27,7 @@ namespace Caliburn.Testability
         /// <param name="boundType">Type of the bound object.</param>
         /// <param name="baseName">A base name.</param>
         /// <returns></returns>
-        public static IElement DependencyObject(DependencyObject element, BoundType boundType, string baseName)
+		public static IBoundElement DependencyObject(DependencyObject element, BoundType boundType, string baseName)
         {
             return DependencyObject(element, boundType, baseName, true);
         }
@@ -40,7 +40,7 @@ namespace Caliburn.Testability
         /// <param name="baseName">A base name.</param>
         /// <param name="checkLogicalChildren">Indicate whether this elements children should be checked.</param>
         /// <returns></returns>
-        public static IElement DependencyObject(DependencyObject element, BoundType boundType, string baseName,
+		public static IBoundElement DependencyObject(DependencyObject element, BoundType boundType, string baseName,
                                                 bool checkLogicalChildren)
         {
             var dependencyObjectElement = new DependencyObjectElement(element, boundType, baseName)
@@ -56,7 +56,7 @@ namespace Caliburn.Testability
         /// <param name="dataTemplate">The data template.</param>
         /// <param name="boundType">Type of the bound.</param>
         /// <returns></returns>
-        public static IElement DataTemplate(DataTemplate dataTemplate, BoundType boundType)
+		public static IBoundElement DataTemplate(DataTemplate dataTemplate, BoundType boundType)
         {
             return DataTemplate(dataTemplate, boundType, string.Empty);
         }
@@ -68,7 +68,7 @@ namespace Caliburn.Testability
         /// <param name="boundType">Type of the bound object.</param>
         /// <param name="baseName">A base name.</param>
         /// <returns></returns>
-        public static IElement DataTemplate(DataTemplate dataTemplate, BoundType boundType, string baseName)
+		public static IBoundElement DataTemplate(DataTemplate dataTemplate, BoundType boundType, string baseName)
         {
             if(!dataTemplate.IsSealed) dataTemplate.Seal();
             return new DataTemplateElement(dataTemplate, boundType, baseName);
@@ -81,7 +81,7 @@ namespace Caliburn.Testability
         /// <param name="boundType">Type of the bound object.</param>
         /// <param name="baseName">A base name.</param>
         /// <returns></returns>
-        public static IElement ControlTemplate(ControlTemplate template, BoundType boundType, string baseName)
+		public static IBoundElement ControlTemplate(ControlTemplate template, BoundType boundType, string baseName)
         {
             return new ControlTemplateElement(template, boundType, baseName);
         }
@@ -92,7 +92,7 @@ namespace Caliburn.Testability
         /// <param name="style">The style.</param>
         /// <param name="type">The type.</param>
         /// <returns></returns>
-        public static IElement Style(Style style, BoundType type)
+		public static IBoundElement Style(Style style, BoundType type)
         {
             return Style(style, type, string.Empty);
         }
@@ -104,7 +104,7 @@ namespace Caliburn.Testability
         /// <param name="type">The type.</param>
         /// <param name="name">The name.</param>
         /// <returns></returns>
-        public static IElement Style(Style style, BoundType type, string name)
+		public static IBoundElement Style(Style style, BoundType type, string name)
         {
             if(!style.IsSealed) style.Seal();
             return new StyleElement(style, type, name);
@@ -116,7 +116,7 @@ namespace Caliburn.Testability
         /// <param name="groupStyle">The group style.</param>
         /// <param name="type">The type.</param>
         /// <returns></returns>
-        public static IElement GroupStyle(GroupStyle groupStyle, BoundType type)
+		public static IBoundElement GroupStyle(GroupStyle groupStyle, BoundType type)
         {
             return GroupStyle(groupStyle, type, string.Empty);
         }
@@ -128,7 +128,7 @@ namespace Caliburn.Testability
         /// <param name="type">The type.</param>
         /// <param name="name">The name.</param>
         /// <returns></returns>
-        public static IElement GroupStyle(GroupStyle groupStyle, BoundType type, string name)
+		public static IBoundElement GroupStyle(GroupStyle groupStyle, BoundType type, string name)
         {
             return new GroupStyleElement(groupStyle, type, name);
         }
@@ -140,7 +140,7 @@ namespace Caliburn.Testability
         /// <param name="boundType">Type of the bound object.</param>
         /// <param name="name">The name.</param>
         /// <returns></returns>
-        public static IElement Enumerable(IEnumerable enumerable, BoundType boundType, string name)
+		public static IBoundElement Enumerable(IEnumerable enumerable, BoundType boundType, string name)
         {
             return new EnumerableElement(enumerable, boundType, name);
         }

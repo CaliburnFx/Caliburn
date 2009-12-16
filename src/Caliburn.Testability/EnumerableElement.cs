@@ -6,7 +6,7 @@
     /// <summary>
     /// An implementation of <see cref="IElement"/> that handles enumerables.
     /// </summary>
-    public class EnumerableElement : IElement
+	public class EnumerableElement : IBoundElement
     {
         private readonly IEnumerable _enumerable;
         private readonly BoundType _type;

@@ -1,18 +1,22 @@
 ﻿namespace Caliburn.Testability
 {
-    /// <summary>
+	using System;
+
+	/// <summary>
     /// Validates bindings on a data bound item.
     /// </summary>
     public class BindingValidator
     {
+		private readonly IBoundElement _element;
         private readonly ElementEnumerator _enumerator;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="BindingValidator"/> class.
         /// </summary>
         /// <param name="element">The data bound item.</param>
-        public BindingValidator(IElement element)
+        public BindingValidator(IBoundElement element)
         {
+			_element = element;
             _enumerator = new ElementEnumerator(element);
         }
 
@@ -24,6 +28,22 @@
         {
             get { return _enumerator.Settings; }
         }
+
+
+		/// <summary>
+		/// Add a type hint for a property path, specifying the actual type returned 
+		/// by the last property of the property path chain
+		/// </summary>
+		/// <typeparam name="K"></typeparam>
+		/// <param name="propertyPath">The property path.</param>
+		/// <param name="hint">The Type actually returned.</param>
+		/// <returns></returns>
+		public BindingValidator WithHint(string propertyPath, Type hint)
+		{
+			_element.Type.AddHint(propertyPath, hint);
+			return this;
+		}
+
 
         /// <summary>
         /// Validates the bound item.

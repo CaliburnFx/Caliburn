@@ -10,7 +10,7 @@ namespace Caliburn.Testability
     /// <summary>
     /// Represents a data bound element.
     /// </summary>
-    public class DependencyObjectElement : IElement
+    public class DependencyObjectElement : IBoundElement
     {
         private readonly DependencyObject _element;
         private readonly BoundType _type;
@@ -284,12 +284,10 @@ namespace Caliburn.Testability
 
                         if(binding != null)
                         {
-                            var enumerableProperty = Type.GetProperty(binding.Path.Path);
+                            var enumerableType = Type.GetPropertyType(binding.Path.Path);
 
-                            if(enumerableProperty != null)
-                            {
-                                var enumerableType = enumerableProperty.PropertyType;
-
+							if (enumerableType != null)
+                            {   
                                 var generics = enumerableType.GetGenericArguments();
 
                                 if(generics != null && generics.Length == 1)

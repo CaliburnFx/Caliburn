@@ -7,7 +7,7 @@
     /// <summary>
     /// An implementation of <see cref="IElement"/> for <see cref="GroupStyle"/>.
     /// </summary>
-    public class GroupStyleElement : IElement
+	public class GroupStyleElement : IBoundElement
     {
         private readonly GroupStyle _style;
         private readonly BoundType _type;

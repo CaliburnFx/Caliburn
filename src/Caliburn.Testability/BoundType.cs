@@ -1,221 +1,325 @@
 namespace Caliburn.Testability
 {
-    using System;
-    using System.Collections;
-    using System.Linq;
-    using System.Reflection;
-    using System.Windows;
-    using System.Windows.Data;
+	using System;
+	using System.Collections;
+	using System.Linq;
+	using System.Reflection;
+	using System.Windows;
+	using System.Windows.Data;
+	using System.Collections.Generic;
 
-    /// <summary>
-    /// Represents a type that an item is bound to.
-    /// </summary>
-    public class BoundType
-    {
-        private Type _type;
-        private string _basePath;
+	/// <summary>
+	/// Represents a type that an item is bound to.
+	/// </summary>
+	public class BoundType
+	{
+		private Type _type;
+		private string _basePath;
+		private IDictionary<string, Type> _hints;
 
-        /// <summary>
-        /// Initializes a new instance of the <see cref="BoundType"/> class.
-        /// </summary>
-        /// <param name="type">The type.</param>
-        public BoundType(Type type)
-            : this(type, string.Empty) {}
+		/// <summary>
+		/// Initializes a new instance of the <see cref="BoundType"/> class.
+		/// </summary>
+		/// <param name="type">The type.</param>
+		public BoundType(Type type)
+			: this(type, string.Empty) { }
 
-        /// <summary>
-        /// Initializes a new instance of the <see cref="BoundType"/> class.
-        /// </summary>
-        /// <param name="type">The type.</param>
-        /// <param name="basePath">The base path.</param>
-        public BoundType(Type type, string basePath)
-        {
-            _type = type;
-            _basePath = basePath;
-        }
+		/// <summary>
+		/// Initializes a new instance of the <see cref="BoundType"/> class.
+		/// </summary>
+		/// <param name="type">The type.</param>
+		/// <param name="basePath">The base path.</param>
+		public BoundType(Type type, string basePath) 
+			: this (type, basePath, new Dictionary<string, Type>()) {}
+		
+		/// <summary>
+		/// Initializes a new instance of the <see cref="BoundType"/> class.
+		/// Used internally to create an associated BoundType from a parent one.
+		/// </summary>
+		/// <param name="type">The type.</param>
+		/// <param name="basePath">The base path.</param>
+		/// /// <param name="hints">Hints propagated from parent.</param>
+		public BoundType(Type type, string basePath, IDictionary<string, Type> hints)
+		{
+			_type = type;
+			_basePath = basePath;
+			_hints = hints;
+		}
 
-        /// <summary>
-        /// Gets the type.
-        /// </summary>
-        /// <value>The type.</value>
-        public Type Type
-        {
-            get { return _type; }
-        }
+		/// <summary>
+		/// Gets the type.
+		/// </summary>
+		/// <value>The type.</value>
+		public Type Type
+		{
+			get { return _type; }
+		}
 
-        /// <summary>
-        /// Validates the information against this type.
-        /// </summary>
-        /// <param name="element">The data bound element.</param>
-        /// <param name="boundProperty">The bound property.</param>
-        /// <param name="binding">The binding.</param>
-        /// <returns></returns>
-        public ValidatedProperty ValidateAgainst(IElement element, DependencyProperty boundProperty, Binding binding)
-        {
-            var propertyPath = binding.Path.Path;
 
-            if(PathIsBinding(propertyPath))
-            {
-                return new ValidatedProperty(
-                    AreCompatibleTypes(element, boundProperty, _type, binding),
-                    GetFullPath(propertyPath)
-                    );
-            }
+		public void AddHint(string propertyPath, Type hint) {
+			if (_hints.ContainsKey(propertyPath))
+				throw new Caliburn.Core.CaliburnException(string.Format("Hint for path '{0}' was already added", propertyPath));
 
-            if(propertyPath == "/")
-            {
-                _type = DeriveTypeOfCollection(_type);
-                _basePath += "/";
+			//TODO: validate path part names
+			//TODO: validate hint congruency with reflected property type 
 
-                return new ValidatedProperty(
-                    null,
-                    GetFullPath(propertyPath)
-                    );
-            }
+			_hints.Add(propertyPath, hint);
+		}
 
-            var propertyInfo = GetProperty(propertyPath);
+		/// <summary>
+		/// Validates the information against this type.
+		/// </summary>
+		/// <param name="element">The data bound element.</param>
+		/// <param name="boundProperty">The bound property.</param>
+		/// <param name="binding">The binding.</param>
+		/// <returns></returns>
+		public ValidatedProperty ValidateAgainst(IElement element, DependencyProperty boundProperty, Binding binding)
+		{
+			var propertyPath = binding.Path.Path;
 
-            if(propertyInfo == null)
-            {
-                return new ValidatedProperty(
-                    Error.BadProperty(element, this, boundProperty, binding),
-                    GetFullPath(propertyPath)
-                    );
-            }
+			if (PathIsBinding(propertyPath))
+			{
+				return new ValidatedProperty(
+					AreCompatibleTypes(element, boundProperty, _type, binding),
+					GetFullPath(propertyPath)
+					);
+			}
 
-            return new ValidatedProperty(
-                AreCompatibleTypes(element, boundProperty, propertyInfo.PropertyType, binding),
-                GetFullPath(propertyPath)
-                );
-        }
+			if (propertyPath == "/")
+			{
+				_type = DeriveTypeOfCollection(_type);
+				_basePath += "/";
 
-        /// <summary>
-        /// Gets a type by association.
-        /// </summary>
-        /// <param name="propertyPath">The property path.</param>
-        /// <returns></returns>
-        public BoundType GetAssociatedType(string propertyPath)
-        {
-            if(PathIsBinding(propertyPath))
-                return this;
+				return new ValidatedProperty(
+					null,
+					GetFullPath(propertyPath)
+					);
+			}
 
-            var association = GetProperty(propertyPath);
-            return association != null ? new BoundType(association.PropertyType, propertyPath) : null;
-        }
+			var propertyType = GetPropertyType(propertyPath);
 
-        /// <summary>
-        /// Gets the property.
-        /// </summary>
-        /// <param name="propertyPath">The property path.</param>
-        /// <returns></returns>
-        public PropertyInfo GetProperty(string propertyPath)
-        {
-            var currentType = _type;
-            PropertyInfo currentInfo = null;
+			if (propertyType == null)
+			{
+				return new ValidatedProperty(
+					Error.BadProperty(element, this, boundProperty, binding),
+					GetFullPath(propertyPath)
+					);
+			}
 
-            for(int i = 0; i < propertyPath.Length; i++)
-            {
-                if(propertyPath[i] == '[')
-                {
-                    while(i < propertyPath.Length && propertyPath[i] != ']')
-                        i++;
+			return new ValidatedProperty(
+				AreCompatibleTypes(element, boundProperty, propertyType, binding),
+				GetFullPath(propertyPath)
+				);
+		}
 
-                    currentInfo = currentType.GetProperty("Item")
-                                  ?? GetInterfaceProperty("Item", currentType);
+		/// <summary>
+		/// Gets a type by association.
+		/// </summary>
+		/// <param name="propertyPath">The property path.</param>
+		/// <returns></returns>
+		public BoundType GetAssociatedType(string propertyPath)
+		{
+			if (PathIsBinding(propertyPath))
+				return this;
 
-                    if(currentInfo == null || i >= propertyPath.Length)
-                        return currentInfo;
+			var associationType = GetPropertyType(propertyPath);
+			return associationType != null ? new BoundType(associationType, propertyPath, GetHintsToPropagate()) : null;
+		}
 
-                    currentType = currentInfo.PropertyType;
-                }
-                else if(propertyPath[i] == '/')
-                    currentType = DeriveTypeOfCollection(currentType);
-                else
-                {
-                    if(propertyPath[i] == '.') i++;
+		private IDictionary<string, Type> GetHintsToPropagate() {
+			return _hints
+				.Select(pair => new KeyValuePair<string, Type>(
+						StripLeadingPathPart(pair.Key),
+						pair.Value
+					))
+				.Where(pair => !string.IsNullOrEmpty(pair.Key))
+				.ToDictionary(pair => pair.Key, pair => pair.Value); 
+		}
+		private string StripLeadingPathPart(string propertyPath) {
+			var dotIndex = propertyPath.IndexOf('.');
+			if (dotIndex < 0) return null;
+			return propertyPath.Substring(dotIndex + 1);
+		}
 
-                    string propertyName = string.Empty;
+		/// <summary>
+		/// Gets the type of property.
+		/// </summary>
+		/// <param name="propertyPath">The property path.</param>
+		/// <returns></returns>
+		public Type GetPropertyType(string propertyPath) 
+		{
+			var currentType = _type;
+			var currentPrefixForHintLookup = string.Empty;
+		 
+			for (int i = 0; i < propertyPath.Length; i++)
+			{
+				if (propertyPath[i] == '[')
+				{
+					while (i < propertyPath.Length && propertyPath[i] != ']')
+						i++;
 
-                    while(i < propertyPath.Length && Char.IsLetterOrDigit(propertyPath[i]))
-                    {
-                        propertyName += propertyPath[i];
-                        i++;
-                    }
+					var info = currentType.GetProperty("Item")
+								  ?? GetInterfaceProperty("Item", currentType);
 
-                    currentInfo = currentType.GetProperty(
-                                      propertyName,
-                                      BindingFlags.DeclaredOnly | BindingFlags.GetProperty | BindingFlags.Public | BindingFlags.Instance)
-                                  ?? GetInterfaceProperty(propertyName, currentType)
-                                     ?? currentType.GetProperties().Where(x => x.Name == propertyName).FirstOrDefault();
+					if (info == null) return null;
 
-                    if(currentInfo == null || i >= propertyPath.Length)
-                        return currentInfo;
+					currentType = info.PropertyType;
+					currentPrefixForHintLookup += "Item.";
+					if (i >= propertyPath.Length) return currentType;
+				}
+				else if (propertyPath[i] == '/')
+					currentType = DeriveTypeOfCollection(currentType);
+				else
+				{
+					if (propertyPath[i] == '.') i++;
 
-                    currentType = currentInfo.PropertyType;
-                    i--;
-                }
-            }
+					string propertyName = string.Empty;
 
-            return currentInfo;
-        }
+					while (i < propertyPath.Length && Char.IsLetterOrDigit(propertyPath[i]))
+					{
+						propertyName += propertyPath[i];
+						i++; 
+					}
 
-        /// <summary>
-        /// Derives the type of the collection.
-        /// </summary>
-        /// <param name="collection">The collection.</param>
-        /// <returns></returns>
-        private static Type DeriveTypeOfCollection(Type collection)
-        {
-            return (from i in collection.GetInterfaces()
-                    where typeof(IEnumerable).IsAssignableFrom(i)
-                          && i.IsGenericType
-                    select i.GetGenericArguments()[0]).FirstOrDefault();
-        }
+					Type hint;
+					if (_hints.TryGetValue(currentPrefixForHintLookup + propertyName, out hint))
+					{
+						currentType = hint;
+					}
+					else
+					{
+						var info = currentType.GetProperty(
+										  propertyName,
+										  BindingFlags.DeclaredOnly | BindingFlags.GetProperty | BindingFlags.Public | BindingFlags.Instance)
+									  ?? GetInterfaceProperty(propertyName, currentType)
+										 ?? currentType.GetProperties().Where(x => x.Name == propertyName).FirstOrDefault();
 
-        /// <summary>
-        /// Gets the interface property.
-        /// </summary>
-        /// <param name="propertyName">Name of the property.</param>
-        /// <param name="type">The type.</param>
-        /// <returns></returns>
-        private static PropertyInfo GetInterfaceProperty(string propertyName, Type type)
-        {
-            var interfaces = type.GetInterfaces();
-            foreach(var t in interfaces)
-            {
-                var propertyInfo = t.GetProperty(propertyName) ?? GetInterfaceProperty(propertyName, t);
-                if(propertyInfo != null)
-                    return propertyInfo;
-            }
-            return null;
-        }
+						if (info == null) return null;
 
-        private string GetFullPath(string propertyPath)
-        {
-            if(string.IsNullOrEmpty(_basePath))
-                return propertyPath;
+						currentType = info.PropertyType;
+					}
 
-            if(_basePath.EndsWith("/") || propertyPath.StartsWith("/"))
-                return (_basePath + propertyPath).Replace("//", "/");
+					currentPrefixForHintLookup += propertyName + ".";
+					if (i >= propertyPath.Length) return currentType;
+					i--;
+				}
+			}
 
-            return _basePath + "." + propertyPath;
-        }
+			return currentType;
+		}
 
-        private bool PathIsBinding(string propertyPath)
-        {
-            return string.IsNullOrEmpty(propertyPath) || propertyPath == ".";
-        }
+		private PropertyInfo GetPropertyInfo(string propertyPath)
+		{
+			var currentType = _type;
+			PropertyInfo currentInfo = null;
 
-        private IError AreCompatibleTypes(IElement element, DependencyProperty boundProperty, Type propertyType,
-                                          Binding binding)
-        {
-            if(boundProperty == null) return null;
+			for (int i = 0; i < propertyPath.Length; i++)
+			{
+				if (propertyPath[i] == '[')
+				{
+					while (i < propertyPath.Length && propertyPath[i] != ']')
+						i++;
 
-            if(typeof(IEnumerable).IsAssignableFrom(boundProperty.PropertyType) &&
-               boundProperty.PropertyType != typeof(string) &&
-               !typeof(IEnumerable).IsAssignableFrom(propertyType))
-                return Error.NotEnumerable(element, this, boundProperty, binding);
+					currentInfo = currentType.GetProperty("Item")
+								  ?? GetInterfaceProperty("Item", currentType);
 
-            return null;
-        }
-    }
+					if (currentInfo == null || i >= propertyPath.Length)
+						return currentInfo;
+
+					currentType = currentInfo.PropertyType;
+				}
+				else if (propertyPath[i] == '/')
+					currentType = DeriveTypeOfCollection(currentType);
+				else
+				{
+					if (propertyPath[i] == '.') i++;
+
+					string propertyName = string.Empty;
+
+					while (i < propertyPath.Length && Char.IsLetterOrDigit(propertyPath[i]))
+					{
+						propertyName += propertyPath[i];
+						i++;
+					}
+
+					currentInfo = currentType.GetProperty(
+									  propertyName,
+									  BindingFlags.DeclaredOnly | BindingFlags.GetProperty | BindingFlags.Public | BindingFlags.Instance)
+								  ?? GetInterfaceProperty(propertyName, currentType)
+									 ?? currentType.GetProperties().Where(x => x.Name == propertyName).FirstOrDefault();
+
+					if (currentInfo == null || i >= propertyPath.Length)
+						return currentInfo;
+
+					currentType = currentInfo.PropertyType;
+					i--;
+				}
+			}
+
+			return currentInfo;
+		}
+
+		/// <summary>
+		/// Derives the type of the collection.
+		/// </summary>
+		/// <param name="collection">The collection.</param>
+		/// <returns></returns>
+		private static Type DeriveTypeOfCollection(Type collection)
+		{
+			return (from i in collection.GetInterfaces()
+					where typeof(IEnumerable).IsAssignableFrom(i)
+						  && i.IsGenericType
+					select i.GetGenericArguments()[0]).FirstOrDefault();
+		}
+
+		/// <summary>
+		/// Gets the interface property.
+		/// </summary>
+		/// <param name="propertyName">Name of the property.</param>
+		/// <param name="type">The type.</param>
+		/// <returns></returns>
+		private static PropertyInfo GetInterfaceProperty(string propertyName, Type type)
+		{
+			var interfaces = type.GetInterfaces();
+			foreach (var t in interfaces)
+			{
+				var propertyInfo = t.GetProperty(propertyName) ?? GetInterfaceProperty(propertyName, t);
+				if (propertyInfo != null)
+					return propertyInfo;
+			}
+			return null;
+		}
+
+		private string GetFullPath(string propertyPath)
+		{
+			if (string.IsNullOrEmpty(_basePath))
+				return propertyPath;
+
+			if (_basePath.EndsWith("/") || propertyPath.StartsWith("/"))
+				return (_basePath + propertyPath).Replace("//", "/");
+
+			return _basePath + "." + propertyPath;
+		}
+
+		private bool PathIsBinding(string propertyPath)
+		{
+			return string.IsNullOrEmpty(propertyPath) || propertyPath == ".";
+		}
+
+		private IError AreCompatibleTypes(IElement element, DependencyProperty boundProperty, Type propertyType,
+										  Binding binding)
+		{
+			if (boundProperty == null) return null;
+
+			if (typeof(IEnumerable).IsAssignableFrom(boundProperty.PropertyType) &&
+			   boundProperty.PropertyType != typeof(string) &&
+			   !typeof(IEnumerable).IsAssignableFrom(propertyType))
+				return Error.NotEnumerable(element, this, boundProperty, binding);
+
+			return null;
+		}
+	}
+
+
+ 
 }

@@ -60,6 +60,7 @@
     <Compile Include="Bound.cs" />
     <Compile Include="ControlTemplateElement.cs" />
     <Compile Include="ControlTemplateValidator.cs" />
+    <Compile Include="ExpressionHelper.cs" />
     <Compile Include="DataTemplateElement.cs" />
     <Compile Include="DataTemplateValidator.cs" />
     <Compile Include="DependencyObjectValidator.cs" />
@@ -67,6 +68,7 @@
     <Compile Include="GroupStyleElement.cs" />
     <Compile Include="GroupStyleValidator.cs" />
     <Compile Include="ElementEnumerator.cs" />
+    <Compile Include="IBoundElement.cs" />
     <Compile Include="StyleElement.cs" />
     <Compile Include="StyleValidator.cs" />
     <Compile Include="Error.cs" />

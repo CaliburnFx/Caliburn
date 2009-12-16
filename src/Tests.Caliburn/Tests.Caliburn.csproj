@@ -152,6 +152,7 @@
     <Compile Include="Fakes\DependentService.cs" />
     <Compile Include="Fakes\Model\DataItem.cs" />
     <Compile Include="Fakes\Model\Order.cs" />
+    <Compile Include="Fakes\Model\PresenterModelChain.cs" />
     <Compile Include="Fakes\Model\StopModel.cs" />
     <Compile Include="Fakes\UI\UIBoundToCustomerIndexer.cs" />
     <Compile Include="Fakes\UI\UIWithHierarchicalPath.cs" />
@@ -239,6 +240,7 @@
     <Compile Include="Testability\ChangeNotificationSamples\NotificationWithWrongName.cs" />
     <Compile Include="Testability\ChangeNotificationSamples\PartialNotification.cs" />
     <Compile Include="Testability\ChangeNotificationSamples\PropertyWithReferenceType.cs" />
+    <Compile Include="Testability\The_BoundType.cs" />
     <Compile Include="Testability\When_leveraging_enumerator_settings.cs" />
     <Compile Include="Testability\When_looking_for_ambiguities.cs" />
     <Compile Include="Testability\When_testing_basic_binding.cs" />
@@ -246,7 +248,7 @@
     <Compile Include="Testability\When_testing_that_properties_implement_change_notification.cs" />
     <Compile Include="Testability\When_testing_data_templates.cs" />
     <Compile Include="Testability\When_testing_multibindings.cs" />
-    <Compile Include="Testability\When_testing_nested_bindings.cs" />
+    <Compile Include="Testability\When_testing_basic_binding_with_hints.cs" />
     <Compile Include="Testability\When_testing_priority_bindings.cs" />
     <Compile Include="Testability\When_testing_styles.cs" />
     <Compile Include="TestBase.cs" />
