@@ -211,6 +211,7 @@
     <Compile Include="MVP\Presenters\A_navigator.cs" />
     <Compile Include="MVP\Presenters\A_presenter.cs" />
     <Compile Include="MVP\Presenters\A_presenter_manager.cs" />
+    <Compile Include="RoutedUIMessaging\Parsers\The_action_message_parser.cs" />
     <Compile Include="RoutedUIMessaging\Parsers\The_event_trigger_parser.cs" />
     <Compile Include="RoutedUIMessaging\Parsers\The_gesture_trigger_parser.cs" />
     <Compile Include="RoutedUIMessaging\The_availability_effect_converter.cs" />
