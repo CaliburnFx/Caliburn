@@ -15,6 +15,7 @@ V1.1 RTW
 -Applied marcoamendola's patch enabling type hinting for polymorphic databinding in Caliburn.Testability.
 -Applied etobi's patch to greatly improve Caliburn's parameter parsing in ActionMessages and CommandMessages. See http://caliburn.codeplex.com/WorkItem/View.aspx?WorkItemId=4644 for an explanation.
 -Closed ticket #4826. DefaultWindowManager now sets WindowStartupLocation to CenterOwner for UserControls hosted in windows. Title was enhanced to databind to IPresenter.DisplayName if model implements this interface.
+-Closed ticket #4833. Fixed an issue with ViewMetadata and invalid Windows in DefaultViewStrategy.
 
 V1 RTW
 -The DefaultBinder will now throw on type activation failure.

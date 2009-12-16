@@ -57,7 +57,14 @@ namespace Caliburn.PresentationFramework.ApplicationModel
             if (metadataContainer != null)
             {
                 var view = metadataContainer.GetView<object>(context);
-                if (view != null) return view;
+                if (view != null)
+                {
+                    var windowCheck = view as Window;
+                    if (windowCheck == null || !windowCheck.IsLoaded)
+                    {
+                        return view;
+                    }
+                }
             }
 #endif
 
