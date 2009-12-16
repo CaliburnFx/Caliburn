@@ -181,6 +181,9 @@
     <Compile Include="Triggers\GestureMessageTrigger.silverlight.cs" />
     <Compile Include="Triggers\GestureMessageTrigger.wpf.cs" />
     <Compile Include="Triggers\MouseAction.silverlight.cs" />
+    <Compile Include="Triggers\Support\UnrestrictedKeyGesture.cs" />
+    <Compile Include="Triggers\Support\UnrestrictedKeyGestureConverter.cs" />
+    <Compile Include="Triggers\Support\UnrestrictedKeyGestureValueSerializer.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Caliburn.Core\Caliburn.Core.csproj">

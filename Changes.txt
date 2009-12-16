@@ -10,6 +10,7 @@ V1.1 RTW
 -Added pre-initialization hooks to CaliburnApplication via Marco Amendola's patch.
 -Redesign of IThreadPool.  AsynchronousAction will now pass itself as state when enqueing the background task.
 -Closed ticket #4672 by making PropertyChangedBase.PropertyChanged virtual.
+-Applied jagregory's patch to add single key gestures to WPF and Caliburn.
 
 V1 RTW
 -The DefaultBinder will now throw on type activation failure.

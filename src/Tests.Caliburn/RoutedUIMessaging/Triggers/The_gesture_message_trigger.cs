@@ -7,6 +7,7 @@ namespace Tests.Caliburn.RoutedUIMessaging.Triggers
     using global::Caliburn.Core;
     using global::Caliburn.PresentationFramework;
     using global::Caliburn.PresentationFramework.Triggers;
+    using global::Caliburn.PresentationFramework.Triggers.Support;
     using NUnit.Framework;
     using NUnit.Framework.SyntaxHelpers;
     using Rhino.Mocks;
@@ -73,7 +74,7 @@ namespace Tests.Caliburn.RoutedUIMessaging.Triggers
             Assert.That(_message.InitializeCalledWith, Is.EqualTo(_node));
 
             var binding = _element.InputBindings[0];
-            var gesture = binding.Gesture as KeyGesture;
+            var gesture = binding.Gesture as UnrestrictedKeyGesture;
 
             Assert.That(binding.Command, Is.EqualTo(new GestureMessageTrigger.GestureCommand(binding.Gesture)));
             Assert.That(gesture.Key, Is.EqualTo(Key.S));

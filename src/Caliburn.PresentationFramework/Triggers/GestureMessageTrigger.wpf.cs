@@ -7,6 +7,7 @@ namespace Caliburn.PresentationFramework.Triggers
     using System.Windows;
     using System.Windows.Input;
     using Core;
+    using Support;
 
     /// <summary>
     /// An implentation of <see cref="InputGesture"/> that enables triggers based on an <see cref="IMessageTrigger"/>.
@@ -87,7 +88,7 @@ namespace Caliburn.PresentationFramework.Triggers
             InputGesture gesture;
 
             if(Key != Key.None)
-                gesture = new KeyGesture(Key, Modifiers);
+                gesture = new UnrestrictedKeyGesture(Key, Modifiers);
             else gesture = new MouseGesture(MouseAction, Modifiers);
 
             var uiElement = node.UIElement as UIElement;
@@ -133,10 +134,10 @@ namespace Caliburn.PresentationFramework.Triggers
         {
             if(left.GetType() != right.GetType()) return false;
 
-            var leftKeyGesture = left as KeyGesture;
+            var leftKeyGesture = left as UnrestrictedKeyGesture;
             if(leftKeyGesture != null)
             {
-                var rightKeyGesture = (KeyGesture)right;
+                var rightKeyGesture = (UnrestrictedKeyGesture)right;
 
                 return rightKeyGesture.Key == leftKeyGesture.Key
                        && rightKeyGesture.Modifiers == leftKeyGesture.Modifiers;
