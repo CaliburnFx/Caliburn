@@ -81,15 +81,15 @@ namespace Caliburn.PresentationFramework.ApplicationModel
 
             if (_cache.ContainsKey(cacheKey))
                 return GetOrCreateViewFromType(_cache[cacheKey]);
-            
+
             var namesToCheck = GetTypeNamesToCheck(modelType, stringContext);
 
-            foreach(var name in namesToCheck)
+            foreach (var name in namesToCheck)
             {
                 foreach (var assembly in _assemblySource.Union(new[] { modelType.Assembly }))
                 {
                     var type = assembly.GetType(name, false);
-                    if(type == null) continue;
+                    if (type == null) continue;
 
                     var view = GetOrCreateViewFromType(type);
                     if (view == null) continue;
@@ -136,10 +136,10 @@ namespace Caliburn.PresentationFramework.ApplicationModel
             var view = _serviceLocator.GetAllInstances(type)
                 .FirstOrDefault();
 
-            if(view != null)
+            if (view != null)
                 return view;
 
-            if (type.IsInterface || type.IsAbstract) 
+            if (type.IsInterface || type.IsAbstract)
                 return null;
 
             return Activator.CreateInstance(type);
@@ -157,9 +157,9 @@ namespace Caliburn.PresentationFramework.ApplicationModel
 
             var keywords = GetSingularKeywords();
 
-            foreach(var word in keywords)
+            foreach (var word in keywords)
             {
-                if(!modelType.FullName.Contains(MakeNamespacePart(word)) && !string.IsNullOrEmpty(word))
+                if (!modelType.FullName.Contains(MakeNamespacePart(word)) && !string.IsNullOrEmpty(word))
                     continue;
 
                 var options = ReplaceWithView(
@@ -167,9 +167,9 @@ namespace Caliburn.PresentationFramework.ApplicationModel
                     word
                     );
 
-                if(!string.IsNullOrEmpty(context))
+                if (!string.IsNullOrEmpty(context))
                 {
-                    foreach(var option in options)
+                    foreach (var option in options)
                     {
                         var name = option + "s." + context;
                         yield return MakeInterface(name); //Namespace.Views.SomethingViews.IEdit
@@ -178,7 +178,7 @@ namespace Caliburn.PresentationFramework.ApplicationModel
                 }
                 else
                 {
-                    foreach(var option in options)
+                    foreach (var option in options)
                     {
                         yield return MakeInterface(option); //Namespace.Views.ISomethingView
                         yield return option; //Namespace.Views.SomethingView
@@ -203,6 +203,7 @@ namespace Caliburn.PresentationFramework.ApplicationModel
                 "Model",
                 "ViewModel",
                 "PresentationModel",
+                "Screen",
                 string.Empty
             };
         }
@@ -226,7 +227,15 @@ namespace Caliburn.PresentationFramework.ApplicationModel
                 }
             }
 
-            if (part.EndsWith(toReplace))
+            if (string.IsNullOrEmpty(toReplace))
+            {
+                foreach (var keyword in GetSingularKeywords().Except(new[] { string.Empty }))
+                {
+                    if (part.EndsWith(keyword))
+                        yield return part.Remove(part.LastIndexOf(keyword)) + "View";
+                }
+            }
+            else if (part.EndsWith(toReplace))
             {
                 part = part.Substring(0, part.Length - toReplace.Length) + "View";
                 yield return part;

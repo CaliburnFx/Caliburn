@@ -102,7 +102,8 @@ namespace Caliburn.PresentationFramework.ApplicationModel
                 };
 
                 if (Application.Current != null
-                   && Application.Current.MainWindow != null)
+                   && Application.Current.MainWindow != null
+                    && Application.Current.MainWindow != window)
                 {
                     window.WindowStartupLocation = WindowStartupLocation.CenterOwner;
                     window.Owner = Application.Current.MainWindow;

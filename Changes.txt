@@ -16,6 +16,8 @@ V1.1 RTW
 -Applied etobi's patch to greatly improve Caliburn's parameter parsing in ActionMessages and CommandMessages. See http://caliburn.codeplex.com/WorkItem/View.aspx?WorkItemId=4644 for an explanation.
 -Closed ticket #4826. DefaultWindowManager now sets WindowStartupLocation to CenterOwner for UserControls hosted in windows. Title was enhanced to databind to IPresenter.DisplayName if model implements this interface.
 -Closed ticket #4833. Fixed an issue with ViewMetadata and invalid Windows in DefaultViewStrategy.
+-Fixed a bug with DefaultWindowManager which caused errors when creating main windows from a user control.
+-Improved the flexibility of the DefaultViewStrategy. It no longer requires separate namespaces for ViewModels/Views.
 
 V1 RTW
 -The DefaultBinder will now throw on type activation failure.
