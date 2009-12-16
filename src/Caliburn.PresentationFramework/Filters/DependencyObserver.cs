@@ -3,6 +3,8 @@ namespace Caliburn.PresentationFramework.Filters
     using System.Collections.Generic;
     using System.ComponentModel;
     using Core.Metadata;
+    using Microsoft.Practices.ServiceLocation;
+    using Core.Invocation;
 
     /// <summary>
     /// Metadata which can be used to trigger availability changes in triggers based on <see cref="INotifyPropertyChanged"/>.
@@ -10,19 +12,21 @@ namespace Caliburn.PresentationFramework.Filters
     public class DependencyObserver : IMetadata
     {
         private readonly IRoutedMessageHandler _messageHandler;
-        private readonly Dictionary<string, IList<IMessageTrigger>> _triggersToNotify;
+        private readonly IServiceLocator _serviceLocator;
+        private readonly INotifyPropertyChanged _notifier;
+        private readonly IDictionary<string, MonitoringInfo> _monitoringInfos;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="DependencyObserver"/> class.
         /// </summary>
         /// <param name="messageHandler">The message handler.</param>
         /// <param name="notifier">The notifier.</param>
-        public DependencyObserver(IRoutedMessageHandler messageHandler, INotifyPropertyChanged notifier)
+        public DependencyObserver(IRoutedMessageHandler messageHandler, INotifyPropertyChanged notifier, IServiceLocator serviceLocator)
         {
             _messageHandler = messageHandler;
-            _triggersToNotify = new Dictionary<string, IList<IMessageTrigger>>();
-
-            notifier.PropertyChanged += Notifier_PropertyChanged;
+            _serviceLocator = serviceLocator;
+            _notifier = notifier;
+            _monitoringInfos = new Dictionary<string, MonitoringInfo>();
         }
 
         /// <summary>
@@ -34,29 +38,48 @@ namespace Caliburn.PresentationFramework.Filters
         {
             foreach (var dependency in dependencies)
             {
-                IList<IMessageTrigger> triggers;
-
-                if(!_triggersToNotify.TryGetValue(dependency, out triggers))
-                {
-                    triggers = new List<IMessageTrigger>();
-                    _triggersToNotify[dependency] = triggers;
-                }
-
-                if(!triggers.Contains(trigger))
-                    triggers.Add(trigger);
+                var info = GetMonitoringInfos(dependency);
+                info.RegisterTrigger(trigger);
             }
         }
 
-        private void Notifier_PropertyChanged(object sender, PropertyChangedEventArgs e)
+        private MonitoringInfo GetMonitoringInfos(string propertyPath)
         {
-            IList<IMessageTrigger> triggers;
+            MonitoringInfo info;
 
-            if(!_triggersToNotify.TryGetValue(e.PropertyName, out triggers)) 
-                return;
-
-            foreach (var messageTrigger in triggers)
+            if (!_monitoringInfos.TryGetValue(propertyPath, out info))
             {
-                _messageHandler.UpdateAvailability(messageTrigger);
+                info = new MonitoringInfo(_serviceLocator.GetInstance<IMethodFactory>(), _notifier, propertyPath, _messageHandler);
+                _monitoringInfos[propertyPath] = info;
+            }
+
+            return info;
+        }
+
+        private class MonitoringInfo
+        {
+            private readonly IRoutedMessageHandler _messageHandler;
+            private readonly IList<IMessageTrigger> _triggersToNotify = new List<IMessageTrigger>();
+            private PropertyPathMonitor _monitor;
+
+            public MonitoringInfo(IMethodFactory methodFactory, object notifier, string propertyPath, IRoutedMessageHandler messageHandler)
+            {
+                _messageHandler = messageHandler;
+                _monitor = new PropertyPathMonitor(methodFactory, notifier, propertyPath, OnPathChanged);
+            }
+
+            public void RegisterTrigger(IMessageTrigger trigger)
+            {
+                if (!_triggersToNotify.Contains(trigger))
+                    _triggersToNotify.Add(trigger);
+            }
+
+            private void OnPathChanged()
+            {
+                foreach (var messageTrigger in _triggersToNotify)
+                {
+                    _messageHandler.UpdateAvailability(messageTrigger);
+                }
             }
         }
     }

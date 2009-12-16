@@ -11,13 +11,11 @@ namespace Caliburn.PresentationFramework.Filters
     /// </summary>
     public class MethodCallFilterBase : Attribute, IInitializable
     {
-        private readonly string _methodName;
-
         /// <summary>
         /// The method.
         /// </summary>
         protected IMethod _method;
-
+        private readonly string _methodName;
         private IMetadataContainer _target;
 
         /// <summary>
@@ -77,11 +75,11 @@ namespace Caliburn.PresentationFramework.Filters
         /// <param name="targetType">Type of the target.</param>
         /// <param name="metadataContainer">The metadata container.</param>
         /// <param name="serviceLocator">The serviceLocator.</param>
-        public void Initialize(Type targetType, IMetadataContainer metadataContainer, IServiceLocator serviceLocator)
+        public virtual void Initialize(Type targetType, IMetadataContainer metadataContainer, IServiceLocator serviceLocator)
         {
             _target = metadataContainer;
 
-            if(_method != null)
+            if (_method != null)
                 return;
 
             var methodInfo = targetType.GetMethod(_methodName,

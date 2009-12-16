@@ -16,6 +16,7 @@
     {
         private readonly string[] _dependencies;
         private IMetadataContainer _target;
+        private IServiceLocator _serviceLocator;
 
         /// <summary>
         /// Gets the priority used to order filters.
@@ -42,6 +43,7 @@
         public void Initialize(Type targetType, IMetadataContainer metadataContainer, IServiceLocator serviceLocator)
         {
             _target = metadataContainer;
+            _serviceLocator = serviceLocator;
         }
 
         /// <summary>
@@ -56,7 +58,7 @@
             var helper = messageHandler.GetMetadata<DependencyObserver>();
             if (helper != null) return;
 
-            helper = new DependencyObserver(messageHandler, notifier);
+            helper = new DependencyObserver(messageHandler, notifier, _serviceLocator);
             messageHandler.AddMetadata(helper);
         }
 
@@ -70,7 +72,7 @@
             var helper = messageHandler.GetMetadata<DependencyObserver>();
             if (helper == null) return;
 
-            if(trigger.Message.RelatesTo(_target))
+            if (trigger.Message.RelatesTo(_target))
                 helper.MakeAwareOf(trigger, _dependencies);
         }
     }

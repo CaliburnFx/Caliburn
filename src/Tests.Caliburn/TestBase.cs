@@ -30,6 +30,14 @@ namespace Tests.Caliburn
             return MockRepository.GenerateMock<T>();
         }
 
+        protected T StrictMock<T>()
+        {
+            var repository = new MockRepository();
+            var strict = repository.StrictMock<T>();
+            repository.Replay(strict);
+            return strict;
+        }
+
         protected T Stub<T>()
         {
             return MockRepository.GenerateStub<T>();

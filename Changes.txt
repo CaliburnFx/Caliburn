@@ -11,6 +11,7 @@ V1.1 RTW
 -Redesign of IThreadPool.  AsynchronousAction will now pass itself as state when enqueing the background task.
 -Closed ticket #4672 by making PropertyChangedBase.PropertyChanged virtual.
 -Applied jagregory's patch to add single key gestures to WPF and Caliburn.
+-Applied marcoamendola's patch for enabling property path syntax with Preview and Dependency attributes. So you can now do things like [Dependencies("Model.IsValid")].
 
 V1 RTW
 -The DefaultBinder will now throw on type activation failure.

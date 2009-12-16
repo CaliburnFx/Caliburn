@@ -3,6 +3,7 @@
     using System;
     using System.ComponentModel;
     using Core.Invocation;
+    using Microsoft.Practices.ServiceLocation;
     using Core.Metadata;
 
     /// <summary>
@@ -11,6 +12,8 @@
     [AttributeUsage(AttributeTargets.Method, AllowMultiple = true)]
     public class PreviewAttribute : MethodCallFilterBase, IPreProcessor, IHandlerAware
     {
+        private IServiceLocator _serviceLocator;
+
         /// <summary>
         /// Initializes a new instance of the <see cref="PreviewAttribute"/> class.
         /// </summary>
@@ -39,6 +42,18 @@
         public bool AffectsTriggers { get; set; }
 
         /// <summary>
+        /// Initializes the filter.
+        /// </summary>
+        /// <param name="targetType">Type of the target.</param>
+        /// <param name="metadataContainer">The metadata container.</param>
+        /// <param name="serviceLocator">The serviceLocator.</param>
+        public override void Initialize(Type targetType, IMetadataContainer metadataContainer, IServiceLocator serviceLocator)
+        {
+            base.Initialize(targetType, metadataContainer, serviceLocator);
+            _serviceLocator = serviceLocator;
+        }
+
+        /// <summary>
         /// Executes the filter.
         /// </summary>
         /// <param name="message">The message.</param>
@@ -49,7 +64,7 @@
         {
             var result = _method.Invoke(handlingNode.MessageHandler.Unwrap(), parameters);
 
-            if(_method.Info.ReturnType == typeof(bool)) return (bool)result;
+            if (_method.Info.ReturnType == typeof(bool)) return (bool)result;
             return true;
         }
 
@@ -68,7 +83,7 @@
             var helper = messageHandler.GetMetadata<DependencyObserver>();
             if (helper != null) return;
 
-            helper = new DependencyObserver(messageHandler, notifier);
+            helper = new DependencyObserver(messageHandler, notifier, _serviceLocator);
             messageHandler.AddMetadata(helper);
         }
 
@@ -86,7 +101,7 @@
             if (helper == null) return;
 
             if (trigger.Message.RelatesTo(Target))
-                helper.MakeAwareOf(trigger, new[] {MethodName});
+                helper.MakeAwareOf(trigger, new[] { MethodName });
         }
     }
 }

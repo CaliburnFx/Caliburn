@@ -120,6 +120,7 @@
     <Compile Include="Configuration\PresentationFrameworkConfiguration.cs" />
     <Compile Include="EnumerableResults.cs" />
     <Compile Include="Filters\DependencyObserver.cs" />
+    <Compile Include="Filters\PropertyPathMonitor.cs" />
     <Compile Include="Invocation\DispatcherOperationProxy.cs" />
     <Compile Include="IObservableCollection.cs" />
     <Compile Include="IViewAware.cs" />
