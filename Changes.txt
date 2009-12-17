@@ -18,6 +18,7 @@ V1.1 RTW
 -Closed ticket #4833. Fixed an issue with ViewMetadata and invalid Windows in DefaultViewStrategy.
 -Fixed a bug with DefaultWindowManager which caused errors when creating main windows from a user control.
 -Improved the flexibility of the DefaultViewStrategy. It no longer requires separate namespaces for ViewModels/Views.
+-Closed ticket #4865. Fixed a bug in MultiPresenterManager which affects multiple presenter shutdown.
 
 V1 RTW
 -The DefaultBinder will now throw on type activation failure.

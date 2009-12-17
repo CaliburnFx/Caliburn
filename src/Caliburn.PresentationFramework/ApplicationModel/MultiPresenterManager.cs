@@ -255,7 +255,7 @@ namespace Caliburn.PresentationFramework.ApplicationModel
                     presenter.Deactivate();
                     presenter.Shutdown();
 
-                    var node = _currentPresenter as IPresenterNode;
+                    var node = presenter as IPresenterNode;
                     if (node != null) node.Parent = null;
 
                     completed(true);
