@@ -12,5 +12,10 @@
         /// </summary>
         /// <param name="action">The action.</param>
         void SetActualHandler(Action<object[]> action);
+
+        /// <summary>
+        /// Unwires the event.
+        /// </summary>
+        void UnWire();
     }
 }

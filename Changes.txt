@@ -20,6 +20,8 @@ V1.1 RTW
 -Improved the flexibility of the DefaultViewStrategy. It no longer requires separate namespaces for ViewModels/Views.
 -Closed ticket #4865. Fixed a bug in MultiPresenterManager which affects multiple presenter shutdown.
 -Applied sedovav's fix to the Spring adapter.
+-Enhanced DefaultViewStrategy's exception to report searched for types when view location fails.
+-Applied cheesus' recommendations to add unwire capability to IEventHandler.
 
 V1 RTW
 -The DefaultBinder will now throw on type activation failure.

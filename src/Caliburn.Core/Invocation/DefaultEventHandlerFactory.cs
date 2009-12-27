@@ -40,7 +40,8 @@
             var typeParameters = GetTypeParameters(parameters);
 
             var handler = (IEventHandler)Activator.CreateInstance(
-                                             genericEventHandlerType.MakeGenericType(typeParameters)
+                                             genericEventHandlerType.MakeGenericType(typeParameters),
+                                             sender, eventInfo
                                              );
 
             eventInfo.AddEventHandler(
@@ -66,6 +67,14 @@
         private class GenericEventHandler<T, K> : IEventHandler
         {
             private Action<object[]> _action;
+            private readonly object _sender;
+            private readonly EventInfo _eventInfo;
+
+            public GenericEventHandler(object sender, EventInfo eventInfo)
+            {
+                _sender = sender;
+                _eventInfo = eventInfo;
+            }
 
             /// <summary>
             /// Sets the actual handler for the event.
@@ -74,6 +83,14 @@
             public void SetActualHandler(Action<object[]> action)
             {
                 _action = action;
+            }
+
+            /// <summary>
+            /// Unwires the event.
+            /// </summary>
+            public void UnWire()
+            {
+                _eventInfo.RemoveEventHandler(_sender, Delegate.CreateDelegate(_eventInfo.EventHandlerType, this, "Invoke"));
             }
 
             /// <summary>
@@ -88,7 +105,7 @@
 
             private void Execute(params object[] invokeArgs)
             {
-                if(_action != null)
+                if (_action != null)
                     _action(invokeArgs);
                 else throw new CaliburnException("The invoker does not have a valid Action.");
             }
