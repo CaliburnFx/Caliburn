@@ -26,7 +26,8 @@ namespace Caliburn.PresentationFramework.ApplicationModel
 
                 Open(
                     value,
-                    success =>{
+                    success =>
+                    {
                         _changingThroughProperty = false;
                         NotifyOfPropertyChange("CurrentPresenter");
                     });
@@ -50,9 +51,9 @@ namespace Caliburn.PresentationFramework.ApplicationModel
         /// </returns>
         public override bool CanShutdown()
         {
-            foreach(var presenter in _presenters)
+            foreach (var presenter in _presenters)
             {
-                if(!presenter.CanShutdown()) return false;
+                if (!presenter.CanShutdown()) return false;
             }
 
             return true;
@@ -63,7 +64,7 @@ namespace Caliburn.PresentationFramework.ApplicationModel
         /// </summary>
         public override void Initialize()
         {
-            if(!IsInitialized)
+            if (!IsInitialized)
             {
                 OnInitialize();
 
@@ -79,7 +80,7 @@ namespace Caliburn.PresentationFramework.ApplicationModel
         /// </summary>
         public override void Shutdown()
         {
-            foreach(var presenter in _presenters)
+            foreach (var presenter in _presenters)
             {
                 presenter.Shutdown();
             }
@@ -92,11 +93,11 @@ namespace Caliburn.PresentationFramework.ApplicationModel
         /// </summary>
         public override void Activate()
         {
-            if(!IsActive)
+            if (!IsActive)
             {
                 OnActivate();
 
-                if(_currentPresenter != null)
+                if (_currentPresenter != null)
                     _currentPresenter.Activate();
 
                 IsActive = true;
@@ -108,11 +109,11 @@ namespace Caliburn.PresentationFramework.ApplicationModel
         /// </summary>
         public override void Deactivate()
         {
-            if(IsActive)
+            if (IsActive)
             {
                 OnDeactivate();
 
-                if(_currentPresenter != null)
+                if (_currentPresenter != null)
                     _currentPresenter.Deactivate();
 
                 IsActive = false;
@@ -126,22 +127,19 @@ namespace Caliburn.PresentationFramework.ApplicationModel
         /// <param name="completed">Called when the open action is finished.</param>
         public virtual void Open(IPresenter presenter, Action<bool> completed)
         {
-            if(presenter == null)
+            if (presenter == null)
             {
                 completed(false);
                 return;
             }
 
-            if(_currentPresenter != null)
+            if (_currentPresenter != null)
                 _currentPresenter.Deactivate();
 
             presenter = EnsurePresenter(presenter);
             presenter.Activate();
 
-            _currentPresenter = presenter;
-
-            if(!_changingThroughProperty)
-                NotifyOfPropertyChange("CurrentPresenter");
+            ChangeCurrentPresenterCore(presenter);
 
             completed(true);
         }
@@ -150,7 +148,7 @@ namespace Caliburn.PresentationFramework.ApplicationModel
         {
             int index = _presenters.IndexOf(presenter);
 
-            if(index == -1)
+            if (index == -1)
                 _presenters.Add(presenter);
             else presenter = _presenters[index];
 
@@ -168,7 +166,7 @@ namespace Caliburn.PresentationFramework.ApplicationModel
         /// <param name="completed">Called when the shutdown action is finished.</param>
         public virtual void ShutdownCurrent(Action<bool> completed)
         {
-            if(_currentPresenter == null)
+            if (_currentPresenter == null)
             {
                 completed(true);
                 return;
@@ -176,7 +174,8 @@ namespace Caliburn.PresentationFramework.ApplicationModel
 
             CanShutdownPresenter(
                 _currentPresenter,
-                isSuccess => {
+                isSuccess =>
+                {
                     if (!isSuccess)
                     {
                         completed(false);
@@ -192,15 +191,15 @@ namespace Caliburn.PresentationFramework.ApplicationModel
                     var node = _currentPresenter as IPresenterNode;
                     if (node != null) node.Parent = null;
 
-                    _currentPresenter = DetermineNextPresenterToActivate(index);
+                    var next = DetermineNextPresenterToActivate(index);
 
-                    if (_currentPresenter != null)
+                    if (next != null)
                     {
-                        _currentPresenter = EnsurePresenter(_currentPresenter);
-                        _currentPresenter.Activate();
+                        next = EnsurePresenter(next);
+                        next.Activate();
                     }
 
-                    NotifyOfPropertyChange("CurrentPresenter");
+                    ChangeCurrentPresenterCore(next);
 
                     completed(true);
                 });
@@ -229,13 +228,13 @@ namespace Caliburn.PresentationFramework.ApplicationModel
         /// <param name="completed">Called when the shutdown action is finished.</param>
         public virtual void Shutdown(IPresenter presenter, Action<bool> completed)
         {
-            if(_currentPresenter == presenter)
+            if (_currentPresenter == presenter)
             {
                 ShutdownCurrent(completed);
                 return;
             }
 
-            if(presenter == null)
+            if (presenter == null)
             {
                 completed(true);
                 return;
@@ -243,8 +242,9 @@ namespace Caliburn.PresentationFramework.ApplicationModel
 
             CanShutdownPresenter(
                 presenter,
-                isSuccess =>{
-                    if(!isSuccess)
+                isSuccess =>
+                {
+                    if (!isSuccess)
                     {
                         completed(false);
                         return;
@@ -263,6 +263,18 @@ namespace Caliburn.PresentationFramework.ApplicationModel
         }
 
         /// <summary>
+        /// Changes the current presenter.
+        /// </summary>
+        /// <param name="newCurrent">The new current presenter.</param>
+        protected virtual void ChangeCurrentPresenterCore(IPresenter newCurrent)
+        {
+            _currentPresenter = newCurrent;
+
+            if (!_changingThroughProperty)
+                NotifyOfPropertyChange("CurrentPresenter");
+        }
+
+        /// <summary>
         /// Creates the shutdown model.
         /// </summary>
         /// <returns></returns>
@@ -270,17 +282,17 @@ namespace Caliburn.PresentationFramework.ApplicationModel
         {
             var model = new SubordinateGroup(this);
 
-            foreach(var presenter in _presenters)
+            foreach (var presenter in _presenters)
             {
-                if(presenter.CanShutdown()) continue;
+                if (presenter.CanShutdown()) continue;
 
                 var custom = presenter as ISupportCustomShutdown;
 
-                if(custom != null)
+                if (custom != null)
                 {
                     var childModel = custom.CreateShutdownModel();
 
-                    if(childModel != null)
+                    if (childModel != null)
                         model.Add(childModel);
                 }
             }
@@ -301,15 +313,15 @@ namespace Caliburn.PresentationFramework.ApplicationModel
             var presentersToRemove = new List<IPresenter>();
             bool result = true;
 
-            foreach(var presenter in _presenters)
+            foreach (var presenter in _presenters)
             {
                 var match = (from child in subordinateGroup
                              where child.Master == presenter
                              select child).FirstOrDefault();
 
-                if(match == null)
+                if (match == null)
                 {
-                    if(presenter.CanShutdown())
+                    if (presenter.CanShutdown())
                         presentersToRemove.Add(presenter);
                     else result = false;
                 }
@@ -318,7 +330,7 @@ namespace Caliburn.PresentationFramework.ApplicationModel
                     var custom = (ISupportCustomShutdown)presenter;
                     var canShutdown = custom.CanShutdown(match);
 
-                    if(canShutdown)
+                    if (canShutdown)
                         presentersToRemove.Add(presenter);
                     else result = false;
                 }
@@ -326,13 +338,12 @@ namespace Caliburn.PresentationFramework.ApplicationModel
 
             FinalizeShutdown(result, presentersToRemove);
 
-            if(_currentPresenter == null || !_presenters.Contains(_currentPresenter))
+            if (_currentPresenter == null || !_presenters.Contains(_currentPresenter))
             {
-                if(_presenters.Count > 0)
+                if (_presenters.Count > 0)
                 {
-                    _currentPresenter = _presenters[0];
-                    _currentPresenter.Activate();
-                    NotifyOfPropertyChange("CurrentPresenter");
+                    _presenters[0].Activate();
+                    ChangeCurrentPresenterCore(_presenters[0]);
                 }
             }
 

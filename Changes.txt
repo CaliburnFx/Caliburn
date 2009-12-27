@@ -22,6 +22,7 @@ V1.1 RTW
 -Applied sedovav's fix to the Spring adapter.
 -Enhanced DefaultViewStrategy's exception to report searched for types when view location fails.
 -Applied cheesus' recommendations to add unwire capability to IEventHandler.
+-Improved PresenterManager and MultiPresenterManager such that all changes to CurrentPresenter go through ChangeCurrentPresenterCore.
 
 V1 RTW
 -The DefaultBinder will now throw on type activation failure.
