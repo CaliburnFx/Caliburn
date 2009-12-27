@@ -68,20 +68,22 @@
         /// </returns>
         protected override object DoGetInstance(Type serviceType, string key)
         {
-            if(key == null)
+            if (key == null)
             {
-                var it = DoGetAllInstances(serviceType).GetEnumerator();
-                if(it.MoveNext())
-                {
+                var it = DoGetAllInstances(serviceType)
+                    .GetEnumerator();
+
+                if (it.MoveNext())
                     return it.Current;
-                }
-                throw new ObjectCreationException(string.Format("no services of type '{0}' defined",
-                                                                serviceType.FullName));
+
+                throw new ObjectCreationException(
+                    string.Format("No services of type '{0}' are defined.", serviceType.FullName)
+                    );
             }
 
-            if(serviceType == null) return _context.GetObject(key);
-
-            return _context.GetObject(key, serviceType);
+            return serviceType == null
+                       ? _context.GetObject(key)
+                       : _context.GetObject(key, serviceType);
         }
 
         /// <summary>
@@ -93,10 +95,7 @@
         /// </returns>
         protected override IEnumerable<object> DoGetAllInstances(Type serviceType)
         {
-            foreach(var o in _context.GetObjectsOfType(serviceType).Values)
-            {
-                yield return o;
-            }
+            return _context.GetObjectsOfTypeRecursive(serviceType);
         }
 
         private void HandleSingleton(Singleton singleton)

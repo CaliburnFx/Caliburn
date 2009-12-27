@@ -19,6 +19,7 @@ V1.1 RTW
 -Fixed a bug with DefaultWindowManager which caused errors when creating main windows from a user control.
 -Improved the flexibility of the DefaultViewStrategy. It no longer requires separate namespaces for ViewModels/Views.
 -Closed ticket #4865. Fixed a bug in MultiPresenterManager which affects multiple presenter shutdown.
+-Applied sedovav's fix to the Spring adapter.
 
 V1 RTW
 -The DefaultBinder will now throw on type activation failure.
