@@ -100,7 +100,11 @@ namespace Caliburn.PresentationFramework.ApplicationModel
                 }
             }
 
-            throw new CaliburnException("A default view was not found for " + modelType.FullName + ".");
+            throw new CaliburnException(
+                "A default view was not found for " + modelType.FullName +
+                ".  Views searched for include: " +
+                namesToCheck.Aggregate(string.Empty, (a, c) => a + Environment.NewLine + c)
+                );
         }
 
         /// <summary>
