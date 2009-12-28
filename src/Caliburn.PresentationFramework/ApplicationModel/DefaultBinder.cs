@@ -10,7 +10,7 @@ namespace Caliburn.PresentationFramework.ApplicationModel
     using Actions;
     using Core.Metadata;
     using Metadata;
-    using Microsoft.Practices.ServiceLocation;
+    using ViewModels;
     using Action=Actions.Action;
 
     /// <summary>
@@ -22,20 +22,17 @@ namespace Caliburn.PresentationFramework.ApplicationModel
 
         private bool _useMessageConventions;
         private bool _useBindingConventions;
-        private readonly IActionFactory _actionFactory;
         private readonly IMessageBinder _messageBinder;
-        private readonly IServiceLocator _serviceLocator;
+        private readonly IViewModelDescriptionBuilder _viewModelDescriptionBuilder;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="DefaultBinder"/> class.
         /// </summary>
-        /// <param name="serviceLocator">The service locator.</param>
-        /// <param name="actionFactory">The action factory.</param>
+        /// <param name="viewModelDescriptionBuilder"></param>
         /// <param name="messageBinder">The message binder.</param>
-        public DefaultBinder(IServiceLocator serviceLocator, IActionFactory actionFactory, IMessageBinder messageBinder)
+        public DefaultBinder(IViewModelDescriptionBuilder viewModelDescriptionBuilder, IMessageBinder messageBinder)
         {
-            _serviceLocator = serviceLocator;
-            _actionFactory = actionFactory;
+            _viewModelDescriptionBuilder = viewModelDescriptionBuilder;
             _messageBinder = messageBinder;
         }
 
@@ -132,11 +129,7 @@ namespace Caliburn.PresentationFramework.ApplicationModel
         protected virtual void ApplyMessageConventions(DependencyObject element, object model)
         {
             var modelType = GetModelType(model);
-            var host = new ActionHost(
-                modelType,
-                _actionFactory,
-                _serviceLocator
-                );
+            var host = _viewModelDescriptionBuilder.Build(modelType);
 
             foreach(var action in host)
             {

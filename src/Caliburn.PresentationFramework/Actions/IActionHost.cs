@@ -2,7 +2,6 @@ namespace Caliburn.PresentationFramework.Actions
 {
     using System;
     using System.Collections.Generic;
-    using Core.Invocation;
     using Core.Metadata;
     using Filters;
 
@@ -29,12 +28,5 @@ namespace Caliburn.PresentationFramework.Actions
         /// <param name="message">The action message.</param>
         /// <returns></returns>
         IAction GetAction(ActionMessage message);
-
-        /// <summary>
-        /// Gets the filter manager for a given method.
-        /// </summary>
-        /// <param name="method">The method.</param>
-        /// <returns></returns>
-        IFilterManager GetFilterManager(IMethod method);
     }
 }

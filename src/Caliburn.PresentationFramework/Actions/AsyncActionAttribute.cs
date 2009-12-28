@@ -11,7 +11,7 @@ namespace Caliburn.PresentationFramework.Actions
     /// Designates an action as asynchronous.
     /// </summary>
     [AttributeUsage(AttributeTargets.Method, AllowMultiple = false)]
-    public class AsyncActionAttribute : Attribute, IInitializable, IPostProcessor
+    public class AsyncActionAttribute : Attribute, IInitializable, IPostProcessor, IActionBuilder
     {
         private IMethod _callback;
 
@@ -68,6 +68,28 @@ namespace Caliburn.PresentationFramework.Actions
 
             outcome.Result = _callback.Invoke(handlingNode.MessageHandler.Unwrap(), outcome.Result);
             outcome.ResultType = _callback.Info.ReturnType;
+        }
+
+        /// <summary>
+        /// Builds an <see cref="IAction"/> using the specified context.
+        /// </summary>
+        /// <param name="context">The context.</param>
+        /// <returns>The <see cref="IAction"/>.</returns>
+        public IAction Build(ActionBuildingContext context)
+        {
+            var method = context.MethodFactory
+                .CreateFrom(context.Method);
+
+            var action = new AsynchronousAction(
+                method,
+                context.MessageBinder,
+                new FilterManager(context.TargetType, method, context.ServiceLocator),
+                BlockInteraction
+                );
+
+            context.ApplyActionFilterConventions(action, method);
+
+            return action;
         }
     }
 }

@@ -53,19 +53,22 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Actions\Action.cs" />
+    <Compile Include="Actions\ActionAttribute.cs" />
     <Compile Include="Actions\ActionBase.cs" />
-    <Compile Include="Actions\DefaultActionFactory.cs" />
-    <Compile Include="Actions\ActionHost.cs" />
+    <Compile Include="Actions\ActionBuildingContext.cs" />
+    <Compile Include="Actions\ActionLocationContext.cs" />
     <Compile Include="Actions\ActionMessage.silverlight.cs" />
     <Compile Include="Actions\ActionMessage.wpf.cs" />
     <Compile Include="Actions\ActionMessageHandler.cs" />
     <Compile Include="Actions\ActionMessageParser.cs" />
     <Compile Include="Actions\AsyncActionAttribute.cs" />
     <Compile Include="Actions\AsynchronousAction.cs" />
+    <Compile Include="Actions\DefaultActionLocator.cs" />
     <Compile Include="Actions\ExtensionMethods.cs" />
     <Compile Include="Actions\IAction.cs" />
-    <Compile Include="Actions\IActionFactory.cs" />
+    <Compile Include="Actions\IActionBuilder.cs" />
     <Compile Include="Actions\IActionHost.cs" />
+    <Compile Include="Actions\IActionLocator.cs" />
     <Compile Include="Actions\OverloadedAction.cs" />
     <Compile Include="Actions\SynchronousAction.cs" />
     <Compile Include="ApplicationModel\CaliburnApplication.silverlight.cs" />
@@ -185,6 +188,10 @@
     <Compile Include="Triggers\Support\UnrestrictedKeyGesture.cs" />
     <Compile Include="Triggers\Support\UnrestrictedKeyGestureConverter.cs" />
     <Compile Include="Triggers\Support\UnrestrictedKeyGestureValueSerializer.cs" />
+    <Compile Include="ViewModels\DefaultViewModelDescription.cs" />
+    <Compile Include="ViewModels\DefaultViewModelDescriptionBuilder.cs" />
+    <Compile Include="ViewModels\IViewModelDescription.cs" />
+    <Compile Include="ViewModels\IViewModelDescriptionBuilder.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Caliburn.Core\Caliburn.Core.csproj">

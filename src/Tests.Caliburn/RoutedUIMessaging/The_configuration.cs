@@ -11,6 +11,7 @@
     using global::Caliburn.PresentationFramework.ApplicationModel;
     using global::Caliburn.PresentationFramework.Configuration;
     using global::Caliburn.PresentationFramework.Parsers;
+    using global::Caliburn.PresentationFramework.ViewModels;
     using NUnit.Framework;
     using NUnit.Framework.SyntaxHelpers;
 
@@ -53,7 +54,14 @@
             Assert.That(found.Implementation, Is.Not.Null);
 
             found = (from reg in registrations.OfType<Singleton>()
-                     where reg.Service == typeof(IActionFactory)
+                     where reg.Service == typeof(IViewModelDescriptionBuilder)
+                     select reg).FirstOrDefault();
+
+            Assert.That(found, Is.Not.Null);
+            Assert.That(found.Implementation, Is.Not.Null);
+
+            found = (from reg in registrations.OfType<Singleton>()
+                     where reg.Service == typeof(IActionLocator)
                      select reg).FirstOrDefault();
 
             Assert.That(found, Is.Not.Null);

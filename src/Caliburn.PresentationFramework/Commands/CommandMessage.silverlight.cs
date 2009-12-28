@@ -16,6 +16,7 @@ namespace Caliburn.PresentationFramework.Commands
     using Core.Metadata;
     using Triggers;
     using Microsoft.Practices.ServiceLocation;
+    using ViewModels;
 
     /// <summary>
     /// An <see cref="IRoutedMessage"/> for commands.
@@ -59,7 +60,7 @@ namespace Caliburn.PresentationFramework.Commands
         }
 
         private IInteractionNode _source;
-        private readonly IActionFactory _actionFactory;
+        private readonly IViewModelDescriptionBuilder _builder;
 
         private ActionMessage _actionMessage;
         private IAction _action;
@@ -71,16 +72,16 @@ namespace Caliburn.PresentationFramework.Commands
         /// </summary>
         public CommandMessage()
         {
-            if (!PresentationFrameworkConfiguration.IsInDesignMode)
-                _actionFactory = ServiceLocator.Current.GetInstance<IActionFactory>();
+            if(!PresentationFrameworkConfiguration.IsInDesignMode)
+                _builder = ServiceLocator.Current.GetInstance<IViewModelDescriptionBuilder>();
         }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="CommandMessage"/> class.
         /// </summary>
-        public CommandMessage(IActionFactory actionFactory)
+        public CommandMessage(IViewModelDescriptionBuilder builder)
         {
-            _actionFactory = actionFactory;
+            _builder = builder;
         }
 
         /// <summary>
@@ -301,11 +302,7 @@ namespace Caliburn.PresentationFramework.Commands
 
         private void CreateAction()
         {
-            var host = new ActionHost(
-                Command.GetType(),
-                _actionFactory,
-                ServiceLocator.Current
-                );
+            var host = _builder.Build(Command.GetType());
 
             host.SelectMany(x => x.Filters.HandlerAware)
                 .Union(host.Filters.HandlerAware)

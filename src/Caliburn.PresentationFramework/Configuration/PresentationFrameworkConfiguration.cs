@@ -10,12 +10,12 @@
     using Actions;
     using ApplicationModel;
     using Commands;
-    using Core;
     using Core.Configuration;
     using Core.Invocation;
     using Invocation;
     using Microsoft.Practices.ServiceLocation;
     using Parsers;
+    using ViewModels;
     using Action=Actions.Action;
 
     public class PresentationFrameworkConfiguration :
@@ -70,7 +70,7 @@
 
             Action.Initialize(
                 _controller,
-                serviceLocator.GetInstance<IActionFactory>(),
+                serviceLocator.GetInstance<IViewModelDescriptionBuilder>(),
                 serviceLocator
                 );
 

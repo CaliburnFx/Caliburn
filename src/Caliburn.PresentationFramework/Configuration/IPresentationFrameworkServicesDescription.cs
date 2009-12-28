@@ -5,6 +5,7 @@ namespace Caliburn.PresentationFramework.Configuration
     using Core.IoC;
     using PresentationFramework;
     using Parsers;
+    using ViewModels;
 
     public interface IPresentationFrameworkServicesDescription
     {
@@ -27,10 +28,17 @@ namespace Caliburn.PresentationFramework.Configuration
         Singleton Parser<T>() where T : IParser;
 
         /// <summary>
-        /// Customizes the action factory used by Caliburn.
+        /// Customizes the view model description builder.
         /// </summary>
         /// <typeparam name="T">The action factory type.</typeparam>
-        Singleton ActionFactory<T>() where T : IActionFactory;
+        Singleton ViewModelDescriptionBuilder<T>() where T : IViewModelDescriptionBuilder;
+
+        /// <summary>
+        /// Customizes the actions locator.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <returns></returns>
+        Singleton ActionLocator<T>() where T : IActionLocator;
 
         /// <summary>
         /// Customizes the view strategy used by Caliburn.

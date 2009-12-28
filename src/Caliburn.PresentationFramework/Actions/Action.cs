@@ -2,6 +2,7 @@
 {
     using System.Windows;
     using Microsoft.Practices.ServiceLocation;
+    using ViewModels;
 
     /// <summary>
     /// A host for action related attached properties.
@@ -9,7 +10,7 @@
     public static class Action
     {
         private static IRoutedMessageController _controller;
-        private static IActionFactory _actionFactory;
+        private static IViewModelDescriptionBuilder _viewModelDescriptionBuilder;
         private static IServiceLocator _serviceLocator;
 
         /// <summary>
@@ -38,13 +39,13 @@
         /// Initializes property host.
         /// </summary>
         /// <param name="controller">The controller.</param>
-        /// <param name="actionFactory">The action factory.</param>
+        /// <param name="viewModelDescriptionBuilder"></param>
         /// <param name="serviceLocator">The service locator.</param>
-        public static void Initialize(IRoutedMessageController controller, IActionFactory actionFactory,
+        public static void Initialize(IRoutedMessageController controller, IViewModelDescriptionBuilder viewModelDescriptionBuilder,
                                       IServiceLocator serviceLocator)
         {
             _controller = controller;
-            _actionFactory = actionFactory;
+            _viewModelDescriptionBuilder = viewModelDescriptionBuilder;
             _serviceLocator = serviceLocator;
         }
 
@@ -114,11 +115,7 @@
 #endif
 
                 var handler = new ActionMessageHandler(
-                    new ActionHost(
-                        target.GetType(),
-                        _actionFactory,
-                        _serviceLocator
-                        ),
+                    _viewModelDescriptionBuilder.Build(target.GetType()),
                     target
                     );
 

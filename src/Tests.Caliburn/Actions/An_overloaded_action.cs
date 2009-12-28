@@ -1,21 +1,19 @@
-﻿using Caliburn.Core;
-using Caliburn.Core.Invocation;
-using Caliburn.Core.Threading;
-using Microsoft.Practices.ServiceLocation;
-using NUnit.Framework;
-using NUnit.Framework.SyntaxHelpers;
-using Rhino.Mocks;
-
-namespace Tests.Caliburn.Actions
+﻿namespace Tests.Caliburn.Actions
 {
+    using System.Linq;
+    using global::Caliburn.Core;
+    using global::Caliburn.Core.Invocation;
+    using global::Caliburn.Core.Threading;
     using global::Caliburn.PresentationFramework;
     using global::Caliburn.PresentationFramework.Actions;
+    using global::Caliburn.PresentationFramework.Filters;
+    using NUnit.Framework;
+    using NUnit.Framework.SyntaxHelpers;
 
     [TestFixture]
     public class An_overloaded_action : TestBase
     {
         private OverloadedAction _action;
-        private IServiceLocator _container;
 
         protected override void given_the_context_of()
         {
@@ -23,19 +21,22 @@ namespace Tests.Caliburn.Actions
                 new DefaultThreadPool()
                 );
 
-            var actionFactory = new DefaultActionFactory(
-                methodFactory,
-                new DefaultMessageBinder(
-                    new DefaultRoutedMessageController()
-                    )
-                );
+            _action = new OverloadedAction("Test");
 
-            _container = Stub<IServiceLocator>();
-            _container.Stub(x => x.GetInstance<IMethodFactory>()).Return(methodFactory).Repeat.Any();
+            var infos = typeof(MethodHost)
+                .GetMethods()
+                .Where(x => x.Name == "Test");
 
-            var host = new ActionHost(typeof(MethodHost), actionFactory, _container);
-
-            _action = host.GetAction(new ActionMessage { MethodName = "Test" }) as OverloadedAction;
+            foreach(var info in infos)
+            {
+                _action.AddOverload(
+                    new SynchronousAction(
+                        methodFactory.CreateFrom(info),
+                        Stub<IMessageBinder>(),
+                        Stub<IFilterManager>()
+                        )
+                    );
+            }
         }
 
         [Test]
