@@ -5,8 +5,10 @@ V2 Alpha
 -Re-designed entire module and configuration mechanism.  Reworked feature modules and updated unit tests.  Fixed all samples.
 -Moved SafeToString to the PresentationFramework assembly and made it internal so that it would stop showing up on all objects.
 -Some refactoring/renaming to IMetadataContainer.
--A major refactoring of action internals for greater extensibility. Removed ActionHost and ActionFactory.  Added IActionLocator and IActionBuilder.
--Added IViewModelDescriptionFactory and IViewModelDescription for future metadata discovery around conventions.
+-A major refactoring of action internals for greater extensibility. Removed ActionHost and ActionFactory.  Added IActionLocator and IActionFactory.
+-Added IViewModelDescriptionFactory and IViewModelDescription for future metadata discovery around conventions and customization.
+-Added caching of IViewModelDescriptions to the DefaultViewModelDescriptionFactory.
+-DefaultViewModelDescriptionFactory now looks for an attribute implementing IViewModelDescriptionFactory on that type to provide a custom description of that type.
 
 V1.1 RTW
 -Added pre-initialization hooks to CaliburnApplication via Marco Amendola's patch.
