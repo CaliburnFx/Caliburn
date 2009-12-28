@@ -1,7 +1,7 @@
 namespace Caliburn.PresentationFramework.Actions
 {
     /// <summary>
-    /// A service responsible for building an <see cref="IAction"/>.
+    /// A service responsible for creating an <see cref="IAction"/>.
     /// </summary>
     public interface IActionFactory
     {

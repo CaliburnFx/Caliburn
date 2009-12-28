@@ -71,7 +71,7 @@ namespace Caliburn.PresentationFramework.Actions
         }
 
         /// <summary>
-        /// Builds an <see cref="IAction"/> using the specified context.
+        /// Creates an <see cref="IAction"/> using the specified context.
         /// </summary>
         /// <param name="context">The context.</param>
         /// <returns>The <see cref="IAction"/>.</returns>
