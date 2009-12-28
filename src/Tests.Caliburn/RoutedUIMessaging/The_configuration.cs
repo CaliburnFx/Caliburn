@@ -54,7 +54,7 @@
             Assert.That(found.Implementation, Is.Not.Null);
 
             found = (from reg in registrations.OfType<Singleton>()
-                     where reg.Service == typeof(IViewModelDescriptionBuilder)
+                     where reg.Service == typeof(IViewModelDescriptionFactory)
                      select reg).FirstOrDefault();
 
             Assert.That(found, Is.Not.Null);

@@ -82,7 +82,7 @@ namespace Caliburn.PresentationFramework.Commands
         }
 
         private IInteractionNode _source;
-        private readonly IViewModelDescriptionBuilder _builder;
+        private readonly IViewModelDescriptionFactory _factory;
 
         private ActionMessage _actionMessage;
         private IAction _action;
@@ -94,7 +94,7 @@ namespace Caliburn.PresentationFramework.Commands
         public CommandMessage()
         {
             if(!PresentationFrameworkConfiguration.IsInDesignMode)
-                _builder = ServiceLocator.Current.GetInstance<IViewModelDescriptionBuilder>();
+                _factory = ServiceLocator.Current.GetInstance<IViewModelDescriptionFactory>();
 
             SetValue(ParametersProperty, new FreezableCollection<Parameter>());
         }
@@ -102,9 +102,9 @@ namespace Caliburn.PresentationFramework.Commands
         /// <summary>
         /// Initializes a new instance of the <see cref="CommandMessage"/> class.
         /// </summary>
-        public CommandMessage(IViewModelDescriptionBuilder builder)
+        public CommandMessage(IViewModelDescriptionFactory factory)
         {
-            _builder = builder;
+            _factory = factory;
 
             SetValue(ParametersProperty, new FreezableCollection<Parameter>());
         }
@@ -343,7 +343,7 @@ namespace Caliburn.PresentationFramework.Commands
 
         private void CreateAction()
         {
-            var host = _builder.Build(Command.GetType());
+            var host = _factory.Create(Command.GetType());
 
             host.SelectMany(x => x.Filters.HandlerAware)
                 .Union(host.Filters.HandlerAware)

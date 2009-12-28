@@ -31,7 +31,7 @@ namespace Caliburn.PresentationFramework.Configuration
         /// Customizes the view model description builder.
         /// </summary>
         /// <typeparam name="T">The action factory type.</typeparam>
-        Singleton ViewModelDescriptionBuilder<T>() where T : IViewModelDescriptionBuilder;
+        Singleton ViewModelDescriptionBuilder<T>() where T : IViewModelDescriptionFactory;
 
         /// <summary>
         /// Customizes the actions locator.

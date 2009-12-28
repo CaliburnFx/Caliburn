@@ -173,7 +173,7 @@
     <Compile Include="Actions\An_asynchronous_action.cs" />
     <Compile Include="Actions\A_synchronous_action.cs" />
     <Compile Include="Actions\The_action_message_handler.cs" />
-    <Compile Include="Actions\The_default_view_model_description_builder.cs" />
+    <Compile Include="Actions\The_default_action_locator.cs" />
     <Compile Include="Fakes\UI\SimpleMultiValueConverter.cs" />
     <Compile Include="Fakes\UI\SimpleResourceDictionary.cs" />
     <Compile Include="Fakes\UI\SimpleUIBoundToCustomer.cs" />

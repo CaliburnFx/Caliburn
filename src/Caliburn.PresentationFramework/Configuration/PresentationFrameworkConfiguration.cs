@@ -70,7 +70,7 @@
 
             Action.Initialize(
                 _controller,
-                serviceLocator.GetInstance<IViewModelDescriptionBuilder>(),
+                serviceLocator.GetInstance<IViewModelDescriptionFactory>(),
                 serviceLocator
                 );
 

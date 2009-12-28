@@ -7,9 +7,9 @@
     using Filters;
     using Microsoft.Practices.ServiceLocation;
 
-    public class ActionBuildingContext
+    public class ActionCreationContext
     {
-        public ActionBuildingContext(IServiceLocator serviceLocator, IMethodFactory methodFactory,
+        public ActionCreationContext(IServiceLocator serviceLocator, IMethodFactory methodFactory,
                                      IMessageBinder messageBinder, Type targetType, IFilterManager targetFilters,
                                      MethodInfo method)
         {

@@ -3,9 +3,9 @@ namespace Caliburn.PresentationFramework.Actions
     using System;
     using Filters;
 
-    public class ActionAttribute : Attribute, IActionBuilder
+    public class ActionAttribute : Attribute, IActionFactory
     {
-        public IAction Build(ActionBuildingContext context)
+        public IAction Create(ActionCreationContext context)
         {
             var method = context.MethodFactory
                 .CreateFrom(context.Method);

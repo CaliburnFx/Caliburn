@@ -11,7 +11,7 @@ namespace Caliburn.PresentationFramework.Actions
     /// Designates an action as asynchronous.
     /// </summary>
     [AttributeUsage(AttributeTargets.Method, AllowMultiple = false)]
-    public class AsyncActionAttribute : Attribute, IInitializable, IPostProcessor, IActionBuilder
+    public class AsyncActionAttribute : Attribute, IInitializable, IPostProcessor, IActionFactory
     {
         private IMethod _callback;
 
@@ -75,7 +75,7 @@ namespace Caliburn.PresentationFramework.Actions
         /// </summary>
         /// <param name="context">The context.</param>
         /// <returns>The <see cref="IAction"/>.</returns>
-        public IAction Build(ActionBuildingContext context)
+        public IAction Create(ActionCreationContext context)
         {
             var method = context.MethodFactory
                 .CreateFrom(context.Method);

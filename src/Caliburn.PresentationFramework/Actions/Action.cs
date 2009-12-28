@@ -10,7 +10,7 @@
     public static class Action
     {
         private static IRoutedMessageController _controller;
-        private static IViewModelDescriptionBuilder _viewModelDescriptionBuilder;
+        private static IViewModelDescriptionFactory _viewModelDescriptionFactory;
         private static IServiceLocator _serviceLocator;
 
         /// <summary>
@@ -39,13 +39,13 @@
         /// Initializes property host.
         /// </summary>
         /// <param name="controller">The controller.</param>
-        /// <param name="viewModelDescriptionBuilder"></param>
+        /// <param name="viewModelDescriptionFactory"></param>
         /// <param name="serviceLocator">The service locator.</param>
-        public static void Initialize(IRoutedMessageController controller, IViewModelDescriptionBuilder viewModelDescriptionBuilder,
+        public static void Initialize(IRoutedMessageController controller, IViewModelDescriptionFactory viewModelDescriptionFactory,
                                       IServiceLocator serviceLocator)
         {
             _controller = controller;
-            _viewModelDescriptionBuilder = viewModelDescriptionBuilder;
+            _viewModelDescriptionFactory = viewModelDescriptionFactory;
             _serviceLocator = serviceLocator;
         }
 
@@ -115,7 +115,7 @@
 #endif
 
                 var handler = new ActionMessageHandler(
-                    _viewModelDescriptionBuilder.Build(target.GetType()),
+                    _viewModelDescriptionFactory.Create(target.GetType()),
                     target
                     );
 

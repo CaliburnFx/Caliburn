@@ -92,12 +92,12 @@
         /// <returns>The action.</returns>
         protected virtual IAction CreateAction(Type targetType, IFilterManager targetFilters, MethodInfo methodInfo)
         {
-            var builder = methodInfo.GetCustomAttributes(typeof(IActionBuilder), true)
-                              .OfType<IActionBuilder>()
+            var builder = methodInfo.GetCustomAttributes(typeof(IActionFactory), true)
+                              .OfType<IActionFactory>()
                               .FirstOrDefault() ?? new ActionAttribute();
 
-            return builder.Build(
-                new ActionBuildingContext(
+            return builder.Create(
+                new ActionCreationContext(
                     _serviceLocator,
                     _methodFactory,
                     _messageBinder,

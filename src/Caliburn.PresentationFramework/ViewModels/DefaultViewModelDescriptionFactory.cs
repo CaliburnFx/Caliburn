@@ -6,18 +6,18 @@ namespace Caliburn.PresentationFramework.ViewModels
     using Filters;
     using Microsoft.Practices.ServiceLocation;
 
-    public class DefaultViewModelDescriptionBuilder : IViewModelDescriptionBuilder
+    public class DefaultViewModelDescriptionFactory : IViewModelDescriptionFactory
     {
         private readonly IServiceLocator _serviceLocator;
         private readonly IActionLocator _actionLocator;
 
-        public DefaultViewModelDescriptionBuilder(IServiceLocator serviceLocator, IActionLocator actionLocator)
+        public DefaultViewModelDescriptionFactory(IServiceLocator serviceLocator, IActionLocator actionLocator)
         {
             _serviceLocator = serviceLocator;
             _actionLocator = actionLocator;
         }
 
-        public IViewModelDescription Build(Type targetType)
+        public IViewModelDescription Create(Type targetType)
         {
             var description = new DefaultViewModelDescription(targetType);
             var filters = new FilterManager(targetType, description, _serviceLocator);

@@ -23,16 +23,16 @@ namespace Caliburn.PresentationFramework.ApplicationModel
         private bool _useMessageConventions;
         private bool _useBindingConventions;
         private readonly IMessageBinder _messageBinder;
-        private readonly IViewModelDescriptionBuilder _viewModelDescriptionBuilder;
+        private readonly IViewModelDescriptionFactory _viewModelDescriptionFactory;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="DefaultBinder"/> class.
         /// </summary>
-        /// <param name="viewModelDescriptionBuilder"></param>
+        /// <param name="viewModelDescriptionFactory"></param>
         /// <param name="messageBinder">The message binder.</param>
-        public DefaultBinder(IViewModelDescriptionBuilder viewModelDescriptionBuilder, IMessageBinder messageBinder)
+        public DefaultBinder(IViewModelDescriptionFactory viewModelDescriptionFactory, IMessageBinder messageBinder)
         {
-            _viewModelDescriptionBuilder = viewModelDescriptionBuilder;
+            _viewModelDescriptionFactory = viewModelDescriptionFactory;
             _messageBinder = messageBinder;
         }
 
@@ -129,7 +129,7 @@ namespace Caliburn.PresentationFramework.ApplicationModel
         protected virtual void ApplyMessageConventions(DependencyObject element, object model)
         {
             var modelType = GetModelType(model);
-            var host = _viewModelDescriptionBuilder.Build(modelType);
+            var host = _viewModelDescriptionFactory.Create(modelType);
 
             foreach(var action in host)
             {
