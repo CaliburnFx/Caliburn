@@ -10,6 +10,7 @@
     using global::Caliburn.PresentationFramework.Actions;
     using global::Caliburn.PresentationFramework.ApplicationModel;
     using global::Caliburn.PresentationFramework.Configuration;
+    using global::Caliburn.PresentationFramework.Conventions;
     using global::Caliburn.PresentationFramework.Parsers;
     using global::Caliburn.PresentationFramework.ViewModels;
     using NUnit.Framework;
@@ -23,7 +24,7 @@
 
         protected override void given_the_context_of()
         {
-            _config = ConventionalModule<PresentationFrameworkConfiguration, IPresentationFrameworkServicesDescription>.Instance;
+            _config = CaliburnModule<PresentationFrameworkConfiguration>.Instance;
             _module = _config;
         }
 
@@ -68,14 +69,21 @@
             Assert.That(found.Implementation, Is.Not.Null);
 
             found = (from reg in registrations.OfType<Singleton>()
-                     where reg.Service == typeof(IViewStrategy)
+                     where reg.Service == typeof(IViewLocator)
                      select reg).FirstOrDefault();
 
             Assert.That(found, Is.Not.Null);
             Assert.That(found.Implementation, Is.Not.Null);
 
             found = (from reg in registrations.OfType<Singleton>()
-                     where reg.Service == typeof(IBinder)
+                     where reg.Service == typeof(IViewModelBinder)
+                     select reg).FirstOrDefault();
+
+            Assert.That(found, Is.Not.Null);
+            Assert.That(found.Implementation, Is.Not.Null);
+
+            found = (from reg in registrations.OfType<Singleton>()
+                     where reg.Service == typeof(IConventionManager)
                      select reg).FirstOrDefault();
 
             Assert.That(found, Is.Not.Null);

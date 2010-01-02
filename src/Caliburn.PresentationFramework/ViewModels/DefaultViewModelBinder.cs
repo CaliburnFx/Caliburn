@@ -1,55 +1,54 @@
-namespace Caliburn.PresentationFramework.ApplicationModel
+namespace Caliburn.PresentationFramework.ViewModels
 {
     using System;
     using System.Windows;
     using Core;
     using Core.Metadata;
     using Metadata;
-    using ViewModels;
     using Action=Actions.Action;
 
     /// <summary>
-    /// The default implementation of <see cref="IBinder"/>.
+    /// The default implementation of <see cref="IViewModelBinder"/>.
     /// </summary>
-    public class DefaultBinder : IBinder
+    public class DefaultViewModelBinder : IViewModelBinder
     {
         private readonly IViewModelDescriptionFactory _viewModelDescriptionFactory;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="DefaultBinder"/> class.
+        /// Initializes a new instance of the <see cref="DefaultViewModelBinder"/> class.
         /// </summary>
         /// <param name="viewModelDescriptionFactory"></param>
-        public DefaultBinder(IViewModelDescriptionFactory viewModelDescriptionFactory)
+        public DefaultViewModelBinder(IViewModelDescriptionFactory viewModelDescriptionFactory)
         {
             _viewModelDescriptionFactory = viewModelDescriptionFactory;
         }
 
         /// <summary>
-        /// Binds the specified model to the view.
+        /// Binds the specified viewModel to the view.
         /// </summary>
-        /// <param name="model">The model.</param>
+        /// <param name="viewModel">The model.</param>
         /// <param name="view">The view.</param>
         /// <param name="context">The context.</param>
-        public void Bind(object model, DependencyObject view, object context)
+        public void Bind(object viewModel, DependencyObject view, object context)
         {
-            BindCore(model, view, context);
-            ApplyConventions(model, view);
+            BindCore(viewModel, view, context);
+            ApplyConventions(viewModel, view);
         }
 
         /// <summary>
-        /// Attaches the model and the view.
+        /// Attaches the view model and the view.
         /// </summary>
-        /// <param name="model">The model.</param>
+        /// <param name="viewModel">The view model.</param>
         /// <param name="view">The view.</param>
         /// <param name="context">The context.</param>
-        protected virtual void BindCore(object model, object view, object context)
+        protected virtual void BindCore(object viewModel, DependencyObject view, object context)
         {
-            Action.SetTarget(view as DependencyObject, model);
+            Action.SetTarget(view, viewModel);
 
-            var metadataContainer = model as IMetadataContainer;
+            var metadataContainer = viewModel as IMetadataContainer;
             if (metadataContainer != null) metadataContainer.SetView(view, context, false);
 
-            var viewAware = model as IViewAware;
+            var viewAware = viewModel as IViewAware;
             if (viewAware != null)
             {
                 var element = view as FrameworkElement;
@@ -76,9 +75,9 @@ namespace Caliburn.PresentationFramework.ApplicationModel
             }
         }
 
-        protected virtual void ApplyConventions(object model, DependencyObject view)
+        protected virtual void ApplyConventions(object viewModel, DependencyObject view)
         {
-            var modelType = GetModelType(model);
+            var modelType = GetModelType(viewModel);
             var description = _viewModelDescriptionFactory.Create(modelType);
 
             description.GetConventionsFor(view)
@@ -86,13 +85,13 @@ namespace Caliburn.PresentationFramework.ApplicationModel
         }
 
         /// <summary>
-        /// Gets the type of the model.
+        /// Gets the type of the view model.
         /// </summary>
-        /// <param name="model">The model.</param>
+        /// <param name="viewModel">The view model.</param>
         /// <returns></returns>
-        protected virtual Type GetModelType(object model)
+        protected virtual Type GetModelType(object viewModel)
         {
-            return model.GetType();
+            return viewModel.GetType();
         }
     }
 }

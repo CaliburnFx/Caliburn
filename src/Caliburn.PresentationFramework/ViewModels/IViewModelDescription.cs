@@ -5,7 +5,6 @@ namespace Caliburn.PresentationFramework.ViewModels
     using System.Reflection;
     using System.Windows;
     using Actions;
-    using Conventions;
 
     /// <summary>
     /// Describes a View Model.

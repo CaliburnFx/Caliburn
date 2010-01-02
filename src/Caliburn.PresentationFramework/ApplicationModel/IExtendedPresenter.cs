@@ -1,6 +1,7 @@
 namespace Caliburn.PresentationFramework.ApplicationModel
 {
     using Core.Metadata;
+    using ViewModels;
 
     /// <summary>
     /// Implements <see cref="IMetadataContainer"/>, <see cref="IPresenterNode"/>, <see cref="ILifecycleNotifier"/> and <see cref="IViewAware"/>.

@@ -1,18 +1,18 @@
-namespace Caliburn.PresentationFramework.ApplicationModel
+namespace Caliburn.PresentationFramework.ViewModels
 {
     using System;
     using System.Collections.Generic;
     using System.Linq;
     using System.Windows;
     using Core;
-    using Microsoft.Practices.ServiceLocation;
     using Core.Metadata;
     using Metadata;
+    using Microsoft.Practices.ServiceLocation;
 
     /// <summary>
-    /// The default implementation of <see cref="IViewStrategy"/>.
+    /// The default implementation of <see cref="IViewLocator"/>.
     /// </summary>
-    public class DefaultViewStrategy : IViewStrategy
+    public class DefaultViewLocator : IViewLocator
     {
         private readonly IAssemblySource _assemblySource;
         private readonly IServiceLocator _serviceLocator;
@@ -20,11 +20,11 @@ namespace Caliburn.PresentationFramework.ApplicationModel
         private readonly Dictionary<string, string> _namespaceAliases = new Dictionary<string, string>();
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="DefaultViewStrategy"/> class.
+        /// Initializes a new instance of the <see cref="DefaultViewLocator"/> class.
         /// </summary>
         /// <param name="assemblySource">The assembly source.</param>
         /// <param name="serviceLocator">The service locator.</param>
-        public DefaultViewStrategy(IAssemblySource assemblySource, IServiceLocator serviceLocator)
+        public DefaultViewLocator(IAssemblySource assemblySource, IServiceLocator serviceLocator)
         {
             _assemblySource = assemblySource;
             _serviceLocator = serviceLocator;
@@ -47,7 +47,7 @@ namespace Caliburn.PresentationFramework.ApplicationModel
         /// <param name="displayLocation">The control into which the view will be injected.</param>
         /// <param name="context">Some additional context used to select the proper view.</param>
         /// <returns></returns>
-        public object GetView(object model, DependencyObject displayLocation, object context)
+        public DependencyObject Locate(object model, DependencyObject displayLocation, object context)
         {
             if (model == null)
                 return null;
@@ -56,7 +56,7 @@ namespace Caliburn.PresentationFramework.ApplicationModel
             var metadataContainer = model as IMetadataContainer;
             if (metadataContainer != null)
             {
-                var view = metadataContainer.GetView<object>(context);
+                var view = metadataContainer.GetView<DependencyObject>(context);
                 if (view != null)
                 {
                     var windowCheck = view as Window;
@@ -74,7 +74,7 @@ namespace Caliburn.PresentationFramework.ApplicationModel
                 .OfType<ViewStrategyAttribute>().Where(x => x.Matches(context)).FirstOrDefault();
 
             if (customStrategy != null)
-                return customStrategy.GetView(model, displayLocation, context);
+                return customStrategy.Locate(model, displayLocation, context);
 
             var stringContext = context.SafeToString();
             var cacheKey = DetermineCacheKey(modelType, stringContext);
@@ -135,18 +135,18 @@ namespace Caliburn.PresentationFramework.ApplicationModel
         /// </summary>
         /// <param name="type">The candidate type for the view.</param>
         /// <returns>An instance of a view or null.</returns>
-        protected object GetOrCreateViewFromType(Type type)
+        protected DependencyObject GetOrCreateViewFromType(Type type)
         {
             var view = _serviceLocator.GetAllInstances(type)
                 .FirstOrDefault();
 
             if (view != null)
-                return view;
+                return (DependencyObject)view;
 
             if (type.IsInterface || type.IsAbstract)
                 return null;
 
-            return Activator.CreateInstance(type);
+            return (DependencyObject)Activator.CreateInstance(type);
         }
 
         /// <summary>
@@ -203,11 +203,11 @@ namespace Caliburn.PresentationFramework.ApplicationModel
         {
             return new[]
             {
-                "Presenter",
-                "Model",
                 "ViewModel",
-                "PresentationModel",
                 "Screen",
+                "Presenter",
+                "PresentationModel",
+                "Model",
                 string.Empty
             };
         }

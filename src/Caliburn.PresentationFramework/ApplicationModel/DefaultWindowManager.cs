@@ -6,25 +6,26 @@ namespace Caliburn.PresentationFramework.ApplicationModel
     using System.ComponentModel;
     using System.Windows;
     using System.Windows.Data;
+    using ViewModels;
 
     /// <summary>
     /// An implementation of <see cref="IWindowManager"/>.
     /// </summary>
     public class DefaultWindowManager : IWindowManager
     {
-        private readonly IViewStrategy _viewStrategy;
-        private readonly IBinder _binder;
+        private readonly IViewLocator _viewLocator;
+        private readonly IViewModelBinder _viewModelBinder;
         private bool _actuallyClosing;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="DefaultWindowManager"/> class.
         /// </summary>
-        /// <param name="viewStrategy">The view strategy.</param>
-        /// <param name="binder">The default binder.</param>
-        public DefaultWindowManager(IViewStrategy viewStrategy, IBinder binder)
+        /// <param name="viewLocator">The view locator.</param>
+        /// <param name="viewModelBinder">The view model binder.</param>
+        public DefaultWindowManager(IViewLocator viewLocator, IViewModelBinder viewModelBinder)
         {
-            _viewStrategy = viewStrategy;
-            _binder = binder;
+            _viewLocator = viewLocator;
+            _viewModelBinder = viewModelBinder;
         }
 
         /// <summary>
@@ -61,9 +62,9 @@ namespace Caliburn.PresentationFramework.ApplicationModel
         /// <returns></returns>
         protected Window CreateWindow(object rootModel, object context, Action<ISubordinate, Action> handleShutdownModel)
         {
-            var view = EnsureWindow(rootModel, _viewStrategy.GetView(rootModel, null, context));
+            var view = EnsureWindow(rootModel, _viewLocator.Locate(rootModel, null, context));
 
-            _binder.Bind(rootModel, view, context);
+            _viewModelBinder.Bind(rootModel, view, context);
 
             var presenter = rootModel as IPresenter;
             if (presenter != null)

@@ -1,4 +1,4 @@
-namespace Caliburn.PresentationFramework.Conventions
+namespace Caliburn.PresentationFramework.ViewModels
 {
     using System.Windows;
 

@@ -4,7 +4,7 @@
     using System.Windows.Controls;
     using System.Windows.Data;
     using System.Windows.Markup;
-    using ApplicationModel;
+    using ViewModels;
 
     public class ApplicableBinding : IViewApplicable
     {

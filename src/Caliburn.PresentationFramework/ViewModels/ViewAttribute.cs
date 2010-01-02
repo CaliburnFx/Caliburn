@@ -1,4 +1,4 @@
-namespace Caliburn.PresentationFramework.ApplicationModel
+namespace Caliburn.PresentationFramework.ViewModels
 {
     using System;
     using System.Linq;
@@ -6,7 +6,7 @@ namespace Caliburn.PresentationFramework.ApplicationModel
     using Microsoft.Practices.ServiceLocation;
 
     /// <summary>
-    /// An implementation of <see cref="IViewStrategy"/> that provides a basic lookup strategy for an attributed model.
+    /// An implementation of <see cref="IViewLocator"/> that provides a basic lookup strategy for an attributed model.
     /// </summary>
     [AttributeUsage(AttributeTargets.Class | AttributeTargets.Enum | AttributeTargets.Struct, AllowMultiple = true)]
     public class ViewAttribute : ViewStrategyAttribute
@@ -53,13 +53,13 @@ namespace Caliburn.PresentationFramework.ApplicationModel
         }
 
         /// <summary>
-        /// Gets the view for displaying the specified model.
+        /// Gets the view for displaying the specified viewModel.
         /// </summary>
-        /// <param name="model">The model.</param>
+        /// <param name="viewModel">The model.</param>
         /// <param name="displayLocation">The control into which the view will be injected.</param>
         /// <param name="context">Some additional context used to select the proper view.</param>
         /// <returns>The view.</returns>
-        public override object GetView(object model, DependencyObject displayLocation, object context)
+        public override DependencyObject Locate(object viewModel, DependencyObject displayLocation, object context)
         {
             var instances = ServiceLocator.Current.GetAllInstances(_key);
 
@@ -67,7 +67,7 @@ namespace Caliburn.PresentationFramework.ApplicationModel
                            ? instances.First()
                            : Activator.CreateInstance(_key);
 
-            return view;
+            return (DependencyObject)view;
         }
     }
 }

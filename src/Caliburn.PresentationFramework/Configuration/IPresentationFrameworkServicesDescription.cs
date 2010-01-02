@@ -45,13 +45,13 @@ namespace Caliburn.PresentationFramework.Configuration
         /// Customizes the view strategy used by Caliburn.
         /// </summary>
         /// <typeparam name="T">The view strategy type.</typeparam>
-        Singleton ViewStrategy<T>() where T : IViewStrategy;
+        Singleton ViewLocator<T>() where T : IViewLocator;
 
         /// <summary>
         /// Customizes the binder used by Caliburn.
         /// </summary>
         /// <typeparam name="T">The binder type.</typeparam>
-        Singleton Binder<T>() where T : IBinder;
+        Singleton ViewModelBinder<T>() where T : IViewModelBinder;
 
         /// <summary>
         /// Customizes the convention manager used by Caliburn.

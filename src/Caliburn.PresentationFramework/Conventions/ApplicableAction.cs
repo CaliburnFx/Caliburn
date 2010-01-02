@@ -1,6 +1,7 @@
 ﻿namespace Caliburn.PresentationFramework.Conventions
 {
     using System.Windows;
+    using ViewModels;
 
     public class ApplicableAction : IViewApplicable
     {

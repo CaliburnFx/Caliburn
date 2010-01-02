@@ -13,6 +13,7 @@ namespace Caliburn.PresentationFramework.ApplicationModel
     using System;
     using System.Windows.Browser;
     using System.Diagnostics;
+    using ViewModels;
 
     /// <summary>
     /// A base class for applications based on Caliburn.
@@ -136,10 +137,10 @@ namespace Caliburn.PresentationFramework.ApplicationModel
         /// <param name="model">The model.</param>
         protected virtual void SetRootVisual(object model)
         {
-            var strategy = Container.GetInstance<IViewStrategy>();
-            var view = (FrameworkElement)strategy.GetView(model, null, null);
+            var locator = Container.GetInstance<IViewLocator>();
+            var view = locator.Locate(model, null, null);
 
-            var binder = Container.GetInstance<IBinder>();
+            var binder = Container.GetInstance<IViewModelBinder>();
             binder.Bind(model, view, null);
 
             var presenter = model as IPresenter;
@@ -149,7 +150,7 @@ namespace Caliburn.PresentationFramework.ApplicationModel
                 presenter.Activate();
             }
 
-            RootVisual = view;
+            RootVisual = (UIElement)view;
         }
 
         /// <summary>

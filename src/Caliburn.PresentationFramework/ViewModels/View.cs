@@ -1,4 +1,4 @@
-﻿namespace Caliburn.PresentationFramework.ApplicationModel
+﻿namespace Caliburn.PresentationFramework.ViewModels
 {
     using System.Linq;
     using System.Windows;
@@ -9,18 +9,18 @@
     /// </summary>
     public static class View
     {
-        private static IViewStrategy _viewStrategy;
-        private static IBinder _binder;
+        private static IViewLocator _viewLocator;
+        private static IViewModelBinder _viewModelBinder;
 
         /// <summary>
-        /// Initializes the framework with the specified view strategy.
+        /// Initializes the framework with the specified view locator and view model binder.
         /// </summary>
-        /// <param name="viewStrategy">The view strategy.</param>
-        /// <param name="binder">The default binder.</param>
-        public static void Initialize(IViewStrategy viewStrategy, IBinder binder)
+        /// <param name="viewLocator">The view locator.</param>
+        /// <param name="viewModelBinder">The view model binder.</param>
+        public static void Initialize(IViewLocator viewLocator, IViewModelBinder viewModelBinder)
         {
-            _viewStrategy = viewStrategy;
-            _binder = binder;
+            _viewLocator = viewLocator;
+            _viewModelBinder = viewModelBinder;
         }
 
         /// <summary>
@@ -86,41 +86,41 @@
         }
 
         /// <summary>
-        /// A dependency property for assigning an <see cref="IViewStrategy"/> to a UI element.
+        /// A dependency property for assigning an <see cref="IViewLocator"/> to a UI element.
         /// </summary>
         public static readonly DependencyProperty StrategyProperty =
             DependencyProperty.RegisterAttached(
                 "Strategy",
-                typeof(IViewStrategy),
+                typeof(IViewLocator),
                 typeof(View),
                 new PropertyMetadata(OnStrategyChanged)
                 );
 
         /// <summary>
-        /// Gets the <see cref="IViewStrategy"/>.
+        /// Gets the <see cref="IViewLocator"/>.
         /// </summary>
         /// <param name="d">The d.</param>
         /// <returns>The strategy.</returns>
-        public static IViewStrategy GetStrategy(DependencyObject d)
+        public static IViewLocator GetStrategy(DependencyObject d)
         {
-            return d.GetValue(StrategyProperty) as IViewStrategy;
+            return d.GetValue(StrategyProperty) as IViewLocator;
         }
 
         /// <summary>
-        /// Sets the <see cref="IViewStrategy"/>.
+        /// Sets the <see cref="IViewLocator"/>.
         /// </summary>
         /// <param name="d">The d.</param>
         /// <param name="value">The value.</param>
-        public static void SetStrategy(DependencyObject d, IViewStrategy value)
+        public static void SetStrategy(DependencyObject d, IViewLocator value)
         {
             d.SetValue(StrategyProperty, value);
         }
 
         private static void OnModelChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
-            var actualStrategy = GetStrategy(d) ?? _viewStrategy;
+            var locator = GetStrategy(d) ?? _viewLocator;
 
-            if (actualStrategy == null)
+            if (locator == null)
                 return;
 
             if(e.OldValue == e.NewValue)
@@ -129,9 +129,9 @@
             if(e.NewValue != null)
             {
                 var context = GetContext(d);
-                var view = (DependencyObject)actualStrategy.GetView(e.NewValue, d, context);
+                var view = locator.Locate(e.NewValue, d, context);
 
-                _binder.Bind(e.NewValue, view, context);
+                _viewModelBinder.Bind(e.NewValue, view, context);
 
                 SetContentProperty(d, view);
             }
@@ -140,9 +140,9 @@
 
         private static void OnContextChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
-            var actualStrategy = GetStrategy(d) ?? _viewStrategy;
+            var locator = GetStrategy(d) ?? _viewLocator;
 
-            if (actualStrategy == null)
+            if (locator == null)
                 return;
 
             if (e.OldValue == e.NewValue)
@@ -152,9 +152,9 @@
             if(model == null)
                 return;
 
-            var view = (DependencyObject)actualStrategy.GetView(model, d, e.NewValue);
+            var view = locator.Locate(model, d, e.NewValue);
 
-            _binder.Bind(model, view, e.NewValue);
+            _viewModelBinder.Bind(model, view, e.NewValue);
 
             SetContentProperty(d, view);
         }
@@ -164,9 +164,9 @@
             if (e.NewValue == e.OldValue)
                 return;
 
-            var actualStrategy = e.NewValue as IViewStrategy ?? _viewStrategy;
+            var locator = e.NewValue as IViewLocator ?? _viewLocator;
 
-            if (actualStrategy == null)
+            if (locator == null)
                 return;
 
             var model = GetModel(d);
@@ -174,9 +174,9 @@
                 return;
 
             var context = GetContext(d);
-            var view = (DependencyObject)actualStrategy.GetView(model, d, context);
+            var view = locator.Locate(model, d, context);
 
-            _binder.Bind(model, view, context);
+            _viewModelBinder.Bind(model, view, context);
             SetContentProperty(d, view);
         }
 

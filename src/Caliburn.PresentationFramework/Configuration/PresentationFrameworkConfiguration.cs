@@ -3,7 +3,6 @@
     using System.ComponentModel;
     using System.Windows;
     using Actions;
-    using ApplicationModel;
     using Commands;
     using Core.Configuration;
     using Invocation;
@@ -66,8 +65,8 @@
                 );
 
             View.Initialize(
-                serviceLocator.GetInstance<IViewStrategy>(),
-                serviceLocator.GetInstance<IBinder>()
+                serviceLocator.GetInstance<IViewLocator>(),
+                serviceLocator.GetInstance<IViewModelBinder>()
                 );
         }
     }

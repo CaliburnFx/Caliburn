@@ -1,4 +1,4 @@
-namespace Caliburn.PresentationFramework
+namespace Caliburn.PresentationFramework.ViewModels
 {
     /// <summary>
     /// Indicates the a model/presenter should be made aware of its view.
