@@ -172,16 +172,6 @@
         {
             throw new NotImplementedException();
         }
-
-        public void SetupDefaults(params InteractionDefaults[] interactionDefaults)
-        {
-            throw new NotImplementedException();
-        }
-
-        public InteractionDefaults GetInteractionDefaults(Type elementType)
-        {
-            throw new NotImplementedException();
-        }
     }
 
     internal class FakeMessageParser : IParser

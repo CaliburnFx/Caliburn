@@ -1,6 +1,5 @@
 ﻿namespace Caliburn.PresentationFramework
 {
-    using System;
     using System.Windows;
 
     /// <summary>
@@ -29,18 +28,5 @@
         /// <param name="uiElement">The UI element to retrieve the parent for.</param>
         /// <returns></returns>
         IInteractionNode GetParent(DependencyObject uiElement);
-
-        /// <summary>
-        /// Sets up the defaults for interaction with an element.
-        /// </summary>
-        /// <param name="interactionDefaults">The defaults.</param>
-        void SetupDefaults(params InteractionDefaults[] interactionDefaults);
-
-        /// <summary>
-        /// Gets the interaction defaults.
-        /// </summary>
-        /// <param name="elementType">The type.</param>
-        /// <returns>The defaults.</returns>
-        InteractionDefaults GetInteractionDefaults(Type elementType);
     }
 }

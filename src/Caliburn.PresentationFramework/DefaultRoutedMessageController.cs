@@ -1,7 +1,5 @@
 ﻿namespace Caliburn.PresentationFramework
 {
-    using System;
-    using System.Collections.Generic;
     using System.Windows;
     using System.Windows.Media;
 
@@ -20,9 +18,6 @@
                 typeof(DefaultRoutedMessageController),
                 null
                 );
-
-        private readonly Dictionary<Type, InteractionDefaults> _interactionDefaults =
-            new Dictionary<Type, InteractionDefaults>();
 
         /// <summary>
         /// Adds a message handler at the specified location in the UI hierarchy.
@@ -96,37 +91,6 @@
             }
 
             return currentNode;
-        }
-
-        /// <summary>
-        /// Sets up the defaults for interaction with an element.
-        /// </summary>
-        /// <param name="interactionDefaults">The defaults.</param>
-        public void SetupDefaults(params InteractionDefaults[] interactionDefaults)
-        {
-            foreach(var defaults in interactionDefaults)
-            {
-                _interactionDefaults[defaults.ElementType] = defaults;
-            }
-        }
-
-        /// <summary>
-        /// Gets the interaction defaults.
-        /// </summary>
-        /// <param name="elementType">The type.</param>
-        /// <returns>The defaults.</returns>
-        public InteractionDefaults GetInteractionDefaults(Type elementType)
-        {
-            if(elementType == null) return null;
-
-            InteractionDefaults defaults;
-
-            _interactionDefaults.TryGetValue(elementType, out defaults);
-
-            if(defaults == null)
-                defaults = GetInteractionDefaults(elementType.BaseType);
-
-            return defaults;
         }
 
         private IInteractionNode FindOrAddNode(DependencyObject uiElement)

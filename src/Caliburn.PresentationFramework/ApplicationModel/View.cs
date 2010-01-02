@@ -129,7 +129,7 @@
             if(e.NewValue != null)
             {
                 var context = GetContext(d);
-                var view = actualStrategy.GetView(e.NewValue, d, context);
+                var view = (DependencyObject)actualStrategy.GetView(e.NewValue, d, context);
 
                 _binder.Bind(e.NewValue, view, context);
 
@@ -152,7 +152,7 @@
             if(model == null)
                 return;
 
-            var view = actualStrategy.GetView(model, d, e.NewValue);
+            var view = (DependencyObject)actualStrategy.GetView(model, d, e.NewValue);
 
             _binder.Bind(model, view, e.NewValue);
 
@@ -174,7 +174,7 @@
                 return;
 
             var context = GetContext(d);
-            var view = actualStrategy.GetView(model, d, context);
+            var view = (DependencyObject)actualStrategy.GetView(model, d, context);
 
             _binder.Bind(model, view, context);
             SetContentProperty(d, view);

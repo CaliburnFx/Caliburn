@@ -58,6 +58,7 @@
     <Compile Include="DefaultAssemblySource.cs" />
     <Compile Include="ExtensionMethods.cs" />
     <Compile Include="IAssemblySource.cs" />
+    <Compile Include="Inflector.cs" />
     <Compile Include="Invocation\DefaultDispatcher.cs" />
     <Compile Include="IoC\ComponentRegistrationBase.cs" />
     <Compile Include="IoC\CustomLifetime.cs" />

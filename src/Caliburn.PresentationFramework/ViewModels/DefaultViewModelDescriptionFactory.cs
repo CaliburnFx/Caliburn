@@ -4,6 +4,7 @@ namespace Caliburn.PresentationFramework.ViewModels
     using System.Collections.Generic;
     using System.Linq;
     using Actions;
+    using Conventions;
     using Core;
     using Filters;
     using Microsoft.Practices.ServiceLocation;
@@ -15,6 +16,7 @@ namespace Caliburn.PresentationFramework.ViewModels
     {
         private readonly IServiceLocator _serviceLocator;
         private readonly IActionLocator _actionLocator;
+        private readonly IConventionManager _conventionManager;
         private readonly Dictionary<Type, IViewModelDescription> _cache = new Dictionary<Type, IViewModelDescription>();
 
         /// <summary>
@@ -22,10 +24,12 @@ namespace Caliburn.PresentationFramework.ViewModels
         /// </summary>
         /// <param name="serviceLocator">The service locator.</param>
         /// <param name="actionLocator">The action locator.</param>
-        public DefaultViewModelDescriptionFactory(IServiceLocator serviceLocator, IActionLocator actionLocator)
+        /// <param name="conventionManager">The convention manager.</param>
+        public DefaultViewModelDescriptionFactory(IServiceLocator serviceLocator, IActionLocator actionLocator, IConventionManager conventionManager)
         {
             _serviceLocator = serviceLocator;
             _actionLocator = actionLocator;
+            _conventionManager = conventionManager;
         }
 
         /// <summary>
@@ -60,7 +64,7 @@ namespace Caliburn.PresentationFramework.ViewModels
             if (customFactory != null)
                 return customFactory.Create(targetType);
 
-            var description = new DefaultViewModelDescription(targetType);
+            var description = new DefaultViewModelDescription(_conventionManager, targetType);
             var filters = new FilterManager(targetType, description, _serviceLocator);
             var actions = _actionLocator.Locate(new ActionLocationContext(_serviceLocator, targetType, filters));
 

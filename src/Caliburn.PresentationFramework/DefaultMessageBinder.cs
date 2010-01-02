@@ -6,6 +6,7 @@
     using System.Globalization;
     using System.Reflection;
     using System.Windows;
+    using Conventions;
     using Core;
     using System.Linq;
 
@@ -18,16 +19,15 @@
     /// </summary>
     public class DefaultMessageBinder : IMessageBinder
     {
-        private readonly IRoutedMessageController _routedMessageController;
+        private readonly IConventionManager _conventionManager;
         private readonly IDictionary<string, Func<IInteractionNode, object, object>> _valueHandlers;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="DefaultMessageBinder"/> class.
         /// </summary>
-        /// <param name="routedMessageController">The routed message controller.</param>
-        public DefaultMessageBinder(IRoutedMessageController routedMessageController)
+        public DefaultMessageBinder(IConventionManager conventionManager)
         {
-            _routedMessageController = routedMessageController;
+            _conventionManager = conventionManager;
             _valueHandlers = new Dictionary<string, Func<IInteractionNode, object, object>>();
             
             InitializeDefaultValueHandlers();
@@ -109,7 +109,7 @@
             if (enumerable != null) 
                 return new SequentialResult(enumerable);
 
-            return outcome.Result as IResult ?? new DefaultResult(_routedMessageController, outcome);
+            return outcome.Result as IResult ?? new DefaultResult(_conventionManager, outcome);
         }
 
         /// <summary>
@@ -136,8 +136,8 @@
                     if (element != null)
                     {
                         var control = element.FindName<object>(parameter.Name, true);
-                        var defaults = _routedMessageController.FindDefaultsOrFail(control);
-                        value = defaults.GetDefaultValue(control);
+                        var defaults = _conventionManager.FindDefaultsOrFail(control);
+                        value = defaults.GetValue(control);
                     }
 #if !SILVERLIGHT
                     else
@@ -149,8 +149,8 @@
                                 "Cannot determine parameters unless handler node is a FrameworkElement or FrameworkContentElement.");
 
                         var control = fce.FindNameOrFail<object>(parameter.Name);
-                        var defaults = _routedMessageController.FindDefaultsOrFail(control);
-                        value = defaults.GetDefaultValue(control);
+                        var defaults = _conventionManager.FindDefaultsOrFail(control);
+                        value = defaults.GetValue(control);
                     }
 #else
                     else
@@ -355,8 +355,8 @@
         private object HandleValue(IInteractionNode sourceNode, object context)
         {
             var ele = sourceNode.UIElement;
-            var defaults = _routedMessageController.FindDefaultsOrFail(ele);
-            return defaults.GetDefaultValue(ele);
+            var defaults = _conventionManager.FindDefaultsOrFail(ele);
+            return defaults.GetValue(ele);
         }
 
         /// <summary>

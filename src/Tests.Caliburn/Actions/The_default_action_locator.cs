@@ -8,6 +8,7 @@
     using global::Caliburn.Core.Metadata;
     using global::Caliburn.PresentationFramework;
     using global::Caliburn.PresentationFramework.Actions;
+    using global::Caliburn.PresentationFramework.Conventions;
     using global::Caliburn.PresentationFramework.Filters;
     using Microsoft.Practices.ServiceLocation;
     using NUnit.Framework;
@@ -21,14 +22,16 @@
         private IMethodFactory _methodFactory;
         private IMessageBinder _messageBinder;
         private IServiceLocator _serviceLocator;
+        private IConventionManager _conventionManager;
 
         protected override void given_the_context_of()
         {
             _methodFactory = Mock<IMethodFactory>();
             _messageBinder = Mock<IMessageBinder>();
             _serviceLocator = Mock<IServiceLocator>();
+            _conventionManager = Mock<IConventionManager>();
 
-            _locator = new DefaultActionLocator(_serviceLocator, _methodFactory, _messageBinder);
+            _locator = new DefaultActionLocator(_serviceLocator, _methodFactory, _messageBinder, _conventionManager);
         }
 
         [Test]

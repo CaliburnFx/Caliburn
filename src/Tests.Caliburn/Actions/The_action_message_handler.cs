@@ -34,8 +34,8 @@ namespace Tests.Caliburn.Actions
                 .Return(filterManager)
                 .Repeat.Any();
 
-            _host.Stub(x => x.GetEnumerator())
-                .Return(new List<IAction>().GetEnumerator())
+            _host.Stub(x => x.Actions)
+                .Return(new List<IAction>())
                 .Repeat.Any();
 
             _handler = new ActionMessageHandler(_host, _target);

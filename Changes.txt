@@ -9,6 +9,7 @@ V2 Alpha
 -Added IViewModelDescriptionFactory and IViewModelDescription for future metadata discovery around conventions and customization.
 -Added caching of IViewModelDescriptions to the DefaultViewModelDescriptionFactory.
 -DefaultViewModelDescriptionFactory now looks for an attribute implementing IViewModelDescriptionFactory on that type to provide a custom description of that type.
+-Added a new rule-based convention system surfaced through IConventionManager and IViewModelDescription and supporting classes.
 
 V1.1 RTW
 -Added pre-initialization hooks to CaliburnApplication via Marco Amendola's patch.

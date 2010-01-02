@@ -24,7 +24,8 @@ namespace Caliburn.PresentationFramework.Actions
                 new FilterManager(context.TargetType, method, context.ServiceLocator).Combine(context.TargetFilters)
                 );
 
-            context.ApplyActionFilterConventions(action, method);
+            context.ConventionManager
+                .ApplyActionCreationConventions(action, method);
 
             return action;
         }

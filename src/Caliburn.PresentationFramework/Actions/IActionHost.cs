@@ -8,7 +8,7 @@ namespace Caliburn.PresentationFramework.Actions
     /// <summary>
     /// Hosts instances of <see cref="IAction"/> and related metadata.
     /// </summary>
-    public interface IActionHost : IMetadataContainer, IEnumerable<IAction>
+    public interface IActionHost : IMetadataContainer
     {
         /// <summary>
         /// Gets the type of the target.
@@ -21,6 +21,12 @@ namespace Caliburn.PresentationFramework.Actions
         /// </summary>
         /// <value>The filters.</value>
         IFilterManager Filters { get; }
+
+        /// <summary>
+        /// Gets the actions.
+        /// </summary>
+        /// <value>The actions.</value>
+        IEnumerable<IAction> Actions { get; }
 
         /// <summary>
         /// Gets the action.

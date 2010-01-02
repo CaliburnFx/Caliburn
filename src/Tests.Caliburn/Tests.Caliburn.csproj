@@ -215,6 +215,7 @@
     <Compile Include="RoutedUIMessaging\Parsers\The_event_trigger_parser.cs" />
     <Compile Include="RoutedUIMessaging\Parsers\The_gesture_trigger_parser.cs" />
     <Compile Include="RoutedUIMessaging\The_availability_effect_converter.cs" />
+    <Compile Include="RoutedUIMessaging\The_convention_manager.cs" />
     <Compile Include="RoutedUIMessaging\When_binding_return_values.cs" />
     <Compile Include="RoutedUIMessaging\When_determining_method_parameters.cs" />
     <Compile Include="Fakes\TestService.cs" />

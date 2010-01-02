@@ -3,6 +3,7 @@
     using System;
     using System.Collections.Generic;
     using System.Windows;
+    using Conventions;
     using Core;
 
 #if SILVERLIGHT
@@ -14,19 +15,18 @@
     /// </summary>
     public class DefaultParser : IParser
     {
+        private readonly IConventionManager _conventionManager;
         private readonly Dictionary<string, ITriggerParser> _triggerParsers = new Dictionary<string, ITriggerParser>();
         private readonly Dictionary<string, IMessageParser> _messageParsers = new Dictionary<string, IMessageParser>();
-        private readonly IRoutedMessageController _controller;
         private string _defaultMessageParserKey = "Action";
         private string _messageDelimiter = ";";
 
         /// <summary>
         /// Initializes a new instance of the <see cref="DefaultParser"/> class.
         /// </summary>
-        /// <param name="controller">The controller.</param>
-        public DefaultParser(IRoutedMessageController controller)
+        public DefaultParser(IConventionManager conventionManager)
         {
-            _controller = controller;
+            _conventionManager = conventionManager;
 
             RegisterTriggerParser("Event", new EventTriggerParser());
             RegisterTriggerParser("Gesture", new GestureTriggerParser());
@@ -106,8 +106,8 @@
 
             if(triggerPlusMessage.Length == 1)
             {
-                var defaults = _controller.FindDefaultsOrFail(target);
-                trigger = defaults.GetDefaultTrigger();
+                var defaults = _conventionManager.FindDefaultsOrFail(target);
+                trigger = defaults.CreateTrigger();
 
                 messageDetail = triggerPlusMessage[0]
                     .Replace("[", string.Empty)

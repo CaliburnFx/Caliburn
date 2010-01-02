@@ -11,6 +11,7 @@ namespace Caliburn.PresentationFramework
     using System.Reflection;
     using System.ComponentModel;
     using Microsoft.Practices.ServiceLocation;
+    using Conventions;
 
     /// <summary>
     /// Represents a parameter of a message.
@@ -123,7 +124,7 @@ namespace Caliburn.PresentationFramework
 
         private void WireToDefaultEvent(Type type, object source, PropertyInfo property)
         {
-            var defaults = ServiceLocator.Current.GetInstance<IRoutedMessageController>().GetInteractionDefaults(type);
+            var defaults = ServiceLocator.Current.GetInstance<IConventionManager>().GetElementConvention(type);
 
             if(defaults == null)
                 throw new CaliburnException(
@@ -131,13 +132,13 @@ namespace Caliburn.PresentationFramework
                     );
 
             if(property == null)
-                ServiceLocator.Current.GetInstance<IEventHandlerFactory>().Wire(source, defaults.DefaultEventName)
+                ServiceLocator.Current.GetInstance<IEventHandlerFactory>().Wire(source, defaults.EventName)
                     .SetActualHandler(
                     parameters => {
-                        Value = defaults.GetDefaultValue(source);
+                        Value = defaults.GetValue(source);
                     });
             else
-                ServiceLocator.Current.GetInstance<IEventHandlerFactory>().Wire(source, defaults.DefaultEventName)
+                ServiceLocator.Current.GetInstance<IEventHandlerFactory>().Wire(source, defaults.EventName)
                     .SetActualHandler(parameters => {
                         Value = property.GetValue(source, null);
                     });

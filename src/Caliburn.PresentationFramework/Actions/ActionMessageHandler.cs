@@ -23,7 +23,7 @@
             _target = target;
             _host = host;
 
-            _host.SelectMany(x => x.Filters.HandlerAware)
+            _host.Actions.SelectMany(x => x.Filters.HandlerAware)
                 .Union(_host.Filters.HandlerAware)
                 .Apply(x => x.MakeAwareOf(this));
         }

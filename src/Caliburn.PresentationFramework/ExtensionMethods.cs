@@ -2,6 +2,7 @@
 {
     using System.Windows;
     using System.Windows.Media;
+    using Conventions;
     using Core;
 
     /// <summary>
@@ -9,6 +10,33 @@
     /// </summary>
     public static class ExtensionMethods
     {
+        public static DependencyObject FindControl(this DependencyObject parent, string name)
+        {
+            var fe = parent as FrameworkElement;
+            if (fe != null)
+                return fe.FindName(name) as DependencyObject;
+#if !SILVERLIGHT
+            var fce = parent as FrameworkContentElement;
+            if (fce != null)
+                return fce.FindName(name) as DependencyObject;
+#endif
+
+            return null;
+        }
+
+        public static string GetName(this DependencyObject dependencyObject)
+        {
+            var fe = dependencyObject as FrameworkElement;
+            if (fe != null) return dependencyObject.GetValue(FrameworkElement.NameProperty) as string;
+
+#if !SILVERLIGHT
+            var fce = dependencyObject as FrameworkContentElement;
+            if (fce != null) return dependencyObject.GetValue(FrameworkContentElement.NameProperty) as string;
+#endif
+
+            return null;
+        }
+
         /// <summary>
         /// Safely converts an object to a string.
         /// </summary>
@@ -85,17 +113,17 @@
         /// <summary>
         /// Finds the interaction defaults or fail.
         /// </summary>
-        /// <param name="controller">The controller.</param>
+        /// <param name="conventionManager">The convention manager.</param>
         /// <param name="element">The element.</param>
         /// <returns></returns>
-        public static InteractionDefaults FindDefaultsOrFail(this IRoutedMessageController controller, object element)
+        public static IElementConvention FindDefaultsOrFail(this IConventionManager conventionManager, object element)
         {
             var type = element.GetType();
-            var defaults = controller.GetInteractionDefaults(type);
+            var defaults = conventionManager.GetElementConvention(type);
 
             if (defaults == null)
                 throw new CaliburnException(
-                    string.Format("Could not locate InteractionDefaults for {0}.  Please register with the IRoutedMessageController.", type.Name)
+                    string.Format("Could not locate an IElementConvention for {0}.  Please register with the IConventionManager.", type.Name)
                     );
 
             return defaults;

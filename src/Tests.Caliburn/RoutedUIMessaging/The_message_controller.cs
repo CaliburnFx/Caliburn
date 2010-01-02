@@ -1,8 +1,6 @@
 ﻿namespace Tests.Caliburn.RoutedUIMessaging
 {
     using System.Windows.Controls;
-    using System.Windows.Controls.Primitives;
-    using global::Caliburn.Core.Invocation;
     using global::Caliburn.PresentationFramework;
     using NUnit.Framework;
     using NUnit.Framework.SyntaxHelpers;
@@ -16,40 +14,6 @@
         protected override void given_the_context_of()
         {
             _controller = new DefaultRoutedMessageController();
-        }
-
-        [Test]
-        public void can_register_interaction_defaults()
-        {
-            var defaults = new GenericInteractionDefaults<TextBox>(
-                Mock<IEventHandlerFactory>(),
-                "TextChanged",
-                (c, v) => c.Text = v.ToString(),
-                c => c.Text
-                );
-
-            _controller.SetupDefaults(defaults);
-
-            var found = _controller.GetInteractionDefaults(typeof(TextBox));
-
-            Assert.That(found, Is.SameAs(defaults));
-        }
-
-        [Test]
-        public void can_get_defaults_if_only_a_base_class_is_registered()
-        {
-            var defaults = new GenericInteractionDefaults<ButtonBase>(
-                Mock<IEventHandlerFactory>(),
-                "Click",
-                (c, v) => c.DataContext = v,
-                c => c.DataContext
-                );
-
-            _controller.SetupDefaults(defaults);
-
-            var found = _controller.GetInteractionDefaults(typeof(Button));
-
-            Assert.That(found, Is.SameAs(defaults));
         }
 
         [Test]

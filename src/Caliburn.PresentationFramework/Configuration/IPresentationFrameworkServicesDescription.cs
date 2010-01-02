@@ -2,6 +2,7 @@ namespace Caliburn.PresentationFramework.Configuration
 {
     using Actions;
     using ApplicationModel;
+    using Conventions;
     using Core.IoC;
     using PresentationFramework;
     using Parsers;
@@ -51,6 +52,13 @@ namespace Caliburn.PresentationFramework.Configuration
         /// </summary>
         /// <typeparam name="T">The binder type.</typeparam>
         Singleton Binder<T>() where T : IBinder;
+
+        /// <summary>
+        /// Customizes the convention manager used by Caliburn.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <returns></returns>
+        Singleton ConventionManager<T>() where T : IConventionManager;
 
 #if !SILVERLIGHT
 

@@ -4,6 +4,7 @@ namespace Caliburn.PresentationFramework
     using System.Linq;
     using System.Reflection;
     using System.Windows;
+    using Conventions;
     using Core;
 
     /// <summary>
@@ -12,17 +13,17 @@ namespace Caliburn.PresentationFramework
     public class DefaultResult : IResult
     {
         private static readonly char[] _separator = new[] {'.'};
-        private readonly IRoutedMessageController _routedMessageController;
+        private readonly IConventionManager _conventionManager;
         private readonly MessageProcessingOutcome _outcome;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="DefaultResult"/> class.
         /// </summary>
-        /// <param name="routedMessageController">The routed message controller.</param>
+        /// <param name="conventionManager">The convention manager.</param>
         /// <param name="outcome">The outcome of processing the message.</param>
-        public DefaultResult(IRoutedMessageController routedMessageController, MessageProcessingOutcome outcome)
+        public DefaultResult(IConventionManager conventionManager, MessageProcessingOutcome outcome)
         {
-            _routedMessageController = routedMessageController;
+            _conventionManager = conventionManager;
             _outcome = outcome;
         }
 
@@ -54,8 +55,8 @@ namespace Caliburn.PresentationFramework
 
                     if (target != null)
                     {
-                        var defaults = _routedMessageController.FindDefaultsOrFail(target);
-                        defaults.SetDefaultValue(target, _outcome.Result);
+                        var defaults = _conventionManager.FindDefaultsOrFail(target);
+                        defaults.SetValue(target, _outcome.Result);
                     }
                 }
                 else
@@ -93,8 +94,8 @@ namespace Caliburn.PresentationFramework
 
                         if(target != null)
                         {
-                            var defaults = _routedMessageController.FindDefaultsOrFail(target);
-                            defaults.SetDefaultValue(target, _outcome.Result);
+                            var defaults = _conventionManager.FindDefaultsOrFail(target);
+                            defaults.SetValue(target, _outcome.Result);
                         }
                     }
                     else

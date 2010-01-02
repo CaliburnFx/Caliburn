@@ -9,6 +9,7 @@
     using Caliburn.Core.Configuration;
     using Caliburn.PresentationFramework;
     using Caliburn.PresentationFramework.Configuration;
+    using Caliburn.PresentationFramework.Conventions;
     using Microsoft.Practices.ServiceLocation;
 
     public partial class App : Application
@@ -31,12 +32,13 @@
                 .Start();
 
             //Note: Retrive one of Caliburn's services.
-            var controller = ServiceLocator.Current.GetInstance<IRoutedMessageController>();
+            var controller = ServiceLocator.Current.GetInstance<IConventionManager>();
 
             //Note: Customize the default behavior of button elements.
-            controller.SetupDefaults(
-                new GenericInteractionDefaults<Button>(
+            controller.AddElementConvention(
+                new DefaultElementConvention<Button>(
                     "MouseEnter",
+                    Button.ContentProperty,
                     (b, v) => b.DataContext = v,
                     b => b.DataContext
                     )

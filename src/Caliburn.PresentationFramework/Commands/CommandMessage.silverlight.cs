@@ -304,7 +304,7 @@ namespace Caliburn.PresentationFramework.Commands
         {
             var host = _factory.Create(Command.GetType());
 
-            host.SelectMany(x => x.Filters.HandlerAware)
+            host.Actions.SelectMany(x => x.Filters.HandlerAware)
                 .Union(host.Filters.HandlerAware)
                 .Apply(x => x.MakeAwareOf(this));
 

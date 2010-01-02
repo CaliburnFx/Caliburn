@@ -87,7 +87,8 @@ namespace Caliburn.PresentationFramework.Actions
                 BlockInteraction
                 );
 
-            context.ApplyActionFilterConventions(action, method);
+            context.ConventionManager
+                .ApplyActionCreationConventions(action, method);
 
             return action;
         }

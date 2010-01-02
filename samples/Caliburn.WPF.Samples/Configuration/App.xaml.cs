@@ -6,6 +6,7 @@
     using Caliburn.Core.Configuration;
     using Caliburn.PresentationFramework;
     using Caliburn.PresentationFramework.Configuration;
+    using Caliburn.PresentationFramework.Conventions;
     using Castle.Windsor;
 
     /// <summary>
@@ -27,12 +28,13 @@
                 .Start();
 
             //Note: Retrieve one of Caliburn's services.
-            var controller = adapter.GetInstance<IRoutedMessageController>();
+            var controller = adapter.GetInstance<IConventionManager>();
 
             //Note: Customize the default behavior of button elements.
-            controller.SetupDefaults(
-                new GenericInteractionDefaults<Button>(
+            controller.AddElementConvention(
+                new DefaultElementConvention<Button>(
                     "MouseEnter",
+                    Button.ContentProperty,
                     (b, v) => b.DataContext = v,
                     b => b.DataContext
                     )

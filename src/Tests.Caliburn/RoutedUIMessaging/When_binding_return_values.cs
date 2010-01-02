@@ -7,6 +7,7 @@ namespace Tests.Caliburn.RoutedUIMessaging
     using global::Caliburn.Core.Invocation;
     using global::Caliburn.Core.Threading;
     using global::Caliburn.PresentationFramework;
+    using global::Caliburn.PresentationFramework.Conventions;
     using NUnit.Framework;
     using NUnit.Framework.SyntaxHelpers;
     using Rhino.Mocks;
@@ -18,14 +19,14 @@ namespace Tests.Caliburn.RoutedUIMessaging
         private DefaultMessageBinder _binder;
         private IInteractionNode _handlingNode;
         private IInteractionNode _sourceNode;
-        private IRoutedMessageController _routedMessageController;
         private ControlHost _host;
+        private IConventionManager _conventionManager;
 
         protected override void given_the_context_of()
         {
             _factory = new DefaultMethodFactory(new DefaultThreadPool());
-            _routedMessageController = Mock<IRoutedMessageController>();
-            _binder = new DefaultMessageBinder(_routedMessageController);
+            _conventionManager = Mock<IConventionManager>();
+            _binder = new DefaultMessageBinder(_conventionManager);
             _handlingNode = Stub<IInteractionNode>();
             _sourceNode = Stub<IInteractionNode>();
             _host = new ControlHost();
@@ -54,12 +55,12 @@ namespace Tests.Caliburn.RoutedUIMessaging
         {
             var method = _factory.CreateFrom(typeof(MethodHost).GetMethod("Method"));
             var returnValue = new object();
-            var defaults = Stub<InteractionDefaults>(typeof(TextBox), "TextChanged");
+            var defaults = Mock<IElementConvention>();
 
-            _routedMessageController.Expect(x => x.GetInteractionDefaults(typeof(TextBox)))
+            _conventionManager.Expect(x => x.GetElementConvention(typeof(TextBox)))
                 .Return(defaults);
 
-            defaults.Expect(x => x.SetDefaultValue(_host._methodResult, returnValue));
+            defaults.Expect(x => x.SetValue(_host._methodResult, returnValue));
 
             var result = _binder.CreateResult(
                 new MessageProcessingOutcome(

@@ -7,6 +7,7 @@ namespace Tests.Caliburn.RoutedUIMessaging
     using Fakes;
     using Fakes.UI;
     using global::Caliburn.PresentationFramework;
+    using global::Caliburn.PresentationFramework.Conventions;
     using NUnit.Framework;
     using NUnit.Framework.SyntaxHelpers;
     using Rhino.Mocks;
@@ -17,12 +18,12 @@ namespace Tests.Caliburn.RoutedUIMessaging
         private DefaultMessageBinder _binder;
         private IInteractionNode _handlingNode;
         private IInteractionNode _sourceNode;
-        private IRoutedMessageController _routedMessageController;
+        private IConventionManager _conventionManager;
 
         protected override void given_the_context_of()
         {
-            _routedMessageController = Mock<IRoutedMessageController>();
-            _binder = new DefaultMessageBinder(_routedMessageController);
+            _conventionManager = Mock<IConventionManager>();
+            _binder = new DefaultMessageBinder(_conventionManager);
             _handlingNode = Stub<IInteractionNode>();
             _sourceNode = Stub<IInteractionNode>();
         }
@@ -225,12 +226,10 @@ namespace Tests.Caliburn.RoutedUIMessaging
             const string param1 = "$value";
             var source = new TextBox { Text = "the value" };
 
-            var defaults = Stub<InteractionDefaults>(typeof(TextBox), "TextChanged");
-
-            _routedMessageController.Expect(x => x.GetInteractionDefaults(typeof(TextBox)))
-                .Return(defaults);
-
-            defaults.Expect(x => x.GetDefaultValue(source)).Return(source.Text);
+            var convention = Mock<IElementConvention>();
+            _conventionManager.Expect(x => x.GetElementConvention(typeof(TextBox)))
+                .Return(convention);
+            convention.Expect(x => x.GetValue(source)).Return(source.Text);
 
             var message = new FakeMessage
             {
@@ -268,13 +267,13 @@ namespace Tests.Caliburn.RoutedUIMessaging
 
             _handlingNode.Stub(x => x.UIElement).Return(element).Repeat.Twice();
 
-            var defaults = Stub<InteractionDefaults>(typeof(TextBox), "TextChanged");
+            var defaults = Mock<IElementConvention>();
 
-            _routedMessageController.Expect(x => x.GetInteractionDefaults(typeof(TextBox)))
+            _conventionManager.Expect(x => x.GetElementConvention(typeof(TextBox)))
                 .Return(defaults).Repeat.Twice();
 
-            defaults.Expect(x => x.GetDefaultValue(Arg<object>.Is.Anything)).Return(param1);
-            defaults.Expect(x => x.GetDefaultValue(Arg<object>.Is.Anything)).Return(param2);
+            defaults.Expect(x => x.GetValue(Arg<object>.Is.Anything)).Return(param1);
+            defaults.Expect(x => x.GetValue(Arg<object>.Is.Anything)).Return(param2);
 
             var message = new FakeMessage();
 
@@ -402,12 +401,12 @@ namespace Tests.Caliburn.RoutedUIMessaging
 
             _sourceNode.Stub(x => x.UIElement).Return(source);
 
-            var defaults = Stub<InteractionDefaults>(typeof(TextBox), "TextChanged");
+            var defaults = Stub<IElementConvention>();
 
-            _routedMessageController.Expect(x => x.GetInteractionDefaults(typeof(TextBox)))
+            _conventionManager.Expect(x => x.GetElementConvention(typeof(TextBox)))
                 .Return(defaults);
 
-            defaults.Expect(x => x.GetDefaultValue(source)).Return(source.Text);
+            defaults.Expect(x => x.GetValue(source)).Return(source.Text);
 
             var message = new FakeMessage();
             message.Initialize(_sourceNode);

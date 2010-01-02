@@ -4,6 +4,7 @@
     using System.Collections.Generic;
     using System.Linq;
     using System.Reflection;
+    using Conventions;
     using Core.Invocation;
     using Filters;
     using Microsoft.Practices.ServiceLocation;
@@ -16,6 +17,7 @@
         private readonly IServiceLocator _serviceLocator;
         private readonly IMethodFactory _methodFactory;
         private readonly IMessageBinder _messageBinder;
+        private readonly IConventionManager _conventionManager;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="DefaultActionLocator"/> class.
@@ -23,11 +25,13 @@
         /// <param name="serviceLocator">The service locator.</param>
         /// <param name="methodFactory">The method factory.</param>
         /// <param name="messageBinder">The message binder.</param>
-        public DefaultActionLocator(IServiceLocator serviceLocator, IMethodFactory methodFactory, IMessageBinder messageBinder)
+        /// <param name="conventionManager">The convention manager.</param>
+        public DefaultActionLocator(IServiceLocator serviceLocator, IMethodFactory methodFactory, IMessageBinder messageBinder, IConventionManager conventionManager)
         {
             _serviceLocator = serviceLocator;
             _methodFactory = methodFactory;
             _messageBinder = messageBinder;
+            _conventionManager = conventionManager;
         }
 
         /// <summary>
@@ -101,6 +105,7 @@
                     _serviceLocator,
                     _methodFactory,
                     _messageBinder,
+                    _conventionManager,
                     targetType,
                     targetFilters,
                     methodInfo

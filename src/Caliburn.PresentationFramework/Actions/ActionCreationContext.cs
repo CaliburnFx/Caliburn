@@ -1,8 +1,8 @@
 ﻿namespace Caliburn.PresentationFramework.Actions
 {
     using System;
-    using System.Linq;
     using System.Reflection;
+    using Conventions;
     using Core.Invocation;
     using Filters;
     using Microsoft.Practices.ServiceLocation;
@@ -18,13 +18,15 @@
         /// <param name="serviceLocator">The service locator.</param>
         /// <param name="methodFactory">The method factory.</param>
         /// <param name="messageBinder">The message binder.</param>
+        /// <param name="conventionManager">The convention manager</param>
         /// <param name="targetType">Type of the target.</param>
         /// <param name="targetFilters">The target filters.</param>
         /// <param name="method">The method.</param>
         public ActionCreationContext(IServiceLocator serviceLocator, IMethodFactory methodFactory,
-                                     IMessageBinder messageBinder, Type targetType, IFilterManager targetFilters,
+                                     IMessageBinder messageBinder, IConventionManager conventionManager, Type targetType, IFilterManager targetFilters,
                                      MethodInfo method)
         {
+            ConventionManager = conventionManager;
             ServiceLocator = serviceLocator;
             MethodFactory = methodFactory;
             MessageBinder = messageBinder;
@@ -70,26 +72,9 @@
         public IMessageBinder MessageBinder { get; private set; }
 
         /// <summary>
-        /// Applies the action filter conventions.
+        /// Gets or sets the convention manager.
         /// </summary>
-        /// <param name="action">The action.</param>
-        /// <param name="targetMethod">The target method.</param>
-        public void ApplyActionFilterConventions(IAction action, IMethod targetMethod)
-        {
-            var found = targetMethod.FindMetadata<PreviewAttribute>()
-                .FirstOrDefault(x => x.MethodName == "Can" + targetMethod.Info.Name);
-
-            if(found != null)
-                return;
-
-            var canExecute = targetMethod.Info.DeclaringType.GetMethod(
-                                 "Can" + targetMethod.Info.Name,
-                                 targetMethod.Info.GetParameters().Select(x => x.ParameterType).ToArray()
-                                 )
-                             ?? targetMethod.Info.DeclaringType.GetMethod("get_Can" + targetMethod.Info.Name);
-
-            if(canExecute != null)
-                action.Filters.Add(new PreviewAttribute(MethodFactory.CreateFrom(canExecute)));
-        }
+        /// <value>The convention manager.</value>
+        public IConventionManager ConventionManager { get; private set; }
     }
 }
