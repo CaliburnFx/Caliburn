@@ -24,7 +24,7 @@
             private set
             {
                 _contact = value;
-                NotifyOfPropertyChange("Contact");
+                NotifyOfPropertyChange(() => Contact);
             }
         }
 
@@ -37,7 +37,7 @@
         private void OnPropertyChangedEvent(object s, PropertyChangedEventArgs e)
         {
             if(e.PropertyName == "IsDirty" || e.PropertyName == "IsValid")
-                NotifyOfPropertyChange("CanSave");
+                NotifyOfPropertyChange(() => CanSave);
         }
 
         protected override void OnActivate()
@@ -62,23 +62,21 @@
             Contact.CancelEdit();
         }
 
-        [Dependencies("CanSave")]
+        public bool CanSave
+        {
+            get { return Contact.IsDirty && Contact.IsValid; }
+        }
+
         [Preview("CanSave")]
         public IResult Apply()
         {
             return SaveContact(x => Contact.BeginEdit());
         }
 
-        [Dependencies("CanSave")]
         [Preview("CanSave")]
         public IResult Ok()
         {
             return SaveContact(x => _owner.Shutdown(this));
-        }
-
-        public bool CanSave()
-        {
-            return Contact.IsDirty && Contact.IsValid;
         }
 
         public void Cancel()

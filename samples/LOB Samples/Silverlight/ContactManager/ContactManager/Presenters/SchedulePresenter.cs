@@ -83,8 +83,8 @@
                         });
                 }
 
-                NotifyOfPropertyChange("CurrentSchedule");
-                NotifyOfPropertyChange("CanSave");
+                NotifyOfPropertyChange(() => CurrentSchedule);
+                NotifyOfPropertyChange(() => CanSaveChanges);
             }
         }
 
@@ -119,7 +119,7 @@
         private void SchedulePropertyChanged(object sender, PropertyChangedEventArgs e)
         {
             if(e.PropertyName == "IsDirty" || e.PropertyName == "IsValid")
-                NotifyOfPropertyChange("CanSaveChanges");
+                NotifyOfPropertyChange(() => CanSaveChanges);
         }
 
         public void GotoPreviousDay()

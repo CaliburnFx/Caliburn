@@ -38,7 +38,7 @@
             set
             {
                 _earliestAppointment = value;
-                NotifyOfPropertyChange("EarliestAppointment");
+                NotifyOfPropertyChange(() => EarliestAppointment);
             }
         }
 
@@ -48,7 +48,7 @@
             set
             {
                 _latestAppointment = value;
-                NotifyOfPropertyChange("LatestAppointment");
+                NotifyOfPropertyChange(() => LatestAppointment);
             }
         }
 

@@ -25,7 +25,7 @@
         public IPresenter DialogModel
         {
             get { return _dialogModel; }
-            set { _dialogModel = value; NotifyOfPropertyChange("DialogModel"); }
+            set { _dialogModel = value; NotifyOfPropertyChange(() => DialogModel); }
         }
 
         public void Open<T>() where T : IPresenter

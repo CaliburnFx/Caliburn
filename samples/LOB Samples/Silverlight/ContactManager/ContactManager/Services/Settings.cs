@@ -19,7 +19,7 @@
             set
             {
                 InsertOrUpdate("EarliestAppointment", value.TotalMilliseconds.ToString());
-                NotifyOfPropertyChange("EarliestAppointment");
+                NotifyOfPropertyChange(() => EarliestAppointment);
             }
         }
 
@@ -33,7 +33,7 @@
             set
             {
                 InsertOrUpdate("LatestAppointment", value.TotalMilliseconds.ToString());
-                NotifyOfPropertyChange("LatestAppointment");
+                NotifyOfPropertyChange(() => LatestAppointment);
             }
         }
     }

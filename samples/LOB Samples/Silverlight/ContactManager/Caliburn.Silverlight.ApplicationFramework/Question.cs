@@ -27,7 +27,7 @@
             set
             {
                 _answer = value;
-                NotifyOfPropertyChange("Answer");
+                NotifyOfPropertyChange(() => Answer);
             }
         }
     }
