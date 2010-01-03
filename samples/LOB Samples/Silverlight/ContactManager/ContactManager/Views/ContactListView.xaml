@@ -2,7 +2,6 @@
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:pf="clr-namespace:Caliburn.PresentationFramework;assembly=Caliburn.PresentationFramework"
-             xmlns:am="clr-namespace:Caliburn.PresentationFramework.ApplicationModel;assembly=Caliburn.PresentationFramework"
              xmlns:Controls="clr-namespace:Caliburn.Silverlight.ApplicationFramework.Controls;assembly=Caliburn.Silverlight.ApplicationFramework"
              Height="400"
              Width="750"
@@ -20,7 +19,7 @@
             </Grid.RowDefinitions>
 
             <ScrollViewer>
-                <ItemsControl ItemsSource="{Binding Contacts, Mode=TwoWay}">
+                <ItemsControl x:Name="Contacts">
                     <ItemsControl.ItemTemplate>
                         <DataTemplate>
                             <Grid Margin="2">
@@ -69,7 +68,7 @@
                     <RowDefinition Height="*" />
                 </Grid.RowDefinitions>
 
-                <ListBox x:Name="PresenterHost"
+                <ListBox x:Name="Presenters"
                          Height="27"
                          BorderThickness="0 0 0 2">
                     <ListBox.ItemsPanel>

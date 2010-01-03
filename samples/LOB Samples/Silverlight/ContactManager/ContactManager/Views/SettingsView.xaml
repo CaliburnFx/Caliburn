@@ -17,14 +17,14 @@
         
         <TextBlock Text="Earliest Appointment"
                    Style="{StaticResource label}" />
-        <TextBox Text="{Binding EarliestAppointment, Mode=TwoWay}"
+        <TextBox x:Name="EarliestAppointment"
                  Grid.Column="1" 
                  Style="{StaticResource textBox}"/>
         
         <TextBlock Text="Latest Appointment"
                    Style="{StaticResource label}" 
                    Grid.Row="1"/>
-        <TextBox Text="{Binding LatestAppointment, Mode=TwoWay}"
+        <TextBox x:Name="LatestAppointment"
                  Grid.Column="1" 
                  Grid.Row="1"
                  Style="{StaticResource textBox}"/>

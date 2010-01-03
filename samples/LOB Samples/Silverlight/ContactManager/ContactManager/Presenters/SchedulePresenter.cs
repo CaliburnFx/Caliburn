@@ -8,7 +8,6 @@
     using Caliburn.ModelFramework;
     using Caliburn.PresentationFramework;
     using Caliburn.PresentationFramework.ApplicationModel;
-    using Caliburn.PresentationFramework.Filters;
     using Caliburn.Silverlight.ApplicationFramework;
     using Interfaces;
     using Model;
@@ -120,7 +119,7 @@
         private void SchedulePropertyChanged(object sender, PropertyChangedEventArgs e)
         {
             if(e.PropertyName == "IsDirty" || e.PropertyName == "IsValid")
-                NotifyOfPropertyChange("CanSave");
+                NotifyOfPropertyChange("CanSaveChanges");
         }
 
         public void GotoPreviousDay()
@@ -157,17 +156,15 @@
             _currentSchedule.RemoveAppointment(appointmentToRemove);
         }
 
-        [Dependencies("CanSave")]
-        [Preview("CanSave")]
+        public bool CanSaveChanges
+        {
+            get { return IsDirty && IsValid; }
+        }
+
         public void SaveChanges()
         {
             _undoRedoManager.Clear();
             _scheduleService.SaveAll();
-        }
-
-        public bool CanSave()
-        {
-            return IsDirty && IsValid;
         }
 
         public void UndoScheduleChange()

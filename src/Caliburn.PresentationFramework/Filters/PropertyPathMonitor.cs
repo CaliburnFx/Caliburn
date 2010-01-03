@@ -12,8 +12,8 @@
         private const string ALL_PROPERTIES = "*";
 
         private readonly IMethodFactory _methodFactory;
-        private WeakReference<object> _targetReference;
-        private WeakReference<Action> _callbackReference;
+        private WeakReference<INotifyPropertyChanged> _notifier;
+        private Action _notifyOfChange;
 
         private readonly string _propertyPath;
         private readonly string _observedPropertyName;
@@ -22,30 +22,16 @@
         private readonly string _subPath;
         private PropertyPathMonitor _subPathMonitor;
 
-        public PropertyPathMonitor(IMethodFactory methodFactory, object target, string propertyPath,
-                                   Action onPathChanged)
+        public PropertyPathMonitor(IMethodFactory methodFactory, INotifyPropertyChanged notifier, string propertyPath, Action onPathChanged)
         {
             _methodFactory = methodFactory;
-
-            if (target == null) throw new ArgumentNullException("target");
-            _targetReference = new WeakReference<object>(target);
-
-            if (onPathChanged == null) throw new ArgumentNullException("onPathChanged");
-            _callbackReference = new WeakReference<Action>(onPathChanged);
-
+            _notifier = new WeakReference<INotifyPropertyChanged>(notifier);
+            _notifyOfChange = onPathChanged;
             _propertyPath = propertyPath;
             _observedPropertyName = GetRootProperty(_propertyPath);
             _subPath = GetSubPath(_propertyPath);
 
-            StartMonitoring();
-        }
-
-        private void StartMonitoring()
-        {
-            var notifier = GetTarget() as INotifyPropertyChanged;
-            if (notifier != null)
-                notifier.PropertyChanged += Notifier_PropertyChanged;
-
+            notifier.PropertyChanged += Notifier_PropertyChanged;
             HookSubpathMonitor();
         }
 
@@ -54,53 +40,50 @@
             if (_subPathMonitor != null)
                 _subPathMonitor.Dispose();
 
-            if (string.IsNullOrEmpty(_subPath)) return;
+            if (string.IsNullOrEmpty(_subPath)) 
+                return;
 
             var getter = GetPropertyGetMethod();
 
-            var subTarget = getter.Invoke(GetTargetOrFail());
+            var subTarget = getter.Invoke(GetTargetOrFail()) as INotifyPropertyChanged;
             if (subTarget != null)
-            {
-                _subPathMonitor = new PropertyPathMonitor(_methodFactory, subTarget, _subPath, OnSubPathChanged);
-            }
-        }
-
-        private void OnSubPathChanged()
-        {
-            NotifyChange();
+                _subPathMonitor = new PropertyPathMonitor(_methodFactory, subTarget, _subPath, Notify);
         }
 
         private void Notifier_PropertyChanged(object sender, PropertyChangedEventArgs e)
         {
             if (ShouldNotify(e.PropertyName))
-            {
-                NotifyChange();
-            }
+                Notify();
 
             HookSubpathMonitor();
         }
 
-        private void NotifyChange()
-        {
-            if (_callbackReference != null && _callbackReference.IsAlive)
-                _callbackReference.Target.Invoke();
-        }
-
-        private object GetTarget()
-        {
-            if (!_targetReference.IsAlive) return null;
-            return _targetReference.Target;
-        }
-
         private object GetTargetOrFail()
         {
-            if (!_targetReference.IsAlive) throw new CaliburnException("Target is no longer available");
-            return _targetReference.Target;
+            if (!_notifier.IsAlive) 
+                throw new CaliburnException("Target is no longer available.");
+
+            return _notifier.Target;
         }
 
         private bool ShouldNotify(string propertyName)
         {
-            return _observedPropertyName == ALL_PROPERTIES || _observedPropertyName.Equals(propertyName);
+            return _observedPropertyName.Equals(propertyName) || _observedPropertyName == ALL_PROPERTIES;
+        }
+
+        private void Notify()
+        {
+            if (_notifyOfChange != null)
+                _notifyOfChange();
+        }
+
+        public void Dispose()
+        {
+            _notifyOfChange = null;
+            _notifier = null;
+
+            if (_subPathMonitor != null)
+                _subPathMonitor.Dispose();
         }
 
         private IMethod GetPropertyGetMethod()
@@ -110,17 +93,20 @@
                 if (_observedPropertyName.Equals(ALL_PROPERTIES))
                     throw new CaliburnException(
                         string.Format(
-                            "'{0}' marker in path {1} is invalid. '{0}' can only be used as leaf property in a path",
-                            ALL_PROPERTIES, _propertyPath));
+                            "'{0}' marker in path {1} is invalid. '{0}' can only be used as leaf property in a path.", ALL_PROPERTIES, _propertyPath));
 
                 var type = GetTargetOrFail().GetType();
                 var propInfo = type.GetProperty(_observedPropertyName, BindingFlags.Instance | BindingFlags.Public);
 
                 if (propInfo == null)
                 {
-                    throw new CaliburnException(string.Format("Cannot find property {0} of path {1} in class {2}",
-                                                              _observedPropertyName, _propertyPath, type.FullName
-                                                    ));
+                    throw new CaliburnException(
+                        string.Format("Cannot find property {0} of path {1} in class {2}.",
+                                      _observedPropertyName, 
+                                      _propertyPath, 
+                                      type.FullName
+                            )
+                        );
                 }
 
                 _propertyGetMethod = _methodFactory.CreateFrom(propInfo.GetGetMethod());
@@ -143,15 +129,6 @@
             if (index < 0 || index >= propertyPath.Length) return null;
 
             return propertyPath.Substring(index + 1);
-        }
-
-        public void Dispose()
-        {
-            _callbackReference = null;
-            _targetReference = null;
-
-            if (_subPathMonitor != null)
-                _subPathMonitor.Dispose();
         }
     }
 }

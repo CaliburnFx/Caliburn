@@ -203,7 +203,6 @@
             _notifier.Model = new TheReferencedClass();
             disconnectedChain.NotifyOfPropertyChange("SomeModelProperty");
 
-
             AssertTriggerUpdateExpectations();
         }
 

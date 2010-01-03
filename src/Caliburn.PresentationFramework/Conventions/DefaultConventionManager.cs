@@ -12,7 +12,6 @@ namespace Caliburn.PresentationFramework.Conventions
     using Core;
     using Core.Invocation;
     using Filters;
-    using Microsoft.Practices.ServiceLocation;
     using ViewModels;
 
     public class DefaultConventionManager : IConventionManager
@@ -194,7 +193,7 @@ namespace Caliburn.PresentationFramework.Conventions
                 yield return ElementConvention<Grid>("Loaded", Grid.DataContextProperty, (c, o) => c.DataContext = o, c => c.DataContext);
                 yield return ElementConvention<Border>("Loaded", Border.DataContextProperty, (c, o) => c.DataContext = o, c => c.DataContext);
                 yield return ElementConvention<ContentControl>("Loaded", ContentControl.ContentProperty, (c, o) => c.DataContext = o, c => c.DataContext);
-                
+                yield return ElementConvention<ItemsControl>("Loaded", ItemsControl.ItemsSourceProperty, (c, o) => c.DataContext = o, c => c.DataContext);
         }
 
         protected virtual IElementConvention ElementConvention<T>(string defaultEvent, DependencyProperty bindableProperty, Action<T, object> setter, Func<T, object> getter)

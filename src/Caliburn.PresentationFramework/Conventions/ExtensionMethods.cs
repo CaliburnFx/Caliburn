@@ -71,15 +71,28 @@
                 }
 
                 var childCount = VisualTreeHelper.GetChildrenCount(current);
-
-                for(var i = 0; i < childCount; i++)
+                if (childCount > 0)
                 {
-                    var childDo = VisualTreeHelper.GetChild(current, i);
+                    for(var i = 0; i < childCount; i++)
+                    {
+                        var childDo = VisualTreeHelper.GetChild(current, i);
 
-                    if (childDo is UserControl)
-                        continue;
+                        if(childDo is UserControl)
+                            continue;
 
-                    queue.Enqueue(childDo);
+                        queue.Enqueue(childDo);
+                    }
+                }
+                else
+                {
+                    var contentControl = current as ContentControl;
+                    if (contentControl != null)
+                    {
+                        if (contentControl.Content != null
+                            && contentControl.Content is DependencyObject
+                            && !(contentControl.Content is UserControl))
+                            queue.Enqueue(contentControl.Content as DependencyObject);
+                    }
                 }
             }
         }

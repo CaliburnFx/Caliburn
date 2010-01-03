@@ -13,6 +13,7 @@ namespace Caliburn.PresentationFramework.ViewModels
     public class DefaultViewModelBinder : IViewModelBinder
     {
         private readonly IViewModelDescriptionFactory _viewModelDescriptionFactory;
+        private bool _applyConventionsByDefault = true;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="DefaultViewModelBinder"/> class.
@@ -24,6 +25,18 @@ namespace Caliburn.PresentationFramework.ViewModels
         }
 
         /// <summary>
+        /// Gets or sets a value indicating whether to apply conventions by default.
+        /// </summary>
+        /// <value>
+        /// 	<c>true</c> if conventions should be applied by default; otherwise, <c>false</c>.
+        /// </value>
+        public bool ApplyConventionsByDefault
+        {
+            get { return _applyConventionsByDefault; }
+            set { _applyConventionsByDefault = value; }
+        }
+
+        /// <summary>
         /// Binds the specified viewModel to the view.
         /// </summary>
         /// <param name="viewModel">The model.</param>
@@ -32,7 +45,9 @@ namespace Caliburn.PresentationFramework.ViewModels
         public void Bind(object viewModel, DependencyObject view, object context)
         {
             BindCore(viewModel, view, context);
-            ApplyConventions(viewModel, view);
+
+            if(ShouldApplyConventions(viewModel, view, context))
+                ApplyConventions(viewModel, view);
         }
 
         /// <summary>
@@ -54,6 +69,24 @@ namespace Caliburn.PresentationFramework.ViewModels
                 view.OnLoad(delegate { viewAware.ViewLoaded(view, context); });
         }
 
+        /// <summary>
+        /// Indicates whether or not the conventions should be applied.
+        /// </summary>
+        /// <param name="viewModel">The view model.</param>
+        /// <param name="view">The view.</param>
+        /// <param name="context">The context.</param>
+        /// <returns><c>true</c> if conventions should be applied; otherwise, <c>false</c></returns>
+        protected virtual bool ShouldApplyConventions(object viewModel, DependencyObject view, object context)
+        {
+            var overriden = View.GetApplyConventions(view);
+            return overriden.GetValueOrDefault(_applyConventionsByDefault);
+        }
+
+        /// <summary>
+        /// Applies the conventions.
+        /// </summary>
+        /// <param name="viewModel">The view model.</param>
+        /// <param name="view">The view.</param>
         protected virtual void ApplyConventions(object viewModel, DependencyObject view)
         {
             var modelType = GetModelType(viewModel);

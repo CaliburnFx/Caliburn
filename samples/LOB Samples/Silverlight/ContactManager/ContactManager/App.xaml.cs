@@ -27,10 +27,6 @@
 
         protected override object CreateRootModel()
         {
-            var binder = (DefaultBinder)Container.GetInstance<IBinder>();
-            binder.EnableMessageConventions();
-            binder.EnableBindingConventions();
-
             return Container.GetInstance<IShellPresenter>();
         }
     }

@@ -19,7 +19,7 @@
             </Grid.RowDefinitions>
 
             <ScrollViewer>
-                <ItemsControl ItemsSource="{Binding Contacts}">
+                <ItemsControl x:Name="Contacts">
                     <ItemsControl.ItemTemplate>
                         <DataTemplate>
                             <Grid Margin="2">
@@ -67,7 +67,7 @@
                     <RowDefinition Height="*" />
                 </Grid.RowDefinitions>
 
-                <ListBox x:Name="PresenterHost"
+                <ListBox x:Name="Presenters"
                          Height="27"
                          BorderThickness="0 0 0 2">
                     <ListBox.ItemsPanel>

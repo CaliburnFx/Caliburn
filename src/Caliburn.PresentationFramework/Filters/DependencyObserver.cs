@@ -2,6 +2,7 @@ namespace Caliburn.PresentationFramework.Filters
 {
     using System.Collections.Generic;
     using System.ComponentModel;
+    using Core;
     using Core.Metadata;
     using Microsoft.Practices.ServiceLocation;
     using Core.Invocation;
@@ -49,7 +50,7 @@ namespace Caliburn.PresentationFramework.Filters
 
             if (!_monitoringInfos.TryGetValue(propertyPath, out info))
             {
-                info = new MonitoringInfo(_serviceLocator.GetInstance<IMethodFactory>(), _notifier, propertyPath, _messageHandler);
+                info = new MonitoringInfo(_messageHandler, _serviceLocator.GetInstance<IMethodFactory>(), _notifier, propertyPath);
                 _monitoringInfos[propertyPath] = info;
             }
 
@@ -62,7 +63,7 @@ namespace Caliburn.PresentationFramework.Filters
             private readonly IList<IMessageTrigger> _triggersToNotify = new List<IMessageTrigger>();
             private PropertyPathMonitor _monitor;
 
-            public MonitoringInfo(IMethodFactory methodFactory, object notifier, string propertyPath, IRoutedMessageHandler messageHandler)
+            public MonitoringInfo(IRoutedMessageHandler messageHandler, IMethodFactory methodFactory, INotifyPropertyChanged notifier, string propertyPath)
             {
                 _messageHandler = messageHandler;
                 _monitor = new PropertyPathMonitor(methodFactory, notifier, propertyPath, OnPathChanged);
@@ -76,10 +77,7 @@ namespace Caliburn.PresentationFramework.Filters
 
             private void OnPathChanged()
             {
-                foreach (var messageTrigger in _triggersToNotify)
-                {
-                    _messageHandler.UpdateAvailability(messageTrigger);
-                }
+                _triggersToNotify.Apply(x => _messageHandler.UpdateAvailability(x));
             }
         }
     }

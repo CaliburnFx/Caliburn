@@ -20,7 +20,7 @@
         <ScrollViewer BorderThickness="0"
                       VerticalScrollBarVisibility="Auto"
                       Grid.Row="1">
-            <ItemsControl ItemsSource="{Binding Questions}"
+            <ItemsControl x:Name="Questions"
                           Margin="0 2 0 4">
                 <ItemsControl.ItemTemplate>
                     <DataTemplate>

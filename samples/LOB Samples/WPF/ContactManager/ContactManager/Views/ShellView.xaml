@@ -57,7 +57,7 @@
                             <Border.Effect>
                                 <DropShadowEffect />
                             </Border.Effect>
-                            <ContentControl cal:View.Model="{Binding DialogModel}" />
+                            <ContentControl x:Name="DialogModel" />
                         </Border>
                     </Grid>
                 </Grid>

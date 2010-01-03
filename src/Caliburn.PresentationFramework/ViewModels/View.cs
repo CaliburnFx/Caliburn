@@ -117,6 +117,37 @@
             d.SetValue(StrategyProperty, value);
         }
 
+        /// <summary>
+        /// A dependency property which allows the override of convention application behavior.
+        /// </summary>
+        public static readonly DependencyProperty ApplyConventionsProperty =
+            DependencyProperty.RegisterAttached(
+                "ApplyConventions",
+                typeof(bool?),
+                typeof(View),
+                null
+                );
+
+        /// <summary>
+        /// Gets the convention application behavior.
+        /// </summary>
+        /// <param name="d">The d.</param>
+        /// <returns>The strategy.</returns>
+        public static bool? GetApplyConventions(DependencyObject d)
+        {
+            return (bool?)d.GetValue(ApplyConventionsProperty);
+        }
+
+        /// <summary>
+        /// Sets the convention application behavior.
+        /// </summary>
+        /// <param name="d">The d.</param>
+        /// <param name="value">The value.</param>
+        public static void SetApplyConventions(DependencyObject d, bool? value)
+        {
+            d.SetValue(ApplyConventionsProperty, value);
+        }
+
         private static void OnModelChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
             var locator = GetStrategy(d) ?? _viewLocator;
