@@ -70,8 +70,8 @@ namespace Caliburn.PresentationFramework.ViewModels
 
             var modelType = GetModelType(model);
 
-            var customStrategy = modelType.GetCustomAttributes(typeof(ViewStrategyAttribute), true)
-                .OfType<ViewStrategyAttribute>().Where(x => x.Matches(context)).FirstOrDefault();
+            var customStrategy = modelType.GetAttributes<IViewStrategy>(true)
+                .Where(x => x.Matches(context)).FirstOrDefault();
 
             if (customStrategy != null)
                 return customStrategy.Locate(model, displayLocation, context);

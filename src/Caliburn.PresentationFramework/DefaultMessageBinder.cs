@@ -5,7 +5,6 @@
     using System.ComponentModel;
     using System.Globalization;
     using System.Reflection;
-    using System.Windows;
     using Conventions;
     using Core;
     using System.Linq;
@@ -131,32 +130,9 @@
 
                 if (!DetermineSpecialValue(parameter.Name.ToLower(), sourceNode, context, out value))
                 {
-                    var element = handlingNode.UIElement as FrameworkElement;
-
-                    if (element != null)
-                    {
-                        var control = element.FindName<object>(parameter.Name, true);
-                        var defaults = _conventionManager.FindDefaultsOrFail(control);
-                        value = defaults.GetValue(control);
-                    }
-#if !SILVERLIGHT
-                    else
-                    {
-                        var fce = handlingNode.UIElement as FrameworkContentElement;
-
-                        if (fce == null)
-                            throw new CaliburnException(
-                                "Cannot determine parameters unless handler node is a FrameworkElement or FrameworkContentElement.");
-
-                        var control = fce.FindNameOrFail<object>(parameter.Name);
-                        var defaults = _conventionManager.FindDefaultsOrFail(control);
-                        value = defaults.GetValue(control);
-                    }
-#else
-                    else
-                        throw new CaliburnException(
-                            "Cannot determine parameters unless handler node is a FrameworkElement.");
-#endif
+                    var control = handlingNode.UIElement.FindNameExhaustive<object>(parameter.Name, true);
+                    var convention = _conventionManager.FindElementConventionOrFail(control);
+                    value = convention.GetValue(control);
                 }
 
                 values[i] = CoerceParameter(parameter, value);
@@ -334,28 +310,13 @@
 
         private object HandleDataContext(IInteractionNode sourceNode, object context)
         {
-            var fe = sourceNode.UIElement as FrameworkElement;
-            if (fe != null)
-                return fe.DataContext;
-
-#if !SILVERLIGHT
-            var fce = sourceNode.UIElement as FrameworkContentElement;
-            if (fce != null)
-                return fce.DataContext;
-#endif
-
-            throw new CaliburnException(
-                string.Format(
-                    "Source {0} must be a FrameworkElement or FrameworkContentElement in order to bind to its DataContext property.",
-                    sourceNode.UIElement.GetType().Name
-                    )
-                );
+            return sourceNode.UIElement.GetDataContext();
         }
 
         private object HandleValue(IInteractionNode sourceNode, object context)
         {
             var ele = sourceNode.UIElement;
-            var defaults = _conventionManager.FindDefaultsOrFail(ele);
+            var defaults = _conventionManager.FindElementConventionOrFail(ele);
             return defaults.GetValue(ele);
         }
 

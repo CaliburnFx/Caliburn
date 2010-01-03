@@ -3,7 +3,6 @@ namespace Caliburn.PresentationFramework
     using System;
     using System.Linq;
     using System.Reflection;
-    using System.Windows;
     using Conventions;
     using Core;
 
@@ -45,98 +44,42 @@ namespace Caliburn.PresentationFramework
                 return;
             }
 
-            var element = message.Source.UIElement as FrameworkElement;
+            var element = message.Source.UIElement;
 
-            if(element != null)
+            if (string.IsNullOrEmpty(message.OutcomePath))
             {
-                if(string.IsNullOrEmpty(message.OutcomePath))
+                var target = element.FindNameExhaustive<object>(message.DefaultOutcomeElement, false);
+
+                if (target != null)
                 {
-                    var target = element.FindName<object>(message.DefaultOutcomeElement, false);
-
-                    if (target != null)
-                    {
-                        var defaults = _conventionManager.FindDefaultsOrFail(target);
-                        defaults.SetValue(target, _outcome.Result);
-                    }
-                }
-                else
-                {
-                    var parts = message.OutcomePath.Split(_separator, StringSplitOptions.RemoveEmptyEntries);
-
-                    if(parts.Length < 2)
-                    {
-                        Completed(this, new CaliburnException(string.Format("{0} is not a valid return path.", message.OutcomePath)));
-                        return;
-                    }
-
-                    var target = element.FindName<object>(parts[0], true);
-                    var setter = CreateSetter(target, parts.Skip(1).ToArray());
-
-                    if (setter == null)
-                    {
-                        Completed(this, new CaliburnException(string.Format("{0} is not a valid property path.", parts.Skip(1).Aggregate((a, c) => a + c))));
-                        return;
-                    }
-
-                    setter(_outcome.Result);
+                    var defaults = _conventionManager.FindElementConventionOrFail(target);
+                    defaults.SetValue(target, _outcome.Result);
                 }
             }
-#if !SILVERLIGHT
             else
             {
-                var fce = message.Source.UIElement as FrameworkContentElement;
+                var parts = message.OutcomePath.Split(_separator, StringSplitOptions.RemoveEmptyEntries);
 
-                if(fce != null)
+                if (parts.Length < 2)
                 {
-                    if(string.IsNullOrEmpty(message.OutcomePath))
-                    {
-                        var target = fce.FindNameOrFail<object>(message.DefaultOutcomeElement);
-
-                        if(target != null)
-                        {
-                            var defaults = _conventionManager.FindDefaultsOrFail(target);
-                            defaults.SetValue(target, _outcome.Result);
-                        }
-                    }
-                    else
-                    {
-                        var parts = message.OutcomePath.Split(_separator, StringSplitOptions.RemoveEmptyEntries);
-
-                        if (parts.Length < 2)
-                        {
-                            Completed(this, new CaliburnException(string.Format("{0} is not a valid return path.", message.OutcomePath)));
-                            return;
-                        }
-
-                        var target = fce.FindNameOrFail<object>(parts[0]);
-                        var setter = CreateSetter(target, parts.Skip(1).ToArray());
-
-                        if(setter == null)
-                        {
-                            Completed(this, new CaliburnException(string.Format("{0} is not a valid property path.", parts.Skip(1).Aggregate((a, c) => a + c))));
-                            return;    
-                        }
-
-                        setter(_outcome.Result);
-                    }
-                }
-                else if(!string.IsNullOrEmpty(message.OutcomePath))
-                {
-                    Completed(this, new CaliburnException("Cannot determine parameters unless handler node is a FrameworkElement or FrameworkContentElement."));
+                    Completed(this, new CaliburnException(string.Format("{0} is not a valid return path.", message.OutcomePath)));
                     return;
                 }
+
+                var target = element.FindNameExhaustive<object>(parts[0], true);
+                var setter = CreateSetter(target, parts.Skip(1).ToArray());
+
+                if (setter == null)
+                {
+                    Completed(this, new CaliburnException(string.Format("{0} is not a valid property path.", parts.Skip(1).Aggregate((a, c) => a + c))));
+                    return;
+                }
+
+                setter(_outcome.Result);
             }
-#else
-            else if (!string.IsNullOrEmpty(message.OutcomePath))
-            {
-                Completed(this, new CaliburnException("Cannot determine parameters unless handler node is a FrameworkElement or FrameworkContentElement."));
-                return;
-            }
-#endif
 
             Completed(this, null);
         }
-
 
         /// <summary>
         /// Finds the property setter.

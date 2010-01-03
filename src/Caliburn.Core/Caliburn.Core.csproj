@@ -60,6 +60,7 @@
     <Compile Include="IAssemblySource.cs" />
     <Compile Include="Inflector.cs" />
     <Compile Include="Invocation\DefaultDispatcher.cs" />
+    <Compile Include="Invocation\ExtensionMethods.cs" />
     <Compile Include="IoC\ComponentRegistrationBase.cs" />
     <Compile Include="IoC\CustomLifetime.cs" />
     <Compile Include="IoC\ExtensionMethods.cs" />

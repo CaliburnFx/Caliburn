@@ -3,6 +3,7 @@
     using System.Linq;
     using System.Windows;
     using System.Windows.Markup;
+    using Core;
 
     /// <summary>
     /// Hosts attached properties related to view models.
@@ -182,11 +183,11 @@
 
         private static void SetContentProperty(DependencyObject d, object view)
         {
-            var contentProperty = d.GetType().GetCustomAttributes(typeof(ContentPropertyAttribute), true)
-                                      .OfType<ContentPropertyAttribute>().FirstOrDefault()
-                                  ?? new ContentPropertyAttribute("Content");
+            var type = d.GetType();
+            var contentProperty = type.GetAttributes<ContentPropertyAttribute>(true)
+                                      .FirstOrDefault() ?? new ContentPropertyAttribute("Content");
 
-            d.GetType().GetProperty(contentProperty.Name)
+            type.GetProperty(contentProperty.Name)
                 .SetValue(d, view, null);
         }
     }

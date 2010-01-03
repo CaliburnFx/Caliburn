@@ -84,7 +84,7 @@
         /// Gets the filters that execute before something else.
         /// </summary>
         /// <value>The pre execute.</value>
-        public IPreProcessor[] PreProcessors
+        public IEnumerable<IPreProcessor> PreProcessors
         {
             get { return _preExecute; }
         }
@@ -93,7 +93,7 @@
         /// Gets the trigger affecting filters.
         /// </summary>
         /// <value>The trigger effects.</value>
-        public IPreProcessor[] TriggerEffects
+        public IEnumerable<IPreProcessor> TriggerEffects
         {
             get { return _triggerEffects; }
         }
@@ -102,7 +102,7 @@
         /// Gets the filters that execute after something else.
         /// </summary>
         /// <value>The post execute.</value>
-        public IPostProcessor[] PostProcessors
+        public IEnumerable<IPostProcessor> PostProcessors
         {
             get { return _postExecute; }
         }
@@ -111,7 +111,7 @@
         /// Gets the instance aware filters.
         /// </summary>
         /// <value>The instance aware filters.</value>
-        public IHandlerAware[] HandlerAware
+        public IEnumerable<IHandlerAware> HandlerAware
         {
             get { return _handlerAware; }
         }
@@ -120,7 +120,7 @@
         /// Gets a filter that performs a resuce.
         /// </summary>
         /// <value>The rescue.</value>
-        public IRescue[] Rescues
+        public IEnumerable<IRescue> Rescues
         {
             get { return _rescues; }
         }

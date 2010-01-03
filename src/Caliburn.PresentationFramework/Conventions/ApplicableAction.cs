@@ -16,7 +16,7 @@
 
         public void ApplyTo(DependencyObject view)
         {
-            var element = view.FindControl(_elementName);
+            var element = view.FindName(_elementName);
             Message.SetAttach(element, _message);
         }
     }

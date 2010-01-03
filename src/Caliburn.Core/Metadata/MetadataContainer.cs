@@ -17,8 +17,7 @@ namespace Caliburn.Core.Metadata
         /// <param name="member">The member.</param>
         protected virtual void AddMetadataFrom(MemberInfo member)
         {
-            member.GetCustomAttributes(true)
-                .OfType<IMetadata>()
+            member.GetAttributes<IMetadata>(true)
                 .Apply(AddMetadata);
         }
 
@@ -43,7 +42,7 @@ namespace Caliburn.Core.Metadata
             where T : IMetadata
         {
             return _metadata == null
-                       ? new List<T>()
+                       ? new T[] {}
                        : _metadata.OfType<T>();
         }
     }

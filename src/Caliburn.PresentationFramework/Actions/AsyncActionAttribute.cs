@@ -83,7 +83,7 @@ namespace Caliburn.PresentationFramework.Actions
             var action = new AsynchronousAction(
                 method,
                 context.MessageBinder,
-                new FilterManager(context.TargetType, method, context.ServiceLocator),
+                context.CreateFilterManager(method),
                 BlockInteraction
                 );
 

@@ -1,7 +1,6 @@
 namespace Caliburn.PresentationFramework.Actions
 {
     using System;
-    using Filters;
 
     /// <summary>
     /// Designates an <see cref="IAction"/>.
@@ -21,7 +20,7 @@ namespace Caliburn.PresentationFramework.Actions
             var action = new SynchronousAction(
                 method,
                 context.MessageBinder,
-                new FilterManager(context.TargetType, method, context.ServiceLocator).Combine(context.TargetFilters)
+                context.CreateFilterManager(method)
                 );
 
             context.ConventionManager

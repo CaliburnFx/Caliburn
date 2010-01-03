@@ -9,10 +9,12 @@ namespace Caliburn.PresentationFramework.Conventions
     public interface IConventionManager
     {
         void AddElementConvention(IElementConvention convention);
+        void AddBindingConvention(IBindingConvention convention);
+        void AddActionConvention(IActionConvention convention);
+
         IElementConvention GetElementConvention(Type elementType);
+        IEnumerable<IViewApplicable> DetermineConventions(IViewModelDescription viewModelDescription, IEnumerable<IElementDescription> elementDescriptions);
 
         void ApplyActionCreationConventions(IAction action, IMethod targetMethod);
-
-        IEnumerable<IViewApplicable> DetermineConventions(IViewModelDescription viewModelDescription, IEnumerable<IElementDescription> elementDescriptions);
     }
 }

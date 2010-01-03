@@ -52,16 +52,7 @@
         {
             _controller = controller;
             _uiElementReference = uiElement;
-
-            var element = _uiElementReference as FrameworkElement;
-            if(element != null) element.Loaded += Element_Loaded;
-#if !SILVERLIGHT
-            else
-            {
-                var fce = _uiElementReference as FrameworkContentElement;
-                if(fce != null) fce.Loaded += Element_Loaded;
-            }
-#endif
+            _uiElementReference.OnLoad(Element_Loaded);
         }
 
         /// <summary>

@@ -5,6 +5,7 @@
     using System.Linq;
     using System.Reflection;
     using Conventions;
+    using Core;
     using Core.Invocation;
     using Filters;
     using Microsoft.Practices.ServiceLocation;
@@ -96,8 +97,7 @@
         /// <returns>The action.</returns>
         protected virtual IAction CreateAction(Type targetType, IFilterManager targetFilters, MethodInfo methodInfo)
         {
-            var builder = methodInfo.GetCustomAttributes(typeof(IActionFactory), true)
-                              .OfType<IActionFactory>()
+            var builder = methodInfo.GetAttributes<IActionFactory>(true)
                               .FirstOrDefault() ?? new ActionAttribute();
 
             return builder.Create(

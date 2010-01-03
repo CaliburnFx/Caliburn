@@ -14,24 +14,6 @@
         /// Wires an event handler to the sender for the specified event.
         /// </summary>
         /// <param name="sender">The sender.</param>
-        /// <param name="eventName">Name of the event.</param>
-        /// <returns>The event handler.</returns>
-        public IEventHandler Wire(object sender, string eventName)
-        {
-            var eventInfo = sender.GetType().GetEvent(eventName);
-
-            if(eventInfo == null)
-                throw new CaliburnException(
-                    string.Format("The event '{0}' does not exist on '{1}'.", eventName, sender.GetType().FullName)
-                    );
-
-            return Wire(sender, eventInfo);
-        }
-
-        /// <summary>
-        /// Wires an event handler to the sender for the specified event.
-        /// </summary>
-        /// <param name="sender">The sender.</param>
         /// <param name="eventInfo">The event info.</param>
         /// <returns>The event handler.</returns>
         public IEventHandler Wire(object sender, EventInfo eventInfo)

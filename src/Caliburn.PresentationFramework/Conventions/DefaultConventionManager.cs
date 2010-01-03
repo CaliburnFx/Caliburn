@@ -12,6 +12,7 @@ namespace Caliburn.PresentationFramework.Conventions
     using Core;
     using Core.Invocation;
     using Filters;
+    using Microsoft.Practices.ServiceLocation;
     using ViewModels;
 
     public class DefaultConventionManager : IConventionManager
@@ -28,12 +29,29 @@ namespace Caliburn.PresentationFramework.Conventions
             _methodFactory = methodFactory;
             _eventHandlerFactory = eventHandlerFactory;
 
-            GetDefaultElementConventions().Apply(AddElementConvention);
+            GetDefaultElementConventions()
+                .Apply(AddElementConvention);
+
+            GetDefaultBindingConventions()
+                .Apply(AddBindingConvention);
+
+            GetDefaultActionConventions()
+                .Apply(AddActionConvention);
         }
 
         public void AddElementConvention(IElementConvention convention)
         {
             _elementConventions[convention.Type] = convention;
+        }
+
+        public void AddBindingConvention(IBindingConvention convention)
+        {
+            _bindingConventions.Add(convention);
+        }
+
+        public void AddActionConvention(IActionConvention convention)
+        {
+            _actionConventions.Add(convention);
         }
 
         public IElementConvention GetElementConvention(Type elementType)
@@ -49,6 +67,35 @@ namespace Caliburn.PresentationFramework.Conventions
                 convention = GetElementConvention(elementType.BaseType);
 
             return convention;
+        }
+
+        public virtual IEnumerable<IViewApplicable> DetermineConventions(IViewModelDescription viewModelDescription, IEnumerable<IElementDescription> elementDescriptions)
+        {
+            foreach (var elementDescription in elementDescriptions)
+            {
+                var actionMatches = from convention in _actionConventions
+                                    from action in viewModelDescription.Actions
+                                    where convention.Matches(viewModelDescription, elementDescription, action)
+                                    select convention.CreateApplication(viewModelDescription, elementDescription, action);
+
+                foreach (var match in actionMatches)
+                {
+                    yield return match;
+                }
+
+                if(actionMatches.Any())
+                    continue;
+
+                var propertyMatches = from convention in _bindingConventions
+                                      from property in viewModelDescription.Properties
+                                      where convention.Matches(viewModelDescription, elementDescription, property)
+                                      select convention.CreateApplication(viewModelDescription, elementDescription, property);
+
+                foreach (var match in propertyMatches)
+                {
+                    yield return match;
+                }
+            }
         }
 
         /// <summary>
@@ -75,35 +122,20 @@ namespace Caliburn.PresentationFramework.Conventions
                 action.Filters.Add(new PreviewAttribute(_methodFactory.CreateFrom(canExecute)));
         }
 
-        public IEnumerable<IViewApplicable> DetermineConventions(IViewModelDescription viewModelDescription, IEnumerable<IElementDescription> elementDescriptions)
-        {
-            foreach (var elementDescription in elementDescriptions)
-            {
-                var actionMatches = from convention in _actionConventions
-                                    from action in viewModelDescription.Actions
-                                    where convention.Matches(viewModelDescription, elementDescription, action)
-                                    select convention.CreateApplication(viewModelDescription, elementDescription, action);
-
-                foreach (var match in actionMatches)
-                {
-                    yield return match;
-                }
-
-                var propertyMatches = from convention in _bindingConventions
-                                      from property in viewModelDescription.Properties
-                                      where convention.Matches(viewModelDescription, elementDescription, property)
-                                      select convention.CreateApplication(viewModelDescription, elementDescription, property);
-
-                foreach (var match in propertyMatches)
-                {
-                    yield return match;
-                }
-            }
-        }
-
         protected virtual string DeriveCanExecuteName(string baseName)
         {
             return "Can" + baseName;
+        }
+
+        protected virtual IEnumerable<IBindingConvention> GetDefaultBindingConventions()
+        {
+            yield return new DefaultBindingConvention();
+            yield return new ItemsControlBindingConvention();
+        }
+
+        protected virtual IEnumerable<IActionConvention> GetDefaultActionConventions()
+        {
+            yield return new DefaultActionConvention();
         }
 
         protected virtual IEnumerable<IElementConvention> GetDefaultElementConventions()

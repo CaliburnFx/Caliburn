@@ -1,7 +1,6 @@
 ﻿namespace Caliburn.PresentationFramework
 {
     using System.Windows;
-    using System.Windows.Media;
 
     /// <summary>
     /// An implementation of <see cref="IRoutedMessageController"/>.
@@ -31,21 +30,7 @@
             node.RegisterHandler(handler);
 
             if(setContext)
-            {
-                var unwrappedValue = handler.Unwrap();
-
-                var frameworkElement = uiElement as FrameworkElement;
-                if(frameworkElement != null)
-                    frameworkElement.DataContext = unwrappedValue;
-#if !SILVERLIGHT
-                else
-                {
-                    var frameworkContentElement = uiElement as FrameworkContentElement;
-                    if(frameworkContentElement != null)
-                        frameworkContentElement.DataContext = unwrappedValue;
-                }
-#endif
-            }
+                uiElement.SetDataContext(handler.Unwrap());
         }
 
         /// <summary>
@@ -80,12 +65,8 @@
 
             while(currentElement != null && currentNode == null)
             {
-#if !SILVERLIGHT
-                currentElement = LogicalTreeHelper.GetParent(currentElement) ??
-                                 VisualTreeHelper.GetParent(currentElement);
-#else
-                currentElement = VisualTreeHelper.GetParent(currentElement);
-#endif
+                currentElement = currentElement.GetParent();
+
                 if(currentElement != null)
                     currentNode = currentElement.GetValue(NodeProperty) as IInteractionNode;
             }

@@ -280,10 +280,12 @@ namespace Caliburn.PresentationFramework.Commands
         {
             string methodName = "Execute";
 
-            var atts = Command.GetType().GetCustomAttributes(typeof(CommandAttribute), true);
+            var att = Command.GetType()
+                .GetAttributes<CommandAttribute>(true)
+                .FirstOrDefault();
 
-            if (atts.Length > 0)
-                methodName = ((CommandAttribute)atts[0]).ExecuteMethod;
+            if(att != null)
+                methodName = att.ExecuteMethod;
 
             _actionMessage = new ActionMessage
             {

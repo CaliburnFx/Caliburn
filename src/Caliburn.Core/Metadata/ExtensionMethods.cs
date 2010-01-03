@@ -8,7 +8,7 @@
         /// Retrieves metadata from the store.
         /// </summary>
         /// <typeparam name="T"></typeparam>
-        /// <returns></returns>
+        /// <returns>The metadata.</returns>
         public static T GetMetadata<T>(this IMetadataContainer container)
             where T : IMetadata
         {

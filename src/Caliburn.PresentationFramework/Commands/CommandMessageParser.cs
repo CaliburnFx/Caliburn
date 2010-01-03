@@ -76,45 +76,25 @@
             switch(_commandSource)
             {
                 case CommandSource.Resource:
-                    var frameworkElement = target as FrameworkElement;
-
-                    if(frameworkElement != null)
-                    {
-                        frameworkElement.Loaded +=
-                            delegate { message.Command = frameworkElement.GetResource<object>(coreOfMessage); };
-                    }
-#if !SILVERLIGHT
-                    else
-                    {
-                        var fce = target as FrameworkContentElement;
-
-                        if(fce != null)
-                        {
-                            fce.Loaded +=
-                                delegate { message.Command = fce.GetResource<object>(coreOfMessage); };
-                        }
-                    }
-#endif
+                    target.OnLoad(delegate{
+                        message.Command = target.GetResource<object>(coreOfMessage);
+                    });
                     break;
                 case CommandSource.Container:
                     message.Command = ServiceLocator.Current.GetInstance(null, coreOfMessage);
                     break;
                 case CommandSource.Bound:
-                    var binding = new Binding(coreOfMessage);
-#if !SILVERLIGHT
-                    BindingOperations.SetBinding(message, CommandMessage.CommandProperty, binding);
-#else
-                    var frameworkElement2 = target as FrameworkElement;
+                    message.SetBinding(CommandMessage.CommandProperty, new Binding(coreOfMessage));
+#if SILVERLIGHT
+                    var fe = target as FrameworkElement;
 
-                    if (frameworkElement2 != null)
+                    if (fe != null)
                     {
-                        frameworkElement2.Loaded +=
+                        fe.Loaded +=
                             delegate {
-                                if (frameworkElement2.DataContext != null)
-                                    message.DataContext = frameworkElement2.DataContext;
+                                if (fe.DataContext != null)
+                                    message.DataContext = fe.DataContext;
                             };
-
-                        message.SetBinding(CommandMessage.CommandProperty, binding);
                     }
 #endif
                     break;

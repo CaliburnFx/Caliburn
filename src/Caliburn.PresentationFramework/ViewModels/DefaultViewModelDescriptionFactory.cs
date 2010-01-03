@@ -57,8 +57,8 @@ namespace Caliburn.PresentationFramework.ViewModels
         /// <returns></returns>
         protected virtual IViewModelDescription CreateCore(Type targetType) 
         {
-            var customFactory = targetType.GetCustomAttributes(typeof(IViewModelDescriptionFactory), true)
-                .OfType<IViewModelDescriptionFactory>()
+            var customFactory = targetType
+                .GetAttributes<IViewModelDescriptionFactory>(true)
                 .FirstOrDefault();
 
             if (customFactory != null)

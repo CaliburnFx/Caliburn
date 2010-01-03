@@ -80,16 +80,7 @@ namespace Caliburn.PresentationFramework.Conventions
         protected virtual PropertyInfo GetHeaderProperty(IViewModelDescription description, PropertyInfo property)
         {
             var found = description.Properties
-                .FirstOrDefault(x =>
-                                x.Name == property.Name + "Header" ||
-                                x.Name == property.Name + "DisplayName" ||
-                                x.Name == property.Name + "Name" ||
-                                x.Name == property.Name + "Title" ||
-                                x.Name == "Header" ||
-                                x.Name == "DisplayName" ||
-                                x.Name == "Name" ||
-                                x.Name == "Title"
-                );
+                .FirstOrDefault(x => x.Name == property.Name + "Header");
 
             return found;
         }

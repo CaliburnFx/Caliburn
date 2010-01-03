@@ -9,7 +9,7 @@ namespace Caliburn.PresentationFramework.ViewModels
     /// An implementation of <see cref="IViewLocator"/> that provides a basic lookup strategy for an attributed model.
     /// </summary>
     [AttributeUsage(AttributeTargets.Class | AttributeTargets.Enum | AttributeTargets.Struct, AllowMultiple = true)]
-    public class ViewAttribute : ViewStrategyAttribute
+    public class ViewAttribute : Attribute, IViewStrategy
     {
         private readonly Type _key;
 
@@ -44,7 +44,7 @@ namespace Caliburn.PresentationFramework.ViewModels
         /// <returns>
         /// true if it matches the context; false otherwise
         /// </returns>
-        public override bool Matches(object context)
+        public bool Matches(object context)
         {
             if(Context == null)
                 return context == null;
@@ -59,7 +59,7 @@ namespace Caliburn.PresentationFramework.ViewModels
         /// <param name="displayLocation">The control into which the view will be injected.</param>
         /// <param name="context">Some additional context used to select the proper view.</param>
         /// <returns>The view.</returns>
-        public override DependencyObject Locate(object viewModel, DependencyObject displayLocation, object context)
+        public DependencyObject Locate(object viewModel, DependencyObject displayLocation, object context)
         {
             var instances = ServiceLocator.Current.GetAllInstances(_key);
 

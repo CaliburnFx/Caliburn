@@ -106,7 +106,7 @@
 
             if(triggerPlusMessage.Length == 1)
             {
-                var defaults = _conventionManager.FindDefaultsOrFail(target);
+                var defaults = _conventionManager.FindElementConventionOrFail(target);
                 trigger = defaults.CreateTrigger();
 
                 messageDetail = triggerPlusMessage[0]

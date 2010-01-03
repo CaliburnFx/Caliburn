@@ -2,6 +2,7 @@
 {
     using System.Windows.Controls.Primitives;
     using global::Caliburn.Core.Invocation;
+    using global::Caliburn.PresentationFramework;
     using global::Caliburn.PresentationFramework.Conventions;
     using NUnit.Framework;
     using System.Windows.Controls;

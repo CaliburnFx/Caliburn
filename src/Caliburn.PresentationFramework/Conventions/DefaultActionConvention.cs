@@ -2,15 +2,20 @@ namespace Caliburn.PresentationFramework.Conventions
 {
     using System;
     using Actions;
+    using Microsoft.Practices.ServiceLocation;
     using ViewModels;
 
     public class DefaultActionConvention : IActionConvention
     {
-        private readonly IMessageBinder _messageBinder;
-
-        public DefaultActionConvention(IMessageBinder messageBinder)
+        private static IMessageBinder _messageBinder;
+        private static IMessageBinder MessageBinder
         {
-            _messageBinder = messageBinder;
+            get
+            {
+                if (_messageBinder == null)
+                    _messageBinder = ServiceLocator.Current.GetInstance<IMessageBinder>();
+                return _messageBinder;
+            }
         }
 
         public bool Matches(IViewModelDescription viewModelDescription, IElementDescription element, IAction action)
@@ -31,7 +36,7 @@ namespace Caliburn.PresentationFramework.Conventions
                     var paramName = requirement.Name;
                     var specialValue = "$" + paramName;
 
-                    if (_messageBinder.IsSpecialValue(specialValue))
+                    if (MessageBinder.IsSpecialValue(specialValue))
                         paramName = specialValue;
 
                     message += paramName + ",";

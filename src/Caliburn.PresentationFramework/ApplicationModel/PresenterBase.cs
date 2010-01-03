@@ -1,6 +1,7 @@
 namespace Caliburn.PresentationFramework.ApplicationModel
 {
     using System;
+    using System.Windows;
     using Core.Metadata;
     using Metadata;
 
@@ -214,7 +215,7 @@ namespace Caliburn.PresentationFramework.ApplicationModel
         /// </summary>
         /// <param name="view">The view.</param>
         /// <param name="context">The context.</param>
-        public virtual void ViewLoaded(object view, object context) {}
+        public virtual void ViewLoaded(DependencyObject view, object context) {}
 
         /// <summary>
         /// Closes this instance by asking its Parent to initiate shutdown or by asking it's corresponding default view to close.

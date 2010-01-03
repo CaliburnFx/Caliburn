@@ -2,7 +2,6 @@
 {
     using System;
     using System.Collections.Generic;
-    using System.Linq;
     using System.Reflection;
     using IoC;
 
@@ -23,13 +22,19 @@
             return CaliburnModule<CoreConfiguration>.Instance;
         }
 
+        /// <summary>
+        /// Inspects the specified assembly for components and modules.
+        /// </summary>
+        /// <param name="assembly">The assembly.</param>
+        /// <param name="componentList">The component list.</param>
+        /// <param name="modules">The modules.</param>
         public static void Inspect(this Assembly assembly, ICollection<IComponentRegistration> componentList, ICollection<IModule> modules)
         {
             var types = assembly.GetExportedTypes();
 
             foreach (var type in types)
             {
-                foreach (var attribute in type.GetCustomAttributes(true).OfType<RegisterAttribute>())
+                foreach (var attribute in type.GetAttributes<RegisterAttribute>(true))
                     componentList.Add(attribute.GetComponentInfo(type));
             }
 

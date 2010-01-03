@@ -25,7 +25,7 @@
 
         public void ApplyTo(DependencyObject view)
         {
-            var element = (FrameworkElement)view.FindControl(_elementName);
+            var element = view.FindName(_elementName);
 
             if (_dependencyProperty != null && ValueNotSet(element))
                 element.SetBinding(_dependencyProperty, new Binding(_path) {Mode = _mode});
@@ -39,13 +39,12 @@
                 itemsControl.ItemTemplate = CreateItemTemplate(itemsControl);
         }
 
-        protected virtual bool ValueNotSet(FrameworkElement element)
+        protected virtual bool ValueNotSet(DependencyObject element)
         {
 #if !SILVERLIGHT_20
-            return element.GetBindingExpression(_dependencyProperty) == null &&
-                   element.GetValue(_dependencyProperty) == DependencyProperty.UnsetValue;
+            return element.GetBindingExpression(_dependencyProperty) == null;
 #else
-            return element.GetValue(_dependencyProperty) == DependencyProperty.UnsetValue;
+            return true;
 #endif
         }
 

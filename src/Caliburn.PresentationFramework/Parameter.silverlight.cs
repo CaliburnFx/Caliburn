@@ -90,7 +90,7 @@ namespace Caliburn.PresentationFramework
                             if(_isLoaded) return;
 
                             _isLoaded = true;
-                            var source = element.FindName<object>(ElementName, false);
+                            var source = element.FindNameExhaustive<object>(ElementName, false);
 
                             if (source != null)
                             {
@@ -133,8 +133,7 @@ namespace Caliburn.PresentationFramework
 
             if(property == null)
                 ServiceLocator.Current.GetInstance<IEventHandlerFactory>().Wire(source, defaults.EventName)
-                    .SetActualHandler(
-                    parameters => {
+                    .SetActualHandler(parameters => {
                         Value = defaults.GetValue(source);
                     });
             else

@@ -103,7 +103,7 @@
     <Compile Include="ApplicationModel\SubordinateGroup.cs" />
     <Compile Include="ViewModels\View.cs" />
     <Compile Include="ViewModels\ViewAttribute.cs" />
-    <Compile Include="ViewModels\ViewStrategyAttribute.cs" />
+    <Compile Include="ViewModels\IViewStrategy.cs" />
     <Compile Include="AvailabilityEffect.cs" />
     <Compile Include="AvailabilityEffectConverter.cs" />
     <Compile Include="BaseMessageTrigger.cs" />

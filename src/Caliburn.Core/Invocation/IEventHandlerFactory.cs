@@ -11,14 +11,6 @@ namespace Caliburn.Core.Invocation
         /// Wires an event handler to the sender for the specified event.
         /// </summary>
         /// <param name="sender">The sender.</param>
-        /// <param name="eventName">Name of the event.</param>
-        /// <returns>The event handler.</returns>
-        IEventHandler Wire(object sender, string eventName);
-
-        /// <summary>
-        /// Wires an event handler to the sender for the specified event.
-        /// </summary>
-        /// <param name="sender">The sender.</param>
         /// <param name="eventInfo">The event info.</param>
         /// <returns>The event handler.</returns>
         IEventHandler Wire(object sender, EventInfo eventInfo);

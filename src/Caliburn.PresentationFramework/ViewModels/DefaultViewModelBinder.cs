@@ -46,33 +46,12 @@ namespace Caliburn.PresentationFramework.ViewModels
             Action.SetTarget(view, viewModel);
 
             var metadataContainer = viewModel as IMetadataContainer;
-            if (metadataContainer != null) metadataContainer.SetView(view, context, false);
+            if (metadataContainer != null) 
+                metadataContainer.SetView(view, context, false);
 
             var viewAware = viewModel as IViewAware;
             if (viewAware != null)
-            {
-                var element = view as FrameworkElement;
-                if (element != null)
-                {
-                    element.Loaded += delegate
-                    {
-                        viewAware.ViewLoaded(element, context);
-                    };
-                }
-#if !SILVERLIGHT
-                else
-                {
-                    var contentElement = view as FrameworkContentElement;
-                    if (contentElement != null)
-                    {
-                        contentElement.Loaded += delegate
-                        {
-                            viewAware.ViewLoaded(contentElement, context);
-                        };
-                    }
-                }
-#endif
-            }
+                view.OnLoad(delegate { viewAware.ViewLoaded(view, context); });
         }
 
         protected virtual void ApplyConventions(object viewModel, DependencyObject view)

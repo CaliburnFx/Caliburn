@@ -60,7 +60,7 @@ namespace Caliburn.PresentationFramework.ApplicationModel
         /// <param name="context">The context.</param>
         /// <param name="handleShutdownModel">The handle shutdown model.</param>
         /// <returns></returns>
-        protected Window CreateWindow(object rootModel, object context, Action<ISubordinate, Action> handleShutdownModel)
+        protected Window CreateWindow(object rootModel, object context,Action<ISubordinate, Action> handleShutdownModel)
         {
             var view = EnsureWindow(rootModel, _viewLocator.Locate(rootModel, null, context));
 

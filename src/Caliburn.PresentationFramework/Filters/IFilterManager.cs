@@ -1,5 +1,7 @@
 namespace Caliburn.PresentationFramework.Filters
 {
+    using System.Collections.Generic;
+
     /// <summary>
     /// Manages filters for an object.
     /// </summary>
@@ -9,32 +11,32 @@ namespace Caliburn.PresentationFramework.Filters
         /// Gets the trigger affecting filters.
         /// </summary>
         /// <value>The trigger effects.</value>
-        IPreProcessor[] TriggerEffects { get; }
+        IEnumerable<IPreProcessor> TriggerEffects { get; }
 
         /// <summary>
         /// 
         /// Gets the filters that execute before something else.
         /// </summary>
         /// <value>The pre execute.</value>
-        IPreProcessor[] PreProcessors { get; }
+        IEnumerable<IPreProcessor> PreProcessors { get; }
 
         /// <summary>
         /// Gets the filters that execute after something else.
         /// </summary>
         /// <value>The post execute.</value>
-        IPostProcessor[] PostProcessors { get; }
+        IEnumerable<IPostProcessor> PostProcessors { get; }
 
         /// <summary>
         /// Gets the instance aware filters.
         /// </summary>
         /// <value>The instance aware filters.</value>
-        IHandlerAware[] HandlerAware { get; }
+        IEnumerable<IHandlerAware> HandlerAware { get; }
 
         /// <summary>
         /// Gets a filter that performs a resuce.
         /// </summary>
         /// <value>The rescue.</value>
-        IRescue[] Rescues { get; }
+        IEnumerable<IRescue> Rescues { get; }
 
         /// <summary>
         /// Adds the specified filter.
