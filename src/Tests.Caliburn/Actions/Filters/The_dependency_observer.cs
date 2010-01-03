@@ -8,7 +8,6 @@
     using global::Caliburn.Core.Threading;
     using global::Caliburn.PresentationFramework;
     using global::Caliburn.PresentationFramework.Filters;
-    using Microsoft.Practices.ServiceLocation;
     using NUnit.Framework;
     using NUnit.Framework.SyntaxHelpers;
     using Rhino.Mocks;
@@ -16,7 +15,6 @@
     [TestFixture]
     public class The_dependency_observer : TestBase
     {
-        private IServiceLocator _container;
         private IRoutedMessageHandler _handler;
         private TheNotifierClass _notifier;
         private DependencyObserver _observer;
@@ -30,12 +28,10 @@
             var methodFactory = new DefaultMethodFactory(
                 new DefaultThreadPool()
                 );
-            _container = Stub<IServiceLocator>();
-            _container.Stub(x => x.GetInstance<IMethodFactory>()).Return(methodFactory).Repeat.Any();
 
             _handler = StrictMock<IRoutedMessageHandler>();
             _notifier = new TheNotifierClass();
-            _observer = new DependencyObserver(_handler, _notifier, _container);
+            _observer = new DependencyObserver(_handler, methodFactory, _notifier);
             _trigger = Mock<IMessageTrigger>();
         }
 

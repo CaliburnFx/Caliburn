@@ -2,6 +2,7 @@
 {
     using System;
     using System.ComponentModel;
+    using Core.Invocation;
     using Core.Metadata;
     using Microsoft.Practices.ServiceLocation;
 
@@ -16,7 +17,7 @@
     {
         private readonly string[] _dependencies;
         private IMetadataContainer _target;
-        private IServiceLocator _serviceLocator;
+        private IMethodFactory _methodFactory;
 
         /// <summary>
         /// Gets the priority used to order filters.
@@ -43,7 +44,7 @@
         public void Initialize(Type targetType, IMetadataContainer metadataContainer, IServiceLocator serviceLocator)
         {
             _target = metadataContainer;
-            _serviceLocator = serviceLocator;
+            _methodFactory = serviceLocator.GetInstance<IMethodFactory>();
         }
 
         /// <summary>
@@ -58,7 +59,7 @@
             var helper = messageHandler.GetMetadata<DependencyObserver>();
             if (helper != null) return;
 
-            helper = new DependencyObserver(messageHandler, notifier, _serviceLocator);
+            helper = new DependencyObserver(messageHandler, _methodFactory, notifier);
             messageHandler.AddMetadata(helper);
         }
 

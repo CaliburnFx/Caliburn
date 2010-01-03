@@ -12,7 +12,7 @@
     [AttributeUsage(AttributeTargets.Method, AllowMultiple = true)]
     public class PreviewAttribute : MethodCallFilterBase, IPreProcessor, IHandlerAware
     {
-        private IServiceLocator _serviceLocator;
+        private IMethodFactory _methodFactory;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="PreviewAttribute"/> class.
@@ -50,7 +50,7 @@
         public override void Initialize(Type targetType, IMetadataContainer metadataContainer, IServiceLocator serviceLocator)
         {
             base.Initialize(targetType, metadataContainer, serviceLocator);
-            _serviceLocator = serviceLocator;
+            _methodFactory = serviceLocator.GetInstance<IMethodFactory>();
         }
 
         /// <summary>
@@ -83,7 +83,7 @@
             var helper = messageHandler.GetMetadata<DependencyObserver>();
             if (helper != null) return;
 
-            helper = new DependencyObserver(messageHandler, notifier, _serviceLocator);
+            helper = new DependencyObserver(messageHandler, _methodFactory, notifier);
             messageHandler.AddMetadata(helper);
         }
 

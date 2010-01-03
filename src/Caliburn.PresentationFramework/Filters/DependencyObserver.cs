@@ -4,7 +4,6 @@ namespace Caliburn.PresentationFramework.Filters
     using System.ComponentModel;
     using Core;
     using Core.Metadata;
-    using Microsoft.Practices.ServiceLocation;
     using Core.Invocation;
 
     /// <summary>
@@ -13,7 +12,7 @@ namespace Caliburn.PresentationFramework.Filters
     public class DependencyObserver : IMetadata
     {
         private readonly IRoutedMessageHandler _messageHandler;
-        private readonly IServiceLocator _serviceLocator;
+        private readonly IMethodFactory _methodFactory;
         private readonly INotifyPropertyChanged _notifier;
         private readonly IDictionary<string, MonitoringInfo> _monitoringInfos;
 
@@ -21,11 +20,12 @@ namespace Caliburn.PresentationFramework.Filters
         /// Initializes a new instance of the <see cref="DependencyObserver"/> class.
         /// </summary>
         /// <param name="messageHandler">The message handler.</param>
+        /// <param name="methodFactory">The method factory.</param>
         /// <param name="notifier">The notifier.</param>
-        public DependencyObserver(IRoutedMessageHandler messageHandler, INotifyPropertyChanged notifier, IServiceLocator serviceLocator)
+        public DependencyObserver(IRoutedMessageHandler messageHandler, IMethodFactory methodFactory, INotifyPropertyChanged notifier)
         {
             _messageHandler = messageHandler;
-            _serviceLocator = serviceLocator;
+            _methodFactory = methodFactory;
             _notifier = notifier;
             _monitoringInfos = new Dictionary<string, MonitoringInfo>();
         }
@@ -50,7 +50,7 @@ namespace Caliburn.PresentationFramework.Filters
 
             if (!_monitoringInfos.TryGetValue(propertyPath, out info))
             {
-                info = new MonitoringInfo(_messageHandler, _serviceLocator.GetInstance<IMethodFactory>(), _notifier, propertyPath);
+                info = new MonitoringInfo(_messageHandler, _methodFactory, _notifier, propertyPath);
                 _monitoringInfos[propertyPath] = info;
             }
 
@@ -61,12 +61,11 @@ namespace Caliburn.PresentationFramework.Filters
         {
             private readonly IRoutedMessageHandler _messageHandler;
             private readonly IList<IMessageTrigger> _triggersToNotify = new List<IMessageTrigger>();
-            private PropertyPathMonitor _monitor;
 
             public MonitoringInfo(IRoutedMessageHandler messageHandler, IMethodFactory methodFactory, INotifyPropertyChanged notifier, string propertyPath)
             {
                 _messageHandler = messageHandler;
-                _monitor = new PropertyPathMonitor(methodFactory, notifier, propertyPath, OnPathChanged);
+                new PropertyPathMonitor(methodFactory, notifier, propertyPath, OnPathChanged);
             }
 
             public void RegisterTrigger(IMessageTrigger trigger)

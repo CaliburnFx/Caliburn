@@ -7,6 +7,9 @@
     using Core.Invocation;
     using Core.MemoryManagement;
 
+    /// <summary>
+    /// A class used to monitor changes in a property path.
+    /// </summary>
     public class PropertyPathMonitor : IDisposable
     {
         private const string ALL_PROPERTIES = "*";
@@ -22,6 +25,13 @@
         private readonly string _subPath;
         private PropertyPathMonitor _subPathMonitor;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="PropertyPathMonitor"/> class.
+        /// </summary>
+        /// <param name="methodFactory">The method factory.</param>
+        /// <param name="notifier">The notifier.</param>
+        /// <param name="propertyPath">The property path.</param>
+        /// <param name="onPathChanged">The on path changed.</param>
         public PropertyPathMonitor(IMethodFactory methodFactory, INotifyPropertyChanged notifier, string propertyPath, Action onPathChanged)
         {
             _methodFactory = methodFactory;
@@ -77,6 +87,9 @@
                 _notifyOfChange();
         }
 
+        /// <summary>
+        /// Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
+        /// </summary>
         public void Dispose()
         {
             _notifyOfChange = null;
