@@ -32,6 +32,7 @@ V1.1 RTW
 -Applied cheesus' recommendations to add unwire capability to IEventHandler.
 -Improved PresenterManager and MultiPresenterManager such that all changes to CurrentPresenter go through ChangeCurrentPresenterCore.
 -Bug fixes and improvements to DependenciesAttribute, PreviewAttribute, DependencyObserver and PropertyPathMonitory.
+-Added strongly-typed property change notification to PropertyChangedBase.
 
 V1 RTW
 -The DefaultBinder will now throw on type activation failure.

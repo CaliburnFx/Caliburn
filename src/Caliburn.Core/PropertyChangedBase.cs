@@ -2,6 +2,8 @@
 {
     using System;
     using System.ComponentModel;
+    using System.Linq.Expressions;
+    using System.Reflection;
     using Invocation;
 
     /// <summary>
@@ -30,12 +32,37 @@
         }
 
         /// <summary>
+        /// Notifies subscribers of the property change.
+        /// </summary>
+        /// <typeparam name="TProperty">The type of the property.</typeparam>
+        /// <param name="propertyExpression">The property expression.</param>
+        public virtual void NotifyOfPropertyChange<TProperty>(Expression<Func<TProperty>> propertyExpression)
+        {
+            NotifyOfPropertyChange(GetMemberInfo(propertyExpression).Name);
+        }
+
+        /// <summary>
         /// Raises the property changed event immediately.
         /// </summary>
         /// <param name="propertyName">Name of the property.</param>
         public virtual void RaisePropertyChangedEventImmediately(string propertyName)
         {
             PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+        }
+
+        private static MemberInfo GetMemberInfo(Expression propertyExpression)
+        {
+            var lambda = (LambdaExpression)propertyExpression;
+
+            MemberExpression memberExpression;
+            if (lambda.Body is UnaryExpression)
+            {
+                var unaryExpression = (UnaryExpression)lambda.Body;
+                memberExpression = (MemberExpression)unaryExpression.Operand;
+            }
+            else memberExpression = (MemberExpression)lambda.Body;
+
+            return memberExpression.Member;
         }
     }
 }
