@@ -5,6 +5,7 @@
     using Caliburn.Core.IoC;
     using Caliburn.PresentationFramework;
     using Caliburn.PresentationFramework.ApplicationModel;
+    using Caliburn.PresentationFramework.Screens;
     using Caliburn.Silverlight.ApplicationFramework;
     using Interfaces;
     using Microsoft.Practices.ServiceLocation;
@@ -13,7 +14,8 @@
 
     [PerRequest(typeof(IContactListPresenter))]
     [HistoryKey("Contacts")]
-    public class ContactListPresenter : MultiPresenterManager, IContactListPresenter
+    public class ContactListPresenter : ScreenConductor<IContactDetailsPresenter>
+        .WithCollection.OneScreenActive, IContactListPresenter
     {
         private readonly IServiceLocator _serviceLocator;
         private readonly IShellPresenter _shellPresenter;
@@ -46,8 +48,8 @@
         public void EditContact(Contact contact)
         {
             var presenter = _serviceLocator.GetInstance<IContactDetailsPresenter>();
-            presenter.Setup(this, contact);
-            this.Open(presenter);
+            presenter.Setup(contact);
+            this.OpenScreen(presenter);
         }
 
         protected override void OnInitialize()

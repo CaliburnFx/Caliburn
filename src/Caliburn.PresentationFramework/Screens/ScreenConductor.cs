@@ -1,23 +1,24 @@
-namespace Caliburn.PresentationFramework.ApplicationModel
+﻿namespace Caliburn.PresentationFramework.Screens
 {
     using System;
-    using Core;
+    using ApplicationModel;
 
     /// <summary>
-    /// A base implementation of <see cref="IPresenterManager"/>.
+    /// A base implementation of <see cref="IScreenConductor"/>.
     /// </summary>
-    public class PresenterManager : PresenterBase, IPresenterManager, ISupportCustomShutdown
+    public partial class ScreenConductor<T> : ScreenConductorBase<T>
+        where T : class, IScreen
     {
-        private IPresenter _currentPresenter;
+        private T _activeScreen;
         private bool _changingThroughProperty;
 
         /// <summary>
-        /// Gets the presenters that are currently managed.
+        /// Gets the screens that are currently conducted.
         /// </summary>
-        /// <value>The presenters.</value>
-        public virtual IObservableCollection<IPresenter> Presenters
+        /// <value>The screens.</value>
+        public override IObservableCollection<T> Screens
         {
-            get { return new BindableCollection<IPresenter> { _currentPresenter }; }
+            get { return new BindableCollection<T> { _activeScreen }; }
         }
 
         /// <summary>
@@ -28,8 +29,8 @@ namespace Caliburn.PresentationFramework.ApplicationModel
         /// </returns>
         public override bool CanShutdown()
         {
-            if (_currentPresenter != null)
-                return _currentPresenter.CanShutdown();
+            if (_activeScreen != null)
+                return _activeScreen.CanShutdown();
 
             return true;
         }
@@ -43,8 +44,8 @@ namespace Caliburn.PresentationFramework.ApplicationModel
             {
                 OnInitialize();
 
-                if (_currentPresenter != null)
-                    _currentPresenter.Initialize();
+                if (_activeScreen != null)
+                    _activeScreen.Initialize();
 
                 IsInitialized = true;
             }
@@ -55,8 +56,8 @@ namespace Caliburn.PresentationFramework.ApplicationModel
         /// </summary>
         public override void Shutdown()
         {
-            if (_currentPresenter != null)
-                _currentPresenter.Shutdown();
+            if (_activeScreen != null)
+                _activeScreen.Shutdown();
 
             OnShutdown();
         }
@@ -70,8 +71,8 @@ namespace Caliburn.PresentationFramework.ApplicationModel
             {
                 OnActivate();
 
-                if (_currentPresenter != null)
-                    _currentPresenter.Activate();
+                if (_activeScreen != null)
+                    _activeScreen.Activate();
 
                 IsActive = true;
             }
@@ -86,77 +87,76 @@ namespace Caliburn.PresentationFramework.ApplicationModel
             {
                 OnDeactivate();
 
-                if (_currentPresenter != null)
-                    _currentPresenter.Deactivate();
+                if (_activeScreen != null)
+                    _activeScreen.Deactivate();
 
                 IsActive = false;
             }
         }
 
         /// <summary>
-        /// Gets or sets the current presenter.
+        /// Gets or sets the active screen.
         /// </summary>
-        /// <value>The current presenter.</value>
-        public virtual IPresenter CurrentPresenter
+        /// <value>The active screen.</value>
+        public override T ActiveScreen
         {
-            get { return _currentPresenter; }
+            get { return _activeScreen; }
             set
             {
                 _changingThroughProperty = true;
 
-                ShutdownCurrent(
+                ShutdownActiveScreen(
                     isShutdownSuccess =>
                     {
                         if (isShutdownSuccess)
                         {
-                            Open(
+                            OpenScreen(
                                 value,
                                 isOpenSuccess =>
                                 {
                                     _changingThroughProperty = false;
-                                    NotifyOfPropertyChange("CurrentPresenter");
+                                    NotifyOfPropertyChange(() => ActiveScreen);
                                 });
                         }
                         else
                         {
                             _changingThroughProperty = false;
-                            NotifyOfPropertyChange("CurrentPresenter");
+                            NotifyOfPropertyChange(() => ActiveScreen);
                         }
                     });
             }
         }
 
         /// <summary>
-        /// Opens the specified presenter.
+        /// Opens the specified screen.
         /// </summary>
-        /// <param name="presenter">The presenter.</param>
+        /// <param name="screen">The screen.</param>
         /// <param name="completed">Called when the open action is finished.</param>
-        public virtual void Open(IPresenter presenter, Action<bool> completed)
+        public override void OpenScreen(T screen, Action<bool> completed)
         {
-            if (presenter == null)
+            if (screen == null)
             {
                 completed(false);
                 return;
             }
 
             Action successfulCompletion =
-                () =>
-                {
-                    var node = presenter as IPresenterNode;
-                    if (node != null) node.Parent = this;
+                () =>{
+                    var node = screen as IHierarchicalScreen;
+                    if(node != null) node.Parent = this;
 
-                    presenter.Initialize();
-                    presenter.Activate();
+                    screen.Initialize();
+                    screen.Activate();
 
-                    ChangeCurrentPresenterCore(presenter);
+                    ChangeActiveScreenCore(screen);
 
                     completed(true);
                 };
 
-            if (_currentPresenter != null)
+            if (_activeScreen != null)
             {
-                CanShutdownPresenter(
-                    _currentPresenter,
+                CanShutdownScreen(
+                    _activeScreen,
                     isSuccess =>
                     {
                         if (!isSuccess)
@@ -165,10 +165,10 @@ namespace Caliburn.PresentationFramework.ApplicationModel
                             return;
                         }
 
-                        _currentPresenter.Deactivate();
-                        _currentPresenter.Shutdown();
+                        _activeScreen.Deactivate();
+                        _activeScreen.Shutdown();
 
-                        var node = _currentPresenter as IPresenterNode;
+                        var node = _activeScreen as IHierarchicalScreen;
                         if (node != null) node.Parent = null;
 
                         successfulCompletion();
@@ -178,32 +178,29 @@ namespace Caliburn.PresentationFramework.ApplicationModel
         }
 
         /// <summary>
-        /// Shuts down the specified presenter.
+        /// Shuts down the specified screen.
         /// </summary>
-        /// <param name="presenter">The presenter.</param>
+        /// <param name="screen">The screen.</param>
         /// <param name="completed">Called when the open action is finished.</param>
-        public virtual void Shutdown(IPresenter presenter, Action<bool> completed)
+        public override void ShutdownScreen(T screen, Action<bool> completed)
         {
-            if (presenter != _currentPresenter)
-                throw new CaliburnException("You cannot shutdown a presenter that is not hosted by this manager.");
-
-            ShutdownCurrent(completed);
+            ShutdownActiveScreen(completed);
         }
 
         /// <summary>
-        /// Shuts down the current presenter.
+        /// Shuts down the active screen.
         /// </summary>
         /// <param name="completed">Called when the shutdown action is finished.</param>
-        public virtual void ShutdownCurrent(Action<bool> completed)
+        public override void ShutdownActiveScreen(Action<bool> completed)
         {
-            if (_currentPresenter == null)
+            if (_activeScreen == null)
             {
                 completed(true);
                 return;
             }
 
-            CanShutdownPresenter(
-                _currentPresenter,
+            CanShutdownScreen(
+                _activeScreen,
                 isSuccess =>
                 {
                     if (!isSuccess)
@@ -212,37 +209,37 @@ namespace Caliburn.PresentationFramework.ApplicationModel
                         return;
                     }
 
-                    _currentPresenter.Deactivate();
-                    _currentPresenter.Shutdown();
+                    _activeScreen.Deactivate();
+                    _activeScreen.Shutdown();
 
-                    var node = _currentPresenter as IPresenterNode;
+                    var node = _activeScreen as IHierarchicalScreen;
                     if (node != null) node.Parent = null;
 
-                    ChangeCurrentPresenterCore(null);
+                    ChangeActiveScreenCore(null);
 
                     completed(true);
                 });
         }
 
         /// <summary>
-        /// Changes the current presenter.
+        /// Changes the active screen.
         /// </summary>
-        /// <param name="newCurrent">The new current presenter.</param>
-        protected virtual void ChangeCurrentPresenterCore(IPresenter newCurrent)
+        /// <param name="newActiveScreen">The new active screen.</param>
+        protected virtual void ChangeActiveScreenCore(T newActiveScreen)
         {
-            _currentPresenter = newCurrent;
+            _activeScreen = newActiveScreen;
 
             if (!_changingThroughProperty)
-                NotifyOfPropertyChange("CurrentPresenter");
+                NotifyOfPropertyChange(() => ActiveScreen);
         }
 
         /// <summary>
         /// Creates the shutdown model.
         /// </summary>
         /// <returns></returns>
-        ISubordinate ISupportCustomShutdown.CreateShutdownModel()
+        public override ISubordinate CreateShutdownModel()
         {
-            var custom = _currentPresenter as ISupportCustomShutdown;
+            var custom = _activeScreen as ISupportCustomShutdown;
 
             if (custom != null)
             {
@@ -262,10 +259,10 @@ namespace Caliburn.PresentationFramework.ApplicationModel
         /// <returns>
         /// 	<c>true</c> if this instance can shutdown; otherwise, <c>false</c>.
         /// </returns>
-        bool ISupportCustomShutdown.CanShutdown(ISubordinate shutdownModel)
+        public override bool CanShutdown(ISubordinate shutdownModel)
         {
             var container = (SubordinateContainer)shutdownModel;
-            var custom = (ISupportCustomShutdown)_currentPresenter;
+            var custom = (ISupportCustomShutdown)_activeScreen;
 
             return custom.CanShutdown(container.Child);
         }

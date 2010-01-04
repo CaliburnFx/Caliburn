@@ -2,10 +2,10 @@ namespace ContactManager.Presenters.Interfaces
 {
     using System;
     using System.Collections.Generic;
-    using Caliburn.PresentationFramework.ApplicationModel;
+    using Caliburn.PresentationFramework.Screens;
     using Caliburn.WPF.ApplicationFramework;
 
-    public interface IQuestionPresenter : IPresenter, ILifecycleNotifier
+    public interface IQuestionPresenter : IScreenEx
     {
         void Setup(IEnumerable<Question> questions, Action completed);
     }

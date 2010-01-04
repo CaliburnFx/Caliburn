@@ -6,12 +6,12 @@ namespace Caliburn.ModelFramework
     using System.Linq.Expressions;
     using Core.Metadata;
     using PresentationFramework;
-    using PresentationFramework.ApplicationModel;
+    using PresentationFramework.Screens;
 
     /// <summary>
     /// An implementation of <see cref="IModel"/>.
     /// </summary>
-    public class ModelBase : Presenter, IModel
+    public class ModelBase : Screen, IModel
     {
         private readonly Dictionary<string, IProperty> _propertyValues =
             new Dictionary<string, IProperty>();

@@ -1,6 +1,6 @@
 namespace ContactManager.Presenters.Interfaces
 {
-    using Caliburn.PresentationFramework.ApplicationModel;
+    using Caliburn.PresentationFramework.Screens;
 
-    public interface ISettingsPresenter : IPresenter {}
+    public interface ISettingsPresenter : IScreenEx {}
 }

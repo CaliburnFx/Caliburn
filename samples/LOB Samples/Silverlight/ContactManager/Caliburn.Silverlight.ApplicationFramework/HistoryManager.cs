@@ -8,16 +8,17 @@
     using System.Windows.Browser;
     using Microsoft.Practices.ServiceLocation;
     using PresentationFramework.ApplicationModel;
+    using PresentationFramework.Screens;
 
     public class HistoryManager<THome>
-        where THome : IPresenter
+        where THome : IScreen
     {
         private IList<HistoryInfo> _historyInfo;
-        private readonly IPresenterManager _host;
+        private readonly IScreenConductor _host;
         private readonly IStateManager _stateManager;
         private readonly IServiceLocator _serviceLocator;
 
-        public HistoryManager(IPresenterManager host, IStateManager stateManager, IServiceLocator serviceLocator)
+        public HistoryManager(IScreenConductor host, IStateManager stateManager, IServiceLocator serviceLocator)
         {
             _host = host;
             _stateManager = stateManager;
@@ -41,16 +42,16 @@
 
         private void Host_PropertyChanged(object sender, PropertyChangedEventArgs e)
         {
-            if (e.PropertyName == "CurrentPresenter")
+            if (e.PropertyName == "ActiveScreen")
             {
-                var presenter = _host.CurrentPresenter;
+                var screen = _host.ActiveScreen;
 
-                if (presenter == null)
+                if (screen == null)
                     _stateManager.Remove("View");
                 else
                 {
-                    _stateManager.InsertOrUpdate("View", GetHistoryKey(presenter));
-                    _stateManager.CommitChanges(presenter.DisplayName);
+                    _stateManager.InsertOrUpdate("View", GetHistoryKey(screen));
+                    _stateManager.CommitChanges(screen.DisplayName);
                 }
             }
         }
@@ -59,20 +60,20 @@
         {
             var historyKey = _stateManager.Get("View");
 
-            var presenter = string.IsNullOrEmpty(historyKey)
+            var screen = string.IsNullOrEmpty(historyKey)
                                 ? _serviceLocator.GetInstance<THome>()
                                 : (from info in _historyInfo
                                    where info.HistoryKey == historyKey
-                                   select (IPresenter)_serviceLocator.GetInstance(info.ServiceType)).FirstOrDefault();
+                                   select (IScreen)_serviceLocator.GetInstance(info.ServiceType)).FirstOrDefault();
 
-            if(presenter != null)
+            if(screen != null)
             {
-                _host.Open(presenter);
-                HtmlPage.Document.SetProperty("title", presenter.DisplayName);
+                _host.OpenScreen(screen, delegate { });
+                HtmlPage.Document.SetProperty("title", screen.DisplayName);
             }
         }
 
-        private string GetHistoryKey(IPresenter presenter)
+        private string GetHistoryKey(IScreen presenter)
         {
             var attribute = (from key in _historyInfo
                              where presenter.GetType().GetInterfaces().Contains(key.ServiceType)

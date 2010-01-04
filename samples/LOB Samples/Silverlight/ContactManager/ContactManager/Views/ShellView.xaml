@@ -26,13 +26,13 @@
                        ToolTipService.ToolTip="Go to the Contact Manager Home Screen"
                        pf:Message.Attach="[Event MouseLeftButtonDown] = [Action GoHome]">Contact Manager</TextBlock>
 
-            <TextBlock Text="{Binding CurrentPresenter.DisplayName}"
+            <TextBlock Text="{Binding ActiveScreen.DisplayName}"
                        HorizontalAlignment="Center"
                        FontSize="18"
                        Foreground="{StaticResource lightBlueBrush}"
                        Margin="5" />
 
-            <Controls:TransitionPresenter x:Name="CurrentPresenter">
+            <Controls:TransitionPresenter x:Name="ActiveScreen">
                 <Controls:TransitionPresenter.Transition>
                     <Controls:CrossFade />
                 </Controls:TransitionPresenter.Transition>

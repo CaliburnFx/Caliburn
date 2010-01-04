@@ -1,10 +1,10 @@
 namespace ContactManager.Presenters.Interfaces
 {
-    using Caliburn.PresentationFramework.ApplicationModel;
+    using Caliburn.PresentationFramework.Screens;
 
-    public interface IShellPresenter : IPresenterManager
+    public interface IShellPresenter : IScreenConductor<IScreen>
     {
-        void Open<T>() where T : IPresenter;
-        void ShowDialog<T>(T presenter) where T : IPresenter, ILifecycleNotifier;
+        void Open<T>() where T : IScreen;
+        void ShowDialog<T>(T presenter) where T : IScreenEx;
     }
 }

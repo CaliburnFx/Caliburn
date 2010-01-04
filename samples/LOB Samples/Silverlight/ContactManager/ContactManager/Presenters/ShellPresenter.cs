@@ -5,18 +5,19 @@
     using System.Reflection;
     using Caliburn.Core.IoC;
     using Caliburn.PresentationFramework.ApplicationModel;
+    using Caliburn.PresentationFramework.Screens;
     using Caliburn.Silverlight.ApplicationFramework;
     using Interfaces;
     using Microsoft.Practices.ServiceLocation;
     using Services.Interfaces;
 
     [Singleton(typeof(IShellPresenter))]
-    public class ShellPresenter : PresenterManager, IShellPresenter
+    public class ShellPresenter : ScreenConductor<IScreen>, IShellPresenter
     {
         private readonly IServiceLocator _serviceLocator;
         private readonly ISettings _settings;
         private readonly HistoryManager<IHomePresenter> _historyManager;
-        private IPresenter _dialogModel;
+        private IScreen _dialogModel;
 
         public ShellPresenter(IServiceLocator serviceLocator, IStateManager stateManager, ISettings settings)
         {
@@ -25,7 +26,7 @@
             _historyManager = new HistoryManager<IHomePresenter>(this, stateManager, serviceLocator);
         }
 
-        public IPresenter DialogModel
+        public IScreen DialogModel
         {
             get { return _dialogModel; }
             set
@@ -35,10 +36,10 @@
             }
         }
 
-        public void Open<T>() where T : IPresenter
+        public void Open<T>() where T : IScreen
         {
             var presenter = _serviceLocator.GetInstance<T>();
-            this.Open(presenter);
+            this.OpenScreen(presenter);
         }
 
         public void GoHome()
@@ -47,7 +48,7 @@
         }
 
         public void ShowDialog<T>(T presenter)
-            where T : IPresenter, ILifecycleNotifier
+            where T : IScreenEx
         {
             presenter.WasShutdown +=
                 delegate { DialogModel = null; };

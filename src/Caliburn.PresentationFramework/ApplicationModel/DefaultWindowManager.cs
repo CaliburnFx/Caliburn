@@ -6,6 +6,7 @@ namespace Caliburn.PresentationFramework.ApplicationModel
     using System.ComponentModel;
     using System.Windows;
     using System.Windows.Data;
+    using Screens;
     using ViewModels;
 
     /// <summary>
@@ -66,18 +67,18 @@ namespace Caliburn.PresentationFramework.ApplicationModel
 
             _viewModelBinder.Bind(rootModel, view, context);
 
-            var presenter = rootModel as IPresenter;
-            if (presenter != null)
+            var screen = rootModel as IScreen;
+            if (screen != null)
             {
-                presenter.Initialize();
-                presenter.Activate();
+                screen.Initialize();
+                screen.Activate();
 
-                view.Closing += (s, e) => OnShutdownAttempted(presenter, view, handleShutdownModel, e);
+                view.Closing += (s, e) => OnShutdownAttempted(screen, view, handleShutdownModel, e);
 
                 view.Closed += delegate
                 {
-                    presenter.Deactivate();
-                    presenter.Shutdown();
+                    screen.Deactivate();
+                    screen.Shutdown();
                 };
             }
 
@@ -111,8 +112,8 @@ namespace Caliburn.PresentationFramework.ApplicationModel
                 }
                 else window.WindowStartupLocation = WindowStartupLocation.CenterScreen;
 
-                var presenter = model as IPresenter;
-                if (presenter != null)
+                var screen = model as IScreen;
+                if (screen != null)
                 {
                     var binding = new Binding("DisplayName") { Mode = BindingMode.TwoWay };
                     window.SetBinding(Window.TitleProperty, binding);
@@ -135,7 +136,7 @@ namespace Caliburn.PresentationFramework.ApplicationModel
         /// <param name="view">The view.</param>
         /// <param name="handleShutdownModel">The handler for the shutdown model.</param>
         /// <param name="e">The <see cref="System.ComponentModel.CancelEventArgs"/> instance containing the event data.</param>
-        protected virtual void OnShutdownAttempted(IPresenter rootModel, Window view, Action<ISubordinate, Action> handleShutdownModel, CancelEventArgs e)
+        protected virtual void OnShutdownAttempted(IScreen rootModel, Window view, Action<ISubordinate, Action> handleShutdownModel, CancelEventArgs e)
         {
             if (_actuallyClosing || rootModel.CanShutdown())
             {

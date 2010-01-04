@@ -3,12 +3,12 @@ namespace Caliburn.PresentationFramework.Conventions
     using System;
     using System.Reflection;
     using System.Windows.Data;
-    using ApplicationModel;
+    using Screens;
     using ViewModels;
 
     public class DefaultBindingConvention : IBindingConvention
     {
-        private static readonly Type _presenterType = typeof(IPresenter);
+        private static readonly Type _screenType = typeof(IScreen);
 
         public bool Matches(IViewModelDescription viewModelDescription, IElementDescription element, PropertyInfo property)
         {
@@ -19,7 +19,7 @@ namespace Caliburn.PresentationFramework.Conventions
         {
             return new ApplicableBinding(
                 element.Name,
-                _presenterType.IsAssignableFrom(property.PropertyType)
+                _screenType.IsAssignableFrom(property.PropertyType)
                     ? View.ModelProperty
                     : element.Convention.BindableProperty,
                 property.Name,

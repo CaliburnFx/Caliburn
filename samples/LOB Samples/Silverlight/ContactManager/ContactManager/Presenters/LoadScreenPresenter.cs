@@ -1,12 +1,12 @@
 ﻿namespace ContactManager.Presenters
 {
     using Caliburn.Core.IoC;
-    using Caliburn.PresentationFramework.ApplicationModel;
+    using Caliburn.PresentationFramework.Screens;
     using Caliburn.Silverlight.ApplicationFramework;
     using Interfaces;
 
     [Singleton(typeof(ILoadScreen))]
-    public class LoadScreenPresenter : Presenter, ILoadScreen
+    public class LoadScreenPresenter : Screen, ILoadScreen
     {
         private readonly IShellPresenter _shellPresenter;
 

@@ -145,7 +145,7 @@
     <Compile Include="Adapters\The_Unity_container.cs" />
     <Compile Include="Adapters\The_Windsor_container.cs" />
     <Compile Include="Core\The_resolve_markup_extension.cs" />
-    <Compile Include="Fakes\FakePresenter.cs" />
+    <Compile Include="Fakes\FakeScreen.cs" />
     <Compile Include="Fakes\FakeShutdownModel.cs" />
     <Compile Include="Fakes\Model\Address.cs" />
     <Compile Include="Fakes\Model\Customer.cs" />
@@ -206,10 +206,10 @@
     <Compile Include="MVP\Models\When_cancelling_changes_on_a_model.cs" />
     <Compile Include="MVP\Models\When_commiting_changes_on_a_model.cs" />
     <Compile Include="MVP\Models\When_editing_a_model.cs" />
-    <Compile Include="MVP\Presenters\A_multi_presenter.cs" />
+    <Compile Include="MVP\Presenters\A_screen_conductor_with_collection_all_screens_active.cs" />
     <Compile Include="MVP\Presenters\A_multi_presenter_manager.cs" />
     <Compile Include="MVP\Presenters\A_navigator.cs" />
-    <Compile Include="MVP\Presenters\A_presenter.cs" />
+    <Compile Include="MVP\Presenters\A_screen.cs" />
     <Compile Include="MVP\Presenters\A_presenter_manager.cs" />
     <Compile Include="RoutedUIMessaging\Parsers\The_action_message_parser.cs" />
     <Compile Include="RoutedUIMessaging\Parsers\The_event_trigger_parser.cs" />

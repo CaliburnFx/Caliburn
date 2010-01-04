@@ -1,6 +1,7 @@
 namespace Caliburn.PresentationFramework.ApplicationModel
 {
     using System.Collections.Generic;
+    using Screens;
 
     /// <summary>
     /// An implementation of <see cref="ISubordinateComposite"/> that has multiple children.
@@ -11,16 +12,16 @@ namespace Caliburn.PresentationFramework.ApplicationModel
         /// Initializes a new instance of the <see cref="SubordinateGroup"/> class.
         /// </summary>
         /// <param name="master">The master.</param>
-        public SubordinateGroup(IPresenter master)
+        public SubordinateGroup(IScreen master)
         {
             Master = master;
         }
 
         /// <summary>
-        /// Gets the <see cref="IPresenter"/> that owns this instance.
+        /// Gets the <see cref="IScreen"/> that owns this instance.
         /// </summary>
         /// <value>The master.</value>
-        public virtual IPresenter Master { get; protected set; }
+        public virtual IScreen Master { get; protected set; }
 
         /// <summary>
         /// Gets the children.

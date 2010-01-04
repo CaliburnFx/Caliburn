@@ -1,4 +1,4 @@
-namespace Caliburn.PresentationFramework.ApplicationModel
+namespace Caliburn.PresentationFramework.Screens
 {
     using System;
     using System.Collections.Generic;
@@ -6,7 +6,8 @@ namespace Caliburn.PresentationFramework.ApplicationModel
     /// <summary>
     /// An implementation of <see cref="INavigator"/>.
     /// </summary>
-    public class Navigator : PresenterManager, INavigator
+    public class Navigator<T> : ScreenConductor<T>, INavigator<T>
+        where T : class, IScreen
     {
         private readonly Stack<Action<Action<bool>>> _next = new Stack<Action<Action<bool>>>();
         private readonly Stack<Action<Action<bool>>> _previous = new Stack<Action<Action<bool>>>();
@@ -119,20 +120,19 @@ namespace Caliburn.PresentationFramework.ApplicationModel
             _current = _previous.Pop();
 
             _current(
-                isSuccess =>
+                isSuccess =>{
+                    if(!isSuccess)
                     {
-                        if (!isSuccess)
-                        {
-                            _previous.Push(_current);
-                            _current = _next.Count > 0 ? _next.Pop() : null;
-                        }
+                        _previous.Push(_current);
+                        _current = _next.Count > 0 ? _next.Pop() : null;
+                    }
 
-                        RaiseChangeNotifications();
+                    RaiseChangeNotifications();
 
-                        _isNavigating = false;
+                    _isNavigating = false;
 
-                        completed(isSuccess);
-                    });
+                    completed(isSuccess);
+                });
         }
 
         /// <summary>
@@ -175,32 +175,25 @@ namespace Caliburn.PresentationFramework.ApplicationModel
             Back(result => { });
         }
 
-        /// <summary>
-        /// Notifies subscribers of the property change.
-        /// </summary>
-        /// <param name="propertyName">Name of the property.</param>
-        public override void NotifyOfPropertyChange(string propertyName)
+        protected override void ChangeActiveScreenCore(T newActiveScreen)
         {
-            if (propertyName == "CurrentPresenter")
-            {
-                if (!_isNavigating)
-                {
-                    var presenter = CurrentPresenter;
+            base.ChangeActiveScreenCore(newActiveScreen);
 
-                    if (_current != null)
-                        _previous.Push(_current);
+            if(_isNavigating) 
+                return;
 
-                    if (presenter != null)
-                        _current = completed => Open(presenter, completed);
-                    else _current = null;
+            var screen = ActiveScreen;
 
-                    _next.Clear();
+            if (_current != null)
+                _previous.Push(_current);
 
-                    RaiseChangeNotifications();
-                }
-            }
+            if (screen != null)
+                _current = completed => OpenScreen(screen, completed);
+            else _current = null;
 
-            base.NotifyOfPropertyChange(propertyName);
+            _next.Clear();
+
+            RaiseChangeNotifications();
         }
 
         /// <summary>

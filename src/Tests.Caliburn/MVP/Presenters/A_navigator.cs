@@ -2,27 +2,27 @@ namespace Tests.Caliburn.MVP.Presenters
 {
     using System;
     using Fakes;
-    using global::Caliburn.PresentationFramework.ApplicationModel;
+    using global::Caliburn.PresentationFramework.Screens;
     using NUnit.Framework;
     using NUnit.Framework.SyntaxHelpers;
 
     [TestFixture]
     public class A_navigator : A_presenter_manager
     {
-        protected Navigator _navigator;
-        private IPresenter _currentPresenter;
+        protected Navigator<IScreen> _navigator;
+        private IScreen _activeScreen;
 
-        protected override PresenterBase CreatePresenter()
+        protected override ScreenBase CreateScreen()
         {
-            return new Navigator();
+            return new Navigator<IScreen>();
         }
 
         protected override void given_the_context_of()
         {
             base.given_the_context_of();
 
-            _navigator = (Navigator)_presenter;
-            _currentPresenter = Mock<IPresenter>();
+            _navigator = (Navigator<IScreen>)_screen;
+            _activeScreen = Mock<IScreen>();
         }
 
         [Test]
@@ -234,7 +234,7 @@ namespace Tests.Caliburn.MVP.Presenters
                     if(e.PropertyName == "CanGoForward") forwardWasRaised = true;
                 };
 
-            _navigator.CurrentPresenter = _currentPresenter;
+            _navigator.ActiveScreen = _activeScreen;
 
             Assert.That(backWasRaised);
             Assert.That(forwardWasRaised);
@@ -243,11 +243,11 @@ namespace Tests.Caliburn.MVP.Presenters
         [Test]
         public void syncs_current_change_with_history()
         {
-            var presenter1 = new FakePresenter {CanShutdownResult = true};
-            var presenter2 = new FakePresenter {CanShutdownResult = true};
+            var screen1 = new FakeScreen {CanShutdownResult = true};
+            var screen2 = new FakeScreen {CanShutdownResult = true};
 
-            _navigator.CurrentPresenter = presenter1;
-            _navigator.Open(presenter2);
+            _navigator.ActiveScreen = screen1;
+            _navigator.OpenScreen(screen2);
 
             bool backSuccessful = false;
             bool forwardSuccessful = false;
@@ -260,7 +260,7 @@ namespace Tests.Caliburn.MVP.Presenters
                 isSuccess => forwardSuccessful = isSuccess
                 );
 
-            Assert.That(_navigator.CurrentPresenter, Is.EqualTo(presenter2));
+            Assert.That(_navigator.ActiveScreen, Is.EqualTo(screen2));
             Assert.That(backSuccessful);
             Assert.That(forwardSuccessful);
         }

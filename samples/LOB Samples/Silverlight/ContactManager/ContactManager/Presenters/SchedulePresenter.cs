@@ -8,6 +8,7 @@
     using Caliburn.ModelFramework;
     using Caliburn.PresentationFramework;
     using Caliburn.PresentationFramework.ApplicationModel;
+    using Caliburn.PresentationFramework.Screens;
     using Caliburn.Silverlight.ApplicationFramework;
     using Interfaces;
     using Model;
@@ -16,7 +17,7 @@
 
     [PerRequest(typeof(ISchedulePresenter))]
     [HistoryKey("Schedule")]
-    public class SchedulePresenter : Presenter, ISchedulePresenter
+    public class SchedulePresenter : Screen, ISchedulePresenter
     {
         private readonly IScheduleService _scheduleService;
         private readonly ISettings _settings;

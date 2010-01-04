@@ -7,16 +7,16 @@
     using Caliburn.PresentationFramework;
     using Caliburn.PresentationFramework.ApplicationModel;
     using Caliburn.PresentationFramework.Filters;
+    using Caliburn.PresentationFramework.Screens;
     using Caliburn.Silverlight.ApplicationFramework;
     using Interfaces;
     using Model;
     using Web;
 
     [PerRequest(typeof(IContactDetailsPresenter))]
-    public class ContactDetailsPresenter : Presenter, IContactDetailsPresenter
+    public class ContactDetailsPresenter : Screen, IContactDetailsPresenter
     {
         private Contact _contact;
-        private IPresenterManager _owner;
 
         public Contact Contact
         {
@@ -28,9 +28,8 @@
             }
         }
 
-        public void Setup(IPresenterManager owner, Contact contact)
+        public void Setup(Contact contact)
         {
-            _owner = owner;
             Contact = contact;
         }
 
@@ -80,12 +79,12 @@
         [Preview("CanSave")]
         public IResult Ok()
         {
-            return SaveContact(x => _owner.Shutdown(this));
+            return SaveContact(x => Close());
         }
 
         public void Cancel()
         {
-            _owner.Shutdown(this);
+            Close();
         }
 
         private IResult SaveContact(Action<AsyncCompletedEventArgs> callback)

@@ -1,14 +1,16 @@
 namespace Caliburn.PresentationFramework.ApplicationModel
 {
+    using Screens;
+
     /// <summary>
-    /// A model that is owned by an <see cref="IPresenter"/>.
+    /// A model that is owned by an <see cref="IScreen"/>.
     /// </summary>
     public interface ISubordinate
     {
         /// <summary>
-        /// Gets the <see cref="IPresenter"/> that owns this instance.
+        /// Gets the <see cref="IScreen"/> that owns this instance.
         /// </summary>
         /// <value>The master.</value>
-        IPresenter Master { get; }
+        IScreen Master { get; }
     }
 }

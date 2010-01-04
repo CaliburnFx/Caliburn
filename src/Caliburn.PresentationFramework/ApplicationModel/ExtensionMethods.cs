@@ -4,64 +4,10 @@
     using System.Globalization;
 
     /// <summary>
-    /// Hosts extension methods for presenter related classes.
+    /// Hosts extension methods for application model classes.
     /// </summary>
     public static class ExtensionMethods
     {
-        /// <summary>
-        /// Opens the specified presenter.
-        /// </summary>
-        /// <param name="host">The host.</param>
-        /// <param name="presenter">The presenter.</param>
-        public static void Open(this IPresenterHost host, IPresenter presenter)
-        {
-            host.Open(presenter, isSuccess => { });
-        }
-
-        /// <summary>
-        /// Shuts down the specified presenter.
-        /// </summary>
-        /// <param name="host">The manager.</param>
-        /// <param name="presenter">The presenter.</param>
-        public static void Shutdown(this IPresenterHost host, IPresenter presenter)
-        {
-            host.Shutdown(presenter, isSuccess => { });
-        }
-
-        /// <summary>
-        /// Shuts down the current presenter.
-        /// </summary>
-        public static void ShutdownCurrent(this IPresenterManager presenterManager)
-        {
-            presenterManager.ShutdownCurrent(isSuccess => { });
-        }
-
-        /// <summary>
-        /// Navigates back.
-        /// </summary>
-        public static void Back(this INavigator navigator)
-        {
-            navigator.Back(isSuccess => { });
-        }
-
-        /// <summary>
-        /// Navigates forward.
-        /// </summary>
-        public static void Forward(this INavigator navigator)
-        {
-            navigator.Forward(isSuccess => { });
-        }
-
-        /// <summary>
-        /// Navigates using the specified action.
-        /// </summary>
-        /// <param name="navigator">The navigator.</param>
-        /// <param name="function">The function.</param>
-        public static void Navigate(this INavigator navigator, Action<Action<bool>> function)
-        {
-            navigator.Navigate(function, isSuccess => { });
-        }
-
         /// <summary>
         /// Inserts or updates a value in the state.
         /// </summary>

@@ -1,9 +1,10 @@
 namespace Tests.Caliburn.Fakes
 {
     using global::Caliburn.PresentationFramework.ApplicationModel;
+    using global::Caliburn.PresentationFramework.Screens;
 
     public class FakeShutdownModel : ISubordinate
     {
-        public IPresenter Master { get; set; }
+        public IScreen Master { get; set; }
     }
 }

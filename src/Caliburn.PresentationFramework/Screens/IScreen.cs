@@ -1,11 +1,11 @@
-namespace Caliburn.PresentationFramework.ApplicationModel
+namespace Caliburn.PresentationFramework.Screens
 {
     using System.ComponentModel;
 
     /// <summary>
-    /// The 'P' in MVP.
+    /// Implemented by screens.
     /// </summary>
-    public interface IPresenter : INotifyPropertyChanged
+    public interface IScreen : INotifyPropertyChanged
     {
         /// <summary>
         /// Gets or sets the display name.

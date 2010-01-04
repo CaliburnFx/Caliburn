@@ -3,12 +3,12 @@
     using System;
     using System.Collections.Generic;
     using Caliburn.Core.IoC;
-    using Caliburn.PresentationFramework.ApplicationModel;
+    using Caliburn.PresentationFramework.Screens;
     using Caliburn.WPF.ApplicationFramework;
     using Interfaces;
 
     [PerRequest(typeof(IQuestionPresenter))]
-    public class QuestionPresenter : Presenter, IQuestionPresenter
+    public class QuestionPresenter : Screen, IQuestionPresenter
     {
         private Action _completed;
         private IEnumerable<Question> _questions;

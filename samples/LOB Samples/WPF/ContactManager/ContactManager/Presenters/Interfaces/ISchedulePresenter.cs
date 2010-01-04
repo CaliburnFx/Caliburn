@@ -1,6 +1,7 @@
 namespace ContactManager.Presenters.Interfaces
 {
     using Caliburn.PresentationFramework.ApplicationModel;
+    using Caliburn.PresentationFramework.Screens;
 
-    public interface ISchedulePresenter : IPresenter, ISupportCustomShutdown {}
+    public interface ISchedulePresenter : IScreenEx, ISupportCustomShutdown {}
 }

@@ -68,7 +68,7 @@
                     <RowDefinition Height="*" />
                 </Grid.RowDefinitions>
 
-                <ListBox x:Name="Presenters"
+                <ListBox x:Name="Screens"
                          Height="27"
                          BorderThickness="0 0 0 2">
                     <ListBox.ItemsPanel>
@@ -89,7 +89,7 @@
                     </ListBox.ItemTemplate>
                 </ListBox>
 
-                <Controls:TransitionPresenter x:Name="CurrentPresenter"
+                <Controls:TransitionPresenter x:Name="ActiveScreen"
                                               Grid.Row="1">
                     <Controls:TransitionPresenter.Transition>
                         <Controls:CrossFade />

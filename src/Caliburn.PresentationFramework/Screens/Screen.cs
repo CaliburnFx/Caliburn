@@ -1,9 +1,9 @@
-namespace Caliburn.PresentationFramework.ApplicationModel
+﻿namespace Caliburn.PresentationFramework.Screens
 {
     /// <summary>
-    /// A base implementation of <see cref="IPresenter"/>.
+    /// A base implementation of <see cref="IScreen"/> and <see cref="IScreenEx"/>.
     /// </summary>
-    public class Presenter : PresenterBase
+    public class Screen : ScreenBase
     {
         /// <summary>
         /// Initializes this instance.

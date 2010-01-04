@@ -1,4 +1,4 @@
-namespace Caliburn.PresentationFramework.ApplicationModel
+namespace Caliburn.PresentationFramework.Screens
 {
     using System;
     using System.Windows;
@@ -6,19 +6,19 @@ namespace Caliburn.PresentationFramework.ApplicationModel
     using Metadata;
 
     /// <summary>
-    /// Implements common functionality used by all implementors of <see cref="IPresenter"/>.
+    /// Implements common functionality used by all implementors of <see cref="IScreen"/>.
     /// </summary>
-    public abstract class PresenterBase : MetadataContainer, IExtendedPresenter
+    public abstract class ScreenBase : MetadataContainer, IScreenEx
     {
-        private IPresenterHost _parent;
+        private IScreenHost _parent;
         private bool _isActive;
         private bool _isInitialized;
         private string _displayName;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="PresenterBase"/> class.
+        /// Initializes a new instance of the <see cref="ScreenBase"/> class.
         /// </summary>
-        protected PresenterBase()
+        protected ScreenBase()
         {
             var runtimeType = GetType();
 
@@ -31,13 +31,13 @@ namespace Caliburn.PresentationFramework.ApplicationModel
         /// Gets or sets the parent.
         /// </summary>
         /// <value>The parent.</value>
-        public virtual IPresenterHost Parent
+        public virtual IScreenHost Parent
         {
             get { return _parent; }
             set
             {
                 _parent = value;
-                NotifyOfPropertyChange("Parent");
+                NotifyOfPropertyChange(() => Parent);
             }
         }
 
@@ -53,7 +53,7 @@ namespace Caliburn.PresentationFramework.ApplicationModel
             protected set
             {
                 _isInitialized = value;
-                NotifyOfPropertyChange("IsInitialized");
+                NotifyOfPropertyChange(() => IsInitialized);
             }
         }
 
@@ -67,7 +67,7 @@ namespace Caliburn.PresentationFramework.ApplicationModel
             protected set
             {
                 _isActive = value;
-                NotifyOfPropertyChange("IsActive");
+                NotifyOfPropertyChange(() => IsActive);
             }
         }
 
@@ -81,7 +81,7 @@ namespace Caliburn.PresentationFramework.ApplicationModel
             set
             {
                 _displayName = value;
-                NotifyOfPropertyChange("DisplayName");
+                NotifyOfPropertyChange(() => DisplayName);
             }
         }
 
@@ -169,49 +169,7 @@ namespace Caliburn.PresentationFramework.ApplicationModel
         }
 
         /// <summary>
-        /// Determines if the specified presenter can be shut down.
-        /// </summary>
-        /// <param name="presenter">The presenter.</param>
-        /// <param name="completed">Called when the shutdown action is finished.</param>
-        protected virtual void CanShutdownPresenter(IPresenter presenter, Action<bool> completed)
-        {
-            var canShutdownPresenter = presenter.CanShutdown();
-
-            if(!canShutdownPresenter)
-            {
-                var custom = presenter as ISupportCustomShutdown;
-
-                if(custom != null)
-                {
-                    var model = custom.CreateShutdownModel();
-
-                    if(model != null)
-                    {
-                        ExecuteShutdownModel(
-                            model,
-                            () => completed(custom.CanShutdown(model))
-                            );
-
-                        return;
-                    }
-                }
-            }
-
-            completed(canShutdownPresenter);
-        }
-
-        /// <summary>
-        /// Inheritors should override this method if they intend to handle advanced shutdown scenarios.
-        /// </summary>
-        /// <param name="model">The model.</param>
-        /// <param name="completed">Called when the shutdown model is finished executing.</param>
-        protected virtual void ExecuteShutdownModel(ISubordinate model, Action completed)
-        {
-            completed();
-        }
-
-        /// <summary>
-        /// Called when the presenter's view is loaded.
+        /// Called when the screen's view is loaded.
         /// </summary>
         /// <param name="view">The view.</param>
         /// <param name="context">The context.</param>
@@ -223,7 +181,7 @@ namespace Caliburn.PresentationFramework.ApplicationModel
         public virtual void Close()
         {
             if (Parent != null)
-                Parent.Shutdown(this, delegate { });
+                Parent.ShutdownScreen(this, delegate { });
             else
             {
                 var view = this.GetView<object>(null);

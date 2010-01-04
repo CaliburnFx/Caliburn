@@ -1,11 +1,11 @@
-namespace Caliburn.PresentationFramework.ApplicationModel
+namespace Caliburn.PresentationFramework.Screens
 {
     using System;
 
     /// <summary>
-    /// A <see cref="IPresenterManager"/> that also has basic navigation abilities.
+    /// An <see cref="IScreenConductor"/> that also has basic navigation abilities.
     /// </summary>
-    public interface INavigator : IPresenterManager
+    public interface INavigator : IScreenConductor
     {
         /// <summary>
         /// Gets a value indicating whether this instance can navigate back.
@@ -44,5 +44,14 @@ namespace Caliburn.PresentationFramework.ApplicationModel
         /// Clears the navigation history.
         /// </summary>
         void ClearHistory();
+    }
+
+    /// <summary>
+    /// An <see cref="IScreenConductor"/> that also has basic navigation abilities.
+    /// </summary>
+    public interface INavigator<T> : IScreenConductor<T>, INavigator
+        where T : class, IScreen
+    {
+        
     }
 }

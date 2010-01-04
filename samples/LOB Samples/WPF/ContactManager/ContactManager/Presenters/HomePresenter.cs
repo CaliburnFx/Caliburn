@@ -1,11 +1,11 @@
 ﻿namespace ContactManager.Presenters
 {
     using Caliburn.Core.IoC;
-    using Caliburn.PresentationFramework.ApplicationModel;
+    using Caliburn.PresentationFramework.Screens;
     using Interfaces;
 
     [PerRequest(typeof(IHomePresenter))]
-    public class HomePresenter : Presenter, IHomePresenter
+    public class HomePresenter : Screen, IHomePresenter
     {
         private readonly IShellPresenter _shellPresenter;
 

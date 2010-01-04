@@ -1,6 +1,7 @@
 namespace Caliburn.PresentationFramework.ApplicationModel
 {
     using System.Collections.Generic;
+    using Screens;
 
     /// <summary>
     /// An implementation of <see cref="ISubordinateComposite"/> that supports exactly one child.
@@ -12,17 +13,17 @@ namespace Caliburn.PresentationFramework.ApplicationModel
         /// </summary>
         /// <param name="master">The master.</param>
         /// <param name="child">The child.</param>
-        public SubordinateContainer(IPresenter master, ISubordinate child)
+        public SubordinateContainer(IScreen master, ISubordinate child)
         {
             Master = master;
             Child = child;
         }
 
         /// <summary>
-        /// Gets the <see cref="IPresenter"/> that owns this instance.
+        /// Gets the <see cref="IScreen"/> that owns this instance.
         /// </summary>
         /// <value>The master.</value>
-        public virtual IPresenter Master { get; protected set; }
+        public virtual IScreen Master { get; protected set; }
 
         /// <summary>
         /// Gets or sets the child.

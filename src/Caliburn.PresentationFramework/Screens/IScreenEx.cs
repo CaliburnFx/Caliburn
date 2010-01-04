@@ -1,12 +1,13 @@
-namespace Caliburn.PresentationFramework.ApplicationModel
+namespace Caliburn.PresentationFramework.Screens
 {
+    using ApplicationModel;
     using Core.Metadata;
     using ViewModels;
 
     /// <summary>
-    /// Implements <see cref="IMetadataContainer"/>, <see cref="IPresenterNode"/>, <see cref="ILifecycleNotifier"/> and <see cref="IViewAware"/>.
+    /// An <see cref="IScreen"/> which also implements <see cref="IMetadataContainer"/>, <see cref="IHierarchicalScreen"/>, <see cref="ILifecycleNotifier"/> and <see cref="IViewAware"/>.
     /// </summary>
-    public interface IExtendedPresenter : IMetadataContainer, IPresenterNode, ILifecycleNotifier, IViewAware
+    public interface IScreenEx : IMetadataContainer, IHierarchicalScreen, ILifecycleNotifier, IViewAware
     {
         /// <summary>
         /// Gets or sets a value indicating whether this instance is initialized.
@@ -23,7 +24,7 @@ namespace Caliburn.PresentationFramework.ApplicationModel
         bool IsActive { get; }
 
         /// <summary>
-        /// Closes this instance.
+        /// Tries to close this screen.
         /// </summary>
         void Close();
     }

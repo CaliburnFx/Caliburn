@@ -14,6 +14,7 @@ namespace Caliburn.PresentationFramework.ApplicationModel
     using System.Windows.Browser;
     using System.Diagnostics;
     using ViewModels;
+    using Screens;
 
     /// <summary>
     /// A base class for applications based on Caliburn.
@@ -143,11 +144,11 @@ namespace Caliburn.PresentationFramework.ApplicationModel
             var binder = Container.GetInstance<IViewModelBinder>();
             binder.Bind(model, view, null);
 
-            var presenter = model as IPresenter;
-            if(presenter != null)
+            var screen = model as IScreen;
+            if(screen != null)
             {
-                presenter.Initialize();
-                presenter.Activate();
+                screen.Initialize();
+                screen.Activate();
             }
 
             RootVisual = (UIElement)view;

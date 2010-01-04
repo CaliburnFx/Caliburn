@@ -2,14 +2,14 @@
 {
     using System;
     using Caliburn.Core.IoC;
-    using Caliburn.PresentationFramework.ApplicationModel;
+    using Caliburn.PresentationFramework.Screens;
     using Caliburn.Silverlight.ApplicationFramework;
     using Interfaces;
     using Services.Interfaces;
 
     [PerRequest(typeof(ISettingsPresenter))]
     [HistoryKey("Settings")]
-    public class SettingsPresenter : Presenter, ISettingsPresenter
+    public class SettingsPresenter : Screen, ISettingsPresenter
     {
         private readonly IShellPresenter _shellPresenter;
         private readonly ISettings _settings;
