@@ -3,6 +3,7 @@
     using System.Reflection;
     using Caliburn.Core.IoC;
     using Caliburn.PresentationFramework.ApplicationModel;
+    using Caliburn.PresentationFramework.Configuration;
     using Microsoft.Practices.ServiceLocation;
     using Presenters.Interfaces;
 
@@ -23,6 +24,11 @@
         protected override Assembly[] SelectAssemblies()
         {
             return new[] {Assembly.GetExecutingAssembly()};
+        }
+
+        protected override void ConfigurePresentationFramework(PresentationFrameworkConfiguration module)
+        {
+            module.RegisterAllScreensWithSubjects();
         }
 
         protected override object CreateRootModel()

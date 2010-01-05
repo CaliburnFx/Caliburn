@@ -10,7 +10,7 @@ namespace Caliburn.PresentationFramework.Screens
     /// </summary>
     public abstract class ScreenBase : MetadataContainer, IScreenEx
     {
-        private IScreenHost _parent;
+        private IScreenCollection _parent;
         private bool _isActive;
         private bool _isInitialized;
         private string _displayName;
@@ -31,7 +31,7 @@ namespace Caliburn.PresentationFramework.Screens
         /// Gets or sets the parent.
         /// </summary>
         /// <value>The parent.</value>
-        public virtual IScreenHost Parent
+        public virtual IScreenCollection Parent
         {
             get { return _parent; }
             set

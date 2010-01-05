@@ -5,7 +5,7 @@ namespace Caliburn.PresentationFramework.Screens
     /// <summary>
     /// An <see cref="IScreen"/> capable of conducting other screens.
     /// </summary>
-    public interface IScreenConductor : IScreenHost
+    public interface IScreenConductor : IScreenCollection
     {
         /// <summary>
         /// Gets or sets the active screen.
@@ -23,7 +23,7 @@ namespace Caliburn.PresentationFramework.Screens
     /// A generic version of <see cref="IScreenConductor"/>.
     /// </summary>
     /// <typeparam name="T"></typeparam>
-    public interface IScreenConductor<T> : IScreenHost<T>, IScreenConductor
+    public interface IScreenConductor<T> : IScreenCollection<T>, IScreenConductor
         where T : class, IScreen
     {
         /// <summary>

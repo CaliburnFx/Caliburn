@@ -5,10 +5,10 @@ namespace Caliburn.PresentationFramework.Screens
     using ApplicationModel;
 
     /// <summary>
-    /// An baseclass for implementations of <see cref="IScreenHost"/>.
+    /// An baseclass for implementations of <see cref="IScreenCollection"/>.
     /// </summary>
     /// <typeparam name="T">A type of <see cref="IScreen"/>.</typeparam>
-    public abstract class ScreenHostBase<T> : ScreenBase, IScreenHost<T>, ISupportCustomShutdown
+    public abstract class ScreenCollectionBase<T> : ScreenBase, IScreenCollection<T>, ISupportCustomShutdown
         where T : class, IScreen
     {
         /// <summary>
@@ -21,7 +21,7 @@ namespace Caliburn.PresentationFramework.Screens
         /// Gets the screens that are currently managed.
         /// </summary>
         /// <value>The screens.</value>
-        IObservableCollection<IScreen> IScreenHost.Screens
+        IObservableCollection<IScreen> IScreenCollection.Screens
         {
             get { return new BindableCollection<IScreen>(Screens.OfType<IScreen>()); }
         }
@@ -38,7 +38,7 @@ namespace Caliburn.PresentationFramework.Screens
         /// </summary>
         /// <param name="screen">The screen.</param>
         /// <param name="completed">Called when the open action is finished.</param>
-        void IScreenHost.OpenScreen(IScreen screen, Action<bool> completed)
+        void IScreenCollection.OpenScreen(IScreen screen, Action<bool> completed)
         {
             OpenScreen((T)screen, completed);
         }
@@ -55,7 +55,7 @@ namespace Caliburn.PresentationFramework.Screens
         /// </summary>
         /// <param name="screen">The screen.</param>
         /// <param name="completed">Called when the open action is finished.</param>
-        void IScreenHost.ShutdownScreen(IScreen screen, Action<bool> completed)
+        void IScreenCollection.ShutdownScreen(IScreen screen, Action<bool> completed)
         {
             ShutdownScreen((T)screen, completed);
         }

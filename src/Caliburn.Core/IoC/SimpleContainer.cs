@@ -209,7 +209,7 @@
         /// <returns>The type handler.</returns>
         public Func<object> GetHandler(Type type)
         {
-            if (type.IsGenericType)
+            if (type.IsGenericType && !IsRegistered(type))
             {
                 var genericType = type.GetGenericTypeDefinition();
 

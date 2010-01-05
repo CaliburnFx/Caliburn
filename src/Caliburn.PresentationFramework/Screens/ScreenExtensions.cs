@@ -2,31 +2,59 @@
 
 namespace Caliburn.PresentationFramework.Screens
 {
+    using System.Linq;
+    using ViewModels;
+
     /// <summary>
     /// Hosts extension methods for <see cref="IScreen"/> classes.
     /// </summary>
-    public static class ExtensionMethods
+    public static class ScreenExtensions
     {
+        private static IViewModelFactory _viewModelFactory;
+
+        /// <summary>
+        /// Initializes the extensions with the specified view model factory.
+        /// </summary>
+        /// <param name="viewModelFactory">The view model factory.</param>
+        public static void Initialize(IViewModelFactory viewModelFactory)
+        {
+            _viewModelFactory = viewModelFactory;
+        }
+
         /// <summary>
         /// Opens the specified screen.
         /// </summary>
-        /// <param name="host">The host.</param>
+        /// <param name="collection">The collection.</param>
+        /// <param name="subject">The subject.</param>
+        public static void OpenScreen(this IScreenCollection collection, IScreenSubject subject)
+        {
+            var found = collection.Screens.FirstOrDefault(subject.Matches);
+
+            if(found != null)
+                collection.OpenScreen(found, delegate { });
+            else subject.CreateScreen(_viewModelFactory,  screen => collection.OpenScreen(screen, delegate { }));
+        }
+
+        /// <summary>
+        /// Opens the specified screen.
+        /// </summary>
+        /// <param name="collection">The host.</param>
         /// <param name="screen">The screen.</param>
-        public static void OpenScreen<T>(this IScreenHost<T> host, T screen)
+        public static void OpenScreen<T>(this IScreenCollection<T> collection, T screen)
             where T : class, IScreen
         {
-            host.OpenScreen(screen, isSuccess => { });
+            collection.OpenScreen(screen, isSuccess => { });
         }
 
         /// <summary>
         /// Shuts down the specified screen.
         /// </summary>
-        /// <param name="host">The manager.</param>
+        /// <param name="collection">The manager.</param>
         /// <param name="screen">The presenter.</param>
-        public static void ShutdownScreen<T>(this IScreenHost<T> host, T screen)
+        public static void ShutdownScreen<T>(this IScreenCollection<T> collection, T screen)
             where T : class, IScreen
         {
-            host.ShutdownScreen(screen, isSuccess => { });
+            collection.ShutdownScreen(screen, isSuccess => { });
         }
 
         /// <summary>

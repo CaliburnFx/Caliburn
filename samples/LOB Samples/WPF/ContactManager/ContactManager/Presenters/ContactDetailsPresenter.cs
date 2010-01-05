@@ -2,7 +2,6 @@
 {
     using System;
     using System.ComponentModel;
-    using Caliburn.Core.IoC;
     using Caliburn.ModelFramework;
     using Caliburn.PresentationFramework;
     using Caliburn.PresentationFramework.ApplicationModel;
@@ -13,26 +12,8 @@
     using Model;
     using Web;
 
-    [PerRequest(typeof(IContactDetailsPresenter))]
-    public class ContactDetailsPresenter : Screen, IContactDetailsPresenter
+    public class ContactDetailsPresenter : Screen<Contact>, IContactDetailsPresenter
     {
-        private Contact _contact;
-
-        public Contact Contact
-        {
-            get { return _contact; }
-            private set
-            {
-                _contact = value;
-                NotifyOfPropertyChange(() => Contact);
-            }
-        }
-
-        public void Setup(Contact contact)
-        {
-            Contact = contact;
-        }
-
         private void OnPropertyChangedEvent(object s, PropertyChangedEventArgs e)
         {
             if(e.PropertyName == "IsDirty" || e.PropertyName == "IsValid")
@@ -43,33 +24,33 @@
         {
             base.OnActivate();
 
-            Contact.PropertyChanged += OnPropertyChangedEvent;
+            Subject.PropertyChanged += OnPropertyChangedEvent;
 
-            Contact.BeginEdit();
-            Contact.Validate();
+            Subject.BeginEdit();
+            Subject.Validate();
         }
 
         protected override void OnDeactivate()
         {
             base.OnDeactivate();
-            Contact.PropertyChanged -= OnPropertyChangedEvent;
+            Subject.PropertyChanged -= OnPropertyChangedEvent;
         }
 
         protected override void OnShutdown()
         {
             base.OnShutdown();
-            Contact.CancelEdit();
+            Subject.CancelEdit();
         }
 
         public bool CanSave
         {
-            get { return Contact.IsDirty && Contact.IsValid; }
+            get { return Subject.IsDirty && Subject.IsValid; }
         }
 
         [Preview("CanSave")]
         public IResult Apply()
         {
-            return SaveContact(x => Contact.BeginEdit());
+            return SaveContact(x => Subject.BeginEdit());
         }
 
         [Preview("CanSave")]
@@ -85,8 +66,8 @@
 
         private IResult SaveContact(Action<AsyncCompletedEventArgs> callback)
         {
-            Contact.EndEdit();
-            var dto = Map.ToDto(Contact);
+            Subject.EndEdit();
+            var dto = Map.ToDto(Subject);
 
             if (dto.ID == Guid.Empty)
                 dto.ID = Guid.NewGuid();
@@ -99,33 +80,33 @@
 
         public void AddNumber()
         {
-            Contact.AddPhoneNumber(new PhoneNumber());
+            Subject.AddPhoneNumber(new PhoneNumber());
         }
 
         public void RemoveNumber(PhoneNumber numberToRemove)
         {
-            Contact.RemovePhoneNumber(numberToRemove);
+            Subject.RemovePhoneNumber(numberToRemove);
         }
 
         public IResult ValidateContact()
         {
-            return new ErrorResult(Contact.Validate());
+            return new ErrorResult(Subject.Validate());
         }
 
         public override bool CanShutdown()
         {
-            return !Contact.IsDirty;
+            return !Subject.IsDirty;
         }
 
         public ISubordinate CreateShutdownModel()
         {
-            if(Contact.IsValid)
+            if (Subject.IsValid)
             {
                 return new Question(
                     this,
                     string.Format(
                         "Contact '{0}' has not been saved.  Do you want to save before closing?",
-                        (Contact.LastName ?? string.Empty) + ", " + (Contact.FirstName ?? string.Empty)
+                        (Subject.LastName ?? string.Empty) + ", " + (Subject.FirstName ?? string.Empty)
                         )
                     ) {Answer = Answer.Yes};
             }
@@ -134,7 +115,7 @@
                 this,
                 string.Format(
                     "Contact '{0}' is invalid.  Changes will be lost.  Do you still want to close?",
-                    (Contact.LastName ?? string.Empty) + ", " + (Contact.FirstName ?? string.Empty)
+                    (Subject.LastName ?? string.Empty) + ", " + (Subject.FirstName ?? string.Empty)
                     ),
                 Answer.Yes, Answer.No
                 );
@@ -144,7 +125,7 @@
         {
             var question = (Question)shutdownModel;
 
-            if(Contact.IsValid)
+            if (Subject.IsValid)
             {
                 if(question.Answer == Answer.Cancel)
                     return false;
@@ -159,12 +140,6 @@
                 return true;
 
             return false;
-        }
-
-        public override bool Equals(object obj)
-        {
-            var other = obj as ContactDetailsPresenter;
-            return other != null && other.Contact == Contact;
         }
     }
 }

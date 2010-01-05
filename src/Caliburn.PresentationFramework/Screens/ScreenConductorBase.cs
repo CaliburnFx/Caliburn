@@ -6,7 +6,7 @@
     /// An baseclass for implementations of <see cref="IScreenConductor"/>.
     /// </summary>
     /// <typeparam name="T">A type of <see cref="IScreen"/>.</typeparam>
-    public abstract class ScreenConductorBase<T> : ScreenHostBase<T>, IScreenConductor<T>
+    public abstract class ScreenConductorBase<T> : ScreenCollectionBase<T>, IScreenConductor<T>
         where T : class, IScreen
     {
         /// <summary>

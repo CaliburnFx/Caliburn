@@ -79,11 +79,11 @@
                     <ListBox.ItemTemplate>
                         <DataTemplate>
                             <StackPanel Orientation="Horizontal">
-                                <TextBlock Text="{Binding Contact.LastName}" />
+                                <TextBlock Text="{Binding Subject.LastName}" />
                                 <TextBlock Text=", " />
-                                <TextBlock Text="{Binding Contact.FirstName}" />
+                                <TextBlock Text="{Binding Subject.FirstName}" />
                                 <TextBlock Text="*"
-                                           Visibility="{Binding Contact.IsDirty, Converter={StaticResource booleanToVisibilityConverter}}" />
+                                           Visibility="{Binding Subject.IsDirty, Converter={StaticResource booleanToVisibilityConverter}}" />
                             </StackPanel>
                         </DataTemplate>
                     </ListBox.ItemTemplate>

@@ -49,9 +49,7 @@
 
         public void EditContact(Contact contact)
         {
-            var presenter = _serviceLocator.GetInstance<IContactDetailsPresenter>();
-            presenter.Setup(contact);
-            this.OpenScreen(presenter);
+            this.OpenScreen(new ScreenSubject<Contact>(contact));
         }
 
         protected override void OnInitialize()

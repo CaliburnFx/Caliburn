@@ -18,9 +18,9 @@
         public abstract partial class WithCollection
         {
             /// <summary>
-            /// An implementation of <see cref="IScreenHost"/> that activates/deactivates all child screens together.
+            /// An implementation of <see cref="IScreenCollection"/> that activates/deactivates all child screens together.
             /// </summary>
-            public class AllScreensActive : ScreenHostBase<T>
+            public class AllScreensActive : ScreenCollectionBase<T>
             {
                 private readonly IObservableCollection<T> _screens = new BindableCollection<T>();
 

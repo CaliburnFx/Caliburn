@@ -5,7 +5,7 @@ namespace Caliburn.PresentationFramework.Screens
     /// <summary>
     /// Represents an <see cref="IScreen"/> that hosts other instances of <see cref="IScreen"/>.
     /// </summary>
-    public interface IScreenHost : IScreen
+    public interface IScreenCollection : IScreen
     {
         /// <summary>
         /// Gets the screens that are currently managed.
@@ -28,7 +28,7 @@ namespace Caliburn.PresentationFramework.Screens
         void ShutdownScreen(IScreen screen, Action<bool> completed);
     }
 
-    public interface IScreenHost<T> : IScreenHost
+    public interface IScreenCollection<T> : IScreenCollection
         where T : class, IScreen
     {
         /// <summary>

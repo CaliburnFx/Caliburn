@@ -4,9 +4,7 @@ namespace ContactManager.Presenters.Interfaces
     using Caliburn.PresentationFramework.Screens;
     using Model;
 
-    public interface IContactDetailsPresenter : IScreen, ISupportCustomShutdown
+    public interface IContactDetailsPresenter : IScreen<Contact>, ISupportCustomShutdown
     {
-        Contact Contact { get; }
-        void Setup(Contact contact);
     }
 }

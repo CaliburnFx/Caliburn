@@ -24,13 +24,13 @@
                     Padding="2">
                 <Grid>
                     <StackPanel Orientation="Horizontal">
-                        <TextBlock Text="{Binding Contact.LastName}"
+                        <TextBlock Text="{Binding Subject.LastName}"
                                    Foreground="White"
                                    FontSize="16" />
                         <TextBlock Text=", "
                                    Foreground="White"
                                    FontSize="16" />
-                        <TextBlock Text="{Binding Contact.FirstName}"
+                        <TextBlock Text="{Binding Subject.FirstName}"
                                    Foreground="White"
                                    FontSize="16" />
                     </StackPanel>
@@ -39,7 +39,7 @@
                              Margin="0 0 2 0"
                              Fill="{StaticResource redBrush}"
                              HorizontalAlignment="Right"
-                             Visibility="{Binding Contact.IsDirty, Converter={StaticResource booleanToVisibilityConverter}}"
+                             Visibility="{Binding Subject.IsDirty, Converter={StaticResource booleanToVisibilityConverter}}"
                              pf:Message.Attach="[Event MouseEnter] = [Action ValidateContact]"/>
                     <Popup x:Name="dirtyPopup">
                         <Grid Margin="2">
@@ -83,7 +83,7 @@
             </Border>
 
             <StackPanel Grid.Row="1"
-                        DataContext="{Binding Contact}">
+                        DataContext="{Binding Subject}">
                 <Border BorderBrush="{StaticResource lightBlueBrush}"
                         BorderThickness="2"
                         CornerRadius="4"
@@ -190,7 +190,7 @@
                     Grid.Row="1"
                     Margin="2"
                     Padding="2"
-                    DataContext="{Binding Contact}">
+                    DataContext="{Binding Subject}">
                 <Grid>
                     <Grid.RowDefinitions>
                         <RowDefinition Height="*" />

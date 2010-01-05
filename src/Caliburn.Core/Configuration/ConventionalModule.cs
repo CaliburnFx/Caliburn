@@ -17,10 +17,10 @@
             SetupDefaultServices();
         }
 
-        public TModule Using<K>(Expression<Func<TServicesDescription, K>> service)
-            where K : IComponentRegistration, new()
+        public TModule Using<TRegistration>(Expression<Func<TServicesDescription, TRegistration>> service)
+            where TRegistration : IComponentRegistration, new()
         {
-            var registration = new K();
+            var registration = new TRegistration();
             var description = ((MethodCallExpression)service.Body).Method;
             var serviceType = DetermineService(description);
             var implementationType = description

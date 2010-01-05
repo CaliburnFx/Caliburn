@@ -9,6 +9,6 @@ namespace Caliburn.PresentationFramework.Screens
         /// Gets or sets the parent.
         /// </summary>
         /// <value>The parent.</value>
-        IScreenHost Parent { get; set; }
+        IScreenCollection Parent { get; set; }
     }
 }

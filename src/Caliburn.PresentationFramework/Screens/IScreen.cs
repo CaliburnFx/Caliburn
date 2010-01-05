@@ -41,4 +41,24 @@ namespace Caliburn.PresentationFramework.Screens
         /// </summary>
         void Deactivate();
     }
+
+    /// <summary>
+    /// A screen with a subject.
+    /// </summary>
+    /// <typeparam name="T">The subject's type.</typeparam>
+    public interface IScreen<T> : IScreen
+    {
+        /// <summary>
+        /// Gets the subject.
+        /// </summary>
+        /// <value>The subject.</value>
+        T Subject { get; }
+
+        /// <summary>
+        /// Configures the screen with the subject.
+        /// </summary>
+        /// <param name="subject">The subject.</param>
+        /// <returns>Self</returns>
+        IScreen<T> WithSubject(T subject);
+    }
 }

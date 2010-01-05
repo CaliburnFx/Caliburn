@@ -54,6 +54,13 @@ namespace Caliburn.PresentationFramework.Configuration
         Singleton ViewModelBinder<T>() where T : IViewModelBinder;
 
         /// <summary>
+        /// Custmizes the view model factory used by Caliburn.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <returns></returns>
+        Singleton ViewModelFactory<T>() where T : IViewModelFactory;
+
+        /// <summary>
         /// Customizes the convention manager used by Caliburn.
         /// </summary>
         /// <typeparam name="T"></typeparam>

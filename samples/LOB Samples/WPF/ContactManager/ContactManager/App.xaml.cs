@@ -2,6 +2,7 @@
 {
     using System.Collections.Generic;
     using Caliburn.PresentationFramework.ApplicationModel;
+    using Caliburn.PresentationFramework.Configuration;
     using Caliburn.WPF.ApplicationFramework;
     using Presenters.Interfaces;
 
@@ -13,6 +14,11 @@
         public App()
         {
             InitializeComponent();
+        }
+
+        protected override void ConfigurePresentationFramework(PresentationFrameworkConfiguration module)
+        {
+            module.RegisterAllScreensWithSubjects();
         }
 
         protected override object CreateRootModel()
