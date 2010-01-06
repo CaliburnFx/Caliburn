@@ -12,7 +12,7 @@
 	<property name="path.tools.rhino" value="${path.tools}/Rhino.Mocks"/>
 	<property name="path.tools.doxygen" value="${path.tools}/Doxygen"/>
 
-	<property name="version" value="2.0.0.0" overwrite="false"/>
+	<property name="version" value="1.0.0.0" overwrite="false"/>
 	<property name="version.major" value="${version::get-major(version::parse(version))}" dynamic="true"/>
 	<property name="version.minor" value="${version::get-minor(version::parse(version))}" dynamic="true"/>
 	<property name="version.build" value="${version::get-build(version::parse(version))}" dynamic="true"/>
@@ -35,12 +35,13 @@
 		<property name="build.config" value="release"/>
 	</target>
 
-	<target name="all" depends="config">
-		<call target="platform-net35"/>
-		<call target="platform-silverlight20"/>
-		<call target="platform-silverlight30"/>
-		<call target="generate-docs" />
-	</target>
+  <target name="all" depends="config">
+    <call target="platform-net35"/>
+    <call target="platform-silverlight20"/>
+    <call target="platform-silverlight30"/>
+    <call target="platform-silverlight40"/>
+    <call target="generate-docs" />
+  </target>
 
 	<target name="clean">
 		<delete dir="${path.bin}" if="${directory::exists(path.bin)}"/>
@@ -130,6 +131,15 @@
     <property name="current.path.lib" value="${path.lib}/Silverlight-3.0" />
   </target>
 
+  <target name="config-platform-silverlight40">
+    <property name="nant.settings.currentframework" value="silverlight-4.0"/>
+    <property name="build.platform" value="silverlight-4.0"/>
+    <property name="build.defines" value="${global.build.defines},SILVERLIGHT,SILVERLIGHT_30,SILVERLIGHT_40,NO_WEB,NO_REMOTING,NO_CONVERT,NO_PARTIAL_TRUST,NO_EXCEPTION_SERIALIZATION,NO_SKIP_VISIBILITY,NO_DEBUG_SYMBOLS"/>
+    <property name="current.path.bin" value="${path.bin}/Silverlight-4.0/${build.config}"/>
+    <property name="current.path.test" value="${path.bin}/Silverlight-4.0/tests" />
+    <property name="current.path.lib" value="${path.lib}/Silverlight-4.0" />
+  </target>
+
 	<target name="ensure-platform-selected">
 		<if test="${not(property::exists('build.platform'))}">
 			<call target="config-platform-net35"/>
@@ -211,6 +221,31 @@
     </if>
     <if test="${not(framework::exists('silverlight-3.0'))}">
       <echo message="Silverlight v3.0 is not available. Skipping platform."/>
+    </if>
+  </target>
+
+  <target name="platform-silverlight40" depends="config">
+    <if test="${framework::exists('silverlight-4.0')}">
+      <echo message="Building Caliburn ${build.version} for Silverlight v4.0."/>
+      <call target="config-platform-silverlight40"/>
+      <copy todir="${current.path.bin}">
+        <fileset basedir="${current.path.lib}">
+          <include name="*.dll"/>
+          <include name="*.xml"/>
+        </fileset>
+      </copy>
+      <call target="core"/>
+      <call target="presentationframework"/>
+      <call target="modelframework"/>
+      <call target="unity"/>
+      <call target="ninject"/>
+      <call target="mef"/>
+      <call target="autofac"/>
+      <call target="prism"/>
+      <call target="package-platform"/>
+    </if>
+    <if test="${not(framework::exists('silverlight-4.0'))}">
+      <echo message="Silverlight v4.0 is not available. Skipping platform."/>
     </if>
   </target>
 
