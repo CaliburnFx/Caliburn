@@ -36,7 +36,7 @@ namespace Caliburn.PresentationFramework.ApplicationModel
         /// <param name="context">The context.</param>
         /// <param name="handleShutdownModel">The handle shutdown model.</param>
         /// <returns></returns>
-        public bool? ShowDialog(object rootModel, object context, Action<ISubordinate, Action> handleShutdownModel)
+        public virtual bool? ShowDialog(object rootModel, object context, Action<ISubordinate, Action> handleShutdownModel)
         {
             var window = CreateWindow(rootModel, context, handleShutdownModel);
             return window.ShowDialog();
@@ -48,7 +48,7 @@ namespace Caliburn.PresentationFramework.ApplicationModel
         /// <param name="rootModel">The root model.</param>
         /// <param name="context">The context.</param>
         /// <param name="handleShutdownModel">The handle shutdown model.</param>
-        public void Show(object rootModel, object context, Action<ISubordinate, Action> handleShutdownModel)
+        public virtual void Show(object rootModel, object context, Action<ISubordinate, Action> handleShutdownModel)
         {
             var window = CreateWindow(rootModel, context, handleShutdownModel);
             window.Show();
@@ -61,7 +61,7 @@ namespace Caliburn.PresentationFramework.ApplicationModel
         /// <param name="context">The context.</param>
         /// <param name="handleShutdownModel">The handle shutdown model.</param>
         /// <returns></returns>
-        protected Window CreateWindow(object rootModel, object context,Action<ISubordinate, Action> handleShutdownModel)
+        protected virtual Window CreateWindow(object rootModel, object context,Action<ISubordinate, Action> handleShutdownModel)
         {
             var view = EnsureWindow(rootModel, _viewLocator.Locate(rootModel, null, context));
 
