@@ -16,6 +16,7 @@ V2 Alpha
 -Major refactoring of IPresenter classes.  They have been replaced with IScreen classes which follow Jeremy Miller's pattern names. ScreenConductors are now strongly typed as well.
 -Introduced IScreen<T>, IScreenSubject, and IViewModelFactory along with default implementations.
 -Added PresentationFrameworkConfiguration.RegisterAllScreensWithSubjects()
+-Added IValidator, DefaultValidator, IValidationError and DefaultValidationError for validation of ViewModels.  The default implementation uses DataAnnotations.
 
 V1.1 RTW
 -Added pre-initialization hooks to CaliburnApplication via Marco Amendola's patch.

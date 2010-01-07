@@ -286,10 +286,11 @@
 				<include name="System.Xml.dll"/>
 				<include name="Caliburn.Core.dll"/>
         <include name="Microsoft.Practices.ServiceLocation.dll"/>
+        <include name="System.ComponentModel.DataAnnotations.dll" />
 				<!--WPF-->
 				<include name="PresentationCore.dll"/>
 				<include name="PresentationFramework.dll"/>
-				<include name="WindowsBase.dll"/>		
+				<include name="WindowsBase.dll"/>
 				<!--Silverlight-->
 				<include name="System.Windows.dll" />
 				<include name="System.Windows.Browser.dll" />

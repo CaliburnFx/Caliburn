@@ -60,6 +60,15 @@ namespace Caliburn.PresentationFramework.Configuration
         /// <returns></returns>
         Singleton ViewModelFactory<T>() where T : IViewModelFactory;
 
+#if !SILVERLIGHT_20
+
+        /// <summary>
+        /// Customizes the validator used by Caliburn.
+        /// </summary>
+        /// <typeparam name="T">The validator type.</typeparam>
+        Singleton Validator<T>() where T : IValidator;
+#endif
+
         /// <summary>
         /// Customizes the convention manager used by Caliburn.
         /// </summary>

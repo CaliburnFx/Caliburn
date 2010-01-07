@@ -42,6 +42,9 @@
       <RequiredTargetFramework>3.0</RequiredTargetFramework>
     </Reference>
     <Reference Include="System" />
+    <Reference Include="System.ComponentModel.DataAnnotations">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
     <Reference Include="System.Core">
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
     </Reference>
@@ -91,11 +94,16 @@
     <Compile Include="Screens\ScreenConductorWithCollectionAllScreensActive.cs" />
     <Compile Include="Screens\ScreenConductorWithCollectionOneScreenActive.cs" />
     <Compile Include="Screens\ScreenSubject.cs" />
+    <Compile Include="ViewModels\DefaultValidationError.cs" />
+    <Compile Include="ViewModels\DefaultValidator.silverlight.cs" />
+    <Compile Include="ViewModels\DefaultValidator.wpf.cs" />
     <Compile Include="ViewModels\DefaultViewModelBinder.cs" />
     <Compile Include="ApplicationModel\DefaultWindowManager.wpf.cs" />
     <Compile Include="ViewModels\DefaultViewLocator.cs" />
     <Compile Include="ApplicationModel\ExtensionMethods.cs" />
     <Compile Include="ViewModels\DefaultViewModelFactory.cs" />
+    <Compile Include="ViewModels\IValidationError.cs" />
+    <Compile Include="ViewModels\IValidator.cs" />
     <Compile Include="ViewModels\IViewModelBinder.cs" />
     <Compile Include="ApplicationModel\IWindowManager.wpf.cs" />
     <Compile Include="ApplicationModel\ILifecycleNotifier.cs" />
