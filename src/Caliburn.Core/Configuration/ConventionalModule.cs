@@ -7,16 +7,30 @@
     using System.Reflection;
     using IoC;
 
+    /// <summary>
+    /// A module which uses conventions to register its requred components.
+    /// </summary>
+    /// <typeparam name="TModule">The type of the module.</typeparam>
+    /// <typeparam name="TServicesDescription">The type of the services description.</typeparam>
     public abstract class ConventionalModule<TModule, TServicesDescription> : CaliburnModule<TModule>
         where TModule : ConventionalModule<TModule, TServicesDescription>, new()
     {
         private readonly Dictionary<Type, IComponentRegistration> _services = new Dictionary<Type, IComponentRegistration>();
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ConventionalModule&lt;TModule, TServicesDescription&gt;"/> class.
+        /// </summary>
         protected ConventionalModule()
         {
             SetupDefaultServices();
         }
 
+        /// <summary>
+        /// Enables this modules services to be customized.
+        /// </summary>
+        /// <typeparam name="TRegistration">The type of the registration.</typeparam>
+        /// <param name="service">The service.</param>
+        /// <returns>The module.</returns>
         public TModule Using<TRegistration>(Expression<Func<TServicesDescription, TRegistration>> service)
             where TRegistration : IComponentRegistration, new()
         {
@@ -32,6 +46,26 @@
             return (TModule)this;
         }
 
+        /// <summary>
+        /// Determines the default implementation.
+        /// </summary>
+        /// <param name="service">The service.</param>
+        /// <returns>The default implemenation.</returns>
+        protected virtual Type DetermineDefaultImplementation(Type service) 
+        {
+            var name = service.FullName.Replace(service.Name, "Default" + service.Name.Substring(1));
+            return service.Assembly.GetType(name);
+        }
+
+        /// <summary>
+        /// Gets the components.
+        /// </summary>
+        /// <returns></returns>
+        protected override IEnumerable<IComponentRegistration> GetComponentsCore()
+        {
+            return _services.Values;
+        }
+
         private void SetupDefaultServices()
         {
             var descriptions = typeof(TServicesDescription)
@@ -45,12 +79,6 @@
 
                 AddRegistration(registration, service, implementation);
             }
-        }
-
-        protected virtual Type DetermineDefaultImplementation(Type service) 
-        {
-            var name = service.FullName.Replace(service.Name, "Default" + service.Name.Substring(1));
-            return service.Assembly.GetType(name);
         }
 
         private void AddRegistration(IComponentRegistration registration, Type service, Type implementation)
@@ -74,11 +102,6 @@
                 .First()
                 .GetGenericParameterConstraints()
                 .First();
-        }
-
-        protected override IEnumerable<IComponentRegistration> GetComponentsCore()
-        {
-            return _services.Values;
         }
     }
 }

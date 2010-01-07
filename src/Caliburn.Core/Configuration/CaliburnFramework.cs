@@ -74,6 +74,10 @@
             ModuleHook = this;
         }
 
+        /// <summary>
+        /// Allows extension of the configuration.
+        /// </summary>
+        /// <value>The extensibility hook.</value>
         IModuleHook IConfigurationBuilder.With
         {
             get { return this; }
@@ -90,6 +94,12 @@
             return this;
         }
 
+        /// <summary>
+        /// Adds the module.
+        /// </summary>
+        /// <typeparam name="T">The module type.</typeparam>
+        /// <param name="module">The module.</param>
+        /// <returns>The module.</returns>
         T IModuleHook.Module<T>(T module)
         {
             if(!_modules.Contains(module))
@@ -105,11 +115,18 @@
             return module;
         }
 
+        /// <summary>
+        /// Adds a module to the famework.
+        /// </summary>
+        /// <param name="module">The module.</param>
         public void AddModule(IModule module)
         {
             ((IModuleHook)this).Module(module);
         }
 
+        /// <summary>
+        /// Starts the framework.
+        /// </summary>
         public void Start()
         {
             if(_isStarted)

@@ -4,6 +4,9 @@ namespace Caliburn.Core.Configuration
     using IoC;
     using Threading;
 
+    /// <summary>
+    /// Describes the services requred for the core framework to function.
+    /// </summary>
     public interface ICoreServicesDescription
     {
         /// <summary>

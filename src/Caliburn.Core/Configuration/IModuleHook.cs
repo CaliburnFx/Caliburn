@@ -11,15 +11,15 @@ namespace Caliburn.Core.Configuration
         /// Adds assemblies to search for types registerable in the DI container.
         /// </summary>
         /// <param name="assembliesToInspect">The assemblies to register.</param>
-        /// <returns></returns>
+        /// <returns>The configuration builder.</returns>
         IConfigurationBuilder Assemblies(params Assembly[] assembliesToInspect);
 
         /// <summary>
         /// Adds the module.
         /// </summary>
-        /// <typeparam name="T"></typeparam>
+        /// <typeparam name="T">The module type.</typeparam>
         /// <param name="module">The module.</param>
-        /// <returns></returns>
+        /// <returns>The module.</returns>
         T Module<T>(T module) where T : IModule;
     }
 }

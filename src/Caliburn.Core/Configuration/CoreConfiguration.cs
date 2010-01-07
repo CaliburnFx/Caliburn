@@ -5,6 +5,9 @@
     using Invocation;
     using Microsoft.Practices.ServiceLocation;
 
+    /// <summary>
+    /// Configures Caliburn's core.
+    /// </summary>
     public class CoreConfiguration : ConventionalModule<CoreConfiguration, ICoreServicesDescription>
     {
         private readonly List<Action> _afterStart = new List<Action>();
@@ -20,6 +23,10 @@
             return this;
         }
 
+        /// <summary>
+        /// Initializes the core.
+        /// </summary>
+        /// <param name="serviceLocator">The service locator.</param>
         protected override void InitializeCore(IServiceLocator serviceLocator)
         {
             Execute.Initialize(serviceLocator.GetInstance<IDispatcher>());

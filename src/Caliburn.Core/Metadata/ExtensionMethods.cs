@@ -2,6 +2,9 @@
 {
     using System.Linq;
 
+    /// <summary>
+    /// Hosts extension methods related to Metadata.
+    /// </summary>
     public static class ExtensionMethods
     {
         /// <summary>
