@@ -93,7 +93,8 @@ namespace Caliburn.PresentationFramework.Screens
         /// </returns>
         public virtual bool CanShutdown()
         {
-            return true;
+            AttemptingShutdown(this, EventArgs.Empty);
+            return CanShutdownCore();
         }
 
         /// <summary>
@@ -122,6 +123,11 @@ namespace Caliburn.PresentationFramework.Screens
         public event EventHandler Initialized = delegate { };
 
         /// <summary>
+        /// Occurs before attempting to shutdown.
+        /// </summary>
+        public virtual event EventHandler AttemptingShutdown = delegate { };
+
+        /// <summary>
         /// Occurs when [was shutdown].
         /// </summary>
         public event EventHandler WasShutdown = delegate { };
@@ -142,6 +148,17 @@ namespace Caliburn.PresentationFramework.Screens
         protected virtual void OnInitialize()
         {
             Initialized(this, EventArgs.Empty);
+        }
+
+        /// <summary>
+        /// Determines whether this instance can shutdown.
+        /// </summary>
+        /// <returns>
+        /// 	<c>true</c> if this instance can shutdown; otherwise, <c>false</c>.
+        /// </returns>
+        protected virtual bool CanShutdownCore()
+        {
+            return true;
         }
 
         /// <summary>
