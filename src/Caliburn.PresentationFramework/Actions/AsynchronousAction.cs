@@ -72,7 +72,11 @@
 
                 foreach (var filter in _filters.PreProcessors)
                 {
-                    if (!filter.Execute(actionMessage, handlingNode, parameters)) return;
+                    if(filter.Execute(actionMessage, handlingNode, parameters)) 
+                        continue;
+
+                    TryUpdateTrigger(actionMessage, handlingNode, false);
+                    return;
                 }
 
                 DoExecute(actionMessage, handlingNode, parameters);

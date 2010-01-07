@@ -38,6 +38,7 @@ V1.1 RTW
 -Added strongly-typed property change notification to PropertyChangedBase.
 -Fixed a bug in the SimpleContainer related to generic component registration.
 -Added ILifecycleNotifier.AttemptingShutdown which gets fired before the CanShutdownCore method on PresenterBase is called.
+-Fixed a bug in AsnychronousAction related to IPreExecute, BlocksInteraction and AffectsTriggers.
 
 V1 RTW
 -The DefaultBinder will now throw on type activation failure.
