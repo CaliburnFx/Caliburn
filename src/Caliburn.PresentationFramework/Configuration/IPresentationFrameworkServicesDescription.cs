@@ -67,7 +67,7 @@ namespace Caliburn.PresentationFramework.Configuration
         /// <returns></returns>
         Singleton ConventionManager<T>() where T : IConventionManager;
 
-#if !SILVERLIGHT
+#if !SILVERLIGHT_20
 
         /// <summary>
         /// Customizes the window manager used by Caliburn.

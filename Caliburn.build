@@ -293,6 +293,7 @@
 				<!--Silverlight-->
 				<include name="System.Windows.dll" />
 				<include name="System.Windows.Browser.dll" />
+				<include name="System.Windows.Controls.dll" />
 			</references>
 			<nowarn>
 				<warning number="1584"/>

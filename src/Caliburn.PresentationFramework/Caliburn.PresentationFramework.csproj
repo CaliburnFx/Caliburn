@@ -74,6 +74,8 @@
     <Compile Include="ApplicationModel\CaliburnApplication.silverlight.cs" />
     <Compile Include="ApplicationModel\CaliburnApplication.wpf.cs" />
     <Compile Include="ApplicationModel\DeepLinkStateManager.silverlight.cs" />
+    <Compile Include="ApplicationModel\DefaultWindowManager.silverlight.cs" />
+    <Compile Include="ApplicationModel\IWindowManager.silverlight.cs" />
     <Compile Include="Screens\ScreenExtensions.cs" />
     <Compile Include="Screens\IHierarchicalScreen.cs" />
     <Compile Include="Screens\IScreen.cs" />
@@ -90,12 +92,12 @@
     <Compile Include="Screens\ScreenConductorWithCollectionOneScreenActive.cs" />
     <Compile Include="Screens\ScreenSubject.cs" />
     <Compile Include="ViewModels\DefaultViewModelBinder.cs" />
-    <Compile Include="ApplicationModel\DefaultWindowManager.cs" />
+    <Compile Include="ApplicationModel\DefaultWindowManager.wpf.cs" />
     <Compile Include="ViewModels\DefaultViewLocator.cs" />
     <Compile Include="ApplicationModel\ExtensionMethods.cs" />
     <Compile Include="ViewModels\DefaultViewModelFactory.cs" />
     <Compile Include="ViewModels\IViewModelBinder.cs" />
-    <Compile Include="ApplicationModel\IWindowManager.cs" />
+    <Compile Include="ApplicationModel\IWindowManager.wpf.cs" />
     <Compile Include="ApplicationModel\ILifecycleNotifier.cs" />
     <Compile Include="Screens\INavigator.cs" />
     <Compile Include="ApplicationModel\IsolatedStorageStateManager.cs" />
