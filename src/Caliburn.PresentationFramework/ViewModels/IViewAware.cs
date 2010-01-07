@@ -3,7 +3,7 @@ namespace Caliburn.PresentationFramework.ViewModels
     using System.Windows;
 
     /// <summary>
-    /// Indicates the a model/presenter should be made aware of its view.
+    /// Indicates that a model should be made aware of its view.
     /// </summary>
     public interface IViewAware
     {

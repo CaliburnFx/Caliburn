@@ -25,18 +25,39 @@ namespace Caliburn.PresentationFramework.Triggers.Support
         private ModifierKeys _modifiers;
         private const string MULTIPLEGESTURE_DELIMITER = ";";
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="UnrestrictedKeyGesture"/> class.
+        /// </summary>
+        /// <param name="key">The key.</param>
         public UnrestrictedKeyGesture(Key key)
             : this(key, ModifierKeys.None)
         { }
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="UnrestrictedKeyGesture"/> class.
+        /// </summary>
+        /// <param name="key">The key.</param>
+        /// <param name="modifiers">The modifiers.</param>
         public UnrestrictedKeyGesture(Key key, ModifierKeys modifiers)
             : this(key, modifiers, string.Empty, true)
         { }
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="UnrestrictedKeyGesture"/> class.
+        /// </summary>
+        /// <param name="key">The key.</param>
+        /// <param name="modifiers">The modifiers.</param>
+        /// <param name="validateGesture">if set to <c>true</c> [validate gesture].</param>
         internal UnrestrictedKeyGesture(Key key, ModifierKeys modifiers, bool validateGesture)
             : this(key, modifiers, string.Empty, validateGesture)
         { }
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="UnrestrictedKeyGesture"/> class.
+        /// </summary>
+        /// <param name="key">The key.</param>
+        /// <param name="modifiers">The modifiers.</param>
+        /// <param name="displayString">The display string.</param>
         public UnrestrictedKeyGesture(Key key, ModifierKeys modifiers, string displayString)
             : this(key, modifiers, displayString, true)
         { }
@@ -106,6 +127,11 @@ namespace Caliburn.PresentationFramework.Triggers.Support
             return (_keyGestureConverter.ConvertFromInvariantString(keyGestureToken) as UnrestrictedKeyGesture);
         }
 
+        /// <summary>
+        /// Gets the display string for culture.
+        /// </summary>
+        /// <param name="culture">The culture.</param>
+        /// <returns></returns>
         public string GetDisplayStringForCulture(CultureInfo culture)
         {
             if (!string.IsNullOrEmpty(_displayString))
@@ -119,6 +145,14 @@ namespace Caliburn.PresentationFramework.Triggers.Support
             return ((key >= Key.None) && (key <= Key.OemClear));
         }
 
+        /// <summary>
+        /// When overridden in a derived class, determines whether the specified <see cref="T:System.Windows.Input.InputGesture"/> matches the input associated with the specified <see cref="T:System.Windows.Input.InputEventArgs"/> object.
+        /// </summary>
+        /// <param name="targetElement">The target of the command.</param>
+        /// <param name="inputEventArgs">The input event data to compare this gesture to.</param>
+        /// <returns>
+        /// true if the gesture matches the input; otherwise, false.
+        /// </returns>
         public override bool Matches(object targetElement, InputEventArgs inputEventArgs)
         {
             KeyEventArgs args = inputEventArgs as KeyEventArgs;
@@ -129,16 +163,28 @@ namespace Caliburn.PresentationFramework.Triggers.Support
             return ((Key == args.Key) && (Modifiers == Keyboard.Modifiers));
         }
 
+        /// <summary>
+        /// Gets the display string.
+        /// </summary>
+        /// <value>The display string.</value>
         public string DisplayString
         {
             get { return _displayString; }
         }
 
+        /// <summary>
+        /// Gets the key.
+        /// </summary>
+        /// <value>The key.</value>
         public Key Key
         {
             get { return _key; }
         }
 
+        /// <summary>
+        /// Gets the modifiers.
+        /// </summary>
+        /// <value>The modifiers.</value>
         public ModifierKeys Modifiers
         {
             get { return _modifiers; }

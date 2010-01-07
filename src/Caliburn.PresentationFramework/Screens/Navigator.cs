@@ -175,6 +175,10 @@ namespace Caliburn.PresentationFramework.Screens
             Back(result => { });
         }
 
+        /// <summary>
+        /// Changes the active screen.
+        /// </summary>
+        /// <param name="newActiveScreen">The new active screen.</param>
         protected override void ChangeActiveScreenCore(T newActiveScreen)
         {
             base.ChangeActiveScreenCore(newActiveScreen);

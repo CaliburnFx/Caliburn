@@ -10,12 +10,20 @@ namespace Caliburn.PresentationFramework.ApplicationModel
     using Screens;
     using ViewModels;
 
+    /// <summary>
+    /// An implementation of <see cref="IWindowManager"/>.
+    /// </summary>
     public class DefaultWindowManager : IWindowManager
     {
         private readonly IViewLocator _viewLocator;
         private readonly IViewModelBinder _binder;
         private bool _actuallyClosing;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="DefaultWindowManager"/> class.
+        /// </summary>
+        /// <param name="viewLocator">The view locator.</param>
+        /// <param name="binder">The binder.</param>
         public DefaultWindowManager(IViewLocator viewLocator, IViewModelBinder binder)
         {
             _viewLocator = viewLocator;

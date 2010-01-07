@@ -8,8 +8,16 @@ namespace Caliburn.PresentationFramework.ViewModels
     using System.Reflection;
     using Core;
 
+    /// <summary>
+    /// The default implemenation of <see cref="IValidator"/>.
+    /// </summary>
     public class DefaultValidator : IValidator
     {
+        /// <summary>
+        /// Validates the specified instance.
+        /// </summary>
+        /// <param name="instance">The instance.</param>
+        /// <returns>The validation errors.</returns>
         public IEnumerable<IValidationError> Validate(object instance)
         {
             return from property in instance.GetType().GetProperties()
@@ -17,6 +25,12 @@ namespace Caliburn.PresentationFramework.ViewModels
                    select error;
         }
 
+        /// <summary>
+        /// Validates the specified property on the instance.
+        /// </summary>
+        /// <param name="instance">The instance.</param>
+        /// <param name="propertyName">Name of the property.</param>
+        /// <returns>The validation errors.</returns>
         public IEnumerable<IValidationError> Validate(object instance, string propertyName)
         {
             var property = instance.GetType().GetProperty(propertyName);

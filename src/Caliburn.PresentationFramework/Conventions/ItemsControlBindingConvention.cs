@@ -10,6 +10,10 @@ namespace Caliburn.PresentationFramework.Conventions
     using Core;
     using ViewModels;
 
+    /// <summary>
+    /// An implemenation of <see cref="IBindingConvention"/> that bindings SelectedItem and Header for Selectors and HeaderedItemsControls respectively.
+    /// ItemsTemplates may be conventionally added as well.
+    /// </summary>
     public class ItemsControlBindingConvention : IBindingConvention
     {
         private static readonly Type _itemsControlType = typeof(ItemsControl);
@@ -19,12 +23,26 @@ namespace Caliburn.PresentationFramework.Conventions
         private static readonly Type _headeredItemsControlType = typeof(HeaderedItemsControl);
 #endif
 
+        /// <summary>
+        /// Indicates whether this convention is a match and should be applied.
+        /// </summary>
+        /// <param name="viewModelDescription">The view model description.</param>
+        /// <param name="element">The element.</param>
+        /// <param name="property">The property.</param>
+        /// <returns></returns>
         public bool Matches(IViewModelDescription viewModelDescription, IElementDescription element, PropertyInfo property)
         {
             return string.Compare(element.Name, property.Name, StringComparison.CurrentCultureIgnoreCase) == 0
                    && _itemsControlType.IsAssignableFrom(element.Type);
         }
 
+        /// <summary>
+        /// Creates the application of the convention.
+        /// </summary>
+        /// <param name="description">The description.</param>
+        /// <param name="element">The element.</param>
+        /// <param name="property">The property.</param>
+        /// <returns>The convention application.</returns>
         public IViewApplicable CreateApplication(IViewModelDescription description, IElementDescription element, PropertyInfo property)
         {
             string selectionPropertyName = null;
@@ -63,6 +81,12 @@ namespace Caliburn.PresentationFramework.Conventions
                 );
         }
 
+        /// <summary>
+        /// Gets the selection property.
+        /// </summary>
+        /// <param name="description">The description.</param>
+        /// <param name="property">The property.</param>
+        /// <returns>The property which should be bound, if found.</returns>
         protected virtual PropertyInfo GetSelectionProperty(IViewModelDescription description, PropertyInfo property)
         {
             var singularName = property.Name.MakeSingular();
@@ -77,6 +101,12 @@ namespace Caliburn.PresentationFramework.Conventions
         }
 
 #if !SILVERLIGHT
+        /// <summary>
+        /// Gets the header property.
+        /// </summary>
+        /// <param name="description">The description.</param>
+        /// <param name="property">The property.</param>
+        /// <returns>The property which should be bound, if found.</returns>
         protected virtual PropertyInfo GetHeaderProperty(IViewModelDescription description, PropertyInfo property)
         {
             var found = description.Properties

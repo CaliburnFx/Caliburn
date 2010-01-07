@@ -20,6 +20,9 @@
     using System.Windows.Controls;
 #endif
 
+    /// <summary>
+    /// The presenation framework module.
+    /// </summary>
     public class PresentationFrameworkConfiguration :
         ConventionalModule<PresentationFrameworkConfiguration, IPresentationFrameworkServicesDescription>
     {
@@ -31,6 +34,9 @@
         private static readonly bool _isInDesignMode = DesignerProperties.GetIsInDesignMode(new UserControl());
 #endif
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="PresentationFrameworkConfiguration"/> class.
+        /// </summary>
         public PresentationFrameworkConfiguration()
         {
             CaliburnModule<CoreConfiguration>
@@ -49,11 +55,18 @@
             get { return _isInDesignMode; }
         }
 
+        /// <summary>
+        /// Searches the <see cref="IAssemblySource"/> and registers all screens which concretely implement <see cref="IScreen{T}"/> using their closed interface type.
+        /// </summary>
         public void RegisterAllScreensWithSubjects()
         {
             _registerAllScreensWithSubjects = true;
         }
 
+        /// <summary>
+        /// Initializes the core.
+        /// </summary>
+        /// <param name="serviceLocator">The service locator.</param>
         protected override void InitializeCore(IServiceLocator serviceLocator)
         {
             var controller = serviceLocator.GetInstance<IRoutedMessageController>();

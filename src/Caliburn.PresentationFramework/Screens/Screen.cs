@@ -62,7 +62,7 @@
         /// Gets the subject.
         /// </summary>
         /// <value>The subject.</value>
-        public T Subject
+        public virtual T Subject
         {
             get { return _subject; }
         }

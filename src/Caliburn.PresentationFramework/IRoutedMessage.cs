@@ -2,7 +2,6 @@
 {
     using System;
     using System.Windows;
-    using Core.Metadata;
 
 #if SILVERLIGHT
     using System.Collections.Generic;

@@ -8,7 +8,6 @@
     /// <summary>
     /// An implementation of <see cref="IScreenConductor"/>.
     /// </summary>
-    /// <typeparam name="T">A type of <see cref="IScreen"/>.</typeparam>
     public partial class ScreenConductor<T>
             where T : class, IScreen
     {

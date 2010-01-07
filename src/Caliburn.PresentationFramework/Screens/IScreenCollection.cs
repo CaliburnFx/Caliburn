@@ -28,6 +28,10 @@ namespace Caliburn.PresentationFramework.Screens
         void ShutdownScreen(IScreen screen, Action<bool> completed);
     }
 
+    /// <summary>
+    /// Represents an <see cref="IScreen"/> that hosts other instances of <see cref="IScreen"/>.
+    /// </summary>
+    /// <typeparam name="T">The type of screens in the collection.</typeparam>
     public interface IScreenCollection<T> : IScreenCollection
         where T : class, IScreen
     {

@@ -49,7 +49,7 @@ namespace Caliburn.PresentationFramework.Screens
         /// Equalses the specified other.
         /// </summary>
         /// <param name="other">The other.</param>
-        /// <returns></returns>
+        /// <returns>The result of the equality check.</returns>
         public bool Equals(ScreenSubject<T> other)
         {
             if (ReferenceEquals(null, other)) return false;

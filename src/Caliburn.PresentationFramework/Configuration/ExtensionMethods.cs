@@ -2,6 +2,9 @@
 {
     using Core.Configuration;
 
+    /// <summary>
+    /// Hosts extension methods realted to configuration.
+    /// </summary>
     public static class ExtensionMethods
     {
         /// <summary>

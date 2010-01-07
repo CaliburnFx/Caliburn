@@ -6,6 +6,9 @@
     using System.Windows.Markup;
     using ViewModels;
 
+    /// <summary>
+    /// An <see cref="IViewApplicable"/> that sets a databinding on an element.
+    /// </summary>
     public class ApplicableBinding : IViewApplicable
     {
         private readonly string _elementName;
@@ -14,6 +17,14 @@
         private readonly BindingMode _mode;
         private readonly bool _checkItemTemplate;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ApplicableBinding"/> class.
+        /// </summary>
+        /// <param name="elementName">Name of the element.</param>
+        /// <param name="dependencyProperty">The dependency property.</param>
+        /// <param name="path">The path.</param>
+        /// <param name="mode">The mode.</param>
+        /// <param name="checkItemTemplate">if set to <c>true</c> [check item template].</param>
         public ApplicableBinding(string elementName, DependencyProperty dependencyProperty, string path, BindingMode mode, bool checkItemTemplate)
         {
             _elementName = elementName;
@@ -23,6 +34,10 @@
             _checkItemTemplate = checkItemTemplate;
         }
 
+        /// <summary>
+        /// Applies the behavior to the specified view.
+        /// </summary>
+        /// <param name="view">The view.</param>
         public void ApplyTo(DependencyObject view)
         {
             var element = view.FindName(_elementName);
@@ -39,6 +54,11 @@
                 itemsControl.ItemTemplate = CreateItemTemplate(itemsControl);
         }
 
+        /// <summary>
+        /// Values the not set.
+        /// </summary>
+        /// <param name="element">The element.</param>
+        /// <returns></returns>
         protected virtual bool ValueNotSet(DependencyObject element)
         {
 #if !SILVERLIGHT_20
@@ -48,6 +68,11 @@
 #endif
         }
 
+        /// <summary>
+        /// Needses the item template.
+        /// </summary>
+        /// <param name="control">The control.</param>
+        /// <returns></returns>
         protected virtual bool NeedsItemTemplate(ItemsControl control)
         {
             return control.ItemTemplate == null && string.IsNullOrEmpty(control.DisplayMemberPath);

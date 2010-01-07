@@ -89,11 +89,21 @@ namespace Caliburn.PresentationFramework.ViewModels
             _actions[action.Name] = action;
         }
 
+        /// <summary>
+        /// Sets the conventions for a particualr view type.
+        /// </summary>
+        /// <param name="viewType">Type of the view.</param>
+        /// <param name="applicableConventions">The applicable conventions.</param>
         public void SetConventionsFor(Type viewType, IEnumerable<IViewApplicable> applicableConventions)
         {
             _viewConventions[viewType] = applicableConventions.ToArray();
         }
 
+        /// <summary>
+        /// Gets the conventions for the specified view.
+        /// </summary>
+        /// <param name="view">The view.</param>
+        /// <returns>The applicable conventions.</returns>
         public IEnumerable<IViewApplicable> GetConventionsFor(DependencyObject view)
         {
             IViewApplicable[] conventions;

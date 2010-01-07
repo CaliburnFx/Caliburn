@@ -10,10 +10,23 @@
     using System.Windows.Media;
 #endif
 
+    /// <summary>
+    /// Hosts extension methods related to conventions.
+    /// </summary>
     public static class ExtensionMethods
     {
+        /// <summary>
+        /// Used to override the behavior for locating named elements within a UI.
+        /// </summary>
         public static Func<IConventionManager, DependencyObject, IEnumerable<IElementDescription>> GetNamedElements = DefaultGetNamedObjects;
 
+        /// <summary>
+        /// Determines the conventions for the specified view and view model description.
+        /// </summary>
+        /// <param name="conventionManager">The convention manager.</param>
+        /// <param name="viewModelDescription">The view model description.</param>
+        /// <param name="view">The view.</param>
+        /// <returns>The applicalble conventions.</returns>
         public static IEnumerable<IViewApplicable> DetermineConventions(this IConventionManager conventionManager, IViewModelDescription viewModelDescription, DependencyObject view)
         {
             return conventionManager.DetermineConventions(viewModelDescription, GetNamedElements(conventionManager, view));

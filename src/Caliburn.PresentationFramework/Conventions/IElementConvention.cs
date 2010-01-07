@@ -3,6 +3,9 @@ namespace Caliburn.PresentationFramework.Conventions
     using System;
     using System.Windows;
 
+    /// <summary>
+    /// Represents an element's conventions.
+    /// </summary>
     public interface IElementConvention
     {
         /// <summary>

@@ -3,7 +3,7 @@ namespace Caliburn.PresentationFramework.ViewModels
     using Screens;
 
     /// <summary>
-    /// Immpmented by services that create view models.
+    /// Implemented by services that create view models.
     /// </summary>
     public interface IViewModelFactory
     {

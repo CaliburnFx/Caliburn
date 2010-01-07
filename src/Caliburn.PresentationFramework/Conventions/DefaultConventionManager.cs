@@ -14,6 +14,9 @@ namespace Caliburn.PresentationFramework.Conventions
     using Filters;
     using ViewModels;
 
+    /// <summary>
+    /// The default implementation of <see cref="IConventionManager"/>.
+    /// </summary>
     public class DefaultConventionManager : IConventionManager
     {
         private readonly IMethodFactory _methodFactory;
@@ -23,6 +26,11 @@ namespace Caliburn.PresentationFramework.Conventions
         private readonly List<IBindingConvention> _bindingConventions = new List<IBindingConvention>();
         private readonly List<IActionConvention> _actionConventions = new List<IActionConvention>();
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="DefaultConventionManager"/> class.
+        /// </summary>
+        /// <param name="methodFactory">The method factory.</param>
+        /// <param name="eventHandlerFactory">The event handler factory.</param>
         public DefaultConventionManager(IMethodFactory methodFactory, IEventHandlerFactory eventHandlerFactory)
         {
             _methodFactory = methodFactory;
@@ -38,21 +46,38 @@ namespace Caliburn.PresentationFramework.Conventions
                 .Apply(AddActionConvention);
         }
 
+        /// <summary>
+        /// Adds the element convention.
+        /// </summary>
+        /// <param name="convention">The convention.</param>
         public void AddElementConvention(IElementConvention convention)
         {
             _elementConventions[convention.Type] = convention;
         }
 
+        /// <summary>
+        /// Adds the binding convention.
+        /// </summary>
+        /// <param name="convention">The convention.</param>
         public void AddBindingConvention(IBindingConvention convention)
         {
             _bindingConventions.Add(convention);
         }
 
+        /// <summary>
+        /// Adds the action convention.
+        /// </summary>
+        /// <param name="convention">The convention.</param>
         public void AddActionConvention(IActionConvention convention)
         {
             _actionConventions.Add(convention);
         }
 
+        /// <summary>
+        /// Gets the element convention for the type of element specified.
+        /// </summary>
+        /// <param name="elementType">Type of the element.</param>
+        /// <returns>The convention.</returns>
         public IElementConvention GetElementConvention(Type elementType)
         {
             if (elementType == null) 
@@ -68,6 +93,12 @@ namespace Caliburn.PresentationFramework.Conventions
             return convention;
         }
 
+        /// <summary>
+        /// Determines the conventions for a view model and a set of UI elements.
+        /// </summary>
+        /// <param name="viewModelDescription">The view model description.</param>
+        /// <param name="elementDescriptions">The element descriptions.</param>
+        /// <returns>The applicable conventions.</returns>
         public virtual IEnumerable<IViewApplicable> DetermineConventions(IViewModelDescription viewModelDescription, IEnumerable<IElementDescription> elementDescriptions)
         {
             foreach (var elementDescription in elementDescriptions)
@@ -121,22 +152,39 @@ namespace Caliburn.PresentationFramework.Conventions
                 action.Filters.Add(new PreviewAttribute(_methodFactory.CreateFrom(canExecute)));
         }
 
+        /// <summary>
+        /// Derives the name of the can execute method/property.
+        /// </summary>
+        /// <param name="baseName">Name of the base method.</param>
+        /// <returns>The conventional name of the can execute poroperty.</returns>
         protected virtual string DeriveCanExecuteName(string baseName)
         {
             return "Can" + baseName;
         }
 
+        /// <summary>
+        /// Gets the default binding conventions.
+        /// </summary>
+        /// <returns></returns>
         protected virtual IEnumerable<IBindingConvention> GetDefaultBindingConventions()
         {
             yield return new DefaultBindingConvention();
             yield return new ItemsControlBindingConvention();
         }
 
+        /// <summary>
+        /// Gets the default action conventions.
+        /// </summary>
+        /// <returns></returns>
         protected virtual IEnumerable<IActionConvention> GetDefaultActionConventions()
         {
             yield return new DefaultActionConvention();
         }
 
+        /// <summary>
+        /// Gets the default element conventions.
+        /// </summary>
+        /// <returns></returns>
         protected virtual IEnumerable<IElementConvention> GetDefaultElementConventions()
         {
 #if !SILVERLIGHT
@@ -196,6 +244,15 @@ namespace Caliburn.PresentationFramework.Conventions
                 yield return ElementConvention<ItemsControl>("Loaded", ItemsControl.ItemsSourceProperty, (c, o) => c.DataContext = o, c => c.DataContext);
         }
 
+        /// <summary>
+        /// Creates an element convention.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="defaultEvent">The default event.</param>
+        /// <param name="bindableProperty">The bindable property.</param>
+        /// <param name="setter">The setter.</param>
+        /// <param name="getter">The getter.</param>
+        /// <returns>The element convention.</returns>
         protected virtual IElementConvention ElementConvention<T>(string defaultEvent, DependencyProperty bindableProperty, Action<T, object> setter, Func<T, object> getter)
         {
             return new DefaultElementConvention<T>(

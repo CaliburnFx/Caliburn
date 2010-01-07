@@ -6,15 +6,49 @@ namespace Caliburn.PresentationFramework.Conventions
     using Core.Invocation;
     using ViewModels;
 
+    /// <summary>
+    /// Implemented by services that understand conventions.
+    /// </summary>
     public interface IConventionManager
     {
+        /// <summary>
+        /// Adds the element convention.
+        /// </summary>
+        /// <param name="convention">The convention.</param>
         void AddElementConvention(IElementConvention convention);
+
+        /// <summary>
+        /// Adds the binding convention.
+        /// </summary>
+        /// <param name="convention">The convention.</param>
         void AddBindingConvention(IBindingConvention convention);
+
+        /// <summary>
+        /// Adds the action convention.
+        /// </summary>
+        /// <param name="convention">The convention.</param>
         void AddActionConvention(IActionConvention convention);
 
+        /// <summary>
+        /// Gets the element convention for the type of element specified.
+        /// </summary>
+        /// <param name="elementType">Type of the element.</param>
+        /// <returns>The convention.</returns>
         IElementConvention GetElementConvention(Type elementType);
+
+        /// <summary>
+        /// Determines the conventions for a view model and a set of UI elements.
+        /// </summary>
+        /// <param name="viewModelDescription">The view model description.</param>
+        /// <param name="elementDescriptions">The element descriptions.</param>
+        /// <returns>The applicable conventions.</returns>
         IEnumerable<IViewApplicable> DetermineConventions(IViewModelDescription viewModelDescription, IEnumerable<IElementDescription> elementDescriptions);
 
+        /// <summary>
+        /// Applies the action creation conventions to the specified action.
+        /// </summary>
+        /// <param name="action">The action.</param>
+        /// <param name="targetMethod">The target method.</param>
         void ApplyActionCreationConventions(IAction action, IMethod targetMethod);
     }
 }

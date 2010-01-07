@@ -6,6 +6,9 @@
     using Core.Metadata;
     using Metadata;
 
+    /// <summary>
+    /// Hosts extension methods and method overrides for execution of <see cref="IResult"/> and <see cref="IEnumerable{IResult}"/>
+    /// </summary>
     public static class EnumerableResults
     {
         /// <summary>

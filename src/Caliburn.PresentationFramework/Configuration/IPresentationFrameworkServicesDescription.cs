@@ -8,6 +8,9 @@ namespace Caliburn.PresentationFramework.Configuration
     using Parsers;
     using ViewModels;
 
+    /// <summary>
+    /// Desscribes the services required for the presentation framework to function.
+    /// </summary>
     public interface IPresentationFrameworkServicesDescription
     {
         /// <summary>

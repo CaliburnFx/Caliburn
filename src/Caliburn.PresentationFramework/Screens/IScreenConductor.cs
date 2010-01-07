@@ -22,7 +22,7 @@ namespace Caliburn.PresentationFramework.Screens
     /// <summary>
     /// A generic version of <see cref="IScreenConductor"/>.
     /// </summary>
-    /// <typeparam name="T"></typeparam>
+    /// <typeparam name="T">The type of screen being conducted.</typeparam>
     public interface IScreenConductor<T> : IScreenCollection<T>, IScreenConductor
         where T : class, IScreen
     {

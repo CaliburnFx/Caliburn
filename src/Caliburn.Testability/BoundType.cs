@@ -55,7 +55,11 @@ namespace Caliburn.Testability
 			get { return _type; }
 		}
 
-
+        /// <summary>
+        /// Adds a hint for polymorphic type checking.
+        /// </summary>
+        /// <param name="propertyPath">The property path.</param>
+        /// <param name="hint">The hint.</param>
 		public void AddHint(string propertyPath, Type hint) {
 			if (_hints.ContainsKey(propertyPath))
 				throw new Caliburn.Core.CaliburnException(string.Format("Hint for path '{0}' was already added", propertyPath));

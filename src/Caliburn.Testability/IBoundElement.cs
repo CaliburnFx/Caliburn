@@ -1,5 +1,8 @@
 namespace Caliburn.Testability
 {
+    /// <summary>
+    /// Represents an element which can be bound.
+    /// </summary>
     public interface IBoundElement : IElement
     {
         /// <summary>

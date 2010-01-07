@@ -21,6 +21,11 @@
             return value == null ? null : value.ToString();
         }
 
+        /// <summary>
+        /// Gets the parent of the dependency object.
+        /// </summary>
+        /// <param name="dependencyObject">The dependency object.</param>
+        /// <returns>The parent element.</returns>
         public static DependencyObject GetParent(this DependencyObject dependencyObject)
         {
 #if !SILVERLIGHT
@@ -31,6 +36,11 @@
 #endif
         }
 
+        /// <summary>
+        /// Sets the data context of the dependency object.
+        /// </summary>
+        /// <param name="dependencyObject">The dependency object.</param>
+        /// <param name="dataContext">The data context value.</param>
         public static void SetDataContext(this DependencyObject dependencyObject, object dataContext)
         {
             var fe = dependencyObject as FrameworkElement;
@@ -46,6 +56,11 @@
 #endif
         }
 
+        /// <summary>
+        /// Gets the data context of the depdendency object.
+        /// </summary>
+        /// <param name="dependencyObject">The dependency object.</param>
+        /// <returns>The data context value.</returns>
         public static object GetDataContext(this DependencyObject dependencyObject)
         {
             var fe = dependencyObject as FrameworkElement;
@@ -64,6 +79,11 @@
                 );
         }
 
+        /// <summary>
+        /// Wires the delegate to the Loaded event of the element.
+        /// </summary>
+        /// <param name="dependencyObject">The dependency object.</param>
+        /// <param name="callback">The callback.</param>
         public static void OnLoad(this DependencyObject dependencyObject, RoutedEventHandler callback)
         {
             var fe = dependencyObject as FrameworkElement;
@@ -79,6 +99,12 @@
 #endif
         }
 
+        /// <summary>
+        /// Gets the binding expression from the dependency object.
+        /// </summary>
+        /// <param name="dependencyObject">The dependency object.</param>
+        /// <param name="dependencyProperty">The dependency property.</param>
+        /// <returns>The binding expression.</returns>
         public static BindingExpression GetBindingExpression(this DependencyObject dependencyObject, DependencyProperty dependencyProperty)
         {
             var fe = dependencyObject as FrameworkElement;
@@ -92,6 +118,12 @@
             return null;
         }
 
+        /// <summary>
+        /// Sets the binding on the dependency object.
+        /// </summary>
+        /// <param name="dependencyObject">The dependency object.</param>
+        /// <param name="dependencyProperty">The dependency property.</param>
+        /// <param name="binding">The binding.</param>
         public static void SetBinding(this DependencyObject dependencyObject, DependencyProperty dependencyProperty, Binding binding)
         {
             var fe = dependencyObject as FrameworkElement;
@@ -107,6 +139,12 @@
 #endif
         }
 
+        /// <summary>
+        /// Finds a child element by name.
+        /// </summary>
+        /// <param name="parent">The parent.</param>
+        /// <param name="name">The name.</param>
+        /// <returns>The found element.</returns>
         public static DependencyObject FindName(this DependencyObject parent, string name)
         {
             var fe = parent as FrameworkElement;
@@ -127,7 +165,7 @@
         /// <param name="element">The element.</param>
         /// <param name="name">The name.</param>
         /// <param name="shouldFail">Indicates whether an exception should be throw if the named item is not found.</param>
-        /// <returns></returns>
+        /// <returns>The found element.</returns>
         public static T FindNameExhaustive<T>(this DependencyObject element, string name, bool shouldFail)
             where T : class
         {
@@ -141,6 +179,11 @@
             return found;
         }
 
+        /// <summary>
+        /// Gets the value of the Name property of this instance.
+        /// </summary>
+        /// <param name="dependencyObject">The dependency object.</param>
+        /// <returns>The name.</returns>
         public static string GetName(this DependencyObject dependencyObject)
         {
             var fe = dependencyObject as FrameworkElement;

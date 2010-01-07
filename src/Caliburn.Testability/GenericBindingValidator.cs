@@ -9,7 +9,6 @@ namespace Caliburn.Testability
     /// <typeparam name="T"></typeparam>
     public class BindingValidator<T> : BindingValidator
     {
-
         /// <summary>
         /// Initializes a new instance of the <see cref="BindingValidator&lt;T&gt;"/> class.
         /// </summary>
@@ -30,23 +29,19 @@ namespace Caliburn.Testability
 
             return typedResult;
         }
-
-
 		
 		/// <summary>
         /// Add a type hint for a property path, specifying the actual type returned 
 		/// by the last property of the property path chain
         /// </summary>
         /// <typeparam name="K"></typeparam>
-        /// <param name="propertyPath">The property path.</param>
+		/// <param name="property">The property</param>
 		/// <param name="hint">The Type actually returned.</param>
         /// <returns></returns>
 		public BindingValidator<T> WithHint<K>(Expression<Func<T, K>> property, Type hint)
 		{
-			this.WithHint(ExpressionHelper.GetPathFromExpression(property), hint);
+			WithHint(ExpressionHelper.GetPathFromExpression(property), hint);
 			return this;
 		}
-
-		
     }
 }
