@@ -3,6 +3,7 @@
     using System;
     using System.ComponentModel;
     using System.Linq;
+    using System.Reflection;
     using System.Windows;
     using Actions;
     using Commands;
@@ -88,45 +89,25 @@
             if (!_registerAllScreensWithSubjects)
                 return;
 
-            var matches = from assembly in serviceLocator.GetInstance<IAssemblySource>()
-                          from type in assembly.GetExportedTypes()
-                          let service = FindInterfaceThatCloses(type, typeof(IScreen<>))
+            var registry = serviceLocator.GetAllInstances<IRegistry>()
+                .FirstOrDefault();
+
+            if (registry == null)
+                return;
+
+            var assemblySource = serviceLocator.GetInstance<IAssemblySource>();
+            assemblySource.Apply(x => RegisterScreens(registry, x));
+            assemblySource.AssemblyAdded += assembly => RegisterScreens(registry, assembly);
+        }
+
+        private static void RegisterScreens(IRegistry registry, Assembly assembly) 
+        {
+            var matches = from type in assembly.GetExportedTypes()
+                          let service = type.FindInterfaceThatCloses(typeof(IScreen<>))
                           where service != null
                           select new PerRequest {Service = service, Implementation = type};
 
-            var registry = serviceLocator.GetInstance<IRegistry>();
             registry.Register(matches.OfType<IComponentRegistration>());
-        }
-
-        private static Type FindInterfaceThatCloses(Type pluggedType, Type templateType)
-        {
-            if(!IsConcrete(pluggedType)) 
-                return null;
-
-            if(templateType.IsInterface)
-            {
-                foreach(Type interfaceType in pluggedType.GetInterfaces())
-                {
-                    if(interfaceType.IsGenericType && interfaceType.GetGenericTypeDefinition() == templateType)
-                    {
-                        return interfaceType;
-                    }
-                }
-            }
-            else if(pluggedType.BaseType.IsGenericType &&
-                    pluggedType.BaseType.GetGenericTypeDefinition() == templateType)
-            {
-                return pluggedType.BaseType;
-            }
-
-            return pluggedType.BaseType == typeof(object)
-                       ? null
-                       : FindInterfaceThatCloses(pluggedType.BaseType, templateType);
-        }
-
-        private static bool IsConcrete(Type type)
-        {
-            return !type.IsAbstract && !type.IsInterface;
         }
     }
 }
