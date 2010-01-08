@@ -5,6 +5,7 @@ namespace Caliburn.Testability.Assertions
     using System.ComponentModel;
     using System.Linq;
     using System.Reflection;
+    using System.Text;
 
     /// <summary>
     /// A base class for assertions on properties.
@@ -12,6 +13,8 @@ namespace Caliburn.Testability.Assertions
     /// <typeparam name="T">A type that implements <see cref="INotifyPropertyChanged"/>.</typeparam>
     public abstract class PropertyAssertionBase<T> where T : class, INotifyPropertyChanged
     {
+        private static readonly Random _random = new Random(DateTime.Now.Millisecond);
+
         private readonly INotifyPropertyChanged _propertyOwner;
         private readonly IDictionary<PropertyInfo, object> _values = new Dictionary<PropertyInfo, object>();
 
@@ -47,17 +50,18 @@ namespace Caliburn.Testability.Assertions
 
             var failures = (from result in results
                             where result.Value == false
-                            select new {result.Key})
+                            select new { result.Key })
                 .ToList();
 
 
-            if(failures.Count == 0) return;
+            if (failures.Count == 0) return;
 
             var msg = string.Format(
                 "\nThe following properties on {0} did not raise change notification:\n",
                 typeof(T).Name);
 
-            failures.ForEach(failure =>{
+            failures.ForEach(failure =>
+            {
                 var setValue = GetSetterValueForProperty(failure.Key);
                 msg += string.Format("\t{0} with the value set to '{1}'\n",
                                      failure.Key.Name,
@@ -75,7 +79,7 @@ namespace Caliburn.Testability.Assertions
 
         private static void AssertThatClassHasCandidateProperties(IEnumerable<PropertyInfo> candidates)
         {
-            if(candidates.Count() > 0) return;
+            if (candidates.Count() > 0) return;
 
             var msg = string.Format(
                 "\n{0} does not have any public properties with setters.\n" +
@@ -89,7 +93,7 @@ namespace Caliburn.Testability.Assertions
             var has_property_changed = false;
 
             _propertyOwner.PropertyChanged +=
-                (s, e) => { if(e.PropertyName == propertyInfo.Name) has_property_changed = true; };
+                (s, e) => { if (e.PropertyName == propertyInfo.Name) has_property_changed = true; };
 
             var valueToSet = GetSetterValueForProperty(propertyInfo);
             propertyInfo.SetValue(_propertyOwner, valueToSet, null);
@@ -101,14 +105,45 @@ namespace Caliburn.Testability.Assertions
         {
             return (_values.ContainsKey(propertyInfo))
                        ? _values[propertyInfo]
-                       : Default(propertyInfo.PropertyType);
+                       : Default(propertyInfo);
         }
 
-        private static object Default(Type type)
+        private object Default(PropertyInfo propertyInfo)
         {
-            return type.IsValueType
-                       ? Activator.CreateInstance(type)
-                       : null;
+            if (typeof(bool).IsAssignableFrom(propertyInfo.PropertyType))
+                return !((bool)propertyInfo.GetValue(_propertyOwner, null));
+            if (typeof(string).IsAssignableFrom(propertyInfo.PropertyType))
+                return RandomString();
+            if (typeof(DateTime).IsAssignableFrom(propertyInfo.PropertyType))
+                return DateTime.Now.Add(TimeSpan.FromMilliseconds(_random.Next()));
+            if (typeof(IConvertible).IsAssignableFrom(propertyInfo.PropertyType))
+            {
+                try
+                {
+                    return Convert.ChangeType(_random.Next(), propertyInfo.PropertyType);
+                }
+                catch
+                {
+                }
+            }
+
+            if (propertyInfo.PropertyType.IsValueType)
+                return Activator.CreateInstance(propertyInfo.PropertyType);
+
+            return null;
+        }
+
+        private static string RandomString()
+        {
+            var builder = new StringBuilder();
+            char ch;
+            for (int i = 0; i < 7; i++)
+            {
+                ch = Convert.ToChar(Convert.ToInt32(Math.Floor(26 * _random.NextDouble() + 65)));
+                builder.Append(ch);
+            }
+
+            return builder.ToString();
         }
     }
 }

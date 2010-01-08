@@ -10,7 +10,7 @@ namespace Tests.Caliburn.Testability
     public class When_testing_that_properties_implement_change_notification
     {
         [Test]
-        [ExpectedException(typeof (Exception))]
+        [ExpectedException(typeof(Exception))]
         public void a_notification_with_the_incorrect_property_name_will_fail()
         {
             var sut = new NotificationWithWrongName();
@@ -37,7 +37,7 @@ namespace Tests.Caliburn.Testability
         }
 
         [Test]
-        [ExpectedException(typeof (Exception))]
+        [ExpectedException(typeof(Exception))]
         public void if_the_class_has_no_eligible_properties_the_assertion_will_fail()
         {
             var sut = new NoNotificationNecessary();
@@ -51,7 +51,17 @@ namespace Tests.Caliburn.Testability
             var sut = new PartialNotification();
 
             sut.AssertThatAllProperties()
-                .Ignoring(x=>x.NoNotification).RaiseChangeNotification();
+                .Ignoring(x => x.NoNotification).RaiseChangeNotification();
+        }
+
+        [Test]
+        public void some_properties_in_base_class_can_be_ignored()
+        {
+            var sut = new ChildNotification();
+
+            sut.AssertThatAllProperties()
+                .Ignoring(x => x.NoNotification)
+                .RaiseChangeNotification();
         }
 
         [Test]

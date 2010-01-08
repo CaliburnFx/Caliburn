@@ -41,6 +41,7 @@ V1.1 RTW
 -Added ILifecycleNotifier.AttemptingShutdown which gets fired before the CanShutdownCore method on PresenterBase is called.
 -Fixed a bug in AsnychronousAction related to IPreExecute, BlocksInteraction and AffectsTriggers.
 -Added IWindowManager and DefaultWindowManager for SL3 and SL4.
+-Fixed a few bugs in property change testing.
 
 V1 RTW
 -The DefaultBinder will now throw on type activation failure.

@@ -238,6 +238,7 @@
     <Compile Include="Testability\ChangeNotificationSamples\ChangeNotificationBase.cs" />
     <Compile Include="Testability\ChangeNotificationSamples\NoNotification.cs" />
     <Compile Include="Testability\ChangeNotificationSamples\NoNotificationNecessary.cs" />
+    <Compile Include="Testability\ChangeNotificationSamples\NotificationInheritance.cs" />
     <Compile Include="Testability\ChangeNotificationSamples\NotificationOnAllProperties.cs" />
     <Compile Include="Testability\ChangeNotificationSamples\NotificationWithWrongName.cs" />
     <Compile Include="Testability\ChangeNotificationSamples\PartialNotification.cs" />

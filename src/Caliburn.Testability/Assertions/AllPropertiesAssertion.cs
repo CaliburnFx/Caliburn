@@ -14,13 +14,13 @@ namespace Caliburn.Testability.Assertions
     /// <typeparam name="T">A type that implements <see cref="INotifyPropertyChanged"/>.</typeparam>
     public class AllPropertiesAssertion<T> : PropertyAssertionBase<T> where T : class, INotifyPropertyChanged
     {
-        private readonly IList<PropertyInfo> ignored = new List<PropertyInfo>();
+        private readonly IList<string> ignored = new List<string>();
 
         /// <summary>
         /// Initializes a new instance of the <see cref="AllPropertiesAssertion&lt;T&gt;"/> class.
         /// </summary>
         /// <param name="propertyOwner">The property owner.</param>
-        public AllPropertiesAssertion(INotifyPropertyChanged propertyOwner) : base(propertyOwner) {}
+        public AllPropertiesAssertion(INotifyPropertyChanged propertyOwner) : base(propertyOwner) { }
 
         /// <summary>
         /// Ignore a property when makeing assertions on this object.
@@ -30,7 +30,7 @@ namespace Caliburn.Testability.Assertions
         /// <returns></returns>
         public AllPropertiesAssertion<T> Ignoring<K>(Expression<Func<T, K>> property)
         {
-            ignored.Add(property.GetPropertyInfo());
+            ignored.Add(property.GetPropertyInfo().Name);
             return this;
         }
 
@@ -40,8 +40,8 @@ namespace Caliburn.Testability.Assertions
         /// <returns></returns>
         protected override IEnumerable<PropertyInfo> GetCandidateProperties()
         {
-            return from property in typeof(T).GetProperties()
-                   where !ignored.Contains(property)
+            return from property in typeof(T).GetProperties(BindingFlags.FlattenHierarchy | BindingFlags.Public | BindingFlags.Instance)
+                   where !ignored.Contains(property.Name)
                          && property.CanWrite
                    select property;
         }
