@@ -26,10 +26,10 @@
 
             var batch = new CompositionBatch();
 
-            batch.AddExportedValue(AttributedModelServices.GetContractName(typeof(IServiceLocator)), this);
-            batch.AddExportedValue(AttributedModelServices.GetContractName(typeof(IRegistry)), this);
-            batch.AddExportedValue(AttributedModelServices.GetContractName(typeof(IContainer)), this);
-            batch.AddExportedValue(AttributedModelServices.GetContractName(typeof(CompositionContainer)), _container);
+            batch.AddExportedValue<IServiceLocator>(this);
+            batch.AddExportedValue<IRegistry>(this);
+            batch.AddExportedValue<IContainer>(this);
+            batch.AddExportedValue<CompositionContainer>(_container);
 
             _container.Compose(batch);
 

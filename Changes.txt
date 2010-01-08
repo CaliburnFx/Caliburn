@@ -42,6 +42,7 @@ V1.1 RTW
 -Fixed a bug in AsnychronousAction related to IPreExecute, BlocksInteraction and AffectsTriggers.
 -Added IWindowManager and DefaultWindowManager for SL3 and SL4.
 -Fixed a few bugs in property change testing.
+-Fixed a bug in the MEFAdapter.
 
 V1 RTW
 -The DefaultBinder will now throw on type activation failure.
