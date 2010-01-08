@@ -8,15 +8,14 @@ namespace Caliburn.PresentationFramework
     public interface IResult
     {
         /// <summary>
-        /// Executes the custom code.
+        /// Executes the result within the specified context.
         /// </summary>
-        /// <param name="message">The message.</param>
-        /// <param name="handlingNode">The handling node.</param>
-        void Execute(IRoutedMessageWithOutcome message, IInteractionNode handlingNode);
+        /// <param name="context">The context.</param>
+        void Execute(ResultExecutionContext context);
 
         /// <summary>
         /// Occurs when execution has completed.
         /// </summary>
-        event Action<IResult, Exception> Completed;
+        event EventHandler<ResultCompletionEventArgs> Completed;
     }
 }

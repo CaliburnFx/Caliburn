@@ -29,26 +29,25 @@ namespace Caliburn.PresentationFramework
         /// <summary>
         /// Occurs when execution has completed.
         /// </summary>
-        public event Action<IResult, Exception> Completed = delegate { };
+        public event EventHandler<ResultCompletionEventArgs> Completed = delegate { };
 
         /// <summary>
-        /// Executes the custom code.
+        /// Executes the result within the specified context.
         /// </summary>
-        /// <param name="message">The message.</param>
-        /// <param name="handlingNode">The handling node.</param>
-        public virtual void Execute(IRoutedMessageWithOutcome message, IInteractionNode handlingNode)
+        /// <param name="context">The context.</param>
+        public virtual void Execute(ResultExecutionContext context)
         {
             if (_outcome.WasCancelled)
             {
-                Completed(this, null);
+                Completed(this, new ResultCompletionEventArgs {WasCancelled = _outcome.WasCancelled});
                 return;
             }
 
-            var element = message.Source.UIElement;
+            var element = context.Message.Source.UIElement;
 
-            if (string.IsNullOrEmpty(message.OutcomePath))
+            if (string.IsNullOrEmpty(context.Message.OutcomePath))
             {
-                var target = element.FindNameExhaustive<object>(message.DefaultOutcomeElement, false);
+                var target = element.FindNameExhaustive<object>(context.Message.DefaultOutcomeElement, false);
 
                 if (target != null)
                 {
@@ -58,11 +57,18 @@ namespace Caliburn.PresentationFramework
             }
             else
             {
-                var parts = message.OutcomePath.Split(_separator, StringSplitOptions.RemoveEmptyEntries);
+                var parts = context.Message.OutcomePath.Split(_separator, StringSplitOptions.RemoveEmptyEntries);
 
                 if (parts.Length < 2)
                 {
-                    Completed(this, new CaliburnException(string.Format("{0} is not a valid return path.", message.OutcomePath)));
+                    Completed(
+                        this,
+                        new ResultCompletionEventArgs
+                        {
+                            Error = new CaliburnException(
+                                string.Format("{0} is not a valid return path.", context.Message.OutcomePath)
+                                )
+                        });
                     return;
                 }
 
@@ -71,14 +77,21 @@ namespace Caliburn.PresentationFramework
 
                 if (setter == null)
                 {
-                    Completed(this, new CaliburnException(string.Format("{0} is not a valid property path.", parts.Skip(1).Aggregate((a, c) => a + c))));
+                    Completed(
+                        this,
+                        new ResultCompletionEventArgs
+                        {
+                            Error = new CaliburnException(
+                                string.Format("{0} is not a valid property path.", parts.Skip(1).Aggregate((a, c) => a + c))
+                                )
+                        });
                     return;
                 }
 
                 setter(_outcome.Result);
             }
 
-            Completed(this, null);
+            Completed(this, new ResultCompletionEventArgs());
         }
 
         /// <summary>

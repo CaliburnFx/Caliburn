@@ -7,6 +7,7 @@
     using global::Caliburn.PresentationFramework;
     using global::Caliburn.PresentationFramework.Actions;
     using global::Caliburn.PresentationFramework.Filters;
+    using Microsoft.Practices.ServiceLocation;
     using NUnit.Framework;
     using NUnit.Framework.SyntaxHelpers;
 
@@ -31,6 +32,7 @@
             {
                 _action.AddOverload(
                     new SynchronousAction(
+                        Stub<IServiceLocator>(),
                         methodFactory.CreateFrom(info),
                         Stub<IMessageBinder>(),
                         Stub<IFilterManager>(),

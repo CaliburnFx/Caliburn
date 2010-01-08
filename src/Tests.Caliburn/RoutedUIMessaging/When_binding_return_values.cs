@@ -8,6 +8,7 @@ namespace Tests.Caliburn.RoutedUIMessaging
     using global::Caliburn.Core.Threading;
     using global::Caliburn.PresentationFramework;
     using global::Caliburn.PresentationFramework.Conventions;
+    using Microsoft.Practices.ServiceLocation;
     using NUnit.Framework;
     using NUnit.Framework.SyntaxHelpers;
     using Rhino.Mocks;
@@ -70,7 +71,13 @@ namespace Tests.Caliburn.RoutedUIMessaging
                     )
                 );
 
-            result.Execute(new FakeMessage(_sourceNode, method, string.Empty), _handlingNode);
+            result.Execute(
+                new ResultExecutionContext(
+                    Stub<IServiceLocator>(),
+                    new FakeMessage(_sourceNode, method, string.Empty),
+                    _handlingNode
+                    )
+                );
         }
 
         [Test]
@@ -87,7 +94,13 @@ namespace Tests.Caliburn.RoutedUIMessaging
                     )
                 );
 
-            result.Execute(new FakeMessage(_sourceNode, method, "param1.Text"), _handlingNode);
+            result.Execute(
+                new ResultExecutionContext(
+                    Stub<IServiceLocator>(),
+                    new FakeMessage(_sourceNode, method, "param1.Text"),
+                    _handlingNode
+                    )
+                );
 
             Assert.That(_host._param1.Text, Is.EqualTo(returnValue));
         }
@@ -106,7 +119,13 @@ namespace Tests.Caliburn.RoutedUIMessaging
                     )
                 );
 
-            result.Execute(new FakeMessage(_sourceNode, method, "$this.DataContext"), _handlingNode);
+            result.Execute(
+                new ResultExecutionContext(
+                    Stub<IServiceLocator>(),
+                    new FakeMessage(_sourceNode, method, "$this.DataContext"),
+                    _handlingNode
+                    )
+                );
 
             Assert.That(_host.DataContext, Is.EqualTo(returnValue));
         }

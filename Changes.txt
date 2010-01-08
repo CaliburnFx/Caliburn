@@ -18,6 +18,7 @@ V2 Alpha
 -Added PresentationFrameworkConfiguration.RegisterAllScreensWithSubjects()
 -Added IValidator, DefaultValidator, IValidationError and DefaultValidationError for validation of ViewModels.  The default implementation uses DataAnnotations.
 -Added BlockInteraction to ActionAttribute, allowing SynchronousAction to block interaction.
+-Redesign of the IResult interface.
 
 V1.1 RTW
 -Added pre-initialization hooks to CaliburnApplication via Marco Amendola's patch.

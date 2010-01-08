@@ -3,21 +3,28 @@
     using System;
     using Core.Invocation;
     using Filters;
+    using Microsoft.Practices.ServiceLocation;
 
     /// <summary>
     /// A synchronous <see cref="IAction"/>.
     /// </summary>
     public class SynchronousAction : ActionBase
     {
+        private readonly IServiceLocator _serviceLocator;
+
         /// <summary>
         /// Initializes a new instance of the <see cref="SynchronousAction"/> class.
         /// </summary>
+        /// <param name="serviceLocator">The service locator.</param>
         /// <param name="method">The method.</param>
         /// <param name="messageBinder">The method binder.</param>
         /// <param name="filters">The filters.</param>
         /// <param name="blockInteraction">if set to <c>true</c> blocks interaction.</param>
-        public SynchronousAction(IMethod method, IMessageBinder messageBinder, IFilterManager filters, bool blockInteraction)
-            : base(method, messageBinder, filters, blockInteraction) {}
+        public SynchronousAction(IServiceLocator serviceLocator, IMethod method, IMessageBinder messageBinder, IFilterManager filters, bool blockInteraction)
+            : base(method, messageBinder, filters, blockInteraction)
+        {
+            _serviceLocator = serviceLocator;
+        }
 
         /// <summary>
         /// Executes the specified this action on the specified target.
@@ -73,19 +80,19 @@
         {
             var result = _messageBinder.CreateResult(outcome);
 
-            result.Completed += (r, ex) =>{
+            result.Completed += (s, e) =>{
                 TryUpdateTrigger(message, handlingNode, false);
 
-                if(ex != null)
+                if(e.Error != null)
                 {
-                    if(!TryApplyRescue(message, handlingNode, ex))
-                        throw ex;
+                    if(!TryApplyRescue(message, handlingNode, e.Error))
+                        throw e.Error;
                 }
 
                 OnCompleted();
             };
 
-            result.Execute(message, handlingNode);
+            result.Execute(new ResultExecutionContext(_serviceLocator, message, handlingNode));
         }
     }
 }

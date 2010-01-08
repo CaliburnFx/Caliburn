@@ -9,10 +9,8 @@
     public class SequentialResult : IResult
     {
         private readonly IEnumerable<IResult> _children;
-
         private IEnumerator<IResult> _enumerator;
-        private IRoutedMessageWithOutcome _message;
-        private IInteractionNode _handlingNode;
+        private ResultExecutionContext _context;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="SequentialResult"/> class.
@@ -26,7 +24,7 @@
         /// <summary>
         /// Occurs when execution has completed.
         /// </summary>
-        public event Action<IResult, Exception> Completed = delegate { };
+        public event EventHandler<ResultCompletionEventArgs> Completed = delegate { };
 
         /// <summary>
         /// Gets the children.
@@ -38,32 +36,34 @@
         }
 
         /// <summary>
-        /// Executes the custom code.
+        /// Executes the result within the specified context.
         /// </summary>
-        /// <param name="message">The message.</param>
-        /// <param name="handlingNode">The handling node.</param>
-        public void Execute(IRoutedMessageWithOutcome message, IInteractionNode handlingNode)
+        /// <param name="context">The context.</param>
+        public void Execute(ResultExecutionContext context)
         {
-            _message = message;
-            _handlingNode = handlingNode;
-
+            _context = context;
             _enumerator = _children.GetEnumerator();
 
-            ChildCompleted(null, null);
+            ChildCompleted(null, new ResultCompletionEventArgs());
         }
 
-        private void ChildCompleted(IResult previous, Exception exception)
+        private void ChildCompleted(object sender, ResultCompletionEventArgs args)
         {
-            if(exception != null)
+            if(args.Error != null)
             {
-                if (exception is CancelResult)
-                    OnComplete(null);
-                else OnComplete(exception);
-
+                OnComplete(args.Error, false);
                 return;
             }
 
-            if(previous != null)
+            if(args.WasCancelled)
+            {
+                OnComplete(null, true);
+                return;
+            }
+
+            var previous = sender as IResult;
+
+            if (previous != null)
                 previous.Completed -= ChildCompleted;
 
             if(_enumerator.MoveNext())
@@ -72,24 +72,23 @@
                 {
                     var next = _enumerator.Current;
                     next.Completed += ChildCompleted;
-                    next.Execute(_message, _handlingNode);
+                    next.Execute(_context);
                 }
                 catch(Exception ex)
                 {
-                    OnComplete(ex);
+                    OnComplete(ex, false);
                     return;
                 }
             }
-            else OnComplete(null);
+            else OnComplete(null, false);
         }
 
-        private void OnComplete(Exception exception) 
+        private void OnComplete(Exception error, bool wasCancelled) 
         {
             _enumerator = null;
-            _message = null;
-            _handlingNode = null;
+            _context = null;
 
-            Completed(this, exception);
+            Completed(this, new ResultCompletionEventArgs{ Error = error, WasCancelled = wasCancelled});
         }
     }
 }

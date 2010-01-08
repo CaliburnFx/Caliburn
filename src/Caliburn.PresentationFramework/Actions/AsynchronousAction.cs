@@ -5,12 +5,15 @@
     using Core.Threading;
     using Filters;
 	using System.Threading;
+    using Microsoft.Practices.ServiceLocation;
 
     /// <summary>
     /// An asynchronous <see cref="IAction"/>.
     /// </summary>
     public class AsynchronousAction : ActionBase
     {
+        private readonly IServiceLocator _serviceLocator;
+
         [ThreadStatic]
         private static IBackgroundTask _currentTask;
 
@@ -29,13 +32,15 @@
         /// <summary>
         /// Initializes a new instance of the <see cref="AsynchronousAction"/> class.
         /// </summary>
+        /// <param name="serviceLocator">The service locator.</param>
         /// <param name="method">The method.</param>
         /// <param name="messageBinder">The method binder.</param>
         /// <param name="filters">The filters.</param>
         /// <param name="blockInteraction">if set to <c>true</c> blocks interaction.</param>
-        public AsynchronousAction(IMethod method, IMessageBinder messageBinder, IFilterManager filters, bool blockInteraction)
+        public AsynchronousAction(IServiceLocator serviceLocator, IMethod method, IMessageBinder messageBinder, IFilterManager filters, bool blockInteraction)
             : base(method, messageBinder, filters, blockInteraction)
         {
+            _serviceLocator = serviceLocator;
         }
 
         /// <summary>
@@ -90,7 +95,7 @@
             CurrentTask.Completed +=
                 (s, e) => Core.Invocation.Execute.OnUIThread(
                               () =>{
-								  Interlocked.Decrement(ref _runningCount);
+                                  Interlocked.Decrement(ref _runningCount);
                                   if(e.Error != null)
                                   {
                                       TryUpdateTrigger(actionMessage, handlingNode, false);
@@ -115,24 +120,24 @@
 
                                           var result = _messageBinder.CreateResult(outcome);
 
-                                          result.Completed += (r,ex) => {
+                                          result.Completed += (r, arg) =>{
                                               TryUpdateTrigger(actionMessage, handlingNode, false);
 
-                                              if(ex != null)
+                                              if(arg.Error != null)
                                               {
-                                                  if (!TryApplyRescue(actionMessage, handlingNode, ex))
-                                                      throw ex;
+                                                  if(!TryApplyRescue(actionMessage, handlingNode, arg.Error))
+                                                      throw arg.Error;
                                               }
-                                              
+
                                               OnCompleted();
                                           };
 
-                                          result.Execute(actionMessage, handlingNode);
+                                          result.Execute(new ResultExecutionContext(_serviceLocator, actionMessage, handlingNode));
                                       }
                                       catch(Exception ex)
                                       {
                                           TryUpdateTrigger(actionMessage, handlingNode, false);
-                                          if (!TryApplyRescue(actionMessage, handlingNode, ex))
+                                          if(!TryApplyRescue(actionMessage, handlingNode, ex))
                                               throw;
                                           OnCompleted();
                                       }

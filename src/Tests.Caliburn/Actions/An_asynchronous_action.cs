@@ -10,6 +10,7 @@ namespace Tests.Caliburn.Actions
     using global::Caliburn.PresentationFramework;
     using global::Caliburn.PresentationFramework.Actions;
     using global::Caliburn.PresentationFramework.Filters;
+    using Microsoft.Practices.ServiceLocation;
 
     [TestFixture]
     public class An_asynchronous_action : TestBase
@@ -28,6 +29,7 @@ namespace Tests.Caliburn.Actions
             _filterManager = Stub<IFilterManager>();
 
             _action = new AsynchronousAction(
+                Stub<IServiceLocator>(),
                 _method,
                 _messageBinder,
                 _filterManager,

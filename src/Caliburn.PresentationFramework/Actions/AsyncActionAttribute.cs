@@ -81,6 +81,7 @@ namespace Caliburn.PresentationFramework.Actions
                 .CreateFrom(context.Method);
 
             var action = new AsynchronousAction(
+                context.ServiceLocator,
                 method,
                 context.MessageBinder,
                 context.CreateFilterManager(method),

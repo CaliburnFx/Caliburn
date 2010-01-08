@@ -24,6 +24,7 @@ namespace Caliburn.PresentationFramework.Actions
                 .CreateFrom(context.Method);
 
             var action = new SynchronousAction(
+                context.ServiceLocator,
                 method,
                 context.MessageBinder,
                 context.CreateFilterManager(method),

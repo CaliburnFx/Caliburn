@@ -79,6 +79,8 @@
     <Compile Include="ApplicationModel\DeepLinkStateManager.silverlight.cs" />
     <Compile Include="ApplicationModel\DefaultWindowManager.silverlight.cs" />
     <Compile Include="ApplicationModel\IWindowManager.silverlight.cs" />
+    <Compile Include="ResultCompletionEventArgs.cs" />
+    <Compile Include="ResultExecutionContext.cs" />
     <Compile Include="Screens\ScreenExtensions.cs" />
     <Compile Include="Screens\IHierarchicalScreen.cs" />
     <Compile Include="Screens\IScreen.cs" />
@@ -125,7 +127,6 @@
     <Compile Include="AvailabilityEffectConverter.cs" />
     <Compile Include="BaseMessageTrigger.cs" />
     <Compile Include="BindableCollection.cs" />
-    <Compile Include="CancelResult.cs" />
     <Compile Include="Commands\AllCommand.cs" />
     <Compile Include="Commands\AnyCommand.cs" />
     <Compile Include="Commands\Command.cs" />

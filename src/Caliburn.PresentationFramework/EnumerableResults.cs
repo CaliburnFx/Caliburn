@@ -5,6 +5,7 @@
     using System.Windows;
     using Core.Metadata;
     using Metadata;
+    using Microsoft.Practices.ServiceLocation;
 
     /// <summary>
     /// Hosts extension methods and method overrides for execution of <see cref="IResult"/> and <see cref="IEnumerable{IResult}"/>
@@ -18,7 +19,7 @@
             (model, context, results) =>{
                 var view = GetViewInstanceFromModel(model, context);
                 var node = GetInteractionNodeFromView(view);
-                new SequentialResult(results).Execute(null, node);
+                new SequentialResult(results).Execute(new ResultExecutionContext(ServiceLocator.Current, null, node));
             };
 
         /// <summary>
@@ -28,7 +29,7 @@
             (model, context, result) =>{
                 var view = GetViewInstanceFromModel(model, context);
                 var node = GetInteractionNodeFromView(view);
-                result.Execute(null, node);
+                result.Execute(new ResultExecutionContext(ServiceLocator.Current, null, node));
             };
 
         /// <summary>

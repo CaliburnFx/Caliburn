@@ -10,6 +10,7 @@ namespace Tests.Caliburn.Actions
     using global::Caliburn.PresentationFramework;
     using global::Caliburn.PresentationFramework.Actions;
     using global::Caliburn.PresentationFramework.Filters;
+    using Microsoft.Practices.ServiceLocation;
 
     [TestFixture]
     public class A_synchronous_action : TestBase
@@ -28,6 +29,7 @@ namespace Tests.Caliburn.Actions
             _filterManager = Stub<IFilterManager>();
 
             _action = new SynchronousAction(
+                Stub<IServiceLocator>(),
                 _method,
                 _messageBinder,
                 _filterManager,
@@ -182,7 +184,7 @@ namespace Tests.Caliburn.Actions
                     false
                     ))).IgnoreArguments().Return(result);
 
-            result.Expect(x => x.Execute(message, handlingNode));
+            result.Expect(x => x.Execute(null)).IgnoreArguments();
 
             _action.Execute(message, handlingNode, context);
         }
@@ -279,7 +281,7 @@ namespace Tests.Caliburn.Actions
                 .IgnoreArguments()
                 .Return(result);
 
-            result.Expect(x => x.Execute(message, handlingNode));
+            result.Expect(x => x.Execute(null)).IgnoreArguments();
 
             _action.Execute(message, handlingNode, context);
         }

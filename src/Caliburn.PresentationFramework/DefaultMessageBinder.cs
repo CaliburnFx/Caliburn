@@ -359,12 +359,12 @@
 
         private class EmptyResult : IResult
         {
-            public void Execute(IRoutedMessageWithOutcome message, IInteractionNode handlingNode)
+            public void Execute(ResultExecutionContext context)
             {
-                Completed(this, null);
+                Completed(this, new ResultCompletionEventArgs());
             }
 
-            public event Action<IResult, Exception> Completed = delegate { };
+            public event EventHandler<ResultCompletionEventArgs> Completed = delegate { };
         }
     }
 }
