@@ -24,7 +24,7 @@ namespace Caliburn.PresentationFramework.Screens
         /// <summary>
         /// Opens the specified screen.
         /// </summary>
-        /// <param name="collection">The collection.</param>
+        /// <param name="collection">The screen collection.</param>
         /// <param name="subject">The subject.</param>
         public static void OpenScreen(this IScreenCollection collection, IScreenSubject subject)
         {
@@ -38,7 +38,7 @@ namespace Caliburn.PresentationFramework.Screens
         /// <summary>
         /// Opens the specified screen.
         /// </summary>
-        /// <param name="collection">The host.</param>
+        /// <param name="collection">The screen collection.</param>
         /// <param name="screen">The screen.</param>
         public static void OpenScreen<T>(this IScreenCollection<T> collection, T screen)
             where T : class, IScreen
@@ -49,10 +49,20 @@ namespace Caliburn.PresentationFramework.Screens
         /// <summary>
         /// Shuts down the specified screen.
         /// </summary>
-        /// <param name="collection">The manager.</param>
-        /// <param name="screen">The presenter.</param>
+        /// <param name="collection">The screen collection owning the screen to shutdown.</param>
+        /// <param name="screen">The screen.</param>
         public static void ShutdownScreen<T>(this IScreenCollection<T> collection, T screen)
             where T : class, IScreen
+        {
+            collection.ShutdownScreen(screen, isSuccess => { });
+        }
+
+        /// <summary>
+        /// Shuts down the specified screen.
+        /// </summary>
+        /// <param name="collection">The screen collection owning the screen to shutdown.</param>
+        /// <param name="screen">The screen.</param>
+        public static void ShutdownScreen(this IScreenCollection collection, IScreen screen)
         {
             collection.ShutdownScreen(screen, isSuccess => { });
         }

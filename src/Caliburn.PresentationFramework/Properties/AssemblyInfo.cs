@@ -14,6 +14,7 @@ using System.Windows.Markup;
 [assembly: XmlnsDefinition("http://www.caliburnproject.org", "Caliburn.PresentationFramework.Triggers")]
 [assembly: XmlnsDefinition("http://www.caliburnproject.org", "Caliburn.PresentationFramework.Commands")]
 [assembly: XmlnsDefinition("http://www.caliburnproject.org", "Caliburn.PresentationFramework.ApplicationModel")]
+[assembly: XmlnsDefinition("http://www.caliburnproject.org", "Caliburn.PresentationFramework.ViewModels")]
 #endif
 
 #if !NO_PARTIAL_TRUST
