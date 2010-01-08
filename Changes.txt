@@ -17,6 +17,7 @@ V2 Alpha
 -Introduced IScreen<T>, IScreenSubject, and IViewModelFactory along with default implementations.
 -Added PresentationFrameworkConfiguration.RegisterAllScreensWithSubjects()
 -Added IValidator, DefaultValidator, IValidationError and DefaultValidationError for validation of ViewModels.  The default implementation uses DataAnnotations.
+-Added BlockInteraction to ActionAttribute, allowing SynchronousAction to block interaction.
 
 V1.1 RTW
 -Added pre-initialization hooks to CaliburnApplication via Marco Amendola's patch.

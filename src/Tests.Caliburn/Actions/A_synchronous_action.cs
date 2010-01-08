@@ -30,7 +30,8 @@ namespace Tests.Caliburn.Actions
             _action = new SynchronousAction(
                 _method,
                 _messageBinder,
-                _filterManager
+                _filterManager,
+                false
                 );
         }
 

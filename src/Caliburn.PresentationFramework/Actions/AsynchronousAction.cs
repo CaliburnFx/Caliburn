@@ -24,7 +24,6 @@
             set { _currentTask = value; }
         }
 
-        private readonly bool _blockInteraction;
 		private int _runningCount;
 
         /// <summary>
@@ -33,20 +32,10 @@
         /// <param name="method">The method.</param>
         /// <param name="messageBinder">The method binder.</param>
         /// <param name="filters">The filters.</param>
-        /// <param name="blockInteraction">if set to <c>true</c> [block interaction].</param>
+        /// <param name="blockInteraction">if set to <c>true</c> blocks interaction.</param>
         public AsynchronousAction(IMethod method, IMessageBinder messageBinder, IFilterManager filters, bool blockInteraction)
-            : base(method, messageBinder, filters)
+            : base(method, messageBinder, filters, blockInteraction)
         {
-            _blockInteraction = blockInteraction;
-        }
-
-        /// <summary>
-        /// Gets a value indicating whether to block intaction with the trigger during async execution.
-        /// </summary>
-        /// <value><c>true</c> if should block; otherwise, <c>false</c>.</value>
-        public bool BlockInteraction
-        {
-            get { return _blockInteraction; }
         }
 
         /// <summary>
@@ -168,38 +157,5 @@
 			if (BlockInteraction && _runningCount > 0) return false;
 			return base.ShouldTriggerBeAvailable(actionMessage, handlingNode);
 		}
-
-        /// <summary>
-        /// Tries to update trigger.
-        /// </summary>
-        /// <param name="actionMessage">The action message.</param>
-        /// <param name="handlingNode">The handling node.</param>
-        /// <param name="forceDisabled">if set to <c>true</c> [force disabled].</param>
-        protected virtual void TryUpdateTrigger(ActionMessage actionMessage, IInteractionNode handlingNode, bool forceDisabled)
-        {
-            if (!BlockInteraction)
-                return;
-
-            foreach (var messageTrigger in actionMessage.Source.Triggers)
-            {
-                if (!messageTrigger.Message.Equals(actionMessage))
-                    continue;
-
-                if (forceDisabled)
-                {
-                    messageTrigger.UpdateAvailabilty(false);
-                    return;
-                }
-
-                if (this.HasTriggerEffects())
-                {
-                    bool isAvailable = ShouldTriggerBeAvailable(actionMessage, handlingNode);
-                    messageTrigger.UpdateAvailabilty(isAvailable);
-                }
-                else messageTrigger.UpdateAvailabilty(true);
-
-                return;
-            }
-        }
     }
 }

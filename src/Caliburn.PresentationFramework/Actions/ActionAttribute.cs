@@ -8,6 +8,12 @@ namespace Caliburn.PresentationFramework.Actions
     public class ActionAttribute : Attribute, IActionFactory
     {
         /// <summary>
+        /// Gets or sets a value indicating whether to block interaction with the trigger during asynchronous execution.
+        /// </summary>
+        /// <value><c>true</c> if should block; otherwise, <c>false</c>.</value>
+        public bool BlockInteraction { get; set; }
+
+        /// <summary>
         /// Creates an <see cref="IAction"/> using the specified context.
         /// </summary>
         /// <param name="context">The context.</param>
@@ -20,7 +26,8 @@ namespace Caliburn.PresentationFramework.Actions
             var action = new SynchronousAction(
                 method,
                 context.MessageBinder,
-                context.CreateFilterManager(method)
+                context.CreateFilterManager(method),
+                BlockInteraction
                 );
 
             context.ConventionManager

@@ -28,17 +28,30 @@ namespace Caliburn.PresentationFramework.Actions
         /// </summary>
         protected IList<RequiredParameter> _requirements;
 
+        private readonly bool _blockInteraction;
+
+        /// <summary>
+        /// Gets a value indicating whether to block intaction with the trigger during async execution.
+        /// </summary>
+        /// <value><c>true</c> if should block; otherwise, <c>false</c>.</value>
+        public bool BlockInteraction
+        {
+            get { return _blockInteraction; }
+        }
+
         /// <summary>
         /// Initializes a new instance of the <see cref="ActionBase"/> class.
         /// </summary>
         /// <param name="method">The method.</param>
         /// <param name="messageBinder">The method binder.</param>
         /// <param name="filters">The filters.</param>
-        protected ActionBase(IMethod method, IMessageBinder messageBinder, IFilterManager filters)
+        /// <param name="blockInteraction">if set to <c>true</c> blocks interaction.</param>
+        protected ActionBase(IMethod method, IMessageBinder messageBinder, IFilterManager filters, bool blockInteraction)
         {
             _method = method;
             _messageBinder = messageBinder;
             _filters = filters;
+            _blockInteraction = blockInteraction;
 
             _requirements = _method.Info.GetParameters()
                 .Select(x => new RequiredParameter(x.Name, x.ParameterType))
@@ -179,6 +192,39 @@ namespace Caliburn.PresentationFramework.Actions
         protected virtual void OnCompleted()
         {
             Completed(this, EventArgs.Empty);
+        }
+
+        /// <summary>
+        /// Tries to update trigger.
+        /// </summary>
+        /// <param name="actionMessage">The action message.</param>
+        /// <param name="handlingNode">The handling node.</param>
+        /// <param name="forceDisabled">if set to <c>true</c> [force disabled].</param>
+        protected virtual void TryUpdateTrigger(ActionMessage actionMessage, IInteractionNode handlingNode, bool forceDisabled)
+        {
+            if (!BlockInteraction)
+                return;
+
+            foreach (var messageTrigger in actionMessage.Source.Triggers)
+            {
+                if (!messageTrigger.Message.Equals(actionMessage))
+                    continue;
+
+                if (forceDisabled)
+                {
+                    messageTrigger.UpdateAvailabilty(false);
+                    return;
+                }
+
+                if (this.HasTriggerEffects())
+                {
+                    bool isAvailable = ShouldTriggerBeAvailable(actionMessage, handlingNode);
+                    messageTrigger.UpdateAvailabilty(isAvailable);
+                }
+                else messageTrigger.UpdateAvailabilty(true);
+
+                return;
+            }
         }
     }
 }

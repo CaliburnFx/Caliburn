@@ -33,7 +33,8 @@
                     new SynchronousAction(
                         methodFactory.CreateFrom(info),
                         Stub<IMessageBinder>(),
-                        Stub<IFilterManager>()
+                        Stub<IFilterManager>(),
+                        false
                         )
                     );
             }
