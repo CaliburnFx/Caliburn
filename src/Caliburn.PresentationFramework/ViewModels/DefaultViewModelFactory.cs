@@ -1,5 +1,6 @@
 ﻿namespace Caliburn.PresentationFramework.ViewModels
 {
+    using System.Linq;
     using Microsoft.Practices.ServiceLocation;
     using Screens;
 
@@ -37,8 +38,10 @@
         /// <returns>The screen.</returns>
         public IScreen<T> CreateFor<T>(T subject)
         {
-            return _serviceLocator.GetInstance<IScreen<T>>()
-                .WithSubject(subject);
+            var screen = _serviceLocator.GetAllInstances<IScreen<T>>()
+                             .FirstOrDefault() ?? new Screen<T>();
+
+            return screen.WithSubject(subject);
         }
     }
 }
