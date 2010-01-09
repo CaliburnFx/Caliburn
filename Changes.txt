@@ -45,6 +45,7 @@ V1.1 RTW
 -Added IWindowManager and DefaultWindowManager for SL3 and SL4.
 -Fixed a few bugs in property change testing.
 -Fixed a bug in the MEFAdapter.
+-Fixed a bug in the design-time support for Availability Effects in the AvailabilityEffectConverter.
 
 V1 RTW
 -The DefaultBinder will now throw on type activation failure.

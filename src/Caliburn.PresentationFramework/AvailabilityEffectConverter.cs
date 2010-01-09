@@ -3,6 +3,7 @@
     using System;
     using System.ComponentModel;
     using System.Globalization;
+    using Configuration;
     using Microsoft.Practices.ServiceLocation;
 
     /// <summary>
@@ -20,9 +21,7 @@
         /// </returns>
         public override bool CanConvertFrom(ITypeDescriptorContext context, Type sourceType)
         {
-            if(typeof(string).IsAssignableFrom(sourceType))
-                return true;
-            return base.CanConvertFrom(context, sourceType);
+            return typeof(string).IsAssignableFrom(sourceType) || base.CanConvertFrom(context, sourceType);
         }
 
         /// <summary>
@@ -41,24 +40,21 @@
         {
             var theString = value as string;
 
-            if(theString != null)
+            switch (theString)
             {
-                switch(theString)
-                {
-                    case "None":
-                        return AvailabilityEffect.None;
-                    case "Disable":
-                        return AvailabilityEffect.Disable;
-                    case "Hide":
-                        return AvailabilityEffect.Hide;
-                    case "Collapse":
-                        return AvailabilityEffect.Collapse;
-                    default:
-                        return ServiceLocator.Current.GetInstance(null, theString);
-                }
+                case "None":
+                    return AvailabilityEffect.None;
+                case "Disable":
+                    return AvailabilityEffect.Disable;
+                case "Hide":
+                    return AvailabilityEffect.Hide;
+                case "Collapse":
+                    return AvailabilityEffect.Collapse;
+                default:
+                    return PresentationFrameworkConfiguration.IsInDesignMode || string.IsNullOrEmpty(theString)
+                               ? AvailabilityEffect.None
+                               : ServiceLocator.Current.GetInstance(null, theString);
             }
-
-            return base.ConvertFrom(context, culture, value);
         }
     }
 }
