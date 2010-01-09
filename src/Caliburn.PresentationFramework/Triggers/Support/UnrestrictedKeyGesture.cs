@@ -160,7 +160,7 @@ namespace Caliburn.PresentationFramework.Triggers.Support
             if ((args == null) || !IsDefinedKey(args.Key))
                 return false;
 
-            return ((Key == args.Key) && (Modifiers == Keyboard.Modifiers));
+            return ((Key == args.Key || (args.Key == Key.System && Key == args.SystemKey)) && (Modifiers == Keyboard.Modifiers));
         }
 
         /// <summary>
