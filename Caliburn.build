@@ -212,6 +212,7 @@
       <call target="core"/>
       <call target="presentationframework"/>
       <call target="modelframework"/>
+      <call target="castle"/>
       <call target="unity"/>
       <call target="ninject"/>
       <call target="mef"/>
@@ -237,6 +238,7 @@
       <call target="core"/>
       <call target="presentationframework"/>
       <call target="modelframework"/>
+      <call target="castle"/>
       <call target="unity"/>
       <call target="ninject"/>
       <call target="mef"/>
@@ -380,8 +382,6 @@
 				<include name="Castle.Windsor.dll"/>
 				<include name="Castle.DynamicProxy2.dll"/>
         <include name="Microsoft.Practices.ServiceLocation.dll"/>
-        <!--Silverlight-->
-        <include name="Castle.Core-Silverlight.dll"/>
 			</references>
 			<nowarn>
 				<warning number="1584"/>

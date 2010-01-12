@@ -33,6 +33,15 @@
         }
 
         /// <summary>
+        /// Gets the <see cref="IUnityContainer"/>.
+        /// </summary>
+        /// <value>The container.</value>
+        public IUnityContainer Container
+        {
+            get { return _container; }
+        }
+
+        /// <summary>
         ///             When implemented by inheriting classes, this method will do the actual work of resolving
         ///             the requested service instance.
         /// </summary>

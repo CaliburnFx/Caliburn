@@ -84,48 +84,6 @@
             <param name="onCreation"></param>
             <param name="onDestruction"></param>
         </member>
-        <member name="T:Castle.MicroKernel.ComponentActivator.WebUserControlComponentActivator">
-            <summary>
-            Attempts to dynamically load a UserControl by invoking Page.LoadControl.  
-            There are two uses of this class.  
-            <para>
-            1) Add a component to the Kernel and add a VirtualPath attribute specifying 
-            the relative path of the .ascx file for the associated UserControl. (easy)
-            </para>
-            <example>
-              <code>
-                &lt;component id="BasketView" 
-                  service="Castle.ShoppingCart.IBasketView, Castle.ShoppingCart"
-                  type="Castle.ShoppingCart.BasketView, Castle.ShoppingCart" 
-                  lifestyle="transient"
-                  virtualPath="~/Views/BasketView.ascx"
-                /&gt;
-              </code>
-            </example>
-            <para>
-            2) Precompile a UserControl and add the pre-compiled class to the Kernel. (hard)  
-            Has not been tested with proxies.
-            </para>
-            </summary>
-        </member>
-        <member name="M:Castle.MicroKernel.ComponentActivator.WebUserControlComponentActivator.#ctor(Castle.Core.ComponentModel,Castle.MicroKernel.IKernel,Castle.MicroKernel.ComponentInstanceDelegate,Castle.MicroKernel.ComponentInstanceDelegate)">
-            <summary>
-            Initializes a new instance of the <see cref="T:Castle.MicroKernel.ComponentActivator.WebUserControlComponentActivator"/> class.
-            </summary>
-            <param name="model">The model.</param>
-            <param name="kernel">The kernel.</param>
-            <param name="onCreation">The on creation.</param>
-            <param name="onDestruction">The on destruction.</param>
-        </member>
-        <member name="M:Castle.MicroKernel.ComponentActivator.WebUserControlComponentActivator.CreateInstance(Castle.MicroKernel.CreationContext,System.Object[],System.Type[])">
-            <summary>
-            Creates the instance.
-            </summary>
-            <param name="context">The context.</param>
-            <param name="arguments">The arguments.</param>
-            <param name="signature">The signature.</param>
-            <returns></returns>
-        </member>
         <member name="T:Castle.MicroKernel.Burden">
             <summary>
             
@@ -258,15 +216,6 @@
             <param name="message">The message.</param>
             <param name="innerException">The inner exception.</param>
         </member>
-        <member name="M:Castle.MicroKernel.Exceptions.CircularDependencyException.#ctor(System.Runtime.Serialization.SerializationInfo,System.Runtime.Serialization.StreamingContext)">
-            <summary>
-            Initializes a new instance of the <see cref="T:Castle.MicroKernel.Exceptions.CircularDependencyException"/> class.
-            </summary>
-            <param name="info">The <see cref="T:System.Runtime.Serialization.SerializationInfo"/> that holds the serialized object data about the exception being thrown.</param>
-            <param name="context">The <see cref="T:System.Runtime.Serialization.StreamingContext"/> that contains contextual information about the source or destination.</param>
-            <exception cref="T:System.ArgumentNullException">The <paramref name="info"/> parameter is <see langword="null"/>.</exception>
-            <exception cref="T:System.Runtime.Serialization.SerializationException">The class name is <see langword="null"/> or <see cref="P:System.Exception.HResult"/> is zero (0).</exception>
-        </member>
         <member name="T:Castle.MicroKernel.ComponentNotFoundException">
             <summary>
             Exception threw when a request for a component
@@ -286,13 +235,6 @@
             </summary>
             <param name="service">The service.</param>
         </member>
-        <member name="M:Castle.MicroKernel.ComponentNotFoundException.#ctor(System.Runtime.Serialization.SerializationInfo,System.Runtime.Serialization.StreamingContext)">
-            <summary>
-            Initializes a new instance of the <see cref="T:Castle.MicroKernel.ComponentNotFoundException"/> class.
-            </summary>
-            <param name="info">The object that holds the serialized object data.</param>
-            <param name="context">The contextual information about the source or destination.</param>
-        </member>
         <member name="T:Castle.MicroKernel.ComponentRegistrationException">
             <summary>
             Exception threw when there is a problem
@@ -304,13 +246,6 @@
             Initializes a new instance of the <see cref="T:Castle.MicroKernel.ComponentRegistrationException"/> class.
             </summary>
             <param name="message">The message.</param>
-        </member>
-        <member name="M:Castle.MicroKernel.ComponentRegistrationException.#ctor(System.Runtime.Serialization.SerializationInfo,System.Runtime.Serialization.StreamingContext)">
-            <summary>
-            Initializes a new instance of the <see cref="T:Castle.MicroKernel.ComponentRegistrationException"/> class.
-            </summary>
-            <param name="info">The object that holds the serialized object data.</param>
-            <param name="context">The contextual information about the source or destination.</param>
         </member>
         <member name="T:Castle.MicroKernel.KernelException">
             <summary>
@@ -330,13 +265,6 @@
             </summary>
             <param name="message">The message.</param>
             <param name="innerException">The inner exception.</param>
-        </member>
-        <member name="M:Castle.MicroKernel.KernelException.#ctor(System.Runtime.Serialization.SerializationInfo,System.Runtime.Serialization.StreamingContext)">
-            <summary>
-            Initializes a new instance of the <see cref="T:Castle.MicroKernel.KernelException"/> class.
-            </summary>
-            <param name="info">The object that holds the serialized object data.</param>
-            <param name="context">The contextual information about the source or destination.</param>
         </member>
         <member name="T:Castle.Facilities.EventWiring.EventWiringException">
             <summary>
@@ -360,13 +288,6 @@
             </summary>
             <param name="message">The message.</param>
             <param name="innerException">The inner exception.</param>
-        </member>
-        <member name="M:Castle.Facilities.EventWiring.EventWiringException.#ctor(System.Runtime.Serialization.SerializationInfo,System.Runtime.Serialization.StreamingContext)">
-            <summary>
-            Initializes a new instance of the <see cref="T:Castle.Facilities.EventWiring.EventWiringException"/> class.
-            </summary>
-            <param name="info">The object that holds the serialized object data.</param>
-            <param name="context">The contextual information about the source or destination.</param>
         </member>
         <member name="T:Castle.Facilities.EventWiring.EventWiringFacility">
              <summary>
@@ -589,162 +510,6 @@
             <summary>
             
             </summary>
-        </member>
-        <member name="T:Castle.Facilities.Remoting.RemoteActivator">
-            <summary>
-            Activates a object connecting to the remote server.
-            </summary>
-        </member>
-        <member name="M:Castle.Facilities.Remoting.RemoteActivator.#ctor(Castle.Core.ComponentModel,Castle.MicroKernel.IKernel,Castle.MicroKernel.ComponentInstanceDelegate,Castle.MicroKernel.ComponentInstanceDelegate)">
-            <summary>
-            Initializes a new instance of the <see cref="T:Castle.Facilities.Remoting.RemoteActivator"/> class.
-            </summary>
-            <param name="model">The model.</param>
-            <param name="kernel">The kernel.</param>
-            <param name="onCreation">The oncreation event handler.</param>
-            <param name="onDestruction">The ondestruction event handler.</param>
-        </member>
-        <member name="T:Castle.Facilities.Remoting.RemoteActivatorThroughConnector">
-            <summary>
-            Activates a client connecting to the remote server, enforcing the uri and the server activation.
-            </summary>
-        </member>
-        <member name="M:Castle.Facilities.Remoting.RemoteActivatorThroughConnector.#ctor(Castle.Core.ComponentModel,Castle.MicroKernel.IKernel,Castle.MicroKernel.ComponentInstanceDelegate,Castle.MicroKernel.ComponentInstanceDelegate)">
-            <summary>
-            Initializes a new instance of the <see cref="T:Castle.Facilities.Remoting.RemoteActivatorThroughConnector"/> class.
-            </summary>
-            <param name="model">The model.</param>
-            <param name="kernel">The kernel.</param>
-            <param name="onCreation">The oncreation event handler.</param>
-            <param name="onDestruction">The ondestruction event handler.</param>
-        </member>
-        <member name="T:Castle.Facilities.Remoting.RemoteActivatorThroughRegistry">
-            <summary>
-            Activates a client connecting to the remote server through the <see cref="T:Castle.Facilities.Remoting.RemotingRegistry"/>.
-            </summary>
-        </member>
-        <member name="M:Castle.Facilities.Remoting.RemoteActivatorThroughRegistry.#ctor(Castle.Core.ComponentModel,Castle.MicroKernel.IKernel,Castle.MicroKernel.ComponentInstanceDelegate,Castle.MicroKernel.ComponentInstanceDelegate)">
-            <summary>
-            Initializes a new instance of the <see cref="T:Castle.Facilities.Remoting.RemoteActivatorThroughRegistry"/> class.
-            </summary>
-            <param name="model">The model.</param>
-            <param name="kernel">The kernel.</param>
-            <param name="onCreation">The oncreation envent handler.</param>
-            <param name="onDestruction">The ondestruction event handler.</param>
-        </member>
-        <member name="T:Castle.Facilities.Remoting.RemoteClientActivatedActivator">
-            <summary>
-            Activates a client activated object.
-            </summary>
-        </member>
-        <member name="M:Castle.Facilities.Remoting.RemoteClientActivatedActivator.#ctor(Castle.Core.ComponentModel,Castle.MicroKernel.IKernel,Castle.MicroKernel.ComponentInstanceDelegate,Castle.MicroKernel.ComponentInstanceDelegate)">
-            <summary>
-            Initializes a new instance of the <see cref="T:Castle.Facilities.Remoting.RemoteClientActivatedActivator"/> class.
-            </summary>
-            <param name="model">The model.</param>
-            <param name="kernel">The kernel.</param>
-            <param name="onCreation">The oncreation event handler.</param>
-            <param name="onDestruction">The ondestruction event handler.</param>
-        </member>
-        <member name="T:Castle.Facilities.Remoting.RemoteMarshallerActivator">
-            <summary>
-            Activates and publishes a server object.
-            </summary>
-        </member>
-        <member name="M:Castle.Facilities.Remoting.RemoteMarshallerActivator.#ctor(Castle.Core.ComponentModel,Castle.MicroKernel.IKernel,Castle.MicroKernel.ComponentInstanceDelegate,Castle.MicroKernel.ComponentInstanceDelegate)">
-            <summary>
-            Initializes a new instance of the <see cref="T:Castle.Facilities.Remoting.RemoteMarshallerActivator"/> class.
-            </summary>
-            <param name="model">The model.</param>
-            <param name="kernel">The kernel.</param>
-            <param name="onCreation">The oncreation event handler.</param>
-            <param name="onDestruction">The ondestruction event handler.</param>
-        </member>
-        <member name="T:Castle.Facilities.Remoting.RemotingFacility">
-            <summary>
-            Facility to allow the communication with remote kernel, using the .NET Remoting infraestructure.
-            </summary>
-            <remarks>
-            TODO
-            </remarks>
-            <example>
-            TODO
-            </example>
-        </member>
-        <member name="F:Castle.Facilities.Remoting.RemotingFacility.baseUri">
-            <summary>
-            Used for client side (Expand explanation)
-            </summary>
-        </member>
-        <member name="F:Castle.Facilities.Remoting.RemotingFacility.localRegistry">
-            <summary>
-            Used for server side. 
-            Holds the local registry
-            </summary>
-        </member>
-        <member name="F:Castle.Facilities.Remoting.RemotingFacility.remoteRegistry">
-            <summary>
-            Used for client side. 
-            Holds a remote proxy to the server registry
-            </summary>
-        </member>
-        <member name="M:Castle.Facilities.Remoting.RemotingFacility.#ctor">
-            <summary>
-            Constructs a RemotingFacility
-            </summary>
-        </member>
-        <member name="M:Castle.Facilities.Remoting.RemotingFacility.Dispose">
-            <summary>
-            Performs the tasks associated with freeing, releasing, or resetting
-            the facility resources.
-            </summary>
-            <remarks>It can be overriden.</remarks>
-        </member>
-        <member name="T:Castle.Facilities.Remoting.RemotingInspector">
-            <summary>
-            Inspects the model looking for remote component configuration. If found, 
-            do the component Remoting configuration.
-            </summary>
-        </member>
-        <member name="T:Castle.MicroKernel.ModelBuilder.IContributeComponentModelConstruction">
-            <summary>
-            Implementors must inspect the component for 
-            a given information or parameter.
-            </summary>
-        </member>
-        <member name="M:Castle.MicroKernel.ModelBuilder.IContributeComponentModelConstruction.ProcessModel(Castle.MicroKernel.IKernel,Castle.Core.ComponentModel)">
-            <summary>
-            Usually the implementation will look in the configuration property 
-            of the model or the service interface, or the implementation looking for
-            something.
-            </summary>
-            <param name="kernel">The kernel instance</param>
-            <param name="model">The component model</param>
-        </member>
-        <member name="M:Castle.Facilities.Remoting.RemotingInspector.#ctor(Castle.MicroKernel.SubSystems.Conversion.ITypeConverter,System.Boolean,System.Boolean,System.String,Castle.Facilities.Remoting.RemotingRegistry,Castle.Facilities.Remoting.RemotingRegistry)">
-            <summary>
-            Initializes a new instance of the <see cref="T:Castle.Facilities.Remoting.RemotingInspector"/> class.
-            </summary>
-            <param name="converter">The converter.</param>
-            <param name="isServer">if set to <c>true</c> is a server.</param>
-            <param name="isClient">if set to <c>true</c> is a client.</param>
-            <param name="baseUri">The base URI.</param>
-            <param name="remoteRegistry">The remote registry.</param>
-            <param name="localRegistry">The local registry.</param>
-        </member>
-        <member name="M:Castle.Facilities.Remoting.RemotingInspector.ResetDependencies(Castle.Core.ComponentModel)">
-            <summary>
-            Client components are not created by the container
-            so there's no point collecting constructor dependencies
-            </summary>
-            <param name="model"></param>
-        </member>
-        <member name="M:Castle.Facilities.Remoting.RemotingRegistry.GetModel(System.Type)">
-            <summary>
-            Used in case of generics:
-            </summary>
-            <param name="serviceType"></param>
-            <returns></returns>
         </member>
         <member name="M:Castle.Facilities.Startable.StartableFacility.CheckWaitingList">
             <summary>
@@ -1182,13 +947,6 @@
             </summary>
             <param name="message">The message.</param>
         </member>
-        <member name="M:Castle.MicroKernel.Handlers.HandlerException.#ctor(System.Runtime.Serialization.SerializationInfo,System.Runtime.Serialization.StreamingContext)">
-            <summary>
-            Initializes a new instance of the <see cref="T:Castle.MicroKernel.Handlers.HandlerException"/> class.
-            </summary>
-            <param name="info">The object that holds the serialized object data.</param>
-            <param name="context">The contextual information about the source or destination.</param>
-        </member>
         <member name="T:Castle.MicroKernel.HandlerState">
             <summary>
             Possible states for a IHandler instance
@@ -1234,11 +992,6 @@
         <member name="T:Castle.MicroKernel.LifecycleConcerns.InitializationConcern">
             <summary>
             Summary description for InitializationConcern.
-            </summary>
-        </member>
-        <member name="T:Castle.MicroKernel.LifecycleConcerns.SupportInitializeConcern">
-            <summary>
-            Summary description for SupportInitializeConcern.
             </summary>
         </member>
         <member name="T:Castle.MicroKernel.Lifestyle.Pool.IPool">
@@ -1307,16 +1060,6 @@
             </summary>
             <param name="instance"></param>
         </member>
-        <member name="T:Castle.MicroKernel.Lifestyle.PerThreadLifestyleManager">
-            <summary>
-            Summary description for PerThreadLifestyleManager.
-            </summary>
-        </member>
-        <member name="M:Castle.MicroKernel.Lifestyle.PerThreadLifestyleManager.Dispose">
-            <summary>
-            
-            </summary>
-        </member>
         <member name="T:Castle.MicroKernel.Lifestyle.PerThreadThreadStaticLifestyleManager">
             <summary>
             per thread LifestyleManager implementation compatibile with Silverlight.
@@ -1325,12 +1068,6 @@
         <member name="M:Castle.MicroKernel.Lifestyle.PerThreadThreadStaticLifestyleManager.Dispose">
             <summary>
             
-            </summary>
-        </member>
-        <member name="T:Castle.MicroKernel.Lifestyle.PerWebRequestLifestyleManager">
-            <summary>
-            Implements a Lifestyle Manager for Web Apps that
-            create at most one object per web request.
             </summary>
         </member>
         <member name="T:Castle.MicroKernel.Lifestyle.PoolableLifestyleManager">
@@ -1359,6 +1096,21 @@
             If nothing could be found it wont touch the model. In this case is up to
             the kernel to establish a default component activator for components.
             </remarks>
+        </member>
+        <member name="T:Castle.MicroKernel.ModelBuilder.IContributeComponentModelConstruction">
+            <summary>
+            Implementors must inspect the component for 
+            a given information or parameter.
+            </summary>
+        </member>
+        <member name="M:Castle.MicroKernel.ModelBuilder.IContributeComponentModelConstruction.ProcessModel(Castle.MicroKernel.IKernel,Castle.Core.ComponentModel)">
+            <summary>
+            Usually the implementation will look in the configuration property 
+            of the model or the service interface, or the implementation looking for
+            something.
+            </summary>
+            <param name="kernel">The kernel instance</param>
+            <param name="model">The component model</param>
         </member>
         <member name="M:Castle.MicroKernel.ModelBuilder.Inspectors.ComponentActivatorInspector.ProcessModel(Castle.MicroKernel.IKernel,Castle.Core.ComponentModel)">
             <summary>
@@ -1830,12 +1582,6 @@
             <summary>
             Determines if the proxied component should only include
             the service interface.
-            </summary>
-        </member>
-        <member name="P:Castle.MicroKernel.Proxy.ProxyOptions.UseMarshalByRefAsBaseClass">
-            <summary>
-            Determines if the interface proxied component should inherit 
-            from <see cref="T:System.MarshalByRefObject"/>
             </summary>
         </member>
         <member name="P:Castle.MicroKernel.Proxy.ProxyOptions.AdditionalInterfaces">
@@ -3397,13 +3143,6 @@
             </summary>
             <param name="message">The message.</param>
         </member>
-        <member name="M:Castle.MicroKernel.Resolvers.DependencyResolverException.#ctor(System.Runtime.Serialization.SerializationInfo,System.Runtime.Serialization.StreamingContext)">
-            <summary>
-            Initializes a new instance of the <see cref="T:Castle.MicroKernel.Resolvers.DependencyResolverException"/> class.
-            </summary>
-            <param name="info">The object that holds the serialized object data.</param>
-            <param name="context">The contextual information about the source or destination.</param>
-        </member>
         <member name="T:Castle.MicroKernel.Resolvers.ILazyComponentLoader">
             <summary>
             Provides lazy registration capabilities to the container.
@@ -3802,6 +3541,13 @@
             Implements all standard conversions.
             </summary>
         </member>
+        <member name="T:Castle.MicroKernel.SubSystems.Conversion.TypeDescriptor">
+            <summary>
+            Our own minimalistic implementation of TypeDescriptor class, which does not exist in Silverlight.
+            It exists solely to support functionality of <see cref="T:Castle.MicroKernel.SubSystems.Conversion.ComponentModelConverter"/> and does not provide
+            full functionality of the actualy thing from the full .NET framework.
+            </summary>
+        </member>
         <member name="T:Castle.MicroKernel.SubSystems.Conversion.TypeNameConverter">
             <summary>
             Convert a type name to a Type instance.
@@ -3824,13 +3570,6 @@
             </summary>
             <param name="message">The message.</param>
             <param name="innerException">The inner exception.</param>
-        </member>
-        <member name="M:Castle.MicroKernel.SubSystems.Conversion.ConverterException.#ctor(System.Runtime.Serialization.SerializationInfo,System.Runtime.Serialization.StreamingContext)">
-            <summary>
-            Initializes a new instance of the <see cref="T:Castle.MicroKernel.SubSystems.Conversion.ConverterException"/> class.
-            </summary>
-            <param name="info">The object that holds the serialized object data.</param>
-            <param name="context">The contextual information about the source or destination.</param>
         </member>
         <member name="T:Castle.MicroKernel.SubSystems.Conversion.ConvertibleAttribute">
             <summary>
@@ -3898,13 +3637,6 @@
             </summary>
             <param name="service">Service name</param>
             <param name="properties">Property list.</param>
-        </member>
-        <member name="M:Castle.MicroKernel.SubSystems.Naming.ComponentName.#ctor(System.Runtime.Serialization.SerializationInfo,System.Runtime.Serialization.StreamingContext)">
-            <summary>
-            Serialization constructor.
-            </summary>
-            <param name="info"></param>
-            <param name="context"></param>
         </member>
         <member name="M:Castle.MicroKernel.SubSystems.Naming.ComponentName.Setup(System.String)">
             <summary>

@@ -35,7 +35,7 @@
         /// </summary>
         /// <typeparam name="TProperty">The type of the property.</typeparam>
         /// <param name="propertyExpression">The property expression.</param>
-        public virtual void NotifyOfPropertyChange<TProperty>(Expression<Func<TProperty>> propertyExpression)
+        public void NotifyOfPropertyChange<TProperty>(Expression<Func<TProperty>> propertyExpression)
         {
             NotifyOfPropertyChange(propertyExpression.GetMemberInfo().Name);
         }
