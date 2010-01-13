@@ -24,6 +24,37 @@
             _viewModelBinder = viewModelBinder;
         }
 
+	/// <summary>
+        /// A dependency property for assigning a context to a particular portion of the UI.
+        /// </summary>
+        public static readonly DependencyProperty ContextProperty =
+            DependencyProperty.RegisterAttached(
+                "Context",
+                typeof(object),
+                typeof(View),
+                new PropertyMetadata(OnContextChanged)
+                );
+
+        /// <summary>
+        /// Gets the context.
+        /// </summary>
+        /// <param name="d">The d.</param>
+        /// <returns></returns>
+        public static object GetContext(DependencyObject d)
+        {
+            return d.GetValue(ContextProperty);
+        }
+
+        /// <summary>
+        /// Sets the context.
+        /// </summary>
+        /// <param name="d">The d.</param>
+        /// <param name="value">The value.</param>
+        public static void SetContext(DependencyObject d, object value)
+        {
+            d.SetValue(ContextProperty, value);
+        }
+
         /// <summary>
         /// A dependency property for attaching a model to the UI.
         /// </summary>
@@ -55,36 +86,6 @@
             d.SetValue(ModelProperty, value);
         }
 
-        /// <summary>
-        /// A dependency property for assigning a context to a particular portion of the UI.
-        /// </summary>
-        public static readonly DependencyProperty ContextProperty =
-            DependencyProperty.RegisterAttached(
-                "Context",
-                typeof(object),
-                typeof(View),
-                new PropertyMetadata(OnContextChanged)
-                );
-
-        /// <summary>
-        /// Gets the context.
-        /// </summary>
-        /// <param name="d">The d.</param>
-        /// <returns></returns>
-        public static object GetContext(DependencyObject d)
-        {
-            return d.GetValue(ContextProperty);
-        }
-
-        /// <summary>
-        /// Sets the context.
-        /// </summary>
-        /// <param name="d">The d.</param>
-        /// <param name="value">The value.</param>
-        public static void SetContext(DependencyObject d, object value)
-        {
-            d.SetValue(ContextProperty, value);
-        }
 
         /// <summary>
         /// A dependency property for assigning an <see cref="IViewLocator"/> to a UI element.

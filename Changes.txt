@@ -46,6 +46,8 @@ V1.1 RTW
 -Fixed a few bugs in property change testing.
 -Fixed a bug in the MEFAdapter.
 -Fixed a bug in the design-time support for Availability Effects in the AvailabilityEffectConverter.
+-Updated to Castle Windsor 2.1, Dynamic Proxy 2.2. Added official Windsor support for Silverlight 3.0 and 4.0
+-Fixed a minor bug in View Contexts.
 
 V1 RTW
 -The DefaultBinder will now throw on type activation failure.
