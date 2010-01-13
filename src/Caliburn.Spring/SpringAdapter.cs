@@ -122,7 +122,7 @@
 
         private void HandleInstance(Instance instance)
         {
-            _context.ObjectFactory.RegisterSingleton(GetName(instance), this);
+            _context.ObjectFactory.RegisterSingleton(GetName(instance), instance.Implementation);
         }
 
         private static string GetName(ComponentRegistrationBase registration)
