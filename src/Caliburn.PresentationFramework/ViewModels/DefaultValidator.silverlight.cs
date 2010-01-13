@@ -1,4 +1,4 @@
-﻿#if SILVRLIGHT_30 || SILVERLIGHT_40
+﻿#if SILVERLIGHT_30 || SILVERLIGHT_40
 
 namespace Caliburn.PresentationFramework.ViewModels
 {

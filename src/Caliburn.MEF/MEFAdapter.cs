@@ -39,6 +39,15 @@
         }
 
         /// <summary>
+        /// Gets the container.
+        /// </summary>
+        /// <value>The container.</value>
+        public CompositionContainer Container
+        {
+            get { return _container; }
+        }
+
+        /// <summary>
         /// When implemented by inheriting classes, this method will do the actual work of resolving
         /// the requested service instance.
         /// </summary>
