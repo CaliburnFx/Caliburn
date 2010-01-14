@@ -2,6 +2,7 @@
 {
     using System;
     using ApplicationModel;
+    using Behaviors;
 
     /// <summary>
     /// A base implementation of <see cref="IScreenConductor"/>.
@@ -16,6 +17,7 @@
         /// Gets the screens that are currently conducted.
         /// </summary>
         /// <value>The screens.</value>
+        [DoNotNotify]
         public override IObservableCollection<T> Screens
         {
             get { return new BindableCollection<T> { _activeScreen }; }
@@ -98,6 +100,7 @@
         /// Gets or sets the active screen.
         /// </summary>
         /// <value>The active screen.</value>
+        [DoNotNotify]
         public override T ActiveScreen
         {
             get { return _activeScreen; }

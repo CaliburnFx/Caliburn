@@ -2,6 +2,7 @@ namespace Caliburn.PresentationFramework.Screens
 {
     using System;
     using System.Collections.Generic;
+    using Behaviors;
 
     /// <summary>
     /// An implementation of <see cref="INavigator"/>.
@@ -21,6 +22,7 @@ namespace Caliburn.PresentationFramework.Screens
         /// <value>
         /// 	<c>true</c> if the history can be cleared; otherwise, <c>false</c>.
         /// </value>
+        [DoNotNotify]
         public virtual bool CanClearHistory
         {
             get { return CanGoBack || CanGoForward; }
@@ -29,6 +31,7 @@ namespace Caliburn.PresentationFramework.Screens
         /// <summary>
         /// Gets the total number of actions tracked by the navigator 
         /// </summary>
+        [DoNotNotify]
         public virtual int Count
         {
             get { return _next.Count + CurrentPosition; }
@@ -40,6 +43,7 @@ namespace Caliburn.PresentationFramework.Screens
         /// <remarks>
         /// This is intended for display within a UI.
         /// </remarks>
+        [DoNotNotify]
         public virtual int CurrentPosition
         {
             get { return _previous.Count + ((_current == null) ? 0 : 1); }
@@ -51,6 +55,7 @@ namespace Caliburn.PresentationFramework.Screens
         /// <value>
         /// 	<c>true</c> if this instance can go back; otherwise, <c>false</c>.
         /// </value>
+        [DoNotNotify]
         public virtual bool CanGoBack
         {
             get { return _previous.Count > 0; }
@@ -62,6 +67,7 @@ namespace Caliburn.PresentationFramework.Screens
         /// <value>
         /// 	<c>true</c> if this instance can go forward; otherwise, <c>false</c>.
         /// </value>
+        [DoNotNotify]
         public virtual bool CanGoForward
         {
             get { return _next.Count > 0; }

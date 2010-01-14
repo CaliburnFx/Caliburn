@@ -261,9 +261,9 @@
       <Project>{AFBDDB74-139F-4C7D-AC94-99C5173F76C7}</Project>
       <Name>Caliburn.Autofac</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Caliburn.Castle\Caliburn.Castle.csproj">
+    <ProjectReference Include="..\Caliburn.Windsor\Caliburn.Windsor.csproj">
       <Project>{1E9926A2-E544-44AE-A602-2F9EC3D069A8}</Project>
-      <Name>Caliburn.Castle</Name>
+      <Name>Caliburn.Windsor</Name>
     </ProjectReference>
     <ProjectReference Include="..\Caliburn.Core\Caliburn.Core.csproj">
       <Project>{D7357C4C-BFFF-4EE4-8D40-0803FAAFF38A}</Project>

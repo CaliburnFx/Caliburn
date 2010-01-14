@@ -5,6 +5,7 @@
     using System.ComponentModel.Composition;
     using System.ComponentModel.Composition.Hosting;
     using System.Linq;
+    using Core.Behaviors;
     using Core.IoC;
     using Microsoft.Practices.ServiceLocation;
 
@@ -13,7 +14,7 @@
     /// </summary>
     public class MEFAdapter : ContainerBase
     {
-        private readonly CompositionContainer _container;
+        private CompositionContainer _container;
         private CompositionBatch _batch;
 
         /// <summary>
@@ -88,6 +89,23 @@
 
             _container.Compose(_batch);
             _batch = null;
+        }
+
+        /// <summary>
+        /// Installs a proxy factory.
+        /// </summary>
+        /// <typeparam name="T">The type of the proxy factory.</typeparam>
+        /// <returns>
+        /// A container with an installed proxy factory.
+        /// </returns>
+        public override IContainer WithProxyFactory<T>()
+        {
+            Register(new IComponentRegistration[]
+            {
+                new Singleton {Service = typeof(IProxyFactory), Implementation = typeof(T)}
+            });
+
+            return this;
         }
 
         private void HandleSingleton(Singleton singleton)

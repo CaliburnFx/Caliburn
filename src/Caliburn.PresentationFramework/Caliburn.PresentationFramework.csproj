@@ -79,6 +79,8 @@
     <Compile Include="ApplicationModel\DeepLinkStateManager.silverlight.cs" />
     <Compile Include="ApplicationModel\DefaultWindowManager.silverlight.cs" />
     <Compile Include="ApplicationModel\IWindowManager.silverlight.cs" />
+    <Compile Include="Behaviors\DoNotNotifyAttribute.cs" />
+    <Compile Include="Behaviors\NotifyPropertyChangedAttribute.cs" />
     <Compile Include="ResultCompletionEventArgs.cs" />
     <Compile Include="ResultExecutionContext.cs" />
     <Compile Include="Screens\ScreenExtensions.cs" />

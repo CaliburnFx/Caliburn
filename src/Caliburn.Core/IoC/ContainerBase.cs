@@ -2,6 +2,7 @@ namespace Caliburn.Core.IoC
 {
     using System;
     using System.Collections.Generic;
+    using Behaviors;
     using Microsoft.Practices.ServiceLocation;
 
     /// <summary>
@@ -34,6 +35,16 @@ namespace Caliburn.Core.IoC
 
             }
         }
+
+        /// <summary>
+        /// Installs a proxy factory.
+        /// </summary>
+        /// <typeparam name="T">The type of the proxy factory.</typeparam>
+        /// <returns>
+        /// A container with an installed proxy factory.
+        /// </returns>
+        public abstract IContainer WithProxyFactory<T>()
+            where T : IProxyFactory;
 
         /// <summary>
         /// Adds the registration handler.

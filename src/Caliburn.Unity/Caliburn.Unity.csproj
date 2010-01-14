@@ -68,6 +68,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="ProxyBuilderStrategy.cs" />
+    <Compile Include="ProxyExtension.cs" />
     <Compile Include="UnityAdapter.cs" />
   </ItemGroup>
   <ItemGroup>

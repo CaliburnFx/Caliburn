@@ -1,5 +1,4 @@
-﻿using Caliburn.Castle;
-using Castle.MicroKernel.Registration;
+﻿using Castle.MicroKernel.Registration;
 using Castle.Windsor;
 using Microsoft.Practices.ServiceLocation;
 using NUnit.Framework;
@@ -7,6 +6,8 @@ using Tests.Caliburn.Adapters.Components;
 
 namespace Tests.Caliburn.Adapters
 {
+    using global::Caliburn.Windsor;
+
     [TestFixture]
     public class The_Windsor_container : ServiceLocatorTests
     {

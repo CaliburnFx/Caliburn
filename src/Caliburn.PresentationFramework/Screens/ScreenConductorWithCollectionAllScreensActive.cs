@@ -4,6 +4,7 @@
     using System.Collections.Generic;
     using System.Linq;
     using ApplicationModel;
+    using Behaviors;
 
     /// <summary>
     /// An implementation of <see cref="IScreenConductor"/>.
@@ -28,6 +29,7 @@
                 /// Gets the screens that are currently managed.
                 /// </summary>
                 /// <value>The screens.</value>
+                [DoNotNotify]
                 public override IObservableCollection<T> Screens
                 {
                     get { return _screens; }

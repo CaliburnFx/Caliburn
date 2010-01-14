@@ -1,5 +1,7 @@
 ﻿namespace Caliburn.PresentationFramework.Screens
 {
+    using Behaviors;
+
     /// <summary>
     /// A base implementation of <see cref="IScreen"/> and <see cref="IScreenEx"/>.
     /// </summary>
@@ -62,6 +64,7 @@
         /// Gets the subject.
         /// </summary>
         /// <value>The subject.</value>
+        [DoNotNotify]
         public virtual T Subject
         {
             get { return _subject; }

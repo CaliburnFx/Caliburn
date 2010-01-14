@@ -2,6 +2,7 @@ namespace Caliburn.PresentationFramework.Screens
 {
     using System;
     using System.Windows;
+    using Behaviors;
     using Core.Metadata;
     using Metadata;
 
@@ -31,6 +32,7 @@ namespace Caliburn.PresentationFramework.Screens
         /// Gets or sets the parent.
         /// </summary>
         /// <value>The parent.</value>
+        [DoNotNotify]
         public virtual IScreenCollection Parent
         {
             get { return _parent; }
@@ -47,6 +49,7 @@ namespace Caliburn.PresentationFramework.Screens
         /// <value>
         /// 	<c>true</c> if this instance is initialized; otherwise, <c>false</c>.
         /// </value>
+        [DoNotNotify]
         public virtual bool IsInitialized
         {
             get { return _isInitialized; }
@@ -61,6 +64,7 @@ namespace Caliburn.PresentationFramework.Screens
         /// Gets or sets a value indicating whether this instance is active.
         /// </summary>
         /// <value><c>true</c> if this instance is active; otherwise, <c>false</c>.</value>
+        [DoNotNotify]
         public virtual bool IsActive
         {
             get { return _isActive; }
@@ -75,6 +79,7 @@ namespace Caliburn.PresentationFramework.Screens
         /// Gets the display name.
         /// </summary>
         /// <value>The display name.</value>
+        [DoNotNotify]
         public virtual string DisplayName
         {
             get { return _displayName; }

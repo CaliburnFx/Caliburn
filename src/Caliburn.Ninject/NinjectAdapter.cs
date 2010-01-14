@@ -2,8 +2,10 @@
 {
     using System;
     using System.Collections.Generic;
+    using Core.Behaviors;
     using Core.IoC;
     using global::Ninject;
+    using global::Ninject.Injection;
     using Microsoft.Practices.ServiceLocation;
     using ActivationException=global::Ninject.ActivationException;
 
@@ -62,6 +64,23 @@
         protected override IEnumerable<object> DoGetAllInstances(Type serviceType)
         {
             return Kernel.GetAll(serviceType);
+        }
+
+        /// <summary>
+        /// Installs a proxy factory.
+        /// </summary>
+        /// <typeparam name="T">The type of the proxy factory.</typeparam>
+        /// <returns>
+        /// A container with an installed proxy factory.
+        /// </returns>
+        public override IContainer WithProxyFactory<T>()
+        {
+            Kernel.Components.RemoveAll<IInjectorFactory>();
+            Kernel.Components.Add<IInjectorFactory, ProxyInjectorFactory>();
+
+            Kernel.Bind<IProxyFactory>().To<T>().InSingletonScope();
+
+            return this;
         }
 
         private void HandleSingleton(Singleton singleton)

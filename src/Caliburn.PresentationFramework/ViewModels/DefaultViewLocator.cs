@@ -5,6 +5,7 @@ namespace Caliburn.PresentationFramework.ViewModels
     using System.Linq;
     using System.Windows;
     using Core;
+    using Core.Behaviors;
     using Core.Metadata;
     using Metadata;
     using Microsoft.Practices.ServiceLocation;
@@ -114,7 +115,8 @@ namespace Caliburn.PresentationFramework.ViewModels
         /// <returns></returns>
         protected virtual Type GetModelType(object model)
         {
-            return model.GetType();
+            var proxy = model as IProxy;
+            return proxy != null ? proxy.OriginalType : model.GetType();
         }
 
         /// <summary>

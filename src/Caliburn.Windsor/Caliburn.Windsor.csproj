@@ -8,8 +8,8 @@
     <ProjectGuid>{1E9926A2-E544-44AE-A602-2F9EC3D069A8}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Caliburn.Castle</RootNamespace>
-    <AssemblyName>Caliburn.Castle</AssemblyName>
+    <RootNamespace>Caliburn.Windsor</RootNamespace>
+    <AssemblyName>Caliburn.Windsor</AssemblyName>
     <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
@@ -60,6 +60,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="ProxyActivator.cs" />
+    <Compile Include="ProxyBehaviorFacility.cs" />
+    <Compile Include="ProxyBehaviorContributor.cs" />
     <Compile Include="WindsorAdapter.cs" />
   </ItemGroup>
   <ItemGroup>

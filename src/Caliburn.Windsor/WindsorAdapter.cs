@@ -1,13 +1,13 @@
-﻿namespace Caliburn.Castle
+﻿namespace Caliburn.Windsor
 {
     using System;
     using System.Collections.Generic;
     using Core.IoC;
-    using global::Castle.Core;
-    using global::Castle.MicroKernel;
-    using global::Castle.MicroKernel.Registration;
-    using global::Castle.MicroKernel.Registration.Lifestyle;
-    using global::Castle.Windsor;
+    using Castle.Core;
+    using Castle.MicroKernel;
+    using Castle.MicroKernel.Registration;
+    using Castle.MicroKernel.Registration.Lifestyle;
+    using Castle.Windsor;
     using Microsoft.Practices.ServiceLocation;
 
     /// <summary>
@@ -77,6 +77,20 @@
         protected override IEnumerable<object> DoGetAllInstances(Type serviceType)
         {
             return (object[])_container.ResolveAll(serviceType);
+        }
+
+        /// <summary>
+        /// Installs a proxy factory.
+        /// </summary>
+        /// <typeparam name="T">The type of the proxy factory.</typeparam>
+        /// <returns>
+        /// A container with an installed proxy factory.
+        /// </returns>
+        public override IContainer WithProxyFactory<T>()
+        {
+            Container.Register(Component.For<Core.Behaviors.IProxyFactory>().ImplementedBy<T>());
+            Container.AddFacility<ProxyBehaviorFacility>();
+            return this;
         }
 
         private void HandleSingleton(Singleton singleton)

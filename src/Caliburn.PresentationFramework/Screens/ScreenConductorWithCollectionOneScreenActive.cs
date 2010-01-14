@@ -4,6 +4,7 @@
     using System.Collections.Generic;
     using System.Linq;
     using ApplicationModel;
+    using Behaviors;
 
     /// <summary>
     /// An implementation of <see cref="IScreenConductor"/>.
@@ -31,6 +32,7 @@
                 /// Gets or sets the active screen.
                 /// </summary>
                 /// <value>The active screen.</value>
+                [DoNotNotify]
                 public override T ActiveScreen
                 {
                     get { return _activeScreen; }
@@ -51,6 +53,7 @@
                 /// Gets the presenters that are currently managed.
                 /// </summary>
                 /// <value>The presenters.</value>
+                [DoNotNotify]
                 public override IObservableCollection<T> Screens
                 {
                     get { return _screens; }

@@ -2,6 +2,9 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.Linq;
+    using Core;
+    using Core.Behaviors;
     using Core.IoC;
     using global::StructureMap;
     using global::StructureMap.Attributes;
@@ -91,6 +94,56 @@
                     base.Register(registrations);
                     _exp = null;
                 });
+        }
+
+        /// <summary>
+        /// Installs a proxy factory.
+        /// </summary>
+        /// <typeparam name="T">The type of the proxy factory.</typeparam>
+        /// <returns>
+        /// A container with an installed proxy factory.
+        /// </returns>
+        public override IContainer WithProxyFactory<T>()
+        {
+            Container.Configure(
+                x =>{
+                    x.ForRequestedType<IProxyFactory>()
+                        .TheDefaultIsConcreteType<T>()
+                        .CacheBy(InstanceScope.Singleton);
+
+                    x.IfTypeMatches(type => type.GetAttributes<IBehavior>(true).Any())
+                        .InterceptWith((context, instance) =>{
+                            var factory = context.GetInstance<IProxyFactory>();
+                            var implementation = instance.GetType();
+
+                            return factory.CreateProxy(
+                                implementation,
+                                implementation.GetAttributes<IBehavior>(true).ToArray(),
+                                DetermineConstructorArgs(implementation)
+                                );
+                        });
+                });
+
+            return this;
+        }
+
+        private object[] DetermineConstructorArgs(Type implementation)
+        {
+            var args = new List<object>();
+            var greedyConstructor = (from c in implementation.GetConstructors()
+                                     orderby c.GetParameters().Length descending
+                                     select c).FirstOrDefault();
+
+            if (greedyConstructor != null)
+            {
+                foreach (var info in greedyConstructor.GetParameters())
+                {
+                    var arg = GetInstance(info.ParameterType);
+                    args.Add(arg);
+                }
+            }
+
+            return args.ToArray();
         }
 
         private void HandleSingleton(Singleton singleton)

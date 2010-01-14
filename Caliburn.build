@@ -160,7 +160,8 @@
 			<call target="presentationframework"/>
 			<call target="modelframework"/>
 			<call target="testability"/>
-			<call target="castle"/>
+			<call target="windsor"/>
+			<call target="dynamicproxy"/>
 			<call target="spring"/>
 			<call target="structuremap"/>
 			<call target="unity"/>
@@ -212,7 +213,8 @@
       <call target="core"/>
       <call target="presentationframework"/>
       <call target="modelframework"/>
-      <call target="castle"/>
+      <call target="windsor"/>
+      <call target="dynamicproxy"/>
       <call target="unity"/>
       <call target="ninject"/>
       <call target="mef"/>
@@ -238,7 +240,8 @@
       <call target="core"/>
       <call target="presentationframework"/>
       <call target="modelframework"/>
-      <call target="castle"/>
+      <call target="windsor"/>
+      <call target="dynamicproxy"/>
       <call target="unity"/>
       <call target="ninject"/>
       <call target="mef"/>
@@ -363,14 +366,14 @@
 		</csc>
 	</target>
 
-	<target name="castle" depends="core">
+	<target name="windsor" depends="core">
 		<mkdir dir="${current.path.bin}"/>
 		<csc keyfile="${path.src}/Caliburn.snk" noconfig="true" warnaserror="false" target="library" debug="${build.debug}" optimize="${build.optimize}" define="${build.defines}"
-         output="${current.path.bin}/Caliburn.Castle.dll"
-         doc="${current.path.bin}/Caliburn.Castle.xml">
+         output="${current.path.bin}/Caliburn.Windsor.dll"
+         doc="${current.path.bin}/Caliburn.Windsor.xml">
 			<sources basedir="${path.src}">
 				<include name="${build.asminfo}"/>
-				<include name="Caliburn.Castle/**/*.cs"/>
+				<include name="Caliburn.Windsor/**/*.cs"/>
 			</sources>
 			<references basedir="${current.path.bin}">
 				<include name="mscorlib.dll"/>
@@ -388,6 +391,31 @@
 			</nowarn>
 		</csc>
 	</target>
+
+  <target name="dynamicproxy" depends="core">
+    <mkdir dir="${current.path.bin}"/>
+    <csc keyfile="${path.src}/Caliburn.snk" noconfig="true" warnaserror="false" target="library" debug="${build.debug}" optimize="${build.optimize}" define="${build.defines}"
+         output="${current.path.bin}/Caliburn.DynamicProxy.dll"
+         doc="${current.path.bin}/Caliburn.DynamicProxy.xml">
+      <sources basedir="${path.src}">
+        <include name="${build.asminfo}"/>
+        <include name="Caliburn.DynamicProxy/**/*.cs"/>
+      </sources>
+      <references basedir="${current.path.bin}">
+        <include name="mscorlib.dll"/>
+        <include name="System.dll"/>
+        <include name="System.Core.dll"/>
+        <include name="Caliburn.Core.dll"/>
+        <include name="Caliburn.PresentationFramework.dll"/>
+        <include name="Castle.Core.dll"/>
+        <include name="Castle.DynamicProxy2.dll"/>
+        <include name="Microsoft.Practices.ServiceLocation.dll"/>
+      </references>
+      <nowarn>
+        <warning number="1584"/>
+      </nowarn>
+    </csc>
+  </target>
 
 	<target name="spring" depends="core">
 		<mkdir dir="${current.path.bin}"/>
@@ -602,7 +630,7 @@
 				<include name="Caliburn.Testability.dll"/>
         <include name="Microsoft.Practices.ServiceLocation.dll"/>
 				<!--Adapters-->
-				<include name="Caliburn.Castle.dll"/>
+				<include name="Caliburn.Windsor.dll"/>
 				<include name="Castle.Core.dll"/>
 				<include name="Castle.Windsor.dll"/>
 				<include name="Castle.MicroKernel.dll"/>

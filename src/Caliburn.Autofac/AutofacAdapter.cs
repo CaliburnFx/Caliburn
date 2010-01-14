@@ -4,6 +4,8 @@
     using System.Collections;
     using System.Collections.Generic;
     using System.Linq;
+    using Core;
+    using Core.Behaviors;
     using Core.IoC;
     using global::Autofac;
     using global::Autofac.Builder;
@@ -89,6 +91,63 @@
 
             _builder.Build(_container);
             _builder = null;
+        }
+
+        /// <summary>
+        /// Installs a proxy factory.
+        /// </summary>
+        /// <typeparam name="T">The type of the proxy factory.</typeparam>
+        /// <returns>
+        /// A container with an installed proxy factory.
+        /// </returns>
+        public override Core.IoC.IContainer WithProxyFactory<T>()
+        {
+            var builder = new ContainerBuilder();
+
+            builder.Register<T>()
+                .As<IProxyFactory>()
+                .SingletonScoped();
+
+            builder.Build(Container);
+
+            Container.ComponentRegistered += (s, e) =>{
+                var implementation = e.ComponentRegistration.Descriptor
+                    .BestKnownImplementationType;
+
+                if(!implementation.GetAttributes<IBehavior>(true).Any())
+                    return;
+
+                e.ComponentRegistration.Activating += (s2, e2) =>{
+                    var factory = e.Container.Resolve<IProxyFactory>();
+
+                    e2.Instance = factory.CreateProxy(
+                        implementation,
+                        implementation.GetAttributes<IBehavior>(true).ToArray(),
+                        DetermineConstructorArgs(implementation)
+                        );
+                };
+            };
+
+            return this;
+        }
+
+        private object[] DetermineConstructorArgs(Type implementation)
+        {
+            var args = new List<object>();
+            var greedyConstructor = (from c in implementation.GetConstructors()
+                                     orderby c.GetParameters().Length descending
+                                     select c).FirstOrDefault();
+
+            if (greedyConstructor != null)
+            {
+                foreach (var info in greedyConstructor.GetParameters())
+                {
+                    var arg = GetInstance(info.ParameterType);
+                    args.Add(arg);
+                }
+            }
+
+            return args.ToArray();
         }
 
         private void HandleSingleton(Singleton singleton)

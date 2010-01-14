@@ -3,6 +3,7 @@
     using System;
     using System.Collections.Generic;
     using System.Linq;
+    using Behaviors;
     using Microsoft.Practices.ServiceLocation;
 
     /// <summary>
@@ -12,6 +13,8 @@
     {
         private readonly Dictionary<string, Func<object>> _typeToHandler
             = new Dictionary<string, Func<object>>();
+
+        private bool _inspectingForBehaviors;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="SimpleContainer"/> class.
@@ -222,6 +225,20 @@
             return InternalGetHandler(type);
         }
 
+        /// <summary>
+        /// Installs a proxy factory.
+        /// </summary>
+        /// <typeparam name="T">The type of the proxy factory.</typeparam>
+        /// <returns>
+        /// A container with an installed proxy factory.
+        /// </returns>
+        public override IContainer WithProxyFactory<T>()
+        {
+            RegisterSingleton<IProxyFactory, T>();
+            _inspectingForBehaviors = true;
+            return this;
+        }
+
         private Func<Object> InternalGetHandler(Type type)
         {
             Func<object> handler;
@@ -310,6 +327,22 @@
                 {
                     var arg = GetInstance(info.ParameterType);
                     args.Add(arg);
+                }
+            }
+
+            if(_inspectingForBehaviors)
+            {
+                var behaviors = type.GetAttributes<IBehavior>(true).ToArray();
+
+                if(behaviors.Length > 0)
+                {
+                    var factory = GetInstance<IProxyFactory>();
+
+                    return factory.CreateProxy(
+                        type,
+                        behaviors,
+                        args.ToArray()
+                        );
                 }
             }
 

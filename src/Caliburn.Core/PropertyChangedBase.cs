@@ -11,7 +11,7 @@
 #if !SILVERLIGHT
     [Serializable]
 #endif
-    public abstract class PropertyChangedBase : INotifyPropertyChanged
+    public abstract class PropertyChangedBase : INotifyPropertyChangedEx
     {
         /// <summary>
         /// Occurs when a property value changes.

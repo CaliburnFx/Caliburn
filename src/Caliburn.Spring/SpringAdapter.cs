@@ -2,6 +2,7 @@
 {
     using System;
     using System.Collections.Generic;
+    using Core.Behaviors;
     using Core.IoC;
     using global::Spring.Context.Support;
     using global::Spring.Objects.Factory;
@@ -96,6 +97,27 @@
         protected override IEnumerable<object> DoGetAllInstances(Type serviceType)
         {
             return _context.GetObjectsOfTypeRecursive(serviceType);
+        }
+
+        /// <summary>
+        /// Installs a proxy factory.
+        /// </summary>
+        /// <typeparam name="T">The type of the proxy factory.</typeparam>
+        /// <returns>
+        /// A container with an installed proxy factory.
+        /// </returns>
+        public override IContainer WithProxyFactory<T>()
+        {
+            Context.RegisterObjectDefinition(
+                typeof(IProxyFactory).FullName,
+                new RootObjectDefinition(
+                    typeof(T),
+                    true
+                    ) { AutowireMode = AutoWiringMode.Constructor }
+                );
+
+            Context.ObjectFactory.AddObjectPostProcessor(new ProxyPostProcessor(this));
+            return this;
         }
 
         private void HandleSingleton(Singleton singleton)

@@ -2,6 +2,7 @@
 {
     using System;
     using System.Collections.Generic;
+    using Core.Behaviors;
     using Core.IoC;
     using Microsoft.Practices.ServiceLocation;
     using Microsoft.Practices.Unity;
@@ -69,6 +70,21 @@
         protected override IEnumerable<object> DoGetAllInstances(Type serviceType)
         {
             return _container.ResolveAll(serviceType);
+        }
+
+        /// <summary>
+        /// Installs a proxy factory.
+        /// </summary>
+        /// <typeparam name="T">The type of the proxy factory.</typeparam>
+        /// <returns>
+        /// A container with an installed proxy factory.
+        /// </returns>
+        public override IContainer WithProxyFactory<T>()
+        {
+            Container.RegisterType<IProxyFactory, T>(new ContainerControlledLifetimeManager());
+            Container.AddExtension(new ProxyExtension());
+
+            return this;
         }
 
         private void HandleSingleton(Singleton singleton)
