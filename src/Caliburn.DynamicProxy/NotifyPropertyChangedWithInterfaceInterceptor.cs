@@ -4,6 +4,7 @@
     using System.ComponentModel;
     using Castle.Core.Interceptor;
     using Core.Invocation;
+    using PresentationFramework.Behaviors;
 
     /// <summary>
     /// Handles <see cref="INotifyPropertyChanged"/> on classes that do not implement the interface.
@@ -11,6 +12,14 @@
     public class NotifyPropertyChangedWithInterfaceInterceptor : NotifyPropertyChangedBaseInterceptor
     {
         private PropertyChangedEventHandler _handler = delegate { };
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="NotifyPropertyChangedWithInterfaceInterceptor"/> class.
+        /// </summary>
+        /// <param name="implementation">The implementation.</param>
+        /// <param name="behavior">The behavior.</param>
+        public NotifyPropertyChangedWithInterfaceInterceptor(Type implementation, NotifyPropertyChangedAttribute behavior) 
+            : base(implementation, behavior) {}
 
         /// <summary>
         /// Indicates whether the invocation should proceed.

@@ -12,7 +12,7 @@
 #if !SILVERLIGHT
     [CLSCompliant(false)]
 #endif
-    [AttributeUsage(AttributeTargets.Method, AllowMultiple = false)]
+    [AttributeUsage(AttributeTargets.Method | AttributeTargets.Property, AllowMultiple = false)]
     public class DependenciesAttribute : Attribute, IHandlerAware, IInitializable
     {
         private readonly string[] _dependencies;
@@ -25,6 +25,15 @@
         /// <value>The order.</value>
         /// <remarks>Higher numbers are evaluated first.</remarks>
         public int Priority { get; set; }
+
+        /// <summary>
+        /// Gets the dependencies.
+        /// </summary>
+        /// <value>The dependencies.</value>
+        public string[] Dependencies
+        {
+            get { return _dependencies; }
+        }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="DependenciesAttribute"/> class.

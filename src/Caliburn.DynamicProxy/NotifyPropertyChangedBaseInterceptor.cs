@@ -1,29 +1,38 @@
 ﻿namespace Caliburn.DynamicProxy
 {
+    using System;
     using System.ComponentModel;
     using Castle.Core.Interceptor;
     using Core;
+    using PresentationFramework.Behaviors;
 
     /// <summary>
     /// A base class for interceptors which handle <see cref="INotifyPropertyChanged"/>.
     /// </summary>
-    public abstract class NotifyPropertyChangedBaseInterceptor : IInterceptor
+    public abstract class NotifyPropertyChangedBaseInterceptor : InterceptorBase
     {
-        private NotificationProfile _profile;
+        private readonly NotificationProfile _profile;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="NotifyPropertyChangedBaseInterceptor"/> class.
+        /// </summary>
+        /// <param name="implementation">The implementation.</param>
+        /// <param name="behavior">The behavior.</param>
+        protected NotifyPropertyChangedBaseInterceptor(Type implementation, NotifyPropertyChangedAttribute behavior)
+        {
+            _profile = NotificationProfile.Get(implementation, behavior);
+        }
 
         /// <summary>
         /// Intercepts the specified invocation.
         /// </summary>
         /// <param name="invocation">The invocation.</param>
-        public void Intercept(IInvocation invocation)
+        public override void Intercept(IInvocation invocation)
         {
             var methodName = invocation.Method.Name;
 
             if(!ShouldProceed(invocation))
                 return;
-
-            if(_profile == null)
-                _profile = NotificationProfile.Get(invocation.TargetType);
 
             if(methodName.StartsWith("get_"))
                 _profile.HandleGetter(GetPropertyName(methodName), invocation);

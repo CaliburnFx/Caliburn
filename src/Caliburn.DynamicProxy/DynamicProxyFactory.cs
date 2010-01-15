@@ -3,11 +3,8 @@
     using System;
     using System.Collections.Generic;
     using System.Linq;
-    using Castle.Core.Interceptor;
     using Castle.DynamicProxy;
     using Core.Behaviors;
-    using Core.IoC;
-    using Microsoft.Practices.ServiceLocation;
     using PresentationFramework.Behaviors;
 
     /// <summary>
@@ -23,29 +20,9 @@
         /// <summary>
         /// Initializes a new instance of the <see cref="DynamicProxyFactory"/> class.
         /// </summary>
-        /// <param name="registry">The registry.</param>
-        public DynamicProxyFactory(IRegistry registry)
+        public DynamicProxyFactory()
         {
             AddConfiguration<NotifyPropertyChangedAttribute, NotifyPropertyChangedConfiguration>();
-
-            registry.Register(new IComponentRegistration[]
-            {
-                new PerRequest
-                {
-                    Service = typeof(NotifyPropertyChangedWithInterfaceInterceptor),
-                    Implementation = typeof(NotifyPropertyChangedWithInterfaceInterceptor)
-                },
-                new PerRequest
-                {
-                    Service = typeof(NotifyPropertyChangedNoInterfaceInterceptor),
-                    Implementation = typeof(NotifyPropertyChangedNoInterfaceInterceptor)
-                },
-                new Singleton
-                {
-                    Service = typeof(ProxyInterceptor),
-                    Implementation = typeof(ProxyInterceptor)
-                }
-            });
         }
 
         /// <summary>
@@ -54,7 +31,7 @@
         /// <typeparam name="T"></typeparam>
         /// <typeparam name="K"></typeparam>
         public void AddConfiguration<T, K>()
-            where K : IBehaviorConfiguration, new()
+            where K : IBehaviorConfiguration<T>, new()
             where T : IBehavior
         {
             _configrations[typeof(T)] = new K();
@@ -73,11 +50,10 @@
                 .Distinct()
                 .ToArray();
 
-            var interceptors = behaviors.Select(x => _configrations[x.GetType()])
-                .SelectMany(x => x.GetInterceptors(type))
-                .Distinct()
-                .Select(x => ServiceLocator.Current.GetInstance(x) as IInterceptor)
-                .ToArray();
+            var interceptors = (from behavior in behaviors
+                                from intercepor in _configrations[behavior.GetType()]
+                                    .GetInterceptors(type, behavior)
+                                select intercepor).Distinct().ToArray();
 
             return proxyGenerator.CreateClassProxy(
                 type,

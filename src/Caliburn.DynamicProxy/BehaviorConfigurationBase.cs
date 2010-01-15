@@ -1,4 +1,4 @@
-namespace Caliburn.DynamicProxy
+﻿namespace Caliburn.DynamicProxy
 {
     using System;
     using System.Collections.Generic;
@@ -6,24 +6,10 @@ namespace Caliburn.DynamicProxy
     using Core.Behaviors;
 
     /// <summary>
-    /// Used to provide interceptors for a type based on a behavior.
+    /// A base class for <see cref="IBehaviorConfiguration{T}"/>
     /// </summary>
-    public interface IBehaviorConfiguration
-    {
-        /// <summary>
-        /// Gets the interceptors.
-        /// </summary>
-        /// <param name="implementation">The implementation.</param>
-        /// <param name="behavior">The behavior being configured.</param>
-        /// <returns>The interceptors.</returns>
-        IEnumerable<IInterceptor> GetInterceptors(Type implementation, IBehavior behavior);
-    }
-
-    /// <summary>
-    /// A strongly typed version of <see cref="IBehaviorConfiguration"/>.
-    /// </summary>
-    /// <typeparam name="T">The type of the behavior to be configured.</typeparam>
-    public interface IBehaviorConfiguration<T> : IBehaviorConfiguration
+    /// <typeparam name="T">The behavior being configured.</typeparam>
+    public abstract class BehaviorConfigurationBase<T> : IBehaviorConfiguration<T>
         where T : IBehavior
     {
         /// <summary>
@@ -32,6 +18,17 @@ namespace Caliburn.DynamicProxy
         /// <param name="implementation">The implementation.</param>
         /// <param name="behavior">The behavior being configured.</param>
         /// <returns>The interceptors.</returns>
-        IEnumerable<IInterceptor> GetInterceptors(Type implementation, T behavior);
+        public abstract IEnumerable<IInterceptor> GetInterceptors(Type implementation, T behavior);
+
+        /// <summary>
+        /// Gets the interceptors.
+        /// </summary>
+        /// <param name="implementation">The implementation.</param>
+        /// <param name="behavior">The behavior being configured.</param>
+        /// <returns>The interceptors.</returns>
+        public IEnumerable<IInterceptor> GetInterceptors(Type implementation, IBehavior behavior)
+        {
+            return GetInterceptors(implementation, (T)behavior);
+        }
     }
 }

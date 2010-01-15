@@ -6,13 +6,26 @@
     /// <summary>
     /// Implements <see cref="IProxy"/>.
     /// </summary>
-    public class ProxyInterceptor : IInterceptor
+    public class ProxyInterceptor : InterceptorBase
     {
+        private static readonly ProxyInterceptor _instance = new ProxyInterceptor();
+
+        /// <summary>
+        /// Gets the instance.
+        /// </summary>
+        /// <value>The instance.</value>
+        public static ProxyInterceptor Instance
+        {
+            get { return _instance; }
+        }
+
+        private ProxyInterceptor() {}
+
         /// <summary>
         /// Intercepts the specified invocation.
         /// </summary>
         /// <param name="invocation">The invocation.</param>
-        public void Intercept(IInvocation invocation)
+        public override void Intercept(IInvocation invocation)
         {
             if(invocation.Method.DeclaringType.Equals(typeof(IProxy)))
             {

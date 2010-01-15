@@ -11,6 +11,25 @@ namespace Caliburn.PresentationFramework.Behaviors
     public class NotifyPropertyChangedAttribute : Attribute, IBehavior
     {
         /// <summary>
+        /// Gets or sets the default dependency mode.
+        /// </summary>
+        public static DependencyMode DefaultDependencyMode = DependencyMode.AlwaysRecord;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="NotifyPropertyChangedAttribute"/> class.
+        /// </summary>
+        public NotifyPropertyChangedAttribute()
+        {
+            DependencyMode = DefaultDependencyMode;
+        }
+
+        /// <summary>
+        /// Gets or sets the dependency mode.
+        /// </summary>
+        /// <value>The dependency mode.</value>
+        public DependencyMode DependencyMode { get; set; }
+
+        /// <summary>
         /// Gets the interfaces which represent this behavior.
         /// </summary>
         /// <param name="implementation">The implementation.</param>

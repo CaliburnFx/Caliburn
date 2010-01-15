@@ -57,6 +57,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="InterceptorBase.cs" />
+    <Compile Include="BehaviorConfigurationBase.cs" />
     <Compile Include="DynamicProxyFactory.cs" />
     <Compile Include="IBehaviorConfiguration.cs" />
     <Compile Include="NotificationProfile.cs" />

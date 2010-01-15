@@ -6,6 +6,7 @@
     using Castle.Core.Interceptor;
     using Core;
     using PresentationFramework.Behaviors;
+    using PresentationFramework.Filters;
 
     /// <summary>
     /// Stores information about how property change notification should work for a particular type.
@@ -19,16 +20,18 @@
 
         private readonly List<string> _recorded = new List<string>();
         private readonly List<string> _ignores = new List<string>();
-        private readonly Dictionary<string, List<string>> _dependencies = new Dictionary<string, List<string>>();
+        private readonly Dictionary<string, IList<string>> _dependencies = new Dictionary<string, IList<string>>();
         private readonly List<string> _getters = new List<string>();
         private readonly object _recordLock = new object();
+        private readonly DependencyMode _dependencyMode;
 
         /// <summary>
         /// Gets the specified profile for the specified type.
         /// </summary>
         /// <param name="type">The type.</param>
+        /// <param name="behavior">The behavior.</param>
         /// <returns>The profile.</returns>
-        public static NotificationProfile Get(Type type)
+        public static NotificationProfile Get(Type type, NotifyPropertyChangedAttribute behavior)
         {
             NotificationProfile profile;
 
@@ -38,7 +41,7 @@
                 {
                     if(!_profiles.TryGetValue(type, out profile))
                     {
-                        _profiles[type] = profile = new NotificationProfile(type);
+                        _profiles[type] = profile = new NotificationProfile(type, behavior);
                     }
                 }
             }
@@ -46,11 +49,36 @@
             return profile;
         }
 
-        private NotificationProfile(Type type)
+        private NotificationProfile(Type type, NotifyPropertyChangedAttribute behavior)
         {
-            _ignores = (from property in type.GetProperties()
+            _dependencyMode = behavior.DependencyMode;
+
+            var properties = type.GetProperties();
+
+            _ignores = (from property in properties
                         where property.GetAttributes<DoNotNotifyAttribute>(true).Any()
                         select property.Name).ToList();
+
+            var dependents = from property in properties
+                             let dependencies = property.GetAttributes<DependenciesAttribute>(true)
+                             where dependencies.Any()
+                             from dependency in dependencies
+                                 .SelectMany(x => x.Dependencies)
+                                 .Distinct()
+                             select new
+                             {
+                                 Property = property.Name,
+                                 DependsOn = dependency
+                             };
+
+            foreach (var dependent in dependents)
+            {
+                GetOrCreateDependencies(dependent.DependsOn)
+                    .Add(dependent.Property);
+
+                if (!_recorded.Contains(dependent.Property))
+                    _recorded.Add(dependent.Property);
+            }
         }
 
         /// <summary>
@@ -60,22 +88,38 @@
         /// <param name="invocation">The invocation.</param>
         public void HandleGetter(string propertyName, IInvocation invocation)
         {
-            if(!_recorded.Contains(propertyName))
+            switch (_dependencyMode)
             {
-                lock(_recordLock)
-                {
+                case DependencyMode.AlwaysRecord:
+                    _getters.Add(propertyName);
+                    invocation.Proceed();
+                    _getters.Remove(propertyName);
+                    RecordDependencies(propertyName);
+                    break;
+                case DependencyMode.RecordOnce:
                     if(!_recorded.Contains(propertyName))
                     {
-                        _getters.Add(propertyName);
-                        invocation.Proceed();
-                        _getters.Remove(propertyName);
+                        lock(_recordLock)
+                        {
+                            if(!_recorded.Contains(propertyName))
+                            {
+                                _getters.Add(propertyName);
+                                invocation.Proceed();
+                                _getters.Remove(propertyName);
 
-                        RecordDependencies(propertyName);
+                                RecordDependencies(propertyName);
+                            }
+                            else invocation.Proceed();
+                        }
                     }
                     else invocation.Proceed();
-                }
+                    break;
+                case DependencyMode.DoNotRecord:
+                    invocation.Proceed();
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException();
             }
-            else invocation.Proceed();
         }
 
         /// <summary>
@@ -95,12 +139,20 @@
         /// <returns>The dependent property names.</returns>
         public IEnumerable<string> GetDependencies(string propertyName)
         {
-            List<string> properties;
+            IList<string> properties;
 
             if(!_dependencies.TryGetValue(propertyName, out properties))
                 properties = new List<string>();
 
-            return properties;
+            foreach(var prop in properties)
+            {
+                yield return prop;
+
+                foreach(var inner in GetDependencies(prop))
+                {
+                    yield return inner;
+                }
+            }
         }
 
         private void RecordDependencies(string propertyName)
@@ -108,10 +160,7 @@
             if(_getters.Count < 1)
                 return;
 
-            List<string> dependencies;
-
-            if(!_dependencies.TryGetValue(propertyName, out dependencies))
-                _dependencies[propertyName] = dependencies = new List<string>();
+            var dependencies = GetOrCreateDependencies(propertyName);
 
             foreach(var getter in _getters)
             {
@@ -120,6 +169,16 @@
             }
 
             _recorded.Add(propertyName);
+        }
+
+        private IList<string> GetOrCreateDependencies(string propertyName)
+        {
+            IList<string> dependencies;
+
+            if(!_dependencies.TryGetValue(propertyName, out dependencies))
+                _dependencies[propertyName] = dependencies = new List<string>();
+
+            return dependencies;
         }
     }
 }
