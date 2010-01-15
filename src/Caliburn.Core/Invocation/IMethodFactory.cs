@@ -11,7 +11,7 @@ namespace Caliburn.Core.Invocation
         /// Creates an instance of <see cref="IMethod"/> using the <see cref="MethodInfo"/>.
         /// </summary>
         /// <param name="methodInfo">The method info.</param>
-        /// <returns></returns>
+        /// <returns>The method.</returns>
         IMethod CreateFrom(MethodInfo methodInfo);
     }
 }

@@ -5,20 +5,20 @@ namespace Caliburn.Core.Invocation
     using System.Reflection;
 
     /// <summary>
-    /// Represents a generic delegate to a function.
-    /// </summary>
-    public delegate object LateBoundFunc(object target, object[] arguments);
-
-    /// <summary>
-    /// Represents a generic delegate to a procedure.
-    /// </summary>
-    public delegate void LateBoundProc(object target, object[] arguments);
-
-    /// <summary>
     /// A factory for delegates.
     /// </summary>
     public static class DelegateFactory
     {
+        /// <summary>
+        /// Represents a generic delegate to a function.
+        /// </summary>
+        public delegate object LateBoundFunc(object target, object[] arguments);
+
+        /// <summary>
+        /// Represents a generic delegate to a procedure.
+        /// </summary>
+        public delegate void LateBoundProc(object target, object[] arguments);
+
         /// <summary>
         /// Creates a delegate to the specified method.
         /// </summary>
@@ -33,7 +33,13 @@ namespace Caliburn.Core.Invocation
             var call = Expression.Call(
                 Expression.Convert(instanceParameter, method.DeclaringType),
                 method,
-                CreateParameterExpressions(method, argumentsParameter)
+                method.GetParameters().Select(
+                    (parameter, index) =>
+                    Expression.Convert(
+                        Expression.ArrayIndex(argumentsParameter, Expression.Constant(index)),
+                        parameter.ParameterType
+                        )
+                    ).ToArray()
                 );
 
             var lambda = Expression.Lambda<T>(
@@ -45,17 +51,6 @@ namespace Caliburn.Core.Invocation
                 );
 
             return lambda.Compile();
-        }
-
-        private static Expression[] CreateParameterExpressions(MethodInfo method, Expression argumentsParameter)
-        {
-            return method.GetParameters().Select(
-                (parameter, index) =>
-                Expression.Convert(
-                    Expression.ArrayIndex(argumentsParameter, Expression.Constant(index)),
-                    parameter.ParameterType
-                    )
-                ).ToArray();
         }
     }
 }

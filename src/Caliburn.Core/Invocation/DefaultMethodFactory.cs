@@ -127,7 +127,7 @@ namespace Caliburn.Core.Invocation
         /// </summary>
         private class Procedure : MethodProxyBase
         {
-            private readonly LateBoundProc _theDelegate;
+            private readonly DelegateFactory.LateBoundProc _theDelegate;
 
             /// <summary>
             /// Initializes a new instance of the <see cref="Procedure"/> class.
@@ -137,7 +137,7 @@ namespace Caliburn.Core.Invocation
             public Procedure(MethodInfo info, IThreadPool threadPool)
                 : base(info, threadPool)
             {
-                _theDelegate = DelegateFactory.Create<LateBoundProc>(info);
+                _theDelegate = DelegateFactory.Create<DelegateFactory.LateBoundProc>(info);
             }
 
             protected override object SafeInvoke(object instance, object[] parameters)
@@ -161,7 +161,7 @@ namespace Caliburn.Core.Invocation
         /// </summary>
         private class Function : MethodProxyBase
         {
-            private readonly LateBoundFunc _theDelegate;
+            private readonly DelegateFactory.LateBoundFunc _theDelegate;
 
             /// <summary>
             /// Initializes a new instance of the <see cref="Function"/> class.
@@ -171,7 +171,7 @@ namespace Caliburn.Core.Invocation
             public Function(MethodInfo info, IThreadPool threadPool)
                 : base(info, threadPool)
             {
-                _theDelegate = DelegateFactory.Create<LateBoundFunc>(info);
+                _theDelegate = DelegateFactory.Create<DelegateFactory.LateBoundFunc>(info);
             }
 
             protected override object SafeInvoke(object instance, object[] parameters)
