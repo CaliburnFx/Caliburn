@@ -1,6 +1,7 @@
 ﻿namespace Caliburn.Core.Invocation
 {
     using System;
+    using System.Linq;
     using System.Reflection;
 
     /// <summary>
@@ -19,7 +20,7 @@
         public IEventHandler Wire(object sender, EventInfo eventInfo)
         {
             var parameters = eventInfo.EventHandlerType.GetMethod("Invoke").GetParameters();
-            var typeParameters = GetTypeParameters(parameters);
+            var typeParameters = parameters.Select(x => x.ParameterType).ToArray();
 
             var handler = (IEventHandler)Activator.CreateInstance(
                                              genericEventHandlerType.MakeGenericType(typeParameters),
@@ -32,18 +33,6 @@
                 );
 
             return handler;
-        }
-
-        private static Type[] GetTypeParameters(ParameterInfo[] parameters)
-        {
-            if(parameters.Length != 2)
-                throw new CaliburnException("The event signature must have two parameters.");
-
-            return new[]
-            {
-                parameters[0].ParameterType,
-                parameters[1].ParameterType,
-            };
         }
 
         private class GenericEventHandler<T, K> : IEventHandler

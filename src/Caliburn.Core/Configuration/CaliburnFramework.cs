@@ -53,6 +53,8 @@
             return new CaliburnFramework(serviceLocator, register);
         }
 
+        private static readonly Type _moduleType = typeof(IModule);
+
         internal static ICaliburnFramework Instance { get; private set; }
         internal static IModuleHook ModuleHook { get; private set; }
 
@@ -135,7 +137,7 @@
             var registrations = new List<IComponentRegistration>();
             var modules = new List<IModule>();
 
-            _assembliesToInspect.Apply(x => x.Inspect(registrations, modules));
+            _assembliesToInspect.Apply(x => Inspect(x, registrations, modules));
             modules.Apply(AddModule);
 
             var components = _modules.SelectMany(x => x.GetComponents())
@@ -166,13 +168,36 @@
             var registrations = new List<IComponentRegistration>();
             var modules = new List<IModule>();
 
-            assembly.Inspect(registrations, modules);
+            Inspect(assembly, registrations, modules);
 
             _register(registrations);
 
             foreach(var module in modules)
             {
                 AddModule(module);
+            }
+        }
+
+        private static void Inspect(Assembly assembly, ICollection<IComponentRegistration> componentList, ICollection<IModule> modules)
+        {
+            var types = assembly.GetExportedTypes();
+
+            foreach (var type in types)
+            {
+                foreach (var attribute in type.GetAttributes<RegisterAttribute>(true))
+                    componentList.Add(attribute.GetComponentInfo(type));
+            }
+
+            foreach (var type in types)
+            {
+                if (!_moduleType.IsAssignableFrom(type) || type.IsAbstract || type.IsInterface)
+                    continue;
+
+                var singleton = type.GetProperty("Instance", BindingFlags.Public | BindingFlags.Static);
+
+                if (singleton != null)
+                    modules.Add((IModule)singleton.GetValue(null, null));
+                else modules.Add((IModule)Activator.CreateInstance(type));
             }
         }
     }

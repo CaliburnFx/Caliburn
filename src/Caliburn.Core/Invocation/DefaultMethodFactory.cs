@@ -50,7 +50,7 @@ namespace Caliburn.Core.Invocation
         private abstract class MethodProxyBase : MetadataContainer, IMethod
         {
             private readonly MethodInfo _info;
-            protected readonly IThreadPool _threadPool;
+            private readonly IThreadPool _threadPool;
 
             /// <summary>
             /// Initializes a new instance of the <see cref="MethodProxyBase"/> class.
@@ -82,7 +82,10 @@ namespace Caliburn.Core.Invocation
             /// <returns>
             /// The result of the function or null if it is a procedure.
             /// </returns>
-            public abstract object Invoke(object instance, params object[] parameters);
+            public object Invoke(object instance, params object[] parameters)
+            {
+                return SafeInvoke(instance, parameters);
+            }
 
             /// <summary>
             /// Creates a background task for executing this method asynchronously.
@@ -92,7 +95,31 @@ namespace Caliburn.Core.Invocation
             /// <returns>
             /// An instance of <see cref="IBackgroundTask"/>.
             /// </returns>
-            public abstract IBackgroundTask CreateBackgroundTask(object instance, params object[] parameters);
+            public IBackgroundTask CreateBackgroundTask(object instance, params object[] parameters)
+            {
+                return new BackgroundTask(_threadPool, () => SafeInvoke(instance, parameters));
+            }
+
+            protected abstract object SafeInvoke(object instance, object[] parameters);
+
+            protected bool TryThrowParameterMismatch(object[] parameters)
+            {
+                var requirements = Info.GetParameters();
+
+                if (requirements.Length != parameters.Length)
+                {
+                    throw new CaliburnException(
+                        string.Format(
+                            "The method '{0}' expected {1} parameters but was provided {2}.",
+                            Info.Name,
+                            requirements.Length,
+                            parameters.Length
+                            )
+                        );
+                }
+
+                return false;
+            }
         }
 
         /// <summary>
@@ -113,33 +140,7 @@ namespace Caliburn.Core.Invocation
                 _theDelegate = DelegateFactory.Create<LateBoundProc>(info);
             }
 
-            /// <summary>
-            /// Invokes the specified method on the provided instance with the given parameters.
-            /// </summary>
-            /// <param name="instance">The instance.</param>
-            /// <param name="parameters">The parameters.</param>
-            /// <returns>
-            /// The result of the function or null if it is a procedure.
-            /// </returns>
-            public override object Invoke(object instance, params object[] parameters)
-            {
-                return SafeInvoke(instance, parameters);
-            }
-
-            /// <summary>
-            /// Creates a background task for executing this method asynchronously.
-            /// </summary>
-            /// <param name="instance">The instance.</param>
-            /// <param name="parameters">The parameters.</param>
-            /// <returns>
-            /// An instance of <see cref="IBackgroundTask"/>.
-            /// </returns>
-            public override IBackgroundTask CreateBackgroundTask(object instance, params object[] parameters)
-            {
-                return new BackgroundTask(_threadPool, () => SafeInvoke(instance, parameters));
-            }
-
-            private object SafeInvoke(object instance, object[] parameters)
+            protected override object SafeInvoke(object instance, object[] parameters)
             {
                 try
                 {
@@ -148,17 +149,9 @@ namespace Caliburn.Core.Invocation
                 }
                 catch (Exception)
                 {
-                    var requirements = Info.GetParameters();
-
-                    if (requirements.Length != parameters.Length)
-                        throw new CaliburnException(
-                            string.Format(
-                                "The method '{0}' expected {1} parameters but was provided {2}.",
-                                Info.Name,
-                                requirements.Length,
-                                parameters.Length)
-                            );
-                    throw;
+                    if(!TryThrowParameterMismatch(parameters))
+                        throw;
+                    return null;
                 }
             }
         }
@@ -181,33 +174,7 @@ namespace Caliburn.Core.Invocation
                 _theDelegate = DelegateFactory.Create<LateBoundFunc>(info);
             }
 
-            /// <summary>
-            /// Invokes the specified method on the provided instance with the given parameters.
-            /// </summary>
-            /// <param name="instance">The instance.</param>
-            /// <param name="parameters">The parameters.</param>
-            /// <returns>
-            /// The result of the function or null if it is a procedure.
-            /// </returns>
-            public override object Invoke(object instance, params object[] parameters)
-            {
-                return SafeInvoke(instance, parameters);
-            }
-
-            /// <summary>
-            /// Creates a background task for executing this method asynchronously.
-            /// </summary>
-            /// <param name="instance">The instance.</param>
-            /// <param name="parameters">The parameters.</param>
-            /// <returns>
-            /// An instance of <see cref="IBackgroundTask"/>.
-            /// </returns>
-            public override IBackgroundTask CreateBackgroundTask(object instance, params object[] parameters)
-            {
-                return new BackgroundTask(_threadPool, () => SafeInvoke(instance, parameters));
-            }
-
-            private object SafeInvoke(object instance, object[] parameters)
+            protected override object SafeInvoke(object instance, object[] parameters)
             {
                 try
                 {
@@ -215,17 +182,9 @@ namespace Caliburn.Core.Invocation
                 }
                 catch(Exception)
                 {
-                    var requirements = Info.GetParameters();
-
-                    if (requirements.Length != parameters.Length)
-                        throw new CaliburnException(
-                            string.Format(
-                                "The method '{0}' expected {1} parameters but was provided {2}.",
-                                Info.Name,
-                                requirements.Length,
-                                parameters.Length)
-                            );
-                    throw;
+                    if (!TryThrowParameterMismatch(parameters))
+                        throw;
+                    return null;
                 }
             }
         }
