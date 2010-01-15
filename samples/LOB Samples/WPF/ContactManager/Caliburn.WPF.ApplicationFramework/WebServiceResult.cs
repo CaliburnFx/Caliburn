@@ -5,7 +5,6 @@
     using System.Linq.Expressions;
     using Core;
     using Core.Invocation;
-    using Microsoft.Practices.ServiceLocation;
     using PresentationFramework;
 
     public class WebServiceResult<T, K> : IResult
@@ -25,15 +24,15 @@
             _callback = callback;
         }
 
-        public event Action<IResult, Exception> Completed = delegate { };
+        public event EventHandler<ResultCompletionEventArgs> Completed = delegate { };
 
-        public void Execute(IRoutedMessageWithOutcome message, IInteractionNode handlingNode)
+        public void Execute(ResultExecutionContext context)
         {
-            ServiceLocator.Current.GetInstance<ILoadScreen>().StartLoading();
+            context.ServiceLocator.GetInstance<ILoadScreen>().StartLoading();
             //if you would rather disable the control that caused the service to be called, you could do this:
             //ChangeAvailability(message, false);
 
-            var factory = ServiceLocator.Current.GetInstance<IEventHandlerFactory>();
+            var factory = context.ServiceLocator.GetInstance<IEventHandlerFactory>();
 
             var lambda = (LambdaExpression)_serviceCall;
             var methodCall = (MethodCallExpression)lambda.Body;
@@ -42,21 +41,18 @@
             var service = new T();
             var handler = factory.Wire(service, eventName);
 
-            handler.SetActualHandler(ActualHandler);
+            handler.SetActualHandler(args =>{
+                context.ServiceLocator.GetInstance<ILoadScreen>().StopLoading();
+                //or re-enable the control that caused the service to be called:
+                //ChangeAvailability(message, true);
+
+                if (_callback != null)
+                    _callback((K)args[1]);
+
+                Completed(this, new ResultCompletionEventArgs());
+            });
 
             _serviceCall.Compile()(service);
-        }
-
-        private void ActualHandler(object[] parameters)
-        {
-            ServiceLocator.Current.GetInstance<ILoadScreen>().StopLoading();
-            //or re-enable the control that caused the service to be called:
-            //ChangeAvailability(message, true);
-
-            if(_callback != null)
-                _callback((K)parameters[1]);
-
-            Completed(this, null);
         }
 
         private void ChangeAvailability(IRoutedMessage message, bool isAvailable)

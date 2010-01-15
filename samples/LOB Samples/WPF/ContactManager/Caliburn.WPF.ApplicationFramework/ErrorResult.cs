@@ -17,13 +17,13 @@ namespace Caliburn.WPF.ApplicationFramework
             _results = results;
         }
 
-        public event Action<IResult, Exception> Completed = delegate { };
+        public event EventHandler<ResultCompletionEventArgs> Completed = delegate { };
 
-        public void Execute(IRoutedMessageWithOutcome message, IInteractionNode handlingNode)
+        public void Execute(ResultExecutionContext context)
         {
             //just demonstrating the power of a custom IExecutableResult
 
-            var source = (FrameworkElement)message.Source.UIElement;
+            var source = (FrameworkElement)context.Message.Source.UIElement;
             var popup = source.FindName("dirtyPopup") as Popup;
 
             var itemsControl = (ItemsControl)popup.FindName("messageHost");
@@ -38,7 +38,7 @@ namespace Caliburn.WPF.ApplicationFramework
 
             popup.Child.MouseLeave += delegate { popup.IsOpen = false; };
 
-            Completed(this, null);
+            Completed(this, new ResultCompletionEventArgs());
         }
     }
 }
