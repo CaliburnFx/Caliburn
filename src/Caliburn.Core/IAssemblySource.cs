@@ -7,21 +7,8 @@ namespace Caliburn.Core
     /// <summary>
     /// A source of assemblies that are inspectable by the framework.
     /// </summary>
-    public interface IAssemblySource : IEnumerable<Assembly>
+    public interface IAssemblySource : ICollection<Assembly>
     {
-        /// <summary>
-        /// Adds the specified assembly.
-        /// </summary>
-        /// <param name="assembly">The assembly.</param>
-        void Add(Assembly assembly);
-
-        /// <summary>
-        /// Removes the specified assembly.
-        /// </summary>
-        /// <param name="assembly">The assembly.</param>
-        /// <returns></returns>
-        bool Remove(Assembly assembly);
-
         /// <summary>
         /// Occurs when an assembly is added.
         /// </summary>

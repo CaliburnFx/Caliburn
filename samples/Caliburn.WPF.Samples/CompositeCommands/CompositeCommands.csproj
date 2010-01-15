@@ -80,6 +80,12 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Framework\AllCommand.cs" />
+    <Compile Include="Framework\AnyCommand.cs" />
+    <Compile Include="Framework\BaseDictionary.cs" />
+    <Compile Include="Framework\WeakKeyComparer.cs" />
+    <Compile Include="Framework\WeakKeyedDictionary.cs" />
+    <Compile Include="Framework\WeakKeyReference.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>

@@ -19,12 +19,6 @@ namespace Caliburn.Core.Threading
         /// <param name="theDelegate">The delegate to execute.</param>
         public BackgroundTask(IThreadPool threadPool, Func<object> theDelegate)
         {
-            if(threadPool == null)
-                throw new ArgumentNullException("threadPool");
-
-            if(theDelegate == null)
-                throw new ArgumentNullException("theDelegate");
-
             _threadPool = threadPool;
             _theDelegate = theDelegate;
             _context = new BackgroundContext(this);

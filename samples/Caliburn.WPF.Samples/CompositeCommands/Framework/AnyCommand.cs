@@ -1,10 +1,10 @@
-﻿namespace Caliburn.PresentationFramework.Commands
+﻿namespace CompositeCommands.Framework
 {
     using System;
     using System.Collections.Generic;
-    using Core;
-    using Core.MemoryManagement;
-    using Filters;
+    using Caliburn.Core;
+    using Caliburn.PresentationFramework.Commands;
+    using Caliburn.PresentationFramework.Filters;
 
     /// <summary>
     /// An <see cref="ICompositeCommand"/> that can execute when any of its children are available.

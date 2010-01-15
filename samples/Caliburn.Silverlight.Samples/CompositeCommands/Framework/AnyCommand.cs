@@ -1,15 +1,15 @@
-﻿namespace Caliburn.PresentationFramework.Commands
+﻿namespace CompositeCommands.Framework
 {
     using System;
     using System.Collections.Generic;
-    using Core;
-    using Core.MemoryManagement;
-    using Filters;
+    using Caliburn.Core;
+    using Caliburn.PresentationFramework.Commands;
+    using Caliburn.PresentationFramework.Filters;
 
     /// <summary>
-    /// An <see cref="ICompositeCommand"/> whose children must all be available in order to execute.
+    /// An <see cref="ICompositeCommand"/> that can execute when any of its children are available.
     /// </summary>
-    public class AllCommand : PropertyChangedBase, ICompositeCommand
+    public class AnyCommand : PropertyChangedBase, ICompositeCommand
     {
         private readonly WeakKeyedDictionary<CommandMessage, bool?> _children =
             new WeakKeyedDictionary<CommandMessage, bool?>();
@@ -36,17 +36,22 @@
         {
             _children.RemoveCollectedEntries();
 
-            var commands = new List<CommandMessage>(_children.Keys);
+            var allCommands = new List<CommandMessage>(_children.Keys);
+            var commandsToExecute = new List<CommandMessage>();
 
-            foreach(var command in commands)
+            foreach(var command in allCommands)
             {
-                command.Completed += Command_Completed;
-                _children[command] = null;
+                if(_children[command].GetValueOrDefault(false))
+                {
+                    command.Completed += Command_Completed;
+                    _children[command] = null;
+                    commandsToExecute.Add(command);
+                }
             }
 
             DetermineAvailability();
 
-            foreach(var command in commands)
+            foreach(var command in commandsToExecute)
             {
                 command.Process(command, null);
             }
@@ -101,13 +106,13 @@
         private void DetermineAvailability()
         {
             _children.RemoveCollectedEntries();
-            _isAvailable = true;
+            _isAvailable = false;
 
             foreach(var state in _children.Values)
             {
-                if(!state.GetValueOrDefault(false))
+                if(state.GetValueOrDefault(false))
                 {
-                    _isAvailable = false;
+                    _isAvailable = true;
                     break;
                 }
             }

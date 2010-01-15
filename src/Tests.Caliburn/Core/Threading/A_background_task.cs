@@ -17,20 +17,6 @@ namespace Tests.Caliburn.Core.Threading
         }
 
         [Test]
-        [ExpectedException(typeof(ArgumentNullException))]
-        public void requires_a_thread_pool()
-        {
-            new BackgroundTask(null, () => null);
-        }
-
-        [Test]
-        [ExpectedException(typeof(ArgumentNullException))]
-        public void requires_a_delegate()
-        {
-            new BackgroundTask(_threadPool, null);
-        }
-
-        [Test]
         public void can_queue_work()
         {
             bool wasExecuted = false;

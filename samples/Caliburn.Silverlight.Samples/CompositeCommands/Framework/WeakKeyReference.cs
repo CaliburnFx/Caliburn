@@ -1,5 +1,7 @@
-namespace Caliburn.Core.MemoryManagement
+﻿namespace CompositeCommands.Framework
 {
+    using Caliburn.Core.MemoryManagement;
+
     /// <summary>
     /// Provides a weak reference to an object of the given type to be used in
     /// a WeakDictionary along with the given comparer.

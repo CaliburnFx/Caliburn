@@ -129,8 +129,6 @@
     <Compile Include="AvailabilityEffectConverter.cs" />
     <Compile Include="BaseMessageTrigger.cs" />
     <Compile Include="BindableCollection.cs" />
-    <Compile Include="Commands\AllCommand.cs" />
-    <Compile Include="Commands\AnyCommand.cs" />
     <Compile Include="Commands\Command.cs" />
     <Compile Include="Commands\CommandAttribute.cs" />
     <Compile Include="Commands\CommandMessage.silverlight.cs" />

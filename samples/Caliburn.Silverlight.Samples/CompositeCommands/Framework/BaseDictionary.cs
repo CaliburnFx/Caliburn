@@ -1,4 +1,4 @@
-﻿namespace Caliburn.Core.MemoryManagement
+﻿namespace CompositeCommands.Framework
 {
     using System;
     using System.Collections;
@@ -11,7 +11,7 @@
     ///
     /// <remarks>
     /// Provides the plumbing for the portions of IDictionary{TKey,TValue}
-	/// which can reasonably be implemented without any
+    /// which can reasonably be implemented without any
     /// dependency on the underlying representation of the dictionary.
     /// </remarks>
     [DebuggerDisplay("Count = {Count}")]

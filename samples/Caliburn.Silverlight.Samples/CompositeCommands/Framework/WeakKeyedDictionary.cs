@@ -1,7 +1,8 @@
-namespace Caliburn.Core.MemoryManagement
+﻿namespace CompositeCommands.Framework
 {
     using System;
     using System.Collections.Generic;
+    using Caliburn.Core.MemoryManagement;
 
     /// <summary>
     /// A generic dictionary, which allows its keys 

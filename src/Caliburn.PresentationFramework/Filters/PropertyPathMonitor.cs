@@ -5,7 +5,6 @@
     using System.Reflection;
     using Core;
     using Core.Invocation;
-    using Core.MemoryManagement;
 
     /// <summary>
     /// A class used to monitor changes in a property path.
@@ -15,7 +14,7 @@
         private const string ALL_PROPERTIES = "*";
 
         private readonly IMethodFactory _methodFactory;
-        private WeakReference<INotifyPropertyChanged> _notifier;
+        private WeakReference _notifier;
         private Action _notifyOfChange;
 
         private readonly string _propertyPath;
@@ -35,7 +34,7 @@
         public PropertyPathMonitor(IMethodFactory methodFactory, INotifyPropertyChanged notifier, string propertyPath, Action onPathChanged)
         {
             _methodFactory = methodFactory;
-            _notifier = new WeakReference<INotifyPropertyChanged>(notifier);
+            _notifier = new WeakReference(notifier);
             _notifyOfChange = onPathChanged;
             _propertyPath = propertyPath;
             _observedPropertyName = GetRootProperty(_propertyPath);

@@ -4,7 +4,6 @@
     using System.Collections.Generic;
     using global::Caliburn.Core;
     using global::Caliburn.Core.Invocation;
-    using global::Caliburn.Core.MemoryManagement;
     using global::Caliburn.Core.Threading;
     using global::Caliburn.PresentationFramework;
     using global::Caliburn.PresentationFramework.Filters;
@@ -207,7 +206,7 @@
         {
             ExpectTriggerUpdate(1); //strict mock requires expectations
 
-            var disconnectedChainRef = new WeakReference<TheReferencedClass>(_notifier.Model);
+            var disconnectedChainRef = new WeakReference(_notifier.Model);
 
             ConfigureObserver(new[] { "Model.SomeModelProperty" });
             _notifier.Model = new TheReferencedClass();

@@ -2,13 +2,14 @@
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:cal="http://www.caliburnproject.org"
+        xmlns:local="clr-namespace:CompositeCommands.Framework"
         Title="Window1">
     <Window.Resources>
         <!--Note: A composite command that must have all children vote yes to execute.-->
-        <cal:AllCommand x:Key="Grandfather" />
-        <cal:AllCommand x:Key="All" />
+        <local:AllCommand x:Key="Grandfather" />
+        <local:AllCommand x:Key="All" />
         <!--Note: A composite command that can execute if any child votes yes.-->
-        <cal:AnyCommand x:Key="Any" />
+        <local:AnyCommand x:Key="Any" />
     </Window.Resources>
 
     <StackPanel>

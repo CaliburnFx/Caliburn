@@ -1,4 +1,4 @@
-﻿namespace Caliburn.Core.MemoryManagement
+﻿namespace CompositeCommands.Framework
 {
     using System.Collections.Generic;
 

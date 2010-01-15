@@ -79,11 +79,6 @@
     <Compile Include="IoC\IComponentRegistration.cs" />
     <Compile Include="IoC\PerRequest.cs" />
     <Compile Include="IoC\Singleton.cs" />
-    <Compile Include="MemoryManagement\BaseDictionary.cs" />
-    <Compile Include="MemoryManagement\GenericWeakReference.cs" />
-    <Compile Include="MemoryManagement\WeakKeyedDictionary.cs" />
-    <Compile Include="MemoryManagement\WeakKeyComparer.cs" />
-    <Compile Include="MemoryManagement\WeakKeyReference.cs" />
     <Compile Include="Metadata\ExtensionMethods.cs" />
     <Compile Include="Metadata\IMetadataContainer.cs" />
     <Compile Include="Metadata\MetadataContainer.cs" />
