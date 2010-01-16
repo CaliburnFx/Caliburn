@@ -91,10 +91,14 @@
             switch (_dependencyMode)
             {
                 case DependencyMode.AlwaysRecord:
-                    _getters.Add(propertyName);
-                    invocation.Proceed();
-                    _getters.Remove(propertyName);
-                    RecordDependencies(propertyName);
+                    lock (_recordLock)
+                    {
+                        _getters.Add(propertyName);
+                        invocation.Proceed();
+                        _getters.Remove(propertyName);
+
+                        RecordDependencies(propertyName);
+                    }
                     break;
                 case DependencyMode.RecordOnce:
                     if(!_recorded.Contains(propertyName))
@@ -168,7 +172,8 @@
                     dependencies.Add(getter);
             }
 
-            _recorded.Add(propertyName);
+            if(!_recorded.Contains(propertyName))
+                _recorded.Add(propertyName);
         }
 
         private IList<string> GetOrCreateDependencies(string propertyName)
