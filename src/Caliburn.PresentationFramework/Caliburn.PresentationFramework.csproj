@@ -83,6 +83,11 @@
     <Compile Include="Behaviors\DoNotNotifyAttribute.cs" />
     <Compile Include="Behaviors\NotifyPropertyChangedAttribute.cs" />
     <Compile Include="Behaviors\ScreenAttribute.cs" />
+    <Compile Include="Conventions\DefaultViewConventionCategory.cs" />
+    <Compile Include="Conventions\IViewConvention.cs" />
+    <Compile Include="Conventions\IViewConventionCategory.cs" />
+    <Compile Include="Conventions\SubActionConvention.cs" />
+    <Compile Include="Conventions\ViewConventionBase.cs" />
     <Compile Include="ResultCompletionEventArgs.cs" />
     <Compile Include="ResultExecutionContext.cs" />
     <Compile Include="Screens\ScreenExtensions.cs" />
@@ -149,8 +154,6 @@
     <Compile Include="Conventions\DefaultElementConvention.cs" />
     <Compile Include="Conventions\DefaultElementDescription.cs" />
     <Compile Include="Conventions\ExtensionMethods.cs" />
-    <Compile Include="Conventions\IActionConvention.cs" />
-    <Compile Include="Conventions\IBindingConvention.cs" />
     <Compile Include="Conventions\IConventionManager.cs" />
     <Compile Include="Conventions\IElementConvention.cs" />
     <Compile Include="Conventions\IElementDescription.cs" />

@@ -2,6 +2,7 @@
 {
     using System.Windows;
     using System.Windows.Data;
+    using Conventions;
     using Parsers;
 
     /// <summary>
@@ -12,19 +13,21 @@
         /// <summary>
         /// Initializes a new instance of the <see cref="ActionMessageParser"/> class.
         /// </summary>
-        /// <param name="messageBinder"></param>
-        public ActionMessageParser(IMessageBinder messageBinder) 
-            : base(messageBinder) {}
+        /// <param name="conventionManager">The convention manager.</param>
+        /// <param name="messageBinder">The message binder.</param>
+        public ActionMessageParser(IConventionManager conventionManager, IMessageBinder messageBinder) 
+            : base(conventionManager, messageBinder) {}
 
 #if !SILVERLIGHT
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ActionMessageParser"/> class.
         /// </summary>
+        /// <param name="conventionManager">The convention manager.</param>
         /// <param name="messageBinder">The message binder.</param>
         /// <param name="defaultTrigger">The default trigger.</param>
-        public ActionMessageParser(IMessageBinder messageBinder, UpdateSourceTrigger defaultTrigger) 
-            : base(messageBinder, defaultTrigger) {}
+        public ActionMessageParser(IConventionManager conventionManager, IMessageBinder messageBinder, UpdateSourceTrigger defaultTrigger)
+            : base(conventionManager, messageBinder, defaultTrigger) { }
 
 #endif
 

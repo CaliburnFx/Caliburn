@@ -3,6 +3,7 @@
     using System;
     using System.Windows;
     using System.Windows.Data;
+    using Conventions;
     using Microsoft.Practices.ServiceLocation;
     using Parsers;
 
@@ -18,19 +19,21 @@
         /// <summary>
         /// Initializes a new instance of the <see cref="CommandMessageParser"/> class.
         /// </summary>
+        /// <param name="conventionManager">The convention mangager.</param>
         /// <param name="messageBinder">The message binder.</param>
         /// <param name="commandSource">The location that the parser will use to get the command.</param>
-        public CommandMessageParser(IMessageBinder messageBinder, CommandSource commandSource)
-            : this(messageBinder, UpdateSourceTrigger.PropertyChanged, commandSource) {}
+        public CommandMessageParser(IConventionManager conventionManager, IMessageBinder messageBinder, CommandSource commandSource)
+            : this(conventionManager, messageBinder, UpdateSourceTrigger.PropertyChanged, commandSource) { }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="CommandMessageParser"/> class.
         /// </summary>
+        /// <param name="conventionManager">The convention manager.</param>
         /// <param name="messageBinder">The binder.</param>
         /// <param name="defaultTrigger">The default trigger.</param>
         /// <param name="commandSource">The location that the parser will use to get the command.</param>
-        public CommandMessageParser(IMessageBinder messageBinder, UpdateSourceTrigger defaultTrigger, CommandSource commandSource)
-            : base(messageBinder, defaultTrigger)
+        public CommandMessageParser(IConventionManager conventionManager, IMessageBinder messageBinder, UpdateSourceTrigger defaultTrigger, CommandSource commandSource)
+            : base(conventionManager, messageBinder, defaultTrigger)
         {
             _commandSource = commandSource;
         }
@@ -41,8 +44,8 @@
         /// </summary>
         /// <param name="messageBinder">The binder.</param>
         /// <param name="commandSource">The location that the parser will use to get the command.</param>
-        public CommandMessageParser(IMessageBinder messageBinder, CommandSource commandSource)
-            : base(messageBinder)
+        public CommandMessageParser(IConventionManager conventionManager, IMessageBinder messageBinder, CommandSource commandSource)
+            : base(conventionManager, messageBinder)
         {
             _commandSource = commandSource;
         }

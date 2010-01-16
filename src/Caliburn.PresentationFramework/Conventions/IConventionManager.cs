@@ -18,16 +18,10 @@ namespace Caliburn.PresentationFramework.Conventions
         void AddElementConvention(IElementConvention convention);
 
         /// <summary>
-        /// Adds the binding convention.
+        /// Adds the view convention category.
         /// </summary>
-        /// <param name="convention">The convention.</param>
-        void AddBindingConvention(IBindingConvention convention);
-
-        /// <summary>
-        /// Adds the action convention.
-        /// </summary>
-        /// <param name="convention">The convention.</param>
-        void AddActionConvention(IActionConvention convention);
+        /// <param name="conventionCategory">The convention category.</param>
+        void AddViewConventions(IViewConventionCategory conventionCategory);
 
         /// <summary>
         /// Gets the element convention for the type of element specified.

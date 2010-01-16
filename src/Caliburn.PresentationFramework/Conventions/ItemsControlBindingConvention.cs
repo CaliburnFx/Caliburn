@@ -1,7 +1,6 @@
 namespace Caliburn.PresentationFramework.Conventions
 {
     using System;
-    using System.Linq;
     using System.Reflection;
     using System.Windows;
     using System.Windows.Controls;
@@ -11,10 +10,10 @@ namespace Caliburn.PresentationFramework.Conventions
     using ViewModels;
 
     /// <summary>
-    /// An implemenation of <see cref="IBindingConvention"/> that bindings SelectedItem and Header for Selectors and HeaderedItemsControls respectively.
+    /// An implemenation of <see cref="IViewConvention{T}"/> that bindings SelectedItem and Header for Selectors and HeaderedItemsControls respectively.
     /// ItemsTemplates may be conventionally added as well.
     /// </summary>
-    public class ItemsControlBindingConvention : IBindingConvention
+    public class ItemsControlBindingConvention : ViewConventionBase<PropertyInfo>
     {
         private static readonly Type _itemsControlType = typeof(ItemsControl);
         private static readonly Type _selectorControlType = typeof(Selector);
@@ -22,20 +21,6 @@ namespace Caliburn.PresentationFramework.Conventions
 #if !SILVERLIGHT
         private static readonly Type _headeredItemsControlType = typeof(HeaderedItemsControl);
 #endif
-
-        /// <summary>
-        /// Indicates whether this convention is a match and should be applied.
-        /// </summary>
-        /// <param name="viewModelDescription">The view model description.</param>
-        /// <param name="element">The element.</param>
-        /// <param name="property">The property.</param>
-        /// <returns></returns>
-        public bool Matches(IViewModelDescription viewModelDescription, IElementDescription element, PropertyInfo property)
-        {
-            return string.Compare(element.Name, property.Name, StringComparison.CurrentCultureIgnoreCase) == 0
-                   && _itemsControlType.IsAssignableFrom(element.Type);
-        }
-
         /// <summary>
         /// Creates the application of the convention.
         /// </summary>
@@ -43,77 +28,65 @@ namespace Caliburn.PresentationFramework.Conventions
         /// <param name="element">The element.</param>
         /// <param name="property">The property.</param>
         /// <returns>The convention application.</returns>
-        public IViewApplicable CreateApplication(IViewModelDescription description, IElementDescription element, PropertyInfo property)
+        public override IViewApplicable TryCreateApplication(IViewModelDescription description, IElementDescription element, PropertyInfo property)
         {
-            string selectionPropertyName = null;
-            DependencyProperty bindableProperty = null;
-            var mode = BindingMode.TwoWay;
+            var originalPath = DeterminePropertyPath(element.Name);
+            var boundProperty = GetBoundProperty(property, originalPath);
+
+            if (boundProperty == null || !_itemsControlType.IsAssignableFrom(element.Type))
+                return null;
+
+            string path;
+            DependencyProperty bindableProperty;
+            BindingMode mode;
 
             if (_selectorControlType.IsAssignableFrom(element.Type))
             {
-                var selectionProperty = GetSelectionProperty(description, property);
-                if (selectionProperty != null)
+                string selectionPath;
+                PropertyInfo selectionProperty;
+
+                if (TryGetByPattern(property, originalPath, out selectionPath, out selectionProperty,
+                    originalName => originalName.MakeSingular(),
+                    (info, baseName) =>
+                        info.Name == "Current" + baseName ||
+                        info.Name == "Active" + baseName ||
+                        info.Name == "Selected" + baseName)
+                    )
                 {
-                    selectionPropertyName = selectionProperty.Name;
+                    path = selectionPath;
                     bindableProperty = Selector.SelectedItemProperty;
                     mode = selectionProperty.CanWrite ? BindingMode.TwoWay : BindingMode.OneWay;
                 }
+                else return null;
             }
 #if !SILVERLIGHT
-            else if(_headeredItemsControlType.IsAssignableFrom(element.Type))
+            else if (_headeredItemsControlType.IsAssignableFrom(element.Type))
             {
-                var headerProperty = GetHeaderProperty(description, property);
-                if (headerProperty != null)
+                string headerPath;
+                PropertyInfo headerProperty;
+
+                if (TryGetByPattern(property, originalPath, out headerPath, out headerProperty,
+                    originalName => originalName,
+                    (info, baseName) =>
+                        info.Name == baseName + "Header")
+                    )
                 {
-                    selectionPropertyName = headerProperty.Name;
+                    path = headerPath;
                     bindableProperty = HeaderedItemsControl.HeaderProperty;
                     mode = headerProperty.CanWrite ? BindingMode.TwoWay : BindingMode.OneWay;
                 }
+                else return null;
             }
 #endif
+            else return null;
 
             return new ApplicableBinding(
                 element.Name,
                 bindableProperty,
-                selectionPropertyName,
+                path,
                 mode,
                 true
                 );
         }
-
-        /// <summary>
-        /// Gets the selection property.
-        /// </summary>
-        /// <param name="description">The description.</param>
-        /// <param name="property">The property.</param>
-        /// <returns>The property which should be bound, if found.</returns>
-        protected virtual PropertyInfo GetSelectionProperty(IViewModelDescription description, PropertyInfo property)
-        {
-            var singularName = property.Name.MakeSingular();
-            var found = description.Properties
-                .FirstOrDefault(x =>
-                                x.Name == "Current" + singularName ||
-                                x.Name == "Active" + singularName ||
-                                x.Name == "Selected" + singularName
-                );
-
-            return found;
-        }
-
-#if !SILVERLIGHT
-        /// <summary>
-        /// Gets the header property.
-        /// </summary>
-        /// <param name="description">The description.</param>
-        /// <param name="property">The property.</param>
-        /// <returns>The property which should be bound, if found.</returns>
-        protected virtual PropertyInfo GetHeaderProperty(IViewModelDescription description, PropertyInfo property)
-        {
-            var found = description.Properties
-                .FirstOrDefault(x => x.Name == property.Name + "Header");
-
-            return found;
-        }
-#endif
     }
 }

@@ -6,6 +6,7 @@
     using System.Windows;
     using Actions;
     using Commands;
+    using Conventions;
     using Core;
     using Core.Configuration;
     using Core.IoC;
@@ -72,11 +73,12 @@
             var controller = serviceLocator.GetInstance<IRoutedMessageController>();
             var messageBinder = serviceLocator.GetInstance<IMessageBinder>();
             var parser = serviceLocator.GetInstance<IParser>();
+            var conventionManager = serviceLocator.GetInstance<IConventionManager>();
 
-            parser.RegisterMessageParser("Action", new ActionMessageParser(messageBinder));
-            parser.RegisterMessageParser("ResourceCommand", new CommandMessageParser(messageBinder, CommandSource.Resource));
-            parser.RegisterMessageParser("ContainerCommand", new CommandMessageParser(messageBinder, CommandSource.Container));
-            parser.RegisterMessageParser("BoundCommand", new CommandMessageParser(messageBinder, CommandSource.Bound));
+            parser.RegisterMessageParser("Action", new ActionMessageParser(conventionManager, messageBinder));
+            parser.RegisterMessageParser("ResourceCommand", new CommandMessageParser(conventionManager, messageBinder, CommandSource.Resource));
+            parser.RegisterMessageParser("ContainerCommand", new CommandMessageParser(conventionManager, messageBinder, CommandSource.Container));
+            parser.RegisterMessageParser("BoundCommand", new CommandMessageParser(conventionManager, messageBinder, CommandSource.Bound));
 
             Message.Initialize(
                 controller,

@@ -27,6 +27,9 @@ V2 Alpha
 -Added Caliburn.DynamicProxy
 -Removed AllCommand and AnyCommand from framework and moved to Samples along with supporting MemoryManagement from Core.
 -Added ScreenAttribute behavior which transforms a POCO into an IScreen and forwards method calls to proxied type. Forwarded methods can have injectable args and IResult/IEnumerable<IResult> return values.
+-Implemented sub-property binding conventions.
+-Implemented sub-property action conventions.
+-Enabled the WPF message parser to now bind action parameters for elements using a default binding.
 
 V1.1 RTW
 -Added pre-initialization hooks to CaliburnApplication via Marco Amendola's patch.

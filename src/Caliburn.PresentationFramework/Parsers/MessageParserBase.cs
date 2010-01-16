@@ -6,6 +6,7 @@ namespace Caliburn.PresentationFramework.Parsers
     using System.Linq;
     using System.Windows;
     using System.Windows.Data;
+    using Conventions;
 
     /// <summary>
     /// An base implementation of <see cref="IMessageParser"/>.
@@ -14,6 +15,7 @@ namespace Caliburn.PresentationFramework.Parsers
         where T : IRoutedMessage, new()
     {
         private static readonly Regex _regex = new Regex(@",(?=(?:[^']*'[^']*')*(?![^']*'))");
+        private readonly IConventionManager _conventionManager;
         private readonly IMessageBinder _messageBinder;
 
 #if !SILVERLIGHT
@@ -23,16 +25,18 @@ namespace Caliburn.PresentationFramework.Parsers
         /// <summary>
         /// Initializes a new instance of the <see cref="MessageParserBase{T}"/> class.
         /// </summary>
-        protected MessageParserBase(IMessageBinder messageBinder)
-            : this(messageBinder, UpdateSourceTrigger.PropertyChanged) { }
+        protected MessageParserBase(IConventionManager conventionManager, IMessageBinder messageBinder)
+            : this(conventionManager, messageBinder, UpdateSourceTrigger.PropertyChanged) { }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="MessageParserBase{T}"/> class.
         /// </summary>
+        /// <param name="conventionManager">The convention manager.</param>
         /// <param name="messageBinder">The message binder.</param>
         /// <param name="defaultTrigger">The default trigger.</param>
-        protected MessageParserBase(IMessageBinder messageBinder, UpdateSourceTrigger defaultTrigger)
+        protected MessageParserBase(IConventionManager conventionManager, IMessageBinder messageBinder, UpdateSourceTrigger defaultTrigger)
         {
+            _conventionManager = conventionManager;
             _messageBinder = messageBinder;
             _defaultTrigger = defaultTrigger;
         }
@@ -42,8 +46,9 @@ namespace Caliburn.PresentationFramework.Parsers
         /// Initializes a new instance of the <see cref="MessageParserBase{T}"/> class.
         /// </summary>
         /// <param name="messageBinder">The message binder.</param>
-        protected MessageParserBase(IMessageBinder messageBinder)
+        protected MessageParserBase(IConventionManager conventionManager, IMessageBinder messageBinder)
         {
+            _conventionManager = conventionManager;
             _messageBinder = messageBinder;
         }
 #endif
@@ -139,27 +144,44 @@ namespace Caliburn.PresentationFramework.Parsers
 
                 var index = nameAndBindingMode[0].IndexOf('.');
 
-                var elementName = nameAndBindingMode[0].Substring(0, index);
-                var path = new PropertyPath(nameAndBindingMode[0].Substring(index + 1));
+                if (index == -1)
+                {
+                    var element = target.FindName(parameter);
+                    if(element != null)
+                    {
+                        var convention = _conventionManager.GetElementConvention(element.GetType());
 
-                var binding = elementName == "$this"
-                                  ? new Binding
-                                  {
-                                      Path = path,
-                                      Source = target,
-                                      UpdateSourceTrigger = _defaultTrigger
-                                  }
-                                  : new Binding
-                                  {
-                                      Path = path,
-                                      ElementName = elementName,
-                                      UpdateSourceTrigger = _defaultTrigger
-                                  };
+                        if (convention != null)
+                        {
+                            var binding = new Binding(convention.BindableProperty.Name) {ElementName = parameter};
+                            BindingOperations.SetBinding(actualParameter, Parameter.ValueProperty, binding);
+                        }
+                    }
+                }
+                else
+                {
+                    var elementName = nameAndBindingMode[0].Substring(0, index);
+                    var path = new PropertyPath(nameAndBindingMode[0].Substring(index + 1));
 
-                if (nameAndBindingMode.Length == 2)
-                    binding.Mode = (BindingMode)Enum.Parse(typeof(BindingMode), nameAndBindingMode[1]);
+                    var binding = elementName == "$this"
+                                      ? new Binding
+                                      {
+                                          Path = path,
+                                          Source = target,
+                                          UpdateSourceTrigger = _defaultTrigger
+                                      }
+                                      : new Binding
+                                      {
+                                          Path = path,
+                                          ElementName = elementName,
+                                          UpdateSourceTrigger = _defaultTrigger
+                                      };
 
-                BindingOperations.SetBinding(actualParameter, Parameter.ValueProperty, binding);
+                    if(nameAndBindingMode.Length == 2)
+                        binding.Mode = (BindingMode)Enum.Parse(typeof(BindingMode), nameAndBindingMode[1]);
+
+                    BindingOperations.SetBinding(actualParameter, Parameter.ValueProperty, binding);
+                }
 #else
                 var index = parameter.IndexOf('.');
 

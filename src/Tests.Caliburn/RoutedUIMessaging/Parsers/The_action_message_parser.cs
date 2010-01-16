@@ -2,6 +2,7 @@ namespace Tests.Caliburn.RoutedUIMessaging.Parsers
 {
     using global::Caliburn.PresentationFramework;
     using global::Caliburn.PresentationFramework.Actions;
+    using global::Caliburn.PresentationFramework.Conventions;
     using Microsoft.Practices.ServiceLocation;
     using NUnit.Framework;
     using NUnit.Framework.SyntaxHelpers;
@@ -14,7 +15,10 @@ namespace Tests.Caliburn.RoutedUIMessaging.Parsers
 
         protected override void given_the_context_of()
         {
-            _parser = new ActionMessageParser(MockRepository.GenerateStub<IMessageBinder>());
+            _parser = new ActionMessageParser(
+                MockRepository.GenerateStub<IConventionManager>(),
+                MockRepository.GenerateStub<IMessageBinder>()
+                );
 
             var container = Stub<IServiceLocator>();
             ServiceLocator.SetLocatorProvider(() => container);

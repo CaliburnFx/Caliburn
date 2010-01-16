@@ -4,6 +4,7 @@ namespace Caliburn.PresentationFramework.Conventions
     using System.Collections;
     using System.Collections.Generic;
     using System.Linq;
+    using System.Reflection;
     using System.Windows;
     using System.Windows.Controls;
     using System.Windows.Controls.Primitives;
@@ -23,8 +24,7 @@ namespace Caliburn.PresentationFramework.Conventions
         private readonly IEventHandlerFactory _eventHandlerFactory;
 
         private readonly Dictionary<Type, IElementConvention> _elementConventions = new Dictionary<Type, IElementConvention>();
-        private readonly List<IBindingConvention> _bindingConventions = new List<IBindingConvention>();
-        private readonly List<IActionConvention> _actionConventions = new List<IActionConvention>();
+        private readonly List<IViewConventionCategory> _viewConventions = new List<IViewConventionCategory>();
 
         /// <summary>
         /// Initializes a new instance of the <see cref="DefaultConventionManager"/> class.
@@ -39,11 +39,7 @@ namespace Caliburn.PresentationFramework.Conventions
             GetDefaultElementConventions()
                 .Apply(AddElementConvention);
 
-            GetDefaultBindingConventions()
-                .Apply(AddBindingConvention);
-
-            GetDefaultActionConventions()
-                .Apply(AddActionConvention);
+            SetupDefaultViewConventions();
         }
 
         /// <summary>
@@ -56,21 +52,12 @@ namespace Caliburn.PresentationFramework.Conventions
         }
 
         /// <summary>
-        /// Adds the binding convention.
+        /// Adds the view conventions.
         /// </summary>
-        /// <param name="convention">The convention.</param>
-        public void AddBindingConvention(IBindingConvention convention)
+        /// <param name="conventionCategory">The convention set.</param>
+        public void AddViewConventions(IViewConventionCategory conventionCategory)
         {
-            _bindingConventions.Add(convention);
-        }
-
-        /// <summary>
-        /// Adds the action convention.
-        /// </summary>
-        /// <param name="convention">The convention.</param>
-        public void AddActionConvention(IActionConvention convention)
-        {
-            _actionConventions.Add(convention);
+            _viewConventions.Add(conventionCategory);
         }
 
         /// <summary>
@@ -103,27 +90,17 @@ namespace Caliburn.PresentationFramework.Conventions
         {
             foreach (var elementDescription in elementDescriptions)
             {
-                var actionMatches = from convention in _actionConventions
-                                    from action in viewModelDescription.Actions
-                                    where convention.Matches(viewModelDescription, elementDescription, action)
-                                    select convention.CreateApplication(viewModelDescription, elementDescription, action);
-
-                foreach (var match in actionMatches)
+                foreach(var set in _viewConventions)
                 {
-                    yield return match;
-                }
+                    var applications = set.GetApplications(viewModelDescription, elementDescription);
 
-                if(actionMatches.Any())
-                    continue;
+                    foreach(var application in applications)
+                    {
+                        yield return application;
+                    }
 
-                var propertyMatches = from convention in _bindingConventions
-                                      from property in viewModelDescription.Properties
-                                      where convention.Matches(viewModelDescription, elementDescription, property)
-                                      select convention.CreateApplication(viewModelDescription, elementDescription, property);
-
-                foreach (var match in propertyMatches)
-                {
-                    yield return match;
+                    if(applications.Any())
+                        break;
                 }
             }
         }
@@ -162,23 +139,20 @@ namespace Caliburn.PresentationFramework.Conventions
             return "Can" + baseName;
         }
 
-        /// <summary>
-        /// Gets the default binding conventions.
-        /// </summary>
-        /// <returns></returns>
-        protected virtual IEnumerable<IBindingConvention> GetDefaultBindingConventions()
+        protected virtual void SetupDefaultViewConventions()
         {
-            yield return new DefaultBindingConvention();
-            yield return new ItemsControlBindingConvention();
-        }
+            var actionSet = new DefaultViewConventionCategory<IAction>(x => x.Actions);
+            actionSet.AddConvention(new DefaultActionConvention());
+            AddViewConventions(actionSet);
 
-        /// <summary>
-        /// Gets the default action conventions.
-        /// </summary>
-        /// <returns></returns>
-        protected virtual IEnumerable<IActionConvention> GetDefaultActionConventions()
-        {
-            yield return new DefaultActionConvention();
+            var bindingSet = new DefaultViewConventionCategory<PropertyInfo>(x => x.Properties);
+            bindingSet.AddConvention(new DefaultBindingConvention());
+            bindingSet.AddConvention(new ItemsControlBindingConvention());
+            AddViewConventions(bindingSet);
+
+            var subActions = new DefaultViewConventionCategory<PropertyInfo>(x => x.Properties);
+            subActions.AddConvention(new SubActionConvention());
+            AddViewConventions(subActions);
         }
 
         /// <summary>

@@ -2,37 +2,13 @@ namespace Caliburn.PresentationFramework.Conventions
 {
     using System;
     using Actions;
-    using Microsoft.Practices.ServiceLocation;
     using ViewModels;
 
     /// <summary>
-    /// The default implementation of <see cref="IActionConvention"/>.
+    /// The default implementation of <see cref="IViewConvention{T}"/> for actions.
     /// </summary>
-    public class DefaultActionConvention : IActionConvention
+    public class DefaultActionConvention : ViewConventionBase<IAction>
     {
-        private static IMessageBinder _messageBinder;
-        private static IMessageBinder MessageBinder
-        {
-            get
-            {
-                if (_messageBinder == null)
-                    _messageBinder = ServiceLocator.Current.GetInstance<IMessageBinder>();
-                return _messageBinder;
-            }
-        }
-
-        /// <summary>
-        /// MIndicates whether this convention is a match and should be applied.
-        /// </summary>
-        /// <param name="viewModelDescription">The view model description.</param>
-        /// <param name="element">The element.</param>
-        /// <param name="action">The action.</param>
-        /// <returns></returns>
-        public bool Matches(IViewModelDescription viewModelDescription, IElementDescription element, IAction action)
-        {
-            return string.Compare(element.Name, action.Name, StringComparison.CurrentCultureIgnoreCase) == 0;
-        }
-
         /// <summary>
         /// Creates the application of the convention.
         /// </summary>
@@ -40,31 +16,14 @@ namespace Caliburn.PresentationFramework.Conventions
         /// <param name="element">The element.</param>
         /// <param name="action">The action.</param>
         /// <returns></returns>
-        public IViewApplicable CreateApplication(IViewModelDescription description, IElementDescription element, IAction action)
+        public override IViewApplicable TryCreateApplication(IViewModelDescription description, IElementDescription element, IAction action)
         {
-            var message = action.Name;
+            if (string.Compare(element.Name, action.Name, StringComparison.CurrentCultureIgnoreCase) != 0)
+                return null;
 
-            if (action.Requirements.Count > 0)
-            {
-                message += "(";
+            var message = CreateActionMessage(action);
 
-                foreach (var requirement in action.Requirements)
-                {
-                    var paramName = requirement.Name;
-                    var specialValue = "$" + paramName;
-
-                    if (MessageBinder.IsSpecialValue(specialValue))
-                        paramName = specialValue;
-
-                    message += paramName + ",";
-                }
-
-                message = message.Remove(message.Length - 1, 1);
-
-                message += ")";
-            }
-
-            return new ApplicableAction(element.Name, message);
+            return new ApplicableAction(element.Name, null, message);
         }
     }
 }
