@@ -3,6 +3,7 @@ namespace Caliburn.PresentationFramework.Behaviors
     using System;
     using System.Collections.Generic;
     using System.ComponentModel;
+    using Core;
     using Core.Behaviors;
 
     /// <summary>
@@ -37,7 +38,7 @@ namespace Caliburn.PresentationFramework.Behaviors
         public IEnumerable<Type> GetInterfaces(Type implementation)
         {
             if(!typeof(INotifyPropertyChanged).IsAssignableFrom(implementation))
-                yield return typeof(INotifyPropertyChanged);
+                yield return typeof(INotifyPropertyChangedEx);
 
             yield return typeof(IProxy);
         }

@@ -57,17 +57,19 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="InterceptorBase.cs" />
-    <Compile Include="BehaviorConfigurationBase.cs" />
+    <Compile Include="Interceptors\InterceptorBase.cs" />
+    <Compile Include="Configuration\BehaviorConfigurationBase.cs" />
     <Compile Include="DynamicProxyFactory.cs" />
-    <Compile Include="IBehaviorConfiguration.cs" />
-    <Compile Include="NotificationProfile.cs" />
-    <Compile Include="NotifyPropertyChangedBaseInterceptor.cs" />
-    <Compile Include="NotifyPropertyChangedConfiguration.cs" />
-    <Compile Include="NotifyPropertyChangedNoInterfaceInterceptor.cs" />
-    <Compile Include="NotifyPropertyChangedWithInterfaceInterceptor.cs" />
+    <Compile Include="Configuration\IBehaviorConfiguration.cs" />
+    <Compile Include="Interceptors\NotificationProfile.cs" />
+    <Compile Include="Interceptors\NotifyPropertyChangedBaseInterceptor.cs" />
+    <Compile Include="Configuration\NotifyPropertyChangedConfiguration.cs" />
+    <Compile Include="Interceptors\NotifyPropertyChangedNoInterfaceInterceptor.cs" />
+    <Compile Include="Interceptors\NotifyPropertyChangedWithInterfaceInterceptor.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="ProxyInterceptor.cs" />
+    <Compile Include="Interceptors\ProxyInterceptor.cs" />
+    <Compile Include="Configuration\ScreenConfiguration.cs" />
+    <Compile Include="Interceptors\ScreenInterceptor.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Caliburn.Core\Caliburn.Core.csproj">

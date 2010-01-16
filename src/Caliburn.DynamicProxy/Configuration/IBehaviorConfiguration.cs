@@ -1,4 +1,4 @@
-namespace Caliburn.DynamicProxy
+namespace Caliburn.DynamicProxy.Configuration
 {
     using System;
     using System.Collections.Generic;
@@ -23,8 +23,7 @@ namespace Caliburn.DynamicProxy
     /// A strongly typed version of <see cref="IBehaviorConfiguration"/>.
     /// </summary>
     /// <typeparam name="T">The type of the behavior to be configured.</typeparam>
-    public interface IBehaviorConfiguration<T> : IBehaviorConfiguration
-        where T : IBehavior
+    public interface IBehaviorConfiguration<T> : IBehaviorConfiguration where T : IBehavior
     {
         /// <summary>
         /// Gets the interceptors.

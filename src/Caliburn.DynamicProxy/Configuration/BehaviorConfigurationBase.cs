@@ -1,4 +1,4 @@
-﻿namespace Caliburn.DynamicProxy
+﻿namespace Caliburn.DynamicProxy.Configuration
 {
     using System;
     using System.Collections.Generic;

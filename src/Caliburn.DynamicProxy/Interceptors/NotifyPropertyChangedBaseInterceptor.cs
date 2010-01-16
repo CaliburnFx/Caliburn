@@ -1,4 +1,4 @@
-﻿namespace Caliburn.DynamicProxy
+﻿namespace Caliburn.DynamicProxy.Interceptors
 {
     using System;
     using System.ComponentModel;

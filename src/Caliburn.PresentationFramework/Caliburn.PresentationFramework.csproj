@@ -82,6 +82,7 @@
     <Compile Include="Behaviors\DependencyMode.cs" />
     <Compile Include="Behaviors\DoNotNotifyAttribute.cs" />
     <Compile Include="Behaviors\NotifyPropertyChangedAttribute.cs" />
+    <Compile Include="Behaviors\ScreenAttribute.cs" />
     <Compile Include="ResultCompletionEventArgs.cs" />
     <Compile Include="ResultExecutionContext.cs" />
     <Compile Include="Screens\ScreenExtensions.cs" />

@@ -1,4 +1,4 @@
-﻿namespace Caliburn.DynamicProxy
+﻿namespace Caliburn.DynamicProxy.Interceptors
 {
     using System;
     using System.Collections.Generic;
@@ -7,6 +7,7 @@
     using Core;
     using PresentationFramework.Behaviors;
     using PresentationFramework.Filters;
+    using ExtensionMethods=Core.ExtensionMethods;
 
     /// <summary>
     /// Stores information about how property change notification should work for a particular type.
@@ -56,7 +57,7 @@
             var properties = type.GetProperties();
 
             _ignores = (from property in properties
-                        where property.GetAttributes<DoNotNotifyAttribute>(true).Any()
+                        where ExtensionMethods.GetAttributes<DoNotNotifyAttribute>(property, true).Any()
                         select property.Name).ToList();
 
             var dependents = from property in properties

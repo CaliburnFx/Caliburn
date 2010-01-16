@@ -1,4 +1,4 @@
-﻿namespace Caliburn.DynamicProxy
+﻿namespace Caliburn.DynamicProxy.Interceptors
 {
     using Castle.Core.Interceptor;
     using Core.Behaviors;
@@ -30,14 +30,9 @@
             if(invocation.Method.DeclaringType.Equals(typeof(IProxy)))
             {
                 if(invocation.Method.Name == "get_OriginalType")
-                {
                     invocation.ReturnValue = invocation.Proxy.GetType().BaseType;
-                }
             }
-            else
-            {
-                invocation.Proceed();
-            }
+            else invocation.Proceed();
         }
     }
 }

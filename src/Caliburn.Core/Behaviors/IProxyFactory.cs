@@ -1,6 +1,7 @@
 namespace Caliburn.Core.Behaviors
 {
     using System;
+    using System.Collections.Generic;
 
     /// <summary>
     /// Implemented by services that can create proxies.
@@ -14,6 +15,6 @@ namespace Caliburn.Core.Behaviors
         /// <param name="behaviors">The proxy behaviors.</param>
         /// <param name="constructorArgs">The constructor args.</param>
         /// <returns>The proxy.</returns>
-        object CreateProxy(Type type, IBehavior[] behaviors, object[] constructorArgs);
+        object CreateProxy(Type type, IEnumerable<IBehavior> behaviors, IEnumerable<object> constructorArgs);
     }
 }

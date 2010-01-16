@@ -26,6 +26,7 @@ V2 Alpha
 -Changed Caliburn.Castle to Caliburn.Windsor.
 -Added Caliburn.DynamicProxy
 -Removed AllCommand and AnyCommand from framework and moved to Samples along with supporting MemoryManagement from Core.
+-Added ScreenAttribute behavior which transforms a POCO into an IScreen and forwards method calls to proxied type. Forwarded methods can have injectable args and IResult/IEnumerable<IResult> return values.
 
 V1.1 RTW
 -Added pre-initialization hooks to CaliburnApplication via Marco Amendola's patch.

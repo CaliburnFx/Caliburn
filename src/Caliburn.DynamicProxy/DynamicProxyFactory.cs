@@ -4,6 +4,7 @@
     using System.Collections.Generic;
     using System.Linq;
     using Castle.DynamicProxy;
+    using Configuration;
     using Core.Behaviors;
     using PresentationFramework.Behaviors;
 
@@ -23,6 +24,7 @@
         public DynamicProxyFactory()
         {
             AddConfiguration<NotifyPropertyChangedAttribute, NotifyPropertyChangedConfiguration>();
+            AddConfiguration<ScreenAttribute, ScreenConfiguration>();
         }
 
         /// <summary>
@@ -44,7 +46,7 @@
         /// <param name="behaviors">The proxy behaviors.</param>
         /// <param name="constructorArgs">The constructor args.</param>
         /// <returns>The proxy.</returns>
-        public object CreateProxy(Type type, IBehavior[] behaviors, object[] constructorArgs)
+        public object CreateProxy(Type type, IEnumerable<IBehavior> behaviors, IEnumerable<object> constructorArgs)
         {
             var interfaces = behaviors.SelectMany(x => x.GetInterfaces(type))
                 .Distinct()
@@ -59,7 +61,7 @@
                 type,
                 interfaces,
                 ProxyGenerationOptions.Default,
-                constructorArgs,
+                constructorArgs.ToArray(),
                 interceptors
                 );
         }
