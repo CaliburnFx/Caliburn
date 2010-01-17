@@ -145,19 +145,7 @@ namespace Caliburn.PresentationFramework.Parsers
                 var index = nameAndBindingMode[0].IndexOf('.');
 
                 if (index == -1)
-                {
-                    var element = target.FindName(parameter);
-                    if(element != null)
-                    {
-                        var convention = _conventionManager.GetElementConvention(element.GetType());
-
-                        if (convention != null)
-                        {
-                            var binding = new Binding(convention.BindableProperty.Name) {ElementName = parameter};
-                            BindingOperations.SetBinding(actualParameter, Parameter.ValueProperty, binding);
-                        }
-                    }
-                }
+                    actualParameter.Bind(target, parameter, null);
                 else
                 {
                     var elementName = nameAndBindingMode[0].Substring(0, index);

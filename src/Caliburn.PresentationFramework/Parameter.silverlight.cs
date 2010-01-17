@@ -2,16 +2,8 @@
 namespace Caliburn.PresentationFramework
 {
     using System;
-    using System.Windows;
     using System.Windows.Markup;
-    using System.Windows.Data;
-    using System.Windows.Controls;
-    using Caliburn.Core;
-    using Caliburn.Core.Invocation;
-    using System.Reflection;
     using System.ComponentModel;
-    using Microsoft.Practices.ServiceLocation;
-    using Conventions;
 
     /// <summary>
     /// Represents a parameter of a message.
@@ -20,7 +12,6 @@ namespace Caliburn.PresentationFramework
     public class Parameter : INotifyPropertyChanged
     {
         private object _value;
-        private bool _isLoaded;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Parameter"/> class.
@@ -79,68 +70,7 @@ namespace Caliburn.PresentationFramework
         /// <param name="node">The node.</param>
         public void Configure(IInteractionNode node)
         {
-            if (!string.IsNullOrEmpty(ElementName))
-            {
-                var element = node.UIElement as FrameworkElement;
-
-                if (element != null)
-                {
-                    element.Loaded +=
-                        (s, e) => {
-                            if(_isLoaded) return;
-
-                            _isLoaded = true;
-                            var source = element.FindNameExhaustive<object>(ElementName, false);
-
-                            if (source != null)
-                            {
-                                if(!string.IsNullOrEmpty(Path))
-                                {
-                                    var sourceType = source.GetType();
-                                    var property = sourceType.GetProperty(Path);
-
-                                    EventInfo changeEvent = null;
-                                    
-                                    if(Path == "SelectedItem")
-                                        changeEvent = sourceType.GetEvent("SelectionChanged");
-                                    if(changeEvent == null)
-                                        changeEvent = sourceType.GetEvent(Path + "Changed");
-                                    if(changeEvent == null)
-                                        WireToDefaultEvent(sourceType, source, property);
-                                    else
-                                    {
-                                        ServiceLocator.Current.GetInstance<IEventHandlerFactory>().Wire(source, changeEvent)
-                                            .SetActualHandler(parameters => {
-                                                Value = property.GetValue(source, null);
-                                            });
-                                    }
-                                }
-                                else WireToDefaultEvent(source.GetType(), source, null);
-                            }
-                        };
-                }
-            }
-        }
-
-        private void WireToDefaultEvent(Type type, object source, PropertyInfo property)
-        {
-            var defaults = ServiceLocator.Current.GetInstance<IConventionManager>().GetElementConvention(type);
-
-            if(defaults == null)
-                throw new CaliburnException(
-                    "Insuficient information provided for wiring action parameters.  Please set interaction defaults for "  + type.FullName
-                    );
-
-            if(property == null)
-                ServiceLocator.Current.GetInstance<IEventHandlerFactory>().Wire(source, defaults.EventName)
-                    .SetActualHandler(parameters => {
-                        Value = defaults.GetValue(source);
-                    });
-            else
-                ServiceLocator.Current.GetInstance<IEventHandlerFactory>().Wire(source, defaults.EventName)
-                    .SetActualHandler(parameters => {
-                        Value = property.GetValue(source, null);
-                    });
+            this.Bind(node.UIElement, ElementName, Path);
         }
     }
 }

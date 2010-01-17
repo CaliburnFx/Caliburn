@@ -1,10 +1,14 @@
 ﻿namespace Caliburn.PresentationFramework
 {
+    using System;
+    using System.Reflection;
     using System.Windows;
     using System.Windows.Data;
     using System.Windows.Media;
     using Conventions;
     using Core;
+    using Core.Invocation;
+    using Microsoft.Practices.ServiceLocation;
 
     /// <summary>
     /// Extension methods related to the PresentationFramework classes.
@@ -259,6 +263,78 @@
                     );
 
             return defaults;
+        }
+
+        /// <summary>
+        /// Binds the specified parameter to an element's property without using databinding.
+        /// Rather, event name conventions are used to wire to property changes and push updates to the parameter value.
+        /// </summary>
+        /// <param name="parameter">The parameter.</param>
+        /// <param name="element">The element.</param>
+        /// <param name="elementName">Name of the element.</param>
+        /// <param name="path">The path.</param>
+        public static void Bind(this Parameter parameter, DependencyObject element, string elementName, string path)
+        {
+            if (string.IsNullOrEmpty(elementName))
+                return;
+
+            bool isLoaded = false;
+
+            element.OnLoad(
+                (s, e) =>{
+                    if(isLoaded)
+                        return;
+
+                    isLoaded = true;
+
+                    var source = element.FindNameExhaustive<object>(elementName, false);
+                    if(source == null)
+                        return;
+
+                    if(!string.IsNullOrEmpty(path))
+                    {
+                        var sourceType = source.GetType();
+                        var property = sourceType.GetProperty(path);
+
+                        EventInfo changeEvent = null;
+
+                        if(path == "SelectedItem")
+                            changeEvent = sourceType.GetEvent("SelectionChanged");
+                        if(changeEvent == null)
+                            changeEvent = sourceType.GetEvent(path + "Changed");
+                        if(changeEvent == null)
+                            WireToDefaultEvent(parameter, sourceType, source, property);
+                        else
+                        {
+                            ServiceLocator.Current.GetInstance<IEventHandlerFactory>().Wire(source, changeEvent)
+                                .SetActualHandler(parameters =>{
+                                    parameter.Value = property.GetValue(source, null);
+                                });
+                        }
+                    }
+                    else WireToDefaultEvent(parameter, source.GetType(), source, null);
+                });
+        }
+
+        private static void WireToDefaultEvent(Parameter parameter, Type type, object source, PropertyInfo property)
+        {
+            var defaults = ServiceLocator.Current.GetInstance<IConventionManager>()
+                .GetElementConvention(type);
+
+            if (defaults == null)
+                throw new CaliburnException(
+                    "Insuficient information provided for wiring action parameters.  Please set interaction defaults for " + type.FullName
+                    );
+
+            if (property == null)
+                ServiceLocator.Current.GetInstance<IEventHandlerFactory>().Wire(source, defaults.EventName)
+                    .SetActualHandler(parameters =>{
+                        parameter.Value = defaults.GetValue(source);
+                    });
+            else ServiceLocator.Current.GetInstance<IEventHandlerFactory>().Wire(source, defaults.EventName)
+                    .SetActualHandler(parameters => {
+                        parameter.Value = property.GetValue(source, null);
+                    });
         }
     }
 }
