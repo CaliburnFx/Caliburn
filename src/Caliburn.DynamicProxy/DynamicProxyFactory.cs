@@ -5,7 +5,9 @@
     using System.Linq;
     using Castle.DynamicProxy;
     using Configuration;
+    using Core;
     using Core.Behaviors;
+    using Interceptors;
     using PresentationFramework.Behaviors;
 
     /// <summary>
@@ -57,13 +59,18 @@
                                     .GetInterceptors(type, behavior)
                                 select intercepor).Distinct().ToArray();
 
-            return proxyGenerator.CreateClassProxy(
+            var proxy = proxyGenerator.CreateClassProxy(
                 type,
                 interfaces,
                 ProxyGenerationOptions.Default,
                 constructorArgs.ToArray(),
                 interceptors
                 );
+
+            interceptors.OfType<IInitializableInterceptor>()
+                .Apply(x => x.Initialize(proxy));
+
+            return proxy;
         }
     }
 }

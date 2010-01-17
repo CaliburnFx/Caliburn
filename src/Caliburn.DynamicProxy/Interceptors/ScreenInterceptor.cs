@@ -17,7 +17,6 @@ namespace Caliburn.DynamicProxy.Interceptors
     public class ScreenInterceptor : InterceptorBase
     {
         private readonly ScreenAttribute _attribute;
-        private bool _notifierChecked;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ScreenInterceptor"/> class.
@@ -29,23 +28,25 @@ namespace Caliburn.DynamicProxy.Interceptors
         }
 
         /// <summary>
+        /// Initializes the interceptor with the specified proxy.
+        /// </summary>
+        /// <param name="proxy">The proxy.</param>
+        public override void Initialize(object proxy)
+        {
+            var notifier = proxy as INotifyPropertyChangedEx;
+            if (notifier != null)
+                notifier.PropertyChanged += (s, e) =>{
+                    if(e.PropertyName == _attribute.DisplayName)
+                        notifier.NotifyOfPropertyChange("DisplayName");
+                };
+        }
+
+        /// <summary>
         /// Intercepts the specified invocation.
         /// </summary>
         /// <param name="invocation">The invocation.</param>
         public override void Intercept(IInvocation invocation)
         {
-            if (!_notifierChecked)
-            {
-                _notifierChecked = true;
-
-                var notifier = invocation.Proxy as INotifyPropertyChangedEx;
-                if(notifier != null)
-                    notifier.PropertyChanged += (s, e) =>{
-                        if(e.PropertyName == _attribute.DisplayName)
-                            notifier.NotifyOfPropertyChange("DisplayName");
-                    };
-            }
-
             if (invocation.Method.DeclaringType.Equals(typeof(IScreen)))
             {
                 switch(invocation.Method.Name)

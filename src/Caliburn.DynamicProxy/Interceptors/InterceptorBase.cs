@@ -5,13 +5,21 @@
     /// <summary>
     /// A base class for interceptors.
     /// </summary>
-    public abstract class InterceptorBase : IInterceptor
+    public abstract class InterceptorBase : IInitializableInterceptor
     {
         /// <summary>
         /// Intercepts the specified invocation.
         /// </summary>
         /// <param name="invocation">The invocation.</param>
         public abstract void Intercept(IInvocation invocation);
+
+        /// <summary>
+        /// Initializes the interceptor with the specified proxy.
+        /// </summary>
+        /// <param name="proxy">The proxy.</param>
+        public virtual void Initialize(object proxy)
+        {
+        }
 
         /// <summary>
         /// Determines whether the specified <see cref="T:System.Object"/> is equal to the current <see cref="T:System.Object"/>.
