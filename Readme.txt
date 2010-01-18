@@ -1,8 +1,6 @@
 Caliburn
 
-Running build.cmd will execute the NAnt build script.  
-The default settings will ouput debug versions of Caliburn for both WPF and Silverlight to the bin folder.  
-There are various settings available in Caliburn.build which you can use to build for release, generate code docs, etc.
+Running one of the build commands (build-*.cmd) will execute the NAnt build script in the chosen configuration. 
 
 Throughout the solution you will see files with the extensions .silverlight.cs or .wpf.cs which indicate major platform differences.  
 Elsewhere I have used various ammounts of conditional compilation as necessary.

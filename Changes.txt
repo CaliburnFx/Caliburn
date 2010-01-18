@@ -60,6 +60,8 @@ V1.1 Release Candidate
 -Updated to Castle Windsor 2.1, Dynamic Proxy 2.2. Added official Windsor support for Silverlight 3.0 and 4.0
 -Fixed a minor bug in View Contexts.
 -Enabled WPF Action parameters to bind to default event/property by specifying only an element name as the arg.
+-Added the Silverlight Navigation Sample to How Tos.
+-Created three different build-*.cmd for the major build scenarios.
 
 V1 RTW
 -The DefaultBinder will now throw on type activation failure.
