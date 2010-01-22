@@ -5,7 +5,9 @@ namespace Caliburn.PresentationFramework.ApplicationModel
     using System;
     using System.ComponentModel;
     using System.Windows;
+    using System.Windows.Controls;
     using System.Windows.Data;
+    using System.Windows.Navigation;
     using Screens;
     using ViewModels;
 
@@ -50,8 +52,18 @@ namespace Caliburn.PresentationFramework.ApplicationModel
         /// <param name="handleShutdownModel">The handle shutdown model.</param>
         public virtual void Show(object rootModel, object context, Action<ISubordinate, Action> handleShutdownModel)
         {
-            var window = CreateWindow(rootModel, context, handleShutdownModel);
-            window.Show();
+            var navWindow = Application.Current.MainWindow as NavigationWindow;
+
+            if (navWindow != null)
+            {
+                var window = CreatePage(rootModel, context, handleShutdownModel);
+                navWindow.Navigate(window);
+            }
+            else
+            {
+                var window = CreateWindow(rootModel, context, handleShutdownModel);
+                window.Show();
+            }
         }
 
         /// <summary>
@@ -127,6 +139,53 @@ namespace Caliburn.PresentationFramework.ApplicationModel
             }
 
             return window;
+        }
+
+        /// <summary>
+        /// Creates the page.
+        /// </summary>
+        /// <param name="rootModel">The root model.</param>
+        /// <param name="context">The context.</param>
+        /// <param name="handleShutdownModel">The handle shutdown model.</param>
+        /// <returns></returns>
+        public Page CreatePage(object rootModel, object context, Action<ISubordinate, Action> handleShutdownModel)
+        {
+            var view = EnsurePage(rootModel, _viewLocator.Locate(rootModel, null, context));
+
+            _viewModelBinder.Bind(rootModel, view, context);
+
+            var screen = rootModel as IScreen;
+            if (screen != null)
+            {
+                view.Unloaded += delegate
+                {
+                    screen.Deactivate();
+                    screen.Shutdown();
+                };
+            }
+
+            return view;
+        }
+
+        /// <summary>
+        /// Ensures the view is a page or provides one.
+        /// </summary>
+        /// <param name="model">The model.</param>
+        /// <param name="view">The view.</param>
+        /// <returns></returns>
+        protected Page EnsurePage(object model, object view)
+        {
+            var page = view as Page;
+
+            if (page == null)
+            {
+                page = new Page
+                {
+                    Content = view
+                };
+            }
+
+            return page;
         }
 
         /// <summary>
