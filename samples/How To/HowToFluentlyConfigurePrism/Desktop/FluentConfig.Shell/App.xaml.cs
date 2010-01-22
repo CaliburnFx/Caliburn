@@ -23,11 +23,6 @@
             CaliburnFramework
                 .Configure()
                 .With.Core()
-                .AfterStart(() =>{
-                    var binder = (DefaultBinder)ServiceLocator.Current.GetInstance<IBinder>();
-                    binder.EnableMessageConventions();
-                    binder.EnableBindingConventions();
-                })
                 .With.PresentationFramework()
                 .With.CompositeApplicationLibrary(CreateShell)
                 .WithModuleCatalog(new ModuleCatalog().AddModule(typeof(CalculatorModule)))

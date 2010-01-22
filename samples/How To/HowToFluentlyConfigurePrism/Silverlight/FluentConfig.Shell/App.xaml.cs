@@ -14,6 +14,7 @@
     using Microsoft.Practices.Composite.Modularity;
     using Microsoft.Practices.ServiceLocation;
     using Presenters;
+    using Caliburn.PresentationFramework.ViewModels;
 
     public partial class App : Application
     {
@@ -40,10 +41,10 @@
         private DependencyObject CreateShell()
         {
             IShellPresenter model = ServiceLocator.Current.GetInstance<ShellPresenter>();
-            var viewStrategy = ServiceLocator.Current.GetInstance<IViewStrategy>();
-            var view = (FrameworkElement)viewStrategy.GetView(model, null, null);
+            var viewStrategy = ServiceLocator.Current.GetInstance<IViewLocator>();
+            var view = (FrameworkElement)viewStrategy.Locate(model, null, null);
 
-            var binder = ServiceLocator.Current.GetInstance<IBinder>();
+            var binder = ServiceLocator.Current.GetInstance<IViewModelBinder>();
             binder.Bind(model, view, null);
 
             RootVisual = view;

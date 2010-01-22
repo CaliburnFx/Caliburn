@@ -30,6 +30,8 @@ V2 Alpha
 -Implemented sub-property binding conventions.
 -Implemented sub-property action conventions.
 -Enabled the WPF message parser to now bind action parameters for elements using a default binding.
+-Applied patch from rauh_ryan to Fixed some breaking changes in the HowToFluentlyConfigurePrism example.
+-Applied patch from rauh_ryan to improve the PrismModule configuration to resolve the IModuleManager and have the module catalog injected into it properly.
 
 V1.1 Release
 -Fixed an issue in the WPF version of InteractionNode.

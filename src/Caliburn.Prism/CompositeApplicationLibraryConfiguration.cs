@@ -17,6 +17,7 @@
     using Microsoft.Practices.Composite.Regions;
     using Microsoft.Practices.ServiceLocation;
     using IModule=Microsoft.Practices.Composite.Modularity.IModule;
+    using System.Reflection;
 
     /// <summary>
     /// The configuration for the composite application library.
@@ -25,6 +26,7 @@
     {
         private Type _loggerFacade;
         private Type _moduleInitializer;
+        private Type _moduleManager;
         private Type _regionManager;
         private Type _eventAggregator;
         private Type _regionViewRegistry;
@@ -51,6 +53,7 @@
              * add load the modules assembly */
             UsingModuleInitializer<CaliburnModuleInitializer>();
 
+            UsingModuleManager<ModuleManager>();
             UsingRegionManager<RegionManager>();
             UsingEventAggregator<EventAggregator>();
             UsingRegionViewRegistry<RegionViewRegistry>();
@@ -89,6 +92,18 @@
             where T : IModuleInitializer
         {
             _moduleInitializer = typeof(T);
+            return this;
+        }
+
+        /// <summary>
+        /// Customizes the module manager.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <returns></returns>
+        public CompositeApplicationLibraryConfiguration UsingModuleManager<T>()
+            where T : IModuleManager
+        {
+            _moduleManager = typeof(T);
             return this;
         }
 
@@ -230,10 +245,14 @@
             yield return Singleton(typeof(IRegionViewRegistry), _regionViewRegistry);
             yield return Singleton(typeof(IRegionBehaviorFactory), _regionBehaviorFactory);
 
-            //currently dependent on default module manager
-            yield return Singleton(typeof(IModuleManager), typeof(ModuleManager));
-            yield return Singleton(typeof(RegionAdapterMappings), typeof(RegionAdapterMappings));
 
+            yield return Singleton(typeof(IModuleManager), _moduleManager);
+            yield return Singleton(typeof(RegionAdapterMappings), typeof(RegionAdapterMappings));
+            yield return new Instance {Service = typeof(IModuleCatalog), Implementation = _moduleCatalog  };
+            foreach (var module in _moduleTypes)
+            {
+                yield return Singleton(module, module);
+            }
 
             /* Patch to support Containers that require explicit Component registration */
             //register default adapters
@@ -251,6 +270,7 @@
             yield return PerRequest(typeof(SyncRegionContextWithHostBehavior), typeof(SyncRegionContextWithHostBehavior));
             yield return PerRequest(typeof(RegionManagerRegistrationBehavior), typeof(RegionManagerRegistrationBehavior));
             yield return PerRequest(typeof(DelayedRegionCreationBehavior), typeof(DelayedRegionCreationBehavior));
+            
         }
 
         /// <summary>
@@ -302,23 +322,28 @@
             if(_moduleTypes != null)
                 _moduleTypes.Apply(x =>{
                     var module = ServiceLocator.Current.GetInstance(x) as IModule;
-                    if(module != null)
+                    if (module != null)
+                    {
+                        AddAssemblyIfMissing(x.Assembly);
                         module.Initialize();
+                    }
                 });
 
             if(_moduleCatalog == null) 
                 return;
+ 
+            var manager =
+                ServiceLocator.Current.TryResolve<IModuleManager>();
+            if (manager != null)
+                manager.Run();
+        }
 
-            // Unable to RegisterInstance of module catalog without taking dependecy on a 
-            // specific IoC container. So this implementation is currently dependent on the 
-            // default prism ModuleManager.  
-            var manager = new ModuleManager(
-                ServiceLocator.Current.GetInstance<IModuleInitializer>(),
-                _moduleCatalog,
-                ServiceLocator.Current.GetInstance<ILoggerFacade>()
-                );
-
-            manager.Run();
+        private void AddAssemblyIfMissing(Assembly assembly)
+        {
+            var assemblySource =  ServiceLocator.Current.TryResolve<IAssemblySource>();
+            if(assemblySource != null)
+                if (!assemblySource.Contains(assembly))
+                    assemblySource.Add(assembly);
         }
 
         private void ConfigureRegionAdapterMappings()

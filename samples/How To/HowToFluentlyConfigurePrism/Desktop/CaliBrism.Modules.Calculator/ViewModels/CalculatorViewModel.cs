@@ -6,10 +6,11 @@ using Caliburn.PresentationFramework.Filters;
 namespace CaliBrism.Modules.Calculator.ViewModels
 {
     using Caliburn.Core.IoC;
+    using Caliburn.PresentationFramework.Screens;
 
     [Rescue("GeneralRescue")]
     [PerRequest(typeof(ICalculatorViewModel))]
-    public class CalculatorViewModel : Presenter, ICalculatorViewModel
+    public class CalculatorViewModel : Screen, ICalculatorViewModel
     {
         public override string DisplayName
         {
