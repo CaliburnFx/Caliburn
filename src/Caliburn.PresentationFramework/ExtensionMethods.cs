@@ -7,7 +7,6 @@
     using System.Windows.Media;
     using Conventions;
     using Core;
-    using Core.Invocation;
     using Microsoft.Practices.ServiceLocation;
 
     /// <summary>
@@ -173,8 +172,12 @@
         public static T FindNameExhaustive<T>(this DependencyObject element, string name, bool shouldFail)
             where T : class
         {
-            T found = (name == "$this" ? element as T : element.FindName(name) as T)
-                ?? element.GetResource<T>(name);
+            T found = null;
+
+            if (!string.IsNullOrEmpty(name))
+            {
+                found = (name == "$this" ? element as T : element.FindName(name) as T) ?? element.GetResource<T>(name);
+            }
 
             if (found == null && shouldFail) throw new CaliburnException(
                     string.Format("Could not locate {0} with name {1}.", typeof(T).Name, name)
