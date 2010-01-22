@@ -139,6 +139,9 @@ namespace Caliburn.PresentationFramework.Conventions
             return "Can" + baseName;
         }
 
+        /// <summary>
+        /// Sets up the default view conventions.
+        /// </summary>
         protected virtual void SetupDefaultViewConventions()
         {
             var actionSet = new DefaultViewConventionCategory<IAction>(x => x.Actions);

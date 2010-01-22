@@ -247,25 +247,6 @@
         }
 
         /// <summary>
-        /// Finds the interaction defaults or fail.
-        /// </summary>
-        /// <param name="conventionManager">The convention manager.</param>
-        /// <param name="element">The element.</param>
-        /// <returns></returns>
-        public static IElementConvention FindElementConventionOrFail(this IConventionManager conventionManager, object element)
-        {
-            var type = element.GetType();
-            var defaults = conventionManager.GetElementConvention(type);
-
-            if (defaults == null)
-                throw new CaliburnException(
-                    string.Format("Could not locate an IElementConvention for {0}.  Please register one with the IConventionManager.", type.Name)
-                    );
-
-            return defaults;
-        }
-
-        /// <summary>
         /// Binds the specified parameter to an element's property without using databinding.
         /// Rather, event name conventions are used to wire to property changes and push updates to the parameter value.
         /// </summary>
@@ -275,42 +256,34 @@
         /// <param name="path">The path.</param>
         public static void Bind(this Parameter parameter, DependencyObject element, string elementName, string path)
         {
-            if (string.IsNullOrEmpty(elementName))
-                return;
-
             bool isLoaded = false;
 
             element.OnLoad(
-                (s, e) =>{
-                    if(isLoaded)
+                (s, e) =>
+                {
+                    if (isLoaded)
                         return;
 
                     isLoaded = true;
 
                     var source = element.FindNameExhaustive<object>(elementName, false);
-                    if(source == null)
+                    if (source == null)
                         return;
 
-                    if(!string.IsNullOrEmpty(path))
+                    if (!string.IsNullOrEmpty(path))
                     {
                         var sourceType = source.GetType();
                         var property = sourceType.GetProperty(path);
 
                         EventInfo changeEvent = null;
 
-                        if(path == "SelectedItem")
+                        if (path == "SelectedItem")
                             changeEvent = sourceType.GetEvent("SelectionChanged");
-                        if(changeEvent == null)
+                        if (changeEvent == null)
                             changeEvent = sourceType.GetEvent(path + "Changed");
-                        if(changeEvent == null)
+                        if (changeEvent == null)
                             WireToDefaultEvent(parameter, sourceType, source, property);
-                        else
-                        {
-                            ServiceLocator.Current.GetInstance<IEventHandlerFactory>().Wire(source, changeEvent)
-                                .SetActualHandler(parameters =>{
-                                    parameter.Value = property.GetValue(source, null);
-                                });
-                        }
+                        else parameter.Wire(source, changeEvent, () => property.GetValue(source, null));
                     }
                     else WireToDefaultEvent(parameter, source.GetType(), source, null);
                 });
@@ -326,15 +299,11 @@
                     "Insuficient information provided for wiring action parameters.  Please set interaction defaults for " + type.FullName
                     );
 
+            var eventInfo = type.GetEvent(defaults.EventName);
+
             if (property == null)
-                ServiceLocator.Current.GetInstance<IEventHandlerFactory>().Wire(source, defaults.EventName)
-                    .SetActualHandler(parameters =>{
-                        parameter.Value = defaults.GetValue(source);
-                    });
-            else ServiceLocator.Current.GetInstance<IEventHandlerFactory>().Wire(source, defaults.EventName)
-                    .SetActualHandler(parameters => {
-                        parameter.Value = property.GetValue(source, null);
-                    });
+                parameter.Wire(source, eventInfo, () => defaults.GetValue(source));
+            else parameter.Wire(source, eventInfo, () => property.GetValue(source, null));
         }
     }
 }

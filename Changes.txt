@@ -33,6 +33,7 @@ V2 Alpha
 
 V1.1 Release
 -Fixed an issue in the WPF version of InteractionNode.
+-Fixed an event invocation order issue and a parameter update issue related to routed messages.
 
 V1.1 Release Candidate
 -Added pre-initialization hooks to CaliburnApplication via Marco Amendola's patch.

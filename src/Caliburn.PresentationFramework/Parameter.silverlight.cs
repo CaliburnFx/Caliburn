@@ -2,8 +2,11 @@
 namespace Caliburn.PresentationFramework
 {
     using System;
+    using System.Reflection;
     using System.Windows.Markup;
     using System.ComponentModel;
+    using Core.Invocation;
+    using Microsoft.Practices.ServiceLocation;
 
     /// <summary>
     /// Represents a parameter of a message.
@@ -12,6 +15,7 @@ namespace Caliburn.PresentationFramework
     public class Parameter : INotifyPropertyChanged
     {
         private object _value;
+        private Func<object> _updater;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Parameter"/> class.
@@ -33,7 +37,13 @@ namespace Caliburn.PresentationFramework
         /// <value>The value.</value>
         public object Value
         {
-            get { return _value; }
+            get
+            {
+                if(_updater != null)
+                    _value = _updater();
+
+                return _value;
+            }
             set
             {
                 _value = value; 
@@ -71,6 +81,22 @@ namespace Caliburn.PresentationFramework
         public void Configure(IInteractionNode node)
         {
             this.Bind(node.UIElement, ElementName, Path);
+        }
+
+        /// <summary>
+        /// Wires the parameter for value updates.
+        /// </summary>
+        /// <param name="source">The source.</param>
+        /// <param name="eventInfo">The event info.</param>
+        /// <param name="updater">The updater.</param>
+        public void Wire(object source, EventInfo eventInfo, Func<object> updater)
+        {
+            ServiceLocator.Current.GetInstance<IEventHandlerFactory>().Wire(source, eventInfo)
+                .SetActualHandler(parameters => {
+                    Value = updater();
+                });
+
+            _updater = updater;
         }
     }
 }

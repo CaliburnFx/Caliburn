@@ -3,8 +3,11 @@
 namespace Caliburn.PresentationFramework
 {
     using System;
+    using System.Reflection;
     using System.Windows;
     using System.Windows.Markup;
+    using Core.Invocation;
+    using Microsoft.Practices.ServiceLocation;
 
     /// <summary>
     /// Represents a parameter of a message.
@@ -24,10 +27,12 @@ namespace Caliburn.PresentationFramework
                                               OnValueChanged)
                 );
 
+        private Func<object> _updater;
+
         /// <summary>
         /// Initializes a new instance of the <see cref="Parameter"/> class.
         /// </summary>
-        public Parameter() {}
+        public Parameter() { }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Parameter"/> class.
@@ -44,7 +49,13 @@ namespace Caliburn.PresentationFramework
         /// <value>The value.</value>
         public object Value
         {
-            get { return GetValue(ValueProperty); }
+            get
+            {
+                if (_updater != null)
+                    Value = _updater();
+
+                return GetValue(ValueProperty);
+            }
             set { SetValue(ValueProperty, value); }
         }
 
@@ -55,7 +66,7 @@ namespace Caliburn.PresentationFramework
 
         private static void OnValueChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
-            if(e.NewValue != e.OldValue)
+            if (e.NewValue != e.OldValue)
             {
                 var parameter = (Parameter)d;
                 parameter.ValueChanged();
@@ -69,6 +80,23 @@ namespace Caliburn.PresentationFramework
         protected override Freezable CreateInstanceCore()
         {
             return new Parameter();
+        }
+
+        /// <summary>
+        /// Wires the parameter for value updates.
+        /// </summary>
+        /// <param name="source">The source.</param>
+        /// <param name="eventInfo">The event info.</param>
+        /// <param name="updater">The updater.</param>
+        public void Wire(object source, EventInfo eventInfo, Func<object> updater)
+        {
+            ServiceLocator.Current.GetInstance<IEventHandlerFactory>().Wire(source, eventInfo)
+                .SetActualHandler(parameters =>
+                {
+                    Value = updater();
+                });
+
+            _updater = updater;
         }
     }
 }

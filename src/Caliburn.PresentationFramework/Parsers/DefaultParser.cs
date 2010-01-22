@@ -2,6 +2,7 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.Linq;
     using System.Windows;
     using Conventions;
     using Core;
@@ -93,26 +94,43 @@
         }
 
         /// <summary>
-        /// Parses an individual message.
+        /// Parses the specified message text.
         /// </summary>
-        /// <param name="messageText">The message text.</param>
         /// <param name="target">The target.</param>
-        /// <returns></returns>
-        protected virtual IMessageTrigger ParseMessage(string messageText, DependencyObject target) 
+        /// <param name="messageText">The message text.</param>
+        /// <returns>The triggers parsed from the text.</returns>
+        protected virtual IMessageTrigger ParseMessage(string messageText, DependencyObject target)
         {
             var triggerPlusMessage = messageText.Split('=');
-            IMessageTrigger trigger = null;
-            string messageDetail;
+            string messageDetail = triggerPlusMessage.Last()
+                .Replace("[", string.Empty)
+                .Replace("]", string.Empty)
+                .Trim();
 
-            if(triggerPlusMessage.Length == 1)
+            IRoutedMessage message = null;
+
+            foreach (var keyValuePair in _messageParsers)
+            {
+                if (messageDetail.StartsWith(keyValuePair.Key, StringComparison.CurrentCultureIgnoreCase))
+                {
+                    message = keyValuePair.Value
+                        .Parse(target, messageDetail.Remove(0, keyValuePair.Key.Length).Trim());
+                    break;
+                }
+            }
+
+            if (message == null)
+            {
+                message = _messageParsers[_defaultMessageParserKey]
+                    .Parse(target, messageDetail);
+            }
+
+            IMessageTrigger trigger = null;
+
+            if (triggerPlusMessage.Length == 1)
             {
                 var defaults = _conventionManager.FindElementConventionOrFail(target);
                 trigger = defaults.CreateTrigger();
-
-                messageDetail = triggerPlusMessage[0]
-                    .Replace("[", string.Empty)
-                    .Replace("]", string.Empty)
-                    .Trim();
             }
             else
             {
@@ -121,12 +139,7 @@
                     .Replace("]", string.Empty)
                     .Trim();
 
-                messageDetail = triggerPlusMessage[1]
-                    .Replace("[", string.Empty)
-                    .Replace("]", string.Empty)
-                    .Trim();
-
-                foreach(var keyValuePair in _triggerParsers)
+                foreach (var keyValuePair in _triggerParsers)
                 {
                     if (triggerDetail.StartsWith(keyValuePair.Key, StringComparison.CurrentCultureIgnoreCase))
                     {
@@ -137,24 +150,10 @@
                 }
             }
 
-            if(trigger == null)
+            if (trigger == null)
                 throw new CaliburnException("Could not determine trigger type.");
 
-            foreach (var keyValuePair in _messageParsers)
-            {
-                if (messageDetail.StartsWith(keyValuePair.Key, StringComparison.CurrentCultureIgnoreCase))
-                {
-                    trigger.Message = keyValuePair.Value
-                        .Parse(target, messageDetail.Remove(0, keyValuePair.Key.Length).Trim());
-                    break;
-                }
-            }
-
-            if(trigger.Message == null)
-            {
-                trigger.Message = _messageParsers[_defaultMessageParserKey]
-                    .Parse(target, messageDetail);
-            }
+            trigger.Message = message;
 
             return trigger;
         }

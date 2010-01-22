@@ -4,6 +4,7 @@
     using System.Collections.Generic;
     using System.Windows;
     using System.Windows.Controls;
+    using Core;
     using ViewModels;
 
 #if SILVERLIGHT
@@ -110,5 +111,24 @@
             }
         }
 #endif
+
+        /// <summary>
+        /// Finds the interaction defaults or fail.
+        /// </summary>
+        /// <param name="conventionManager">The convention manager.</param>
+        /// <param name="element">The element.</param>
+        /// <returns></returns>
+        public static IElementConvention FindElementConventionOrFail(this IConventionManager conventionManager, object element)
+        {
+            var type = element.GetType();
+            var defaults = conventionManager.GetElementConvention(type);
+
+            if (defaults == null)
+                throw new CaliburnException(
+                    string.Format("Could not locate an IElementConvention for {0}.  Please register one with the IConventionManager.", type.Name)
+                    );
+
+            return defaults;
+        }
     }
 }
