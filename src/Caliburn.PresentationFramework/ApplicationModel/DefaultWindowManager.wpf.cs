@@ -40,7 +40,7 @@ namespace Caliburn.PresentationFramework.ApplicationModel
         /// <returns></returns>
         public virtual bool? ShowDialog(object rootModel, object context, Action<ISubordinate, Action> handleShutdownModel)
         {
-            var window = CreateWindow(rootModel, context, handleShutdownModel);
+            var window = CreateWindow(rootModel, true, context, handleShutdownModel);
             return window.ShowDialog();
         }
 
@@ -61,7 +61,7 @@ namespace Caliburn.PresentationFramework.ApplicationModel
             }
             else
             {
-                var window = CreateWindow(rootModel, context, handleShutdownModel);
+                var window = CreateWindow(rootModel, false, context, handleShutdownModel);
                 window.Show();
             }
         }
@@ -70,12 +70,13 @@ namespace Caliburn.PresentationFramework.ApplicationModel
         /// Creates the window.
         /// </summary>
         /// <param name="rootModel">The root model.</param>
+        /// <param name="isDialog">Indicates it is a dialog window.</param>
         /// <param name="context">The context.</param>
         /// <param name="handleShutdownModel">The handle shutdown model.</param>
         /// <returns></returns>
-        protected virtual Window CreateWindow(object rootModel, object context,Action<ISubordinate, Action> handleShutdownModel)
+        protected virtual Window CreateWindow(object rootModel, bool isDialog, object context, Action<ISubordinate, Action> handleShutdownModel)
         {
-            var view = EnsureWindow(rootModel, _viewLocator.Locate(rootModel, null, context));
+            var view = EnsureWindow(rootModel, _viewLocator.Locate(rootModel, null, context), isDialog);
 
             _viewModelBinder.Bind(rootModel, view, context);
 
@@ -102,8 +103,9 @@ namespace Caliburn.PresentationFramework.ApplicationModel
         /// </summary>
         /// <param name="model">The model.</param>
         /// <param name="view">The view.</param>
+        /// <param name="isDialog">Indicates we are insuring a dialog window.</param>
         /// <returns></returns>
-        protected virtual Window EnsureWindow(object model, object view)
+        protected virtual Window EnsureWindow(object model, object view, bool isDialog)
         {
             var window = view as Window;
 
@@ -134,7 +136,7 @@ namespace Caliburn.PresentationFramework.ApplicationModel
             else if (Application.Current != null
                    && Application.Current.MainWindow != null)
             {
-                if (Application.Current.MainWindow != window)
+                if (Application.Current.MainWindow != window && isDialog)
                     window.Owner = Application.Current.MainWindow;
             }
 
