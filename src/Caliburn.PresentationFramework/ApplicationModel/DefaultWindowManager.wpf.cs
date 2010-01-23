@@ -16,6 +16,27 @@ namespace Caliburn.PresentationFramework.ApplicationModel
     /// </summary>
     public class DefaultWindowManager : IWindowManager
     {
+        private static readonly DependencyProperty IsElementGeneratedProperty =
+            DependencyProperty.RegisterAttached(
+                "IsElementGenerated",
+                typeof(bool),
+                typeof(DefaultWindowManager),
+                new PropertyMetadata(false, null)
+                );
+
+        /// <summary>
+        /// Gets the significant view.
+        /// </summary>
+        /// <param name="view">The view.</param>
+        /// <returns>The non-generated view that was wrapped by Caliburn.</returns>
+        public static DependencyObject GetSignificantView(DependencyObject view)
+        {
+            if ((bool)view.GetValue(IsElementGeneratedProperty))
+                return (DependencyObject)((ContentControl)view).Content;
+
+            return view;
+        }
+
         private readonly IViewLocator _viewLocator;
         private readonly IViewModelBinder _viewModelBinder;
         private bool _actuallyClosing;
@@ -117,6 +138,8 @@ namespace Caliburn.PresentationFramework.ApplicationModel
                     SizeToContent = SizeToContent.WidthAndHeight
                 };
 
+                window.SetValue(IsElementGeneratedProperty, true);
+
                 if (Application.Current != null
                    && Application.Current.MainWindow != null
                     && Application.Current.MainWindow != window)
@@ -185,6 +208,8 @@ namespace Caliburn.PresentationFramework.ApplicationModel
                 {
                     Content = view
                 };
+
+                page.SetValue(IsElementGeneratedProperty, true);
             }
 
             return page;

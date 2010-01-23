@@ -108,10 +108,12 @@ namespace Caliburn.PresentationFramework.ViewModels
         {
             IViewApplicable[] conventions;
 
-            if(!_viewConventions.TryGetValue(view.GetType(), out conventions))
+            var viewType = view.GetType();
+
+            if (!_viewConventions.TryGetValue(viewType, out conventions))
             {
                 conventions = _conventionManager.DetermineConventions(this, view).ToArray();
-                _viewConventions[view.GetType()] = conventions;
+                _viewConventions[viewType] = conventions;
             }
 
             return conventions;

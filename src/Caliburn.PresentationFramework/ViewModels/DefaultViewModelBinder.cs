@@ -2,6 +2,7 @@ namespace Caliburn.PresentationFramework.ViewModels
 {
     using System;
     using System.Windows;
+    using ApplicationModel;
     using Core;
     using Core.Metadata;
     using Metadata;
@@ -46,8 +47,10 @@ namespace Caliburn.PresentationFramework.ViewModels
         {
             BindCore(viewModel, view, context);
 
-            if(ShouldApplyConventions(viewModel, view, context))
-                ApplyConventions(viewModel, view);
+            var significantView = DefaultWindowManager.GetSignificantView(view);
+
+            if (ShouldApplyConventions(viewModel, significantView, context))
+                ApplyConventions(viewModel, significantView);
         }
 
         /// <summary>

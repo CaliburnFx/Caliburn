@@ -13,6 +13,10 @@
     public abstract class ViewConventionBase<T> : IViewConvention<T>
     {
         private static IMessageBinder _messageBinder;
+        /// <summary>
+        /// Gets the message binder.
+        /// </summary>
+        /// <value>The message binder.</value>
         protected static IMessageBinder MessageBinder
         {
             get
@@ -24,6 +28,10 @@
         }
 
         private static IViewModelDescriptionFactory _viewModelDescriptionFactory;
+        /// <summary>
+        /// Gets the view model description factory.
+        /// </summary>
+        /// <value>The view model description factory.</value>
         protected static IViewModelDescriptionFactory ViewModelDescriptionFactory
         {
             get
