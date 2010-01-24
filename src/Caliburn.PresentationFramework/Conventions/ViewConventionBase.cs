@@ -42,6 +42,21 @@
             }
         }
 
+        private static IValidator _validator;
+        /// <summary>
+        /// Gets the validator.
+        /// </summary>
+        /// <value>The validator.</value>
+        protected static IValidator Validator
+        {
+            get
+            {
+                if (_validator == null)
+                    _validator = ServiceLocator.Current.GetInstance<IValidator>();
+                return _validator;
+            }
+        }
+
         /// <summary>
         /// Tries to creates the application of the convention.
         /// </summary>
@@ -152,6 +167,20 @@
             }
 
             return message;
+        }
+
+        /// <summary>
+        /// Indicates whether the specified property should be violated.
+        /// </summary>
+        /// <param name="property">The property.</param>
+        /// <returns></returns>
+        protected virtual bool ShouldValidate(PropertyInfo property)
+        {
+#if SILVERLIGHT_20 || SILVERLIGHT_30
+            return true;
+#else
+            return Validator.ShouldValidate(property);
+#endif
         }
     }
 }

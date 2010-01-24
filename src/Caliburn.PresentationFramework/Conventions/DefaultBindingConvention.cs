@@ -35,6 +35,7 @@ namespace Caliburn.PresentationFramework.Conventions
                     : element.Convention.BindableProperty,
                 path,
                 boundProperty.CanWrite ? BindingMode.TwoWay : BindingMode.OneWay,
+                ShouldValidate(property),
                 false
                 );
         }

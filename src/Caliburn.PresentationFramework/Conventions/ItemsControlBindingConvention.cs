@@ -85,6 +85,7 @@ namespace Caliburn.PresentationFramework.Conventions
                 bindableProperty,
                 path,
                 mode,
+                false,
                 true
                 );
         }

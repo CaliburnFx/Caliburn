@@ -15,6 +15,7 @@
         private readonly DependencyProperty _dependencyProperty;
         private readonly string _path;
         private readonly BindingMode _mode;
+        private readonly bool _validate;
         private readonly bool _checkItemTemplate;
 
         /// <summary>
@@ -24,13 +25,15 @@
         /// <param name="dependencyProperty">The dependency property.</param>
         /// <param name="path">The path.</param>
         /// <param name="mode">The mode.</param>
+        /// <param name="validate">Inidicates whether or not to turn on validation for the binding.</param>
         /// <param name="checkItemTemplate">if set to <c>true</c> [check item template].</param>
-        public ApplicableBinding(string elementName, DependencyProperty dependencyProperty, string path, BindingMode mode, bool checkItemTemplate)
+        public ApplicableBinding(string elementName, DependencyProperty dependencyProperty, string path, BindingMode mode, bool validate, bool checkItemTemplate)
         {
             _elementName = elementName;
             _dependencyProperty = dependencyProperty;
             _path = path;
             _mode = mode;
+            _validate = validate;
             _checkItemTemplate = checkItemTemplate;
         }
 
@@ -41,9 +44,18 @@
         public void ApplyTo(DependencyObject view)
         {
             var element = view.FindName(_elementName);
+            var binding = new Binding(_path) {Mode = _mode};
+
+#if SILVERLIGHT_40 || NET
+            if (_validate)
+                binding.ValidatesOnDataErrors = true;
+#elif SILVERLIGHT_30
+            if(_validate)
+                binding.ValidatesOnExceptions = true;
+#endif
 
             if (_dependencyProperty != null && ValueNotSet(element))
-                element.SetBinding(_dependencyProperty, new Binding(_path) {Mode = _mode});
+                element.SetBinding(_dependencyProperty, binding);
 
             if(!_checkItemTemplate) 
                 return;

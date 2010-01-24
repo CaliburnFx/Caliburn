@@ -7,6 +7,7 @@ namespace Caliburn.PresentationFramework.ViewModels
     using System.Linq;
     using System.Reflection;
     using Core;
+    using Core.Behaviors;
     using Microsoft.Practices.ServiceLocation;
 
     /// <summary>
@@ -23,6 +24,19 @@ namespace Caliburn.PresentationFramework.ViewModels
         public DefaultValidator(IServiceLocator serviceLocator)
         {
             _serviceLocator = serviceLocator;
+        }
+
+        /// <summary>
+        /// Indicates whether the specified property should be validated.
+        /// </summary>
+        /// <param name="property">The property.</param>
+        /// <returns>
+        /// true if should be validated; otherwise false
+        /// </returns>
+        public bool ShouldValidate(PropertyInfo property)
+        {
+            return EnsureProperty(property)
+                .GetAttributes<ValidationAttribute>(true).Any();
         }
 
         /// <summary>
@@ -52,9 +66,9 @@ namespace Caliburn.PresentationFramework.ViewModels
         private IEnumerable<IValidationError> GetValidationErrors(object instance, PropertyInfo property)
         {
             var context = new ValidationContext(instance, _serviceLocator, null);
-            var propertyValue = property.GetValue(instance, null);
-            var validators = from attribute in property.GetAttributes<ValidationAttribute>(true)
-                             where attribute.GetValidationResult(propertyValue, context) != ValidationResult.Success
+            var validators = from attribute in EnsureProperty(property)
+                                 .GetAttributes<ValidationAttribute>(true)
+                             where attribute.GetValidationResult(property.GetValue(instance, null), context) != ValidationResult.Success
                              select new DefaultValidationError(
                                  instance,
                                  property.Name,
@@ -62,6 +76,13 @@ namespace Caliburn.PresentationFramework.ViewModels
                                  );
 
             return validators.OfType<IValidationError>();
+        }
+
+        private static PropertyInfo EnsureProperty(PropertyInfo info)
+        {
+            if (typeof(IProxy).IsAssignableFrom(info.DeclaringType))
+                return info.DeclaringType.BaseType.GetProperty(info.Name) ?? info;
+            return info;
         }
     }
 }

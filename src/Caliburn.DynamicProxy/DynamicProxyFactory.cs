@@ -15,10 +15,12 @@
     /// </summary>
     public class DynamicProxyFactory : IProxyFactory
     {
-        private readonly ProxyGenerator proxyGenerator = new ProxyGenerator();
+        private readonly ProxyGenerator _proxyGenerator;
 
         private readonly Dictionary<Type, IBehaviorConfiguration> _configrations =
             new Dictionary<Type, IBehaviorConfiguration>();
+
+        //private ModuleScope _scope;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="DynamicProxyFactory"/> class.
@@ -27,6 +29,18 @@
         {
             AddConfiguration<NotifyPropertyChangedAttribute, NotifyPropertyChangedConfiguration>();
             AddConfiguration<ScreenAttribute, ScreenConfiguration>();
+            AddConfiguration<ValidateAttribute, ValidateConfiguration>();
+
+            //var savePhysicalAssembly = true; 
+            //var strongAssemblyName = ModuleScope.DEFAULT_ASSEMBLY_NAME; 
+            //var strongModulePath = ModuleScope.DEFAULT_FILE_NAME; 
+            //var weakAssemblyName = "Caliburn.Proxies";
+            //var weakModulePath = "Caliburn.Proxies.dll"; 
+            //_scope = new ModuleScope(savePhysicalAssembly, strongAssemblyName, strongModulePath, weakAssemblyName, weakModulePath); 
+            //var builder = new DefaultProxyBuilder(_scope);
+            //_proxyGenerator = new ProxyGenerator(builder);
+
+            _proxyGenerator = new ProxyGenerator();
         }
 
         /// <summary>
@@ -59,7 +73,7 @@
                                     .GetInterceptors(type, behavior)
                                 select intercepor).Distinct().ToArray();
 
-            var proxy = proxyGenerator.CreateClassProxy(
+            var proxy = _proxyGenerator.CreateClassProxy(
                 type,
                 interfaces,
                 ProxyGenerationOptions.Default,
@@ -69,6 +83,8 @@
 
             interceptors.OfType<IInitializableInterceptor>()
                 .Apply(x => x.Initialize(proxy));
+
+            //_scope.SaveAssembly(false);
 
             return proxy;
         }
