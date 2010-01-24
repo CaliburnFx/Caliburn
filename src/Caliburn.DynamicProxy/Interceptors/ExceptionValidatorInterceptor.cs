@@ -1,4 +1,4 @@
-﻿#if SILVERLIGHT_30
+﻿#if !SILVERLIGHT_40 && !NET
 
 namespace Caliburn.DynamicProxy.Interceptors
 {
