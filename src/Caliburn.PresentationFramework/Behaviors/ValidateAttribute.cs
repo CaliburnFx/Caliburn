@@ -1,28 +1,4 @@
-﻿#if SILVERLIGHT_20
-#elif SILVERLIGHT_30
-namespace Caliburn.PresentationFramework.Behaviors
-{
-    using System;
-    using System.Collections.Generic;
-    using Core.Behaviors;
-
-    /// <summary>
-    /// Applies a behavior which implements property validation using exceptions.
-    /// </summary>
-    public class ValidateAttribute : Attribute, IBehavior 
-    {
-        /// <summary>
-        /// Gets the interfaces which represent this behavior.
-        /// </summary>
-        /// <param name="implementation">The implementation.</param>
-        /// <returns>The representative interfaces.</returns>
-        public IEnumerable<Type> GetInterfaces(Type implementation)
-        {
-            yield return typeof(IProxy);
-        }
-    }
-}
-#else
+﻿#if SILVERLIGHT_40 || NET
 namespace Caliburn.PresentationFramework.Behaviors
 {
     using System;
@@ -43,6 +19,29 @@ namespace Caliburn.PresentationFramework.Behaviors
         public IEnumerable<Type> GetInterfaces(Type implementation)
         {
             yield return typeof(IDataErrorInfo);
+            yield return typeof(IProxy);
+        }
+    }
+}
+#elif SILVERLIGHT_30
+namespace Caliburn.PresentationFramework.Behaviors
+{
+    using System;
+    using System.Collections.Generic;
+    using Core.Behaviors;
+
+    /// <summary>
+    /// Applies a behavior which implements property validation using exceptions.
+    /// </summary>
+    public class ValidateAttribute : Attribute, IBehavior 
+    {
+        /// <summary>
+        /// Gets the interfaces which represent this behavior.
+        /// </summary>
+        /// <param name="implementation">The implementation.</param>
+        /// <returns>The representative interfaces.</returns>
+        public IEnumerable<Type> GetInterfaces(Type implementation)
+        {
             yield return typeof(IProxy);
         }
     }

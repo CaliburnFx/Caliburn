@@ -28,7 +28,7 @@
         /// <returns></returns>
         protected override bool ShouldProceed(IInvocation invocation)
         {
-            if(!invocation.MethodInvocationTarget.DeclaringType.Equals(typeof(INotifyPropertyChanged)))
+            if (!invocation.Method.DeclaringType.Equals(typeof(INotifyPropertyChanged)))
                 return true;
 
             if(invocation.Method.Name == "add_PropertyChanged")

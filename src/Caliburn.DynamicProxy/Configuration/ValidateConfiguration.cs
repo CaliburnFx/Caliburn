@@ -21,10 +21,10 @@
         /// <returns>The interceptors.</returns>
         public override IEnumerable<IInterceptor> GetInterceptors(Type implementation, ValidateAttribute behavior)
         {
-#if SILVERLIGHT_30
+#if SILVERLIGHT_40 || NET
+            yield return new DataErrorInfoInterceptor(ServiceLocator.Current.GetInstance<IValidator>());          
+#elif SILVERLIGHT_30
             yield return new ExceptionValidatorInterceptor(ServiceLocator.Current.GetInstance<IValidator>());
-#else
-            yield return new DataErrorInfoInterceptor(ServiceLocator.Current.GetInstance<IValidator>());
 #endif
             yield return ProxyInterceptor.Instance;
         }
