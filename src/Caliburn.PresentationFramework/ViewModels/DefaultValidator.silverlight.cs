@@ -35,8 +35,7 @@ namespace Caliburn.PresentationFramework.ViewModels
         /// </returns>
         public bool ShouldValidate(PropertyInfo property)
         {
-            return EnsureProperty(property)
-                .GetAttributes<ValidationAttribute>(true).Any();
+            return property.GetAttributes<ValidationAttribute>(true).Any();
         }
 
         /// <summary>
@@ -66,8 +65,7 @@ namespace Caliburn.PresentationFramework.ViewModels
         private IEnumerable<IValidationError> GetValidationErrors(object instance, PropertyInfo property)
         {
             var context = new ValidationContext(instance, _serviceLocator, null);
-            var validators = from attribute in EnsureProperty(property)
-                                 .GetAttributes<ValidationAttribute>(true)
+            var validators = from attribute in property.GetAttributes<ValidationAttribute>(true)
                              where attribute.GetValidationResult(property.GetValue(instance, null), context) != ValidationResult.Success
                              select new DefaultValidationError(
                                  instance,
@@ -76,13 +74,6 @@ namespace Caliburn.PresentationFramework.ViewModels
                                  );
 
             return validators.OfType<IValidationError>();
-        }
-
-        private static PropertyInfo EnsureProperty(PropertyInfo info)
-        {
-            if (typeof(IProxy).IsAssignableFrom(info.DeclaringType))
-                return info.DeclaringType.BaseType.GetProperty(info.Name) ?? info;
-            return info;
         }
     }
 }

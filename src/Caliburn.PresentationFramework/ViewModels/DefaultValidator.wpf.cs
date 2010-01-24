@@ -7,7 +7,6 @@ namespace Caliburn.PresentationFramework.ViewModels
     using System.Linq;
     using System.Reflection;
     using Core;
-    using Core.Behaviors;
 
     /// <summary>
     /// The default implemenation of <see cref="IValidator"/>.
@@ -23,8 +22,7 @@ namespace Caliburn.PresentationFramework.ViewModels
         /// </returns>
         public bool ShouldValidate(PropertyInfo property)
         {
-            return EnsureProperty(property)
-                .GetAttributes<ValidationAttribute>(true).Any();
+            return property.GetAttributes<ValidationAttribute>(true).Any();
         }
 
         /// <summary>
@@ -53,8 +51,7 @@ namespace Caliburn.PresentationFramework.ViewModels
 
         private static IEnumerable<IValidationError> GetValidationErrors(object instance, PropertyInfo property)
         {
-            var validators = from attribute in EnsureProperty(property)
-                                 .GetAttributes<ValidationAttribute>(true)
+            var validators = from attribute in property.GetAttributes<ValidationAttribute>(true)
                              where !attribute.IsValid(property.GetValue(instance, null))
                              select new DefaultValidationError(
                                  instance,
@@ -63,13 +60,6 @@ namespace Caliburn.PresentationFramework.ViewModels
                                  );
 
             return validators.OfType<IValidationError>();
-        }
-
-        private static PropertyInfo EnsureProperty(PropertyInfo info)
-        {
-            if (typeof(IProxy).IsAssignableFrom(info.DeclaringType))
-                return info.DeclaringType.BaseType.GetProperty(info.Name) ?? info;
-            return info;
         }
     }
 }

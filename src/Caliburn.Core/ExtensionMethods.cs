@@ -20,7 +20,7 @@
         /// <returns>The attributes.</returns>
         public static IEnumerable<T> GetAttributes<T>(this MemberInfo member, bool inherit)
         {
-            return member.GetCustomAttributes(inherit).OfType<T>();
+            return Attribute.GetCustomAttributes(member, inherit).OfType<T>();
         }
 
         /// <summary>
