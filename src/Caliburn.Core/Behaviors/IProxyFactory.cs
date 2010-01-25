@@ -9,6 +9,15 @@ namespace Caliburn.Core.Behaviors
     public interface IProxyFactory
     {
         /// <summary>
+        /// Creates the proxy using the specified target.
+        /// </summary>
+        /// <param name="interfaceType">Type of the interface.</param>
+        /// <param name="target">The target.</param>
+        /// <param name="behaviors">The behaviors.</param>
+        /// <returns>The proxy.</returns>
+        object CreateProxyWithTarget(Type interfaceType, object target, IEnumerable<IBehavior> behaviors);
+
+        /// <summary>
         /// Creates a proxy.
         /// </summary>
         /// <param name="type">The type.</param>

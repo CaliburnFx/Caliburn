@@ -56,6 +56,41 @@
         }
 
         /// <summary>
+        /// Creates the proxy using the specified target.
+        /// </summary>
+        /// <param name="interfaceType">Type of the interface.</param>
+        /// <param name="target">The target.</param>
+        /// <param name="behaviors">The behaviors.</param>
+        /// <returns>The proxy.</returns>
+        public object CreateProxyWithTarget(Type interfaceType, object target, IEnumerable<IBehavior> behaviors)
+        {
+            var targetType = target.GetType();
+            var interfaces = behaviors.SelectMany(x => x.GetInterfaces(targetType))
+                .Distinct()
+                .ToArray();
+
+            var interceptors = (from behavior in behaviors
+                                from intercepor in _configrations[behavior.GetType()]
+                                    .GetInterceptors(targetType, behavior)
+                                select intercepor).Distinct().ToArray();
+
+            var proxy = _proxyGenerator.CreateInterfaceProxyWithTarget(
+                interfaceType,
+                interfaces,
+                target,
+                ProxyGenerationOptions.Default,
+                interceptors
+                );
+
+            interceptors.OfType<IInitializableInterceptor>()
+                .Apply(x => x.Initialize(proxy));
+
+            //_scope.SaveAssembly(false);
+
+            return proxy;
+        }
+
+        /// <summary>
         /// Creates a proxy.
         /// </summary>
         /// <param name="type">The type.</param>
