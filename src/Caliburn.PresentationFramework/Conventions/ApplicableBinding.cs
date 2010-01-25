@@ -44,18 +44,13 @@
         public void ApplyTo(DependencyObject view)
         {
             var element = view.FindName(_elementName);
-            var binding = new Binding(_path) {Mode = _mode};
-
-#if SILVERLIGHT_40 || NET
-            if (_validate)
-                binding.ValidatesOnDataErrors = true;
-#elif SILVERLIGHT_30
-            if(_validate)
-                binding.ValidatesOnExceptions = true;
-#endif
 
             if (_dependencyProperty != null && ValueNotSet(element))
+            {
+                var binding = new Binding(_path) { Mode = _mode };
+                TryAddValidation(element, binding, _dependencyProperty);
                 element.SetBinding(_dependencyProperty, binding);
+            }
 
             if(!_checkItemTemplate) 
                 return;
@@ -64,6 +59,42 @@
 
             if (NeedsItemTemplate(itemsControl))
                 itemsControl.ItemTemplate = CreateItemTemplate(itemsControl);
+        }
+
+        /// <summary>
+        /// Tries to add validation to the binding.
+        /// </summary>
+        protected virtual void TryAddValidation(DependencyObject element, Binding binding, DependencyProperty dependencyProperty)
+        {
+            if (!_validate)
+                return;
+
+#if NET
+            binding.ValidatesOnDataErrors = true;
+            if(element is TextBox && dependencyProperty == TextBox.TextProperty)
+                binding.UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged;
+#elif SILVERLIGHT_40
+            binding.ValidatesOnDataErrors = true;
+
+            var textBox = element as TextBox;
+            if(textBox != null && dependencyProperty == TextBox.TextProperty)
+            {
+                textBox.TextChanged += delegate {
+                    textBox.GetBindingExpression(TextBox.TextProperty).UpdateSource();
+                };
+            }
+
+#elif SILVERLIGHT_30
+            binding.ValidatesOnExceptions = true;
+
+            var textBox = element as TextBox;
+            if(textBox != null && dependencyProperty == TextBox.TextProperty)
+            {
+                textBox.TextChanged += delegate {
+                    textBox.GetBindingExpression(TextBox.TextProperty).UpdateSource();
+                };
+            }
+#endif
         }
 
         /// <summary>
