@@ -193,7 +193,7 @@
                 if (!_moduleType.IsAssignableFrom(type) || type.IsAbstract || type.IsInterface)
                     continue;
 
-                var singleton = type.GetProperty("Instance", BindingFlags.Public | BindingFlags.Static);
+                var singleton = type.GetProperty("Instance", BindingFlags.Public | BindingFlags.Static | BindingFlags.FlattenHierarchy);
 
                 if (singleton != null)
                     modules.Add((IModule)singleton.GetValue(null, null));
