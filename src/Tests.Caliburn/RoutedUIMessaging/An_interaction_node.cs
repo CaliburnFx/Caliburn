@@ -1,5 +1,6 @@
 ﻿namespace Tests.Caliburn.RoutedUIMessaging
 {
+    using System.Linq;
     using System.Windows.Controls;
     using Fakes;
     using global::Caliburn.Core;

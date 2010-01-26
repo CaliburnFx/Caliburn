@@ -2,9 +2,12 @@
 
 namespace Caliburn.PresentationFramework.Actions
 {
+    using System.Collections.Generic;
     using System.Windows;
     using System.Windows.Markup;
     using Core.Invocation;
+    using Microsoft.Practices.ServiceLocation;
+    using ViewModels;
 
     /// <summary>
     /// An <see cref="IRoutedMessage"/> for actions.
@@ -181,6 +184,24 @@ namespace Caliburn.PresentationFramework.Actions
         public override string ToString()
         {
             return "Action: " + MethodName;
+        }
+
+        /// <summary>
+        /// Gets the default handlers for this type of message.
+        /// </summary>
+        /// <param name="node">The node to get default handlers for.</param>
+        /// <returns></returns>
+        public IEnumerable<IRoutedMessageHandler> GetDefaultHandlers(IInteractionNode node)
+        {
+            var context = node.UIElement.GetDataContext();
+            if(context == null)
+                yield break;
+
+            yield return new ActionMessageHandler(
+                ServiceLocator.Current.GetInstance<IViewModelDescriptionFactory>()
+                    .Create(context.GetType()),
+                context
+                );
         }
     }
 }

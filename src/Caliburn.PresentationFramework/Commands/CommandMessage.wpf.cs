@@ -387,6 +387,16 @@ namespace Caliburn.PresentationFramework.Commands
         {
             return "Command: " + Command;
         }
+
+        /// <summary>
+        /// Gets the default handlers for this type of message.
+        /// </summary>
+        /// <param name="node">The node to get default handlers for.</param>
+        /// <returns></returns>
+        public IEnumerable<IRoutedMessageHandler> GetDefaultHandlers(IInteractionNode node)
+        {
+            return _actionMessage.GetDefaultHandlers(node);
+        }
     }
 }
 

@@ -1,6 +1,7 @@
 namespace Tests.Caliburn.Fakes
 {
     using System;
+    using System.Collections.Generic;
     using System.Windows;
     using global::Caliburn.PresentationFramework;
 
@@ -44,6 +45,11 @@ namespace Tests.Caliburn.Fakes
         public bool Equals(IRoutedMessage other)
         {
             return ReferenceEquals(this, other);
+        }
+
+        public IEnumerable<IRoutedMessageHandler> GetDefaultHandlers(IInteractionNode node)
+        {
+            yield break;
         }
     }
 }

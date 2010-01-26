@@ -1,6 +1,7 @@
 ﻿namespace Caliburn.PresentationFramework
 {
     using System;
+    using System.Collections.Generic;
     using System.Windows;
 
 #if SILVERLIGHT
@@ -8,7 +9,7 @@
 #endif
 
     /// <summary>
-    /// Instances of this interface can be routed through the interacion hierarchy.
+    /// Instances of this interface can be routed through the interaction hierarchy.
     /// </summary>
     public interface IRoutedMessage : IEquatable<IRoutedMessage>
     {
@@ -49,6 +50,13 @@
         /// <param name="potentialTarget">The potential target.</param>
         /// <returns></returns>
         bool RelatesTo(object potentialTarget);
+
+        /// <summary>
+        /// Gets the default handlers for this type of message.
+        /// </summary>
+        /// <param name="node">The node to get default handlers for.</param>
+        /// <returns></returns>
+        IEnumerable<IRoutedMessageHandler> GetDefaultHandlers(IInteractionNode node);
 
         /// <summary>
         /// Occurs when the message is invalidated.

@@ -18,7 +18,7 @@ namespace Caliburn.PresentationFramework
         /// Gets the triggers.
         /// </summary>
         /// <value>The triggers.</value>
-        ICollection<IMessageTrigger> Triggers { get; }
+        IEnumerable<IMessageTrigger> Triggers { get; }
 
         /// <summary>
         /// Gets the UI element.

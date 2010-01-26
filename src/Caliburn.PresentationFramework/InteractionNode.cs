@@ -1,7 +1,6 @@
 ﻿namespace Caliburn.PresentationFramework
 {
     using System.Collections.Generic;
-    using System.Collections.ObjectModel;
     using System.Windows;
     using Core;
 
@@ -11,7 +10,7 @@
     public class InteractionNode : IInteractionNode
     {
         private readonly IRoutedMessageController _controller;
-        private readonly DependencyObject _uiElementReference;
+        private readonly DependencyObject _uiElement;
         private IRoutedMessageHandler _messageHandler;
         private List<IMessageTrigger> _triggers;
         private bool _elementIsLoaded;
@@ -29,9 +28,9 @@
         /// Gets the triggers.
         /// </summary>
         /// <value>The triggers.</value>
-        public ICollection<IMessageTrigger> Triggers
+        public IEnumerable<IMessageTrigger> Triggers
         {
-            get { return new ReadOnlyCollection<IMessageTrigger>(_triggers); }
+            get { return _triggers; }
         }
 
         /// <summary>
@@ -40,7 +39,7 @@
         /// <value>The UI element.</value>
         public DependencyObject UIElement
         {
-            get { return _uiElementReference; }
+            get { return _uiElement; }
         }
 
         /// <summary>
@@ -51,10 +50,10 @@
         public InteractionNode(DependencyObject uiElement, IRoutedMessageController controller)
         {
             _controller = controller;
-            _uiElementReference = uiElement;
+            _uiElement = uiElement;
 
 #if !SILVERLIGHT
-            var element = _uiElementReference as FrameworkElement;
+            var element = _uiElement as FrameworkElement;
             if (element != null)
             {
                 if (element.IsLoaded)
@@ -63,7 +62,7 @@
             }
             else
             {
-                var fce = _uiElementReference as FrameworkContentElement;
+                var fce = _uiElement as FrameworkContentElement;
                 if (fce != null)
                 {
                     if (fce.IsLoaded)
@@ -72,7 +71,7 @@
                 }
             }
 #else
-            var element = _uiElementReference as FrameworkElement;
+            var element = _uiElement as FrameworkElement;
             if(element != null) element.Loaded += Element_Loaded;
 #endif
         }
@@ -83,12 +82,7 @@
         /// <returns>The parent or null if not found.</returns>
         public IInteractionNode FindParent()
         {
-            var element = UIElement;
-
-            if(element != null)
-                return _controller.GetParent(element);
-
-            return null;
+            return _uiElement != null ? _controller.GetParent(_uiElement) : null;
         }
 
         /// <summary>
@@ -98,9 +92,7 @@
         /// <returns></returns>
         public bool Handles(IRoutedMessage message)
         {
-            if(_messageHandler != null)
-                return _messageHandler.Handles(message);
-            return false;
+            return _messageHandler != null && _messageHandler.Handles(message);
         }
 
         /// <summary>
@@ -110,8 +102,7 @@
         /// <param name="context">An object that provides additional context for message processing.</param>
         public void ProcessMessage(IRoutedMessage message, object context)
         {
-            var handlerNode = FindHandlerNode(message, true);
-            handlerNode.MessageHandler.Process(message, context);
+            FindHandlerOrFail(message, true).Process(message, context);
         }
 
         /// <summary>
@@ -120,10 +111,10 @@
         /// <param name="trigger">The trigger.</param>
         public void UpdateAvailability(IMessageTrigger trigger)
         {
-            if(!_elementIsLoaded) return;
+            if(!_elementIsLoaded) 
+                return;
 
-            var handlerNode = FindHandlerNode(trigger.Message, true);
-            handlerNode.MessageHandler.UpdateAvailability(trigger);
+            FindHandlerOrFail(trigger.Message, true).UpdateAvailability(trigger);
         }
 
         /// <summary>
@@ -132,11 +123,8 @@
         /// <param name="messageHandler">The message handler.</param>
         public void RegisterHandler(IRoutedMessageHandler messageHandler)
         {
-            if(messageHandler != null)
-            {
-                _messageHandler = messageHandler;
-                _messageHandler.Initialize(this);
-            }
+            _messageHandler = messageHandler;
+            _messageHandler.Initialize(this);
         }
 
         /// <summary>
@@ -157,17 +145,18 @@
         {
             _elementIsLoaded = true;
 
-            if(_triggers == null) return;
+            if(_triggers == null) 
+                return;
 
             foreach(var messageTrigger in _triggers)
             {
-                var handlerNode = FindHandlerNode(messageTrigger.Message, false);
-                if(handlerNode != null)
-                    handlerNode.MessageHandler.MakeAwareOf(messageTrigger);
+                var Handler = FindHandlerOrFail(messageTrigger.Message, false);
+                if (Handler != null) 
+                    Handler.MakeAwareOf(messageTrigger);
             }
         }
 
-        private IInteractionNode FindHandlerNode(IRoutedMessage message, bool shouldFail)
+        private IRoutedMessageHandler FindHandlerOrFail(IRoutedMessage message, bool shouldFail)
         {
             IInteractionNode currentNode = this;
 
@@ -176,17 +165,29 @@
                 currentNode = currentNode.FindParent();
             }
 
-            if(currentNode == null && shouldFail)
+            if(currentNode == null)
             {
-                throw new CaliburnException(
-                    string.Format(
-                        "There was no handler found for the message {0}.",
-                        message
-                        )
-                    );
+                foreach(var handler in message.GetDefaultHandlers(this))
+                {
+                    if (handler.Handles(message))
+                    {
+                        RegisterHandler(handler);
+                        return handler;
+                    }
+                }
+
+                if (shouldFail)
+                {
+                    throw new CaliburnException(
+                        string.Format(
+                            "There was no handler found for the message {0}.",
+                            message
+                            )
+                        );
+                }
             }
 
-            return currentNode;
+            return currentNode != null ? currentNode.MessageHandler : null;
         }
     }
 }

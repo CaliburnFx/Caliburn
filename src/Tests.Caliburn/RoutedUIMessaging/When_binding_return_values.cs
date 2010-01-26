@@ -1,6 +1,7 @@
 namespace Tests.Caliburn.RoutedUIMessaging
 {
     using System;
+    using System.Collections.Generic;
     using System.Windows;
     using System.Windows.Controls;
     using Fakes.UI;
@@ -184,6 +185,11 @@ namespace Tests.Caliburn.RoutedUIMessaging
             public string DefaultOutcomeElement
             {
                 get { return _method.Info.Name + "Result"; }
+            }
+
+            public IEnumerable<IRoutedMessageHandler> GetDefaultHandlers(IInteractionNode node)
+            {
+                yield break;
             }
         }
 
