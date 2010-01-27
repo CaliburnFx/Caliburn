@@ -103,26 +103,6 @@
         }
 
         /// <summary>
-        /// Gets the binding expression from the dependency object.
-        /// </summary>
-        /// <param name="dependencyObject">The dependency object.</param>
-        /// <param name="dependencyProperty">The dependency property.</param>
-        /// <returns>The binding expression.</returns>
-        public static BindingExpression GetBindingExpression(this DependencyObject dependencyObject, DependencyProperty dependencyProperty)
-        {
-#if !SILVERLIGHT
-            return BindingOperations.GetBindingExpression(dependencyObject, dependencyProperty);
-#elif SILVERIGHT_30 || SILVERLIGHT_40
-            var fe = dependencyObject as FrameworkElement;
-            if (fe != null)
-                return fe.GetBindingExpression(dependencyProperty);
-            return null;
-#else 
-            return null;
-#endif
-        }
-
-        /// <summary>
         /// Sets the binding on the dependency object.
         /// </summary>
         /// <param name="dependencyObject">The dependency object.</param>
