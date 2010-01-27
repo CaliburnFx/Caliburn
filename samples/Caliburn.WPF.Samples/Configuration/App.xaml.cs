@@ -2,9 +2,8 @@
 {
     using System.Windows;
     using System.Windows.Controls;
-    using Caliburn.Castle;
+    using Caliburn.Windsor;
     using Caliburn.Core.Configuration;
-    using Caliburn.PresentationFramework;
     using Caliburn.PresentationFramework.Configuration;
     using Caliburn.PresentationFramework.Conventions;
     using Castle.Windsor;
