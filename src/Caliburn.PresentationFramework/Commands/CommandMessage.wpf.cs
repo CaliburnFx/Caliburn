@@ -257,14 +257,17 @@ namespace Caliburn.PresentationFramework.Commands
             if(trigger.Message != this)
                 throw new CaliburnException("The handler cannot update availability for this trigger.");
 
-            CreateActionMessage();
+			if (Command != null)
+			{
+				CreateActionMessage();
 
-            if(Command != null && _action.HasTriggerEffects())
-            {
-                bool isAvailable = _action.ShouldTriggerBeAvailable(_actionMessage, Source);
-                trigger.UpdateAvailabilty(isAvailable);
-                TryUpdateParentAvailability(isAvailable);
-            }
+				if (_action.HasTriggerEffects())
+				{
+					bool isAvailable = _action.ShouldTriggerBeAvailable(_actionMessage, Source);
+					trigger.UpdateAvailabilty(isAvailable);
+					TryUpdateParentAvailability(isAvailable);
+				}
+			}
         }
 
         /// <summary>
@@ -274,7 +277,7 @@ namespace Caliburn.PresentationFramework.Commands
         public void MakeAwareOf(IMessageTrigger trigger)
         {
             if(trigger.Message != this) return;
-
+			
             CreateActionMessage();
 
             if(_action.HasTriggerEffects())

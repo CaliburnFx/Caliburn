@@ -87,16 +87,17 @@
                     message.Command = ServiceLocator.Current.GetInstance(null, coreOfMessage);
                     break;
                 case CommandSource.Bound:
-                    message.SetBinding(CommandMessage.CommandProperty, new Binding(coreOfMessage));
+                    var binding = new Binding(coreOfMessage);
+                    message.SetBinding(CommandMessage.CommandProperty, binding);
 #if SILVERLIGHT
-                    var fe = target as FrameworkElement;
+                    var frameworkElement = target as FrameworkElement;
 
-                    if (fe != null)
+                    if (frameworkElement != null)
                     {
-                        fe.Loaded +=
+                        frameworkElement.Loaded +=
                             delegate {
-                                if (fe.DataContext != null)
-                                    message.DataContext = fe.DataContext;
+                                if (frameworkElement.DataContext != null)
+                                    message.DataContext = frameworkElement.DataContext;
                             };
                     }
 #endif

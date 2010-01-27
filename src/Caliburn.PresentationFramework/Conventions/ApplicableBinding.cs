@@ -104,11 +104,7 @@
         /// <returns></returns>
         protected virtual bool ValueNotSet(DependencyObject element)
         {
-#if !SILVERLIGHT_20
             return element.GetBindingExpression(_dependencyProperty) == null;
-#else
-            return true;
-#endif
         }
 
         /// <summary>

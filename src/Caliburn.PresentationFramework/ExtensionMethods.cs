@@ -110,15 +110,16 @@
         /// <returns>The binding expression.</returns>
         public static BindingExpression GetBindingExpression(this DependencyObject dependencyObject, DependencyProperty dependencyProperty)
         {
+#if !SILVERLIGHT
+            return BindingOperations.GetBindingExpression(dependencyObject, dependencyProperty);
+#elif SILVERIGHT_30 || SILVERLIGHT_40
             var fe = dependencyObject as FrameworkElement;
             if (fe != null)
                 return fe.GetBindingExpression(dependencyProperty);
-#if !SILVERLIGHT
-            var fce = dependencyObject as FrameworkContentElement;
-            if (fce != null)
-                return fce.GetBindingExpression(dependencyProperty);
-#endif
             return null;
+#else 
+            return null;
+#endif
         }
 
         /// <summary>
@@ -129,16 +130,12 @@
         /// <param name="binding">The binding.</param>
         public static void SetBinding(this DependencyObject dependencyObject, DependencyProperty dependencyProperty, Binding binding)
         {
+#if !SILVERLIGHT || SILVERIGHT_30 || SILVERLIGHT_40
+			BindingOperations.SetBinding(dependencyObject, dependencyProperty, binding);
+#else
             var fe = dependencyObject as FrameworkElement;
             if (fe != null)
                 fe.SetBinding(dependencyProperty, binding);
-#if !SILVERLIGHT
-            else
-            {
-                var fce = dependencyObject as FrameworkContentElement;
-                if(fce != null)
-                    fce.SetBinding(dependencyProperty, binding);
-            }
 #endif
         }
 
