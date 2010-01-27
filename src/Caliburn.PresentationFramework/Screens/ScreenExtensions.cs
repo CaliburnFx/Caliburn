@@ -28,11 +28,22 @@ namespace Caliburn.PresentationFramework.Screens
         /// <param name="subject">The subject.</param>
         public static void OpenScreen(this IScreenCollection collection, IScreenSubject subject)
         {
+            collection.OpenScreen(subject, delegate { });
+        }
+
+        /// <summary>
+        /// Opens the specified screen.
+        /// </summary>
+        /// <param name="collection">The screen collection.</param>
+        /// <param name="subject">The subject.</param>
+        /// <param name="completed">Completion callback.</param>
+        public static void OpenScreen(this IScreenCollection collection, IScreenSubject subject, Action<bool> completed)
+        {
             var found = collection.Screens.FirstOrDefault(subject.Matches);
 
             if(found != null)
-                collection.OpenScreen(found, delegate { });
-            else subject.CreateScreen(_viewModelFactory,  screen => collection.OpenScreen(screen, delegate { }));
+                collection.OpenScreen(found, completed);
+            else subject.CreateScreen(_viewModelFactory, screen => collection.OpenScreen(screen, completed));
         }
 
         /// <summary>

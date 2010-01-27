@@ -159,6 +159,7 @@
 			<call target="core"/>
 			<call target="presentationframework"/>
 			<call target="modelframework"/>
+			<call target="shellframework"/>
 			<call target="testability"/>
 			<call target="windsor"/>
 			<call target="dynamicproxy"/>
@@ -213,6 +214,7 @@
       <call target="core"/>
       <call target="presentationframework"/>
       <call target="modelframework"/>
+      <call target="shellframework"/>
       <call target="windsor"/>
       <call target="dynamicproxy"/>
       <call target="unity"/>
@@ -240,6 +242,7 @@
       <call target="core"/>
       <call target="presentationframework"/>
       <call target="modelframework"/>
+      <call target="shellframework"/>
       <call target="windsor"/>
       <call target="dynamicproxy"/>
       <call target="unity"/>
@@ -306,6 +309,39 @@
 			</nowarn>
 		</csc>
 	</target>
+
+  <target name="shellframework" depends="presentationframework">
+    <mkdir dir="${current.path.bin}"/>
+    <csc keyfile="${path.src}/Caliburn.snk" noconfig="true" warnaserror="false" target="library" debug="${build.debug}" optimize="${build.optimize}" define="${build.defines}"
+         output="${current.path.bin}/Caliburn.ShellFramework.dll"
+         doc="${current.path.bin}/Caliburn.ShellFramework.xml">
+      <sources basedir="${path.src}">
+        <include name="${build.asminfo}"/>
+        <include name="Caliburn.ShellFramework/**/*.cs"/>
+      </sources>
+      <references basedir="${current.path.bin}">
+        <include name="mscorlib.dll"/>
+        <include name="System.dll"/>
+        <include name="System.Core.dll"/>
+        <include name="System.Xml.dll"/>
+        <include name="Caliburn.Core.dll"/>
+        <include name="Caliburn.PresentationFramework.dll"/>
+        <include name="Microsoft.Practices.ServiceLocation.dll"/>
+        <include name="System.ComponentModel.DataAnnotations.dll" />
+        <!--WPF-->
+        <include name="PresentationCore.dll"/>
+        <include name="PresentationFramework.dll"/>
+        <include name="WindowsBase.dll"/>
+        <!--Silverlight-->
+        <include name="System.Windows.dll" />
+        <include name="System.Windows.Browser.dll" />
+        <include name="System.Windows.Controls.dll" />
+      </references>
+      <nowarn>
+        <warning number="1584"/>
+      </nowarn>
+    </csc>
+  </target>
 
 	<target name="modelframework" depends="presentationframework">
 		<mkdir dir="${current.path.bin}"/>

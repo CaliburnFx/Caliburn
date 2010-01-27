@@ -49,6 +49,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Frameworks", "Frameworks", 
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Caliburn.DynamicProxy", "src\Caliburn.DynamicProxy\Caliburn.DynamicProxy.csproj", "{7FF13E8A-FA3B-432B-A79B-78B5B82DEC4F}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Caliburn.ShellFramework", "src\Caliburn.ShellFramework\Caliburn.ShellFramework.csproj", "{1A4EFC27-E9C2-41D5-A801-58854CA50F86}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -111,6 +113,10 @@ Global
 		{7FF13E8A-FA3B-432B-A79B-78B5B82DEC4F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7FF13E8A-FA3B-432B-A79B-78B5B82DEC4F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{7FF13E8A-FA3B-432B-A79B-78B5B82DEC4F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1A4EFC27-E9C2-41D5-A801-58854CA50F86}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1A4EFC27-E9C2-41D5-A801-58854CA50F86}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1A4EFC27-E9C2-41D5-A801-58854CA50F86}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1A4EFC27-E9C2-41D5-A801-58854CA50F86}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
