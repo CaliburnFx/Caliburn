@@ -1,0 +1,16 @@
+﻿<UserControl x:Class="Caliburn.Silverlight.NavigationShell.Baz.Views.BazView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:pf="clr-namespace:Caliburn.PresentationFramework;assembly=Caliburn.PresentationFramework">
+    <StackPanel>
+        <TextBlock HorizontalAlignment="Center"
+               FontSize="32"
+               Foreground="Blue">Lazy Loaded Baz</TextBlock>
+        <Button Content="Open"
+                HorizontalAlignment="Center"
+                pf:Message.Attach="Open"/>
+        <Button Content="Save" 
+                HorizontalAlignment="Center"
+                pf:Message.Attach="Save"/>
+    </StackPanel>
+</UserControl>

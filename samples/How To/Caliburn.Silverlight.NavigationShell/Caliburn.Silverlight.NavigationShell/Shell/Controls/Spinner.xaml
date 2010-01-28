@@ -1,0 +1,112 @@
+﻿<UserControl x:Class="Caliburn.Silverlight.NavigationShell.Shell.Controls.Spinner"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <UserControl.Resources>
+        <Storyboard x:Name="spinAnimation">
+            <DoubleAnimationUsingKeyFrames BeginTime="00:00:00"
+                                           RepeatBehavior="Forever"
+                                           Storyboard.TargetName="loader_anim"
+                                           Storyboard.TargetProperty="(UIElement.RenderTransform).(TransformGroup.Children)[2].(RotateTransform.Angle)">
+                <EasingDoubleKeyFrame KeyTime="00:00:00"
+                                      Value="0" />
+                <EasingDoubleKeyFrame KeyTime="00:00:03.9000000"
+                                      Value="360" />
+            </DoubleAnimationUsingKeyFrames>
+        </Storyboard>
+    </UserControl.Resources>
+
+    <Canvas x:Name="loader_anim"
+                Height="32"
+                Width="32"
+                RenderTransformOrigin="0.5,0.5"
+                Margin="4,4,8,4">
+        <Canvas.RenderTransform>
+            <TransformGroup>
+                <ScaleTransform />
+                <SkewTransform />
+                <RotateTransform />
+                <TranslateTransform />
+            </TransformGroup>
+        </Canvas.RenderTransform>
+        <Ellipse Fill="Black"
+                     Height="6"
+                     Width="6"
+                     Canvas.Left="13"
+                     RenderTransformOrigin="0.5,0.5">
+            <Ellipse.RenderTransform>
+                <TransformGroup>
+                    <ScaleTransform />
+                    <SkewTransform />
+                    <RotateTransform Angle="45" />
+                    <TranslateTransform X="9.1923881554251174"
+                                        Y="3.8076118445748808" />
+                </TransformGroup>
+            </Ellipse.RenderTransform>
+        </Ellipse>
+        <Ellipse Fill="Black"
+                     Height="6"
+                     Width="6"
+                     Canvas.Left="13"
+                     Canvas.Top="26"
+                     RenderTransformOrigin="0.5,0.5">
+            <Ellipse.RenderTransform>
+                <TransformGroup>
+                    <ScaleTransform />
+                    <SkewTransform />
+                    <RotateTransform Angle="45" />
+                    <TranslateTransform X="-9.1923881554251174"
+                                            Y="-3.8076118445748808" />
+                </TransformGroup>
+            </Ellipse.RenderTransform>
+        </Ellipse>
+        <Ellipse Fill="Black"
+                     Height="6"
+                     Width="6"
+                     Canvas.Left="26"
+                     Canvas.Top="13"
+                     RenderTransformOrigin="0.5,0.5">
+            <Ellipse.RenderTransform>
+                <TransformGroup>
+                    <ScaleTransform />
+                    <SkewTransform />
+                    <RotateTransform Angle="45" />
+                    <TranslateTransform X="-3.8076118445748808"
+                                            Y="9.1923881554251174" />
+                </TransformGroup>
+            </Ellipse.RenderTransform>
+        </Ellipse>
+        <Ellipse Fill="Black"
+                     Height="6"
+                     Width="6"
+                     Canvas.Top="13"
+                     RenderTransformOrigin="0.5,0.5">
+            <Ellipse.RenderTransform>
+                <TransformGroup>
+                    <ScaleTransform />
+                    <SkewTransform />
+                    <RotateTransform Angle="45" />
+                    <TranslateTransform X="3.8076118445748808"
+                                        Y="-9.1923881554251174" />
+                </TransformGroup>
+            </Ellipse.RenderTransform>
+        </Ellipse>
+        <Ellipse Fill="Black"
+                     Height="6"
+                     Width="6"
+                     Canvas.Left="13" />
+        <Ellipse Fill="Black"
+                     Height="6"
+                     Width="6"
+                     Canvas.Left="13"
+                     Canvas.Top="26" />
+        <Ellipse Fill="Black"
+                     Height="6"
+                     Width="6"
+                     Canvas.Left="26"
+                     Canvas.Top="13" />
+        <Ellipse Fill="Black"
+                     Height="6"
+                     Width="6"
+                     Canvas.Top="13" />
+    </Canvas>
+</UserControl>

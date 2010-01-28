@@ -64,5 +64,23 @@ namespace Caliburn.Core.Configuration
         {
             return new PerRequest { Service = service, Implementation = implementation };
         }
+
+        /// <summary>
+        /// Creates a singleton registration.
+        /// </summary>
+        /// <returns>The registration.</returns>
+        protected Singleton Singleton<TService, TImplementation>()
+        {
+            return new Singleton { Service = typeof(TService), Implementation = typeof(TImplementation) };
+        }
+
+        /// <summary>
+        /// Creates a per request registration.
+        /// </summary>
+        /// <returns>The registration.</returns>
+        protected PerRequest PerRequest<TService, TImplementation>()
+        {
+            return new PerRequest { Service = typeof(TService), Implementation = typeof(TImplementation) };
+        }
     }
 }

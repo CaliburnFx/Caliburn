@@ -1,0 +1,12 @@
+﻿<UserControl x:Class="Caliburn.Silverlight.NavigationShell.Foo.Views.FooView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <StackPanel>
+        <TextBlock HorizontalAlignment="Center"
+                   FontSize="32"
+                   Foreground="Red">This is the Foo View.</TextBlock>
+        <Button Content="Click Me (I was wired using a naming convention.)"
+                x:Name="ClickMe" 
+                HorizontalAlignment="Center"/>
+    </StackPanel>
+</UserControl>

@@ -77,6 +77,21 @@
 
 #endif
 
+        public static LoadingResult Loader()
+        {
+            return new LoadingResult(true, "Loading...");
+        }
+
+        public static LoadingResult Loader(string message)
+        {
+            return new LoadingResult(true, message);
+        }
+
+        public static LoadingResult NoLoader()
+        {
+            return new LoadingResult(false, null);
+        }
+
         public static PlayAnimationResult Animation(string animationKey)
         {
             return new PlayAnimationResult(animationKey);

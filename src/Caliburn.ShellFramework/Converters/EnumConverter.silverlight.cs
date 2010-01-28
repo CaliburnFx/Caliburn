@@ -1,6 +1,6 @@
 ﻿#if SILVERLIGHT
 
-namespace Caliburn.ShellFramework
+namespace Caliburn.ShellFramework.Converters
 {
     using System;
     using System.Globalization;

@@ -1,0 +1,1 @@
+-Please be sure to set the Web as your startup project before running and set Caliburn.Silverlight.NavigationShellTestPage.aspx as your start page.

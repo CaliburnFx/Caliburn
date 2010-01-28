@@ -45,14 +45,11 @@
     <Reference Include="System.Core">
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
     </Reference>
-    <Reference Include="System.Xml.Linq">
-      <RequiredTargetFramework>3.5</RequiredTargetFramework>
-    </Reference>
-    <Reference Include="System.Data.DataSetExtensions">
-      <RequiredTargetFramework>3.5</RequiredTargetFramework>
-    </Reference>
     <Reference Include="System.Data" />
-    <Reference Include="System.Xml" />
+    <Reference Include="System.XML" />
+    <Reference Include="UIAutomationProvider">
+      <RequiredTargetFramework>3.0</RequiredTargetFramework>
+    </Reference>
     <Reference Include="WindowsBase">
       <RequiredTargetFramework>3.0</RequiredTargetFramework>
     </Reference>
@@ -64,7 +61,8 @@
     <Compile Include="Controls\ButtonConverter.cs" />
     <Compile Include="Controls\ButtonPanel.cs" />
     <Compile Include="Controls\DialogChrome.cs" />
-    <Compile Include="EnumConverter.silverlight.cs" />
+    <Compile Include="Converters\BooleanToVisibilityConverter.silverlight.cs" />
+    <Compile Include="Converters\EnumConverter.silverlight.cs" />
     <Compile Include="History\ExtensionMethods.silverlight.cs" />
     <Compile Include="History\HistoryConfiguration.silverlight.cs" />
     <Compile Include="History\HistoryCoordinator.silverlight.cs" />
@@ -87,6 +85,7 @@
     <Compile Include="Resources\IResourceManager.cs" />
     <Compile Include="Results\ExtensionMethods.cs" />
     <Compile Include="Results\IOpenResult.cs" />
+    <Compile Include="Results\LoadingResult.cs" />
     <Compile Include="Results\MessageBoxResult.cs" />
     <Compile Include="Results\OpenChildResult.cs" />
     <Compile Include="Results\OpenDialogResult.cs" />
@@ -97,6 +96,9 @@
     <Compile Include="Results\SaveFileDialogResult.silverlight.cs" />
     <Compile Include="Results\Show.cs" />
     <Compile Include="Results\ShowCommonDialogResult.wpf.cs" />
+    <Compile Include="Services\DefaultLoader.cs" />
+    <Compile Include="Services\ILoader.cs" />
+    <Compile Include="Services\LoadScreenViewModel.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Caliburn.Core\Caliburn.Core.csproj">

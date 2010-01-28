@@ -1,5 +1,6 @@
 ﻿namespace Caliburn.PresentationFramework.Configuration
 {
+    using System;
     using System.ComponentModel;
     using System.Linq;
     using System.Reflection;
@@ -103,15 +104,17 @@
             if (!_registerAllScreensWithSubjects)
                 return;
 
-            var registry = serviceLocator.GetAllInstances<IRegistry>()
-                .FirstOrDefault();
+            try
+            {
+                var registry = serviceLocator.GetInstance<IRegistry>();
+                var assemblySource = serviceLocator.GetInstance<IAssemblySource>();
 
-            if (registry == null)
-                return;
-
-            var assemblySource = serviceLocator.GetInstance<IAssemblySource>();
-            assemblySource.Apply(x => RegisterScreens(registry, x));
-            assemblySource.AssemblyAdded += assembly => RegisterScreens(registry, assembly);
+                assemblySource.Apply(x => RegisterScreens(registry, x));
+                assemblySource.AssemblyAdded += assembly => RegisterScreens(registry, assembly);
+            }
+            catch(ActivationException)
+            {
+            }
         }
 
         private static void RegisterScreens(IRegistry registry, Assembly assembly) 
@@ -119,7 +122,12 @@
             var matches = from type in assembly.GetExportedTypes()
                           let service = type.FindInterfaceThatCloses(typeof(IScreen<>))
                           where service != null
-                          select new PerRequest {Service = service, Implementation = type};
+                          select new PerRequest
+                          {
+                              Service = service, 
+                              Implementation = type,
+                              Name = type.AssemblyQualifiedName
+                          };
 
             registry.Register(matches.OfType<IComponentRegistration>());
         }
