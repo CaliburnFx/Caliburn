@@ -43,7 +43,7 @@ namespace Caliburn.PresentationFramework.ApplicationModel
                 var hostID = HtmlPage.Plugin.Id;
 
                 if(string.IsNullOrEmpty(hostID))
-                    throw new Exception();
+                    return false;
 
                 _stateName = stateName ?? string.Empty;
 
