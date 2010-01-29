@@ -133,7 +133,10 @@
                 return false;
             }
 
-            newPropertyPath = subPath + "." + newProperty.Name;
+            if (index == -1)
+                newPropertyPath = newProperty.Name;
+            else newPropertyPath = subPath + "." + newProperty.Name;
+
             return true;
         }
 
