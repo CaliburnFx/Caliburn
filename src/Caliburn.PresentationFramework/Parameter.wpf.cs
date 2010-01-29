@@ -28,6 +28,7 @@ namespace Caliburn.PresentationFramework
                 );
 
         private Func<object> _updater;
+        private bool _updating;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Parameter"/> class.
@@ -51,8 +52,12 @@ namespace Caliburn.PresentationFramework
         {
             get
             {
-                if (_updater != null)
+                if (_updater != null && !_updating)
+                {
+                    _updating = true;
                     Value = _updater();
+                    _updating = false;
+                }
 
                 return GetValue(ValueProperty);
             }
