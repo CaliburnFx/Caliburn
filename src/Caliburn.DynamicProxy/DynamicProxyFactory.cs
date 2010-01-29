@@ -112,7 +112,7 @@
                 type,
                 interfaces,
                 ProxyGenerationOptions.Default,
-                constructorArgs.ToArray(),
+                constructorArgs == null ? new object[] {} : constructorArgs.ToArray(),
                 interceptors
                 );
 
