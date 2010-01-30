@@ -52,14 +52,15 @@ namespace Caliburn.PresentationFramework.ViewModels
             return Context.Equals(context);
         }
 
+
         /// <summary>
-        /// Gets the view for displaying the specified viewModel.
+        /// Locates the View for the specified model type.
         /// </summary>
-        /// <param name="viewModel">The model.</param>
-        /// <param name="displayLocation">The control into which the view will be injected.</param>
-        /// <param name="context">Some additional context used to select the proper view.</param>
+        /// <param name="modelType">Type of the model.</param>
+        /// <param name="displayLocation">The display location.</param>
+        /// <param name="context">The context.</param>
         /// <returns>The view.</returns>
-        public DependencyObject Locate(object viewModel, DependencyObject displayLocation, object context)
+        public DependencyObject Locate(Type modelType, DependencyObject displayLocation, object context)
         {
             var instances = ServiceLocator.Current.GetAllInstances(_key);
 

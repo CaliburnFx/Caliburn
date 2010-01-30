@@ -4,10 +4,8 @@ namespace Caliburn.PresentationFramework.ViewModels
     using System.Collections.Generic;
     using System.Linq;
     using System.Windows;
+    using System.Windows.Controls;
     using Core;
-    using Core.Behaviors;
-    using Core.Metadata;
-    using Metadata;
     using Microsoft.Practices.ServiceLocation;
 
     /// <summary>
@@ -42,40 +40,19 @@ namespace Caliburn.PresentationFramework.ViewModels
         }
 
         /// <summary>
-        /// Gets the view for displaying the specified model.
+        /// Locates the View for the specified model type.
         /// </summary>
-        /// <param name="model">The model.</param>
-        /// <param name="displayLocation">The control into which the view will be injected.</param>
-        /// <param name="context">Some additional context used to select the proper view.</param>
-        /// <returns></returns>
-        public DependencyObject Locate(object model, DependencyObject displayLocation, object context)
+        /// <param name="modelType">Type of the model.</param>
+        /// <param name="displayLocation">The display location.</param>
+        /// <param name="context">The context.</param>
+        /// <returns>The view.</returns>
+        public DependencyObject Locate(Type modelType, DependencyObject displayLocation, object context)
         {
-            if (model == null)
-                return null;
-
-#if !SILVERLIGHT
-            var metadataContainer = model as IMetadataContainer;
-            if (metadataContainer != null)
-            {
-                var view = metadataContainer.GetView<DependencyObject>(context);
-                if (view != null)
-                {
-                    var windowCheck = view as Window;
-                    if (windowCheck == null || !windowCheck.IsLoaded)
-                    {
-                        return view;
-                    }
-                }
-            }
-#endif
-
-            var modelType = GetModelType(model);
-
             var customStrategy = modelType.GetAttributes<IViewStrategy>(true)
                 .Where(x => x.Matches(context)).FirstOrDefault();
 
             if (customStrategy != null)
-                return customStrategy.Locate(model, displayLocation, context);
+                return customStrategy.Locate(modelType, displayLocation, context);
 
             var stringContext = context.SafeToString();
             var cacheKey = DetermineCacheKey(modelType, stringContext);
@@ -101,22 +78,22 @@ namespace Caliburn.PresentationFramework.ViewModels
                 }
             }
 
-            throw new CaliburnException(
-                "A default view was not found for " + modelType.FullName +
-                ".  Views searched for include: " +
-                namesToCheck.Aggregate(string.Empty, (a, c) => a + Environment.NewLine + c)
+            var message = namesToCheck.Aggregate(
+                "A default view was not found for " + modelType.FullName + ".  Views searched for include: ", 
+                (a, c) => a + Environment.NewLine + c
                 );
-        }
 
-        /// <summary>
-        /// Gets the type of the model.
-        /// </summary>
-        /// <param name="model">The model.</param>
-        /// <returns></returns>
-        protected virtual Type GetModelType(object model)
-        {
-            var proxy = model as IProxy;
-            return proxy != null ? proxy.OriginalType : model.GetType();
+            var generated = new TextBlock
+            {
+                Text = message,
+                TextWrapping = TextWrapping.Wrap,
+                VerticalAlignment = VerticalAlignment.Stretch,
+                HorizontalAlignment = HorizontalAlignment.Stretch
+            };
+
+            ToolTipService.SetToolTip(generated, message);
+
+            return generated;
         }
 
         /// <summary>

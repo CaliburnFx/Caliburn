@@ -115,6 +115,7 @@
     <Compile Include="ViewModels\DefaultViewLocator.cs" />
     <Compile Include="ApplicationModel\ExtensionMethods.cs" />
     <Compile Include="ViewModels\DefaultViewModelFactory.cs" />
+    <Compile Include="ViewModels\ExtensionMethods.cs" />
     <Compile Include="ViewModels\IValidationError.cs" />
     <Compile Include="ViewModels\IValidator.cs" />
     <Compile Include="ViewModels\IViewModelBinder.cs" />

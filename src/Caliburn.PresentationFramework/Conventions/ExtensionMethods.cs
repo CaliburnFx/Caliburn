@@ -17,9 +17,9 @@
     public static class ExtensionMethods
     {
         /// <summary>
-        /// Used to override the behavior for locating named elements within a UI.
+        /// The overridable implemenation of GetNamedElements.
         /// </summary>
-        public static Func<IConventionManager, DependencyObject, IEnumerable<IElementDescription>> GetNamedElements = DefaultGetNamedObjects;
+        public static Func<IConventionManager, DependencyObject, IEnumerable<IElementDescription>> GetNamedElementsImplementation = DefaultGetNamedElementsImplementation;
 
         /// <summary>
         /// Determines the conventions for the specified view and view model description.
@@ -30,11 +30,11 @@
         /// <returns>The applicalble conventions.</returns>
         public static IEnumerable<IViewApplicable> DetermineConventions(this IConventionManager conventionManager, IViewModelDescription viewModelDescription, DependencyObject view)
         {
-            return conventionManager.DetermineConventions(viewModelDescription, GetNamedElements(conventionManager, view));
+            return conventionManager.DetermineConventions(viewModelDescription, GetNamedElementsImplementation(conventionManager, view));
         }
 
 #if !SILVERLIGHT
-        private static IEnumerable<IElementDescription> DefaultGetNamedObjects(IConventionManager conventionManager, DependencyObject root)
+        private static IEnumerable<IElementDescription> DefaultGetNamedElementsImplementation(IConventionManager conventionManager, DependencyObject root)
         {
             var queue = new Queue<DependencyObject>();
             queue.Enqueue(root);
@@ -65,7 +65,7 @@
             }
         }
 #else
-        private static IEnumerable<IElementDescription> DefaultGetNamedObjects(IConventionManager conventionManager, DependencyObject root)
+        private static IEnumerable<IElementDescription> DefaultGetNamedElementsImplementation(IConventionManager conventionManager, DependencyObject root)
         {
             var queue = new Queue<DependencyObject>();
             queue.Enqueue(root);

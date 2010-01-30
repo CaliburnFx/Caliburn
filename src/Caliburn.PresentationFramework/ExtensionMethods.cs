@@ -7,6 +7,7 @@
     using System.Windows.Media;
     using Conventions;
     using Core;
+    using Core.Behaviors;
     using Microsoft.Practices.ServiceLocation;
 
     /// <summary>
@@ -15,6 +16,11 @@
     public static class ExtensionMethods
     {
         /// <summary>
+        /// The overridable implemenation of GetModelType.
+        /// </summary>
+        public static Func<object, Type> GetModelTypeImplementation = DefaultGetModelTypeImplemenation;
+
+        /// <summary>
         /// Safely converts an object to a string.
         /// </summary>
         /// <param name="value">The value to convert.</param>
@@ -22,6 +28,22 @@
         internal static string SafeToString(this object value)
         {
             return value == null ? null : value.ToString();
+        }
+
+        /// <summary>
+        /// Gets the type of the model.
+        /// </summary>
+        /// <param name="model">The model.</param>
+        /// <returns></returns>
+        public static Type GetModelType(this object model)
+        {
+            return GetModelTypeImplementation(model);
+        }
+
+        private static Type DefaultGetModelTypeImplemenation(this object model)
+        {
+            var proxy = model as IProxy;
+            return proxy != null ? proxy.OriginalType : model.GetType();
         }
 
         /// <summary>
