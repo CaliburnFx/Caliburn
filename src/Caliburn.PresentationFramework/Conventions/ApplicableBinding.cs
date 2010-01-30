@@ -129,8 +129,8 @@
         private const string _templateCore =
             "<DataTemplate xmlns='http://schemas.microsoft.com/winfx/2006/xaml/presentation' " +
                           "xmlns:x='http://schemas.microsoft.com/winfx/2006/xaml' " +
-                          "xmlns:am='clr-namespace:Caliburn.PresentationFramework.ApplicationModel;assembly=Caliburn.PresentationFramework'> " +
-            "<ContentControl am:View.Model=\"{Binding}\" ";
+                          "xmlns:vm='clr-namespace:Caliburn.PresentationFramework.ViewModels;assembly=Caliburn.PresentationFramework'> " +
+            "<ContentControl vm:View.Model=\"{Binding}\" ";
 
         /// <summary>
         /// Creates an item template which binds view models.
@@ -143,7 +143,7 @@
             var template = _templateCore;
 
             if (context != null)
-                template += "am:View.Context=\"" + context + "\"";
+                template += "vm:View.Context=\"" + context + "\"";
 
             template += " /></DataTemplate>";
 
