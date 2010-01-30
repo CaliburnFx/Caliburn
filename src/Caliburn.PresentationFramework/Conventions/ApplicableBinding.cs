@@ -16,7 +16,7 @@
         private readonly string _path;
         private readonly BindingMode _mode;
         private readonly bool _validate;
-        private readonly bool _checkItemTemplate;
+        private readonly bool _checkTemplate;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ApplicableBinding"/> class.
@@ -26,15 +26,15 @@
         /// <param name="path">The path.</param>
         /// <param name="mode">The mode.</param>
         /// <param name="validate">Inidicates whether or not to turn on validation for the binding.</param>
-        /// <param name="checkItemTemplate">if set to <c>true</c> [check item template].</param>
-        public ApplicableBinding(string elementName, DependencyProperty dependencyProperty, string path, BindingMode mode, bool validate, bool checkItemTemplate)
+        /// <param name="checkTemplate">if set to <c>true</c> [check item template].</param>
+        public ApplicableBinding(string elementName, DependencyProperty dependencyProperty, string path, BindingMode mode, bool validate, bool checkTemplate)
         {
             _elementName = elementName;
             _dependencyProperty = dependencyProperty;
             _path = path;
             _mode = mode;
             _validate = validate;
-            _checkItemTemplate = checkItemTemplate;
+            _checkTemplate = checkTemplate;
         }
 
         /// <summary>
@@ -48,17 +48,38 @@
             if (_dependencyProperty != null && ValueNotSet(element))
             {
                 var binding = new Binding(_path) { Mode = _mode };
-                TryAddValidation(element, binding, _dependencyProperty);
-                element.SetBinding(_dependencyProperty, binding);
+                var dependencyProperty = CheckForViewModelProperty(element, _dependencyProperty);
+                TryAddValidation(element, binding, dependencyProperty);
+                element.SetBinding(dependencyProperty, binding);
             }
 
-            if(!_checkItemTemplate) 
+            if(!_checkTemplate) 
                 return;
 
             var itemsControl = (ItemsControl)element;
 
             if (NeedsItemTemplate(itemsControl))
-                itemsControl.ItemTemplate = CreateItemTemplate(itemsControl);
+                itemsControl.ItemTemplate = CreateTemplate(itemsControl);
+        }
+
+        /// <summary>
+        /// Checks to see if the dependency property should be converted to a view model property.
+        /// </summary>
+        /// <param name="element">The element.</param>
+        /// <param name="property">The property.</param>
+        /// <returns></returns>
+        protected virtual DependencyProperty CheckForViewModelProperty(DependencyObject element, DependencyProperty property)
+        {
+            var contentControl = element as ContentControl;
+            if (contentControl == null) return property;
+
+#if !SILVERLIGHT
+            if (contentControl.ContentTemplate == null && contentControl.ContentTemplateSelector == null)
+                return View.ModelProperty;
+            return property;
+#else
+            return contentControl.ContentTemplate == null ? View.ModelProperty : property;
+#endif
         }
 
         /// <summary>
@@ -123,23 +144,29 @@
         /// <returns></returns>
         protected virtual bool NeedsItemTemplate(ItemsControl control)
         {
+#if !SILVERLIGHT
+            return control.ItemTemplate == null
+                   && control.ItemTemplateSelector == null
+                   && string.IsNullOrEmpty(control.DisplayMemberPath);
+#else
             return control.ItemTemplate == null && string.IsNullOrEmpty(control.DisplayMemberPath);
+#endif
         }
 
         private const string _templateCore =
             "<DataTemplate xmlns='http://schemas.microsoft.com/winfx/2006/xaml/presentation' " +
                           "xmlns:x='http://schemas.microsoft.com/winfx/2006/xaml' " +
                           "xmlns:vm='clr-namespace:Caliburn.PresentationFramework.ViewModels;assembly=Caliburn.PresentationFramework'> " +
-            "<ContentControl vm:View.Model=\"{Binding}\" ";
+                "<ContentControl vm:View.Model=\"{Binding}\" ";
 
         /// <summary>
         /// Creates an item template which binds view models.
         /// </summary>
-        /// <param name="itemsControl">The items control.</param>
+        /// <param name="control">The control.</param>
         /// <returns></returns>
-        protected virtual DataTemplate CreateItemTemplate(ItemsControl itemsControl)
+        protected virtual DataTemplate CreateTemplate(Control control)
         {
-            var context = View.GetContext(itemsControl);
+            var context = View.GetContext(control);
             var template = _templateCore;
 
             if (context != null)

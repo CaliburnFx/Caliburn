@@ -1,9 +1,7 @@
 namespace Caliburn.PresentationFramework.Conventions
 {
-    using System;
     using System.Reflection;
     using System.Windows.Data;
-    using Screens;
     using ViewModels;
 
     /// <summary>
@@ -11,8 +9,6 @@ namespace Caliburn.PresentationFramework.Conventions
     /// </summary>
     public class DefaultBindingConvention : ViewConventionBase<PropertyInfo>
     {
-        private static readonly Type _screenType = typeof(IScreen);
-
         /// <summary>
         /// Creates the application of the convention.
         /// </summary>
@@ -30,9 +26,7 @@ namespace Caliburn.PresentationFramework.Conventions
 
             return new ApplicableBinding(
                 element.Name,
-                _screenType.IsAssignableFrom(boundProperty.PropertyType)
-                    ? View.ModelProperty
-                    : element.Convention.BindableProperty,
+                element.Convention.BindableProperty,
                 path,
                 boundProperty.CanWrite ? BindingMode.TwoWay : BindingMode.OneWay,
                 ShouldValidate(boundProperty),
