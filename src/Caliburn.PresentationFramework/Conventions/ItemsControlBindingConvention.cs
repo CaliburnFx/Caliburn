@@ -36,9 +36,9 @@ namespace Caliburn.PresentationFramework.Conventions
             if (boundProperty == null || !_itemsControlType.IsAssignableFrom(element.Type))
                 return null;
 
-            string path;
-            DependencyProperty bindableProperty;
-            BindingMode mode;
+            string path = null;
+            DependencyProperty bindableProperty = null;
+            BindingMode mode = BindingMode.OneWay;
 
             if (_selectorControlType.IsAssignableFrom(element.Type))
             {
@@ -78,7 +78,6 @@ namespace Caliburn.PresentationFramework.Conventions
                 else return null;
             }
 #endif
-            else return null;
 
             return new ApplicableBinding(
                 element.Name,
