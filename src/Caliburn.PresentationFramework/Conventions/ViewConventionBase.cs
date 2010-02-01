@@ -122,7 +122,7 @@
                                    ? deriveBaseName(originalPropertyPath)
                                    : deriveBaseName(originalPropertyPath.Substring(index + 1));
 
-            var found = (index == -1 ? originalProperty.DeclaringType : subProperty.PropertyType).GetProperties()
+            var found = (index == -1 ? originalProperty.ReflectedType : subProperty.PropertyType).GetProperties()
                 .FirstOrDefault(x => predicate(x, singularName));
 
             newProperty = found;

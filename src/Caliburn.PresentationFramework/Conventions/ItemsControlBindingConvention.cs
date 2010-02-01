@@ -39,6 +39,7 @@ namespace Caliburn.PresentationFramework.Conventions
             string path = null;
             DependencyProperty bindableProperty = null;
             BindingMode mode = BindingMode.OneWay;
+            bool checkTemplate = true;
 
             if (_selectorControlType.IsAssignableFrom(element.Type))
             {
@@ -56,6 +57,7 @@ namespace Caliburn.PresentationFramework.Conventions
                     path = selectionPath;
                     bindableProperty = Selector.SelectedItemProperty;
                     mode = selectionProperty.CanWrite ? BindingMode.TwoWay : BindingMode.OneWay;
+                    checkTemplate = ShouldCheckTemplate(selectionProperty);
                 }
                 else return null;
             }
@@ -74,6 +76,7 @@ namespace Caliburn.PresentationFramework.Conventions
                     path = headerPath;
                     bindableProperty = HeaderedItemsControl.HeaderProperty;
                     mode = headerProperty.CanWrite ? BindingMode.TwoWay : BindingMode.OneWay;
+                    checkTemplate = ShouldCheckTemplate(headerProperty);
                 }
                 else return null;
             }
@@ -85,8 +88,15 @@ namespace Caliburn.PresentationFramework.Conventions
                 path,
                 mode,
                 false,
-                true
+                checkTemplate
                 );
+        }
+
+        private bool ShouldCheckTemplate(PropertyInfo property)
+        {
+            return !property.PropertyType.IsEnum &&
+                !property.PropertyType.IsPrimitive &&
+                !typeof(string).IsAssignableFrom(property.PropertyType);
         }
     }
 }
