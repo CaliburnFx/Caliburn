@@ -8,6 +8,7 @@ namespace Caliburn.PresentationFramework.Conventions
     using System.Windows.Data;
     using Core;
     using ViewModels;
+using Caliburn.PresentationFramework.Converters;
 
     /// <summary>
     /// An implemenation of <see cref="IViewConvention{T}"/> that bindings SelectedItem and Header for Selectors and HeaderedItemsControls respectively.
@@ -17,6 +18,7 @@ namespace Caliburn.PresentationFramework.Conventions
     {
         private static readonly Type _itemsControlType = typeof(ItemsControl);
         private static readonly Type _selectorControlType = typeof(Selector);
+        private static readonly EnumConverter _enumConverter = new EnumConverter();
 
 #if !SILVERLIGHT
         private static readonly Type _headeredItemsControlType = typeof(HeaderedItemsControl);
@@ -40,6 +42,7 @@ namespace Caliburn.PresentationFramework.Conventions
             DependencyProperty bindableProperty = null;
             BindingMode mode = BindingMode.OneWay;
             bool checkTemplate = true;
+            IValueConverter converter = null;
 
             if (_selectorControlType.IsAssignableFrom(element.Type))
             {
@@ -58,6 +61,9 @@ namespace Caliburn.PresentationFramework.Conventions
                     bindableProperty = Selector.SelectedItemProperty;
                     mode = selectionProperty.CanWrite ? BindingMode.TwoWay : BindingMode.OneWay;
                     checkTemplate = ShouldCheckTemplate(selectionProperty);
+                    converter = typeof(BindableCollection<BindableEnum>).IsAssignableFrom(boundProperty.PropertyType)
+                                    ? _enumConverter
+                                    : null;
                 }
                 else return null;
             }
@@ -88,7 +94,8 @@ namespace Caliburn.PresentationFramework.Conventions
                 path,
                 mode,
                 false,
-                checkTemplate
+                checkTemplate,
+                converter
                 );
         }
 

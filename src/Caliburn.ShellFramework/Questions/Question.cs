@@ -1,6 +1,4 @@
-﻿#if SILVERLIGHT
-
-namespace Caliburn.ShellFramework.Questions
+﻿namespace Caliburn.ShellFramework.Questions
 {
     using System.Collections.Generic;
     using System.Linq;
@@ -8,6 +6,7 @@ namespace Caliburn.ShellFramework.Questions
     using PresentationFramework;
     using PresentationFramework.ApplicationModel;
     using PresentationFramework.Screens;
+    using PresentationFramework.ViewModels;
 
     public class Question : PropertyChangedBase, ISubordinate
     {
@@ -54,5 +53,3 @@ namespace Caliburn.ShellFramework.Questions
         }
     }
 }
-
-#endif

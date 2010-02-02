@@ -2,6 +2,7 @@ namespace Caliburn.PresentationFramework.Conventions
 {
     using System.Reflection;
     using System.Windows.Data;
+    using Screens;
     using ViewModels;
 
     /// <summary>
@@ -26,11 +27,14 @@ namespace Caliburn.PresentationFramework.Conventions
 
             return new ApplicableBinding(
                 element.Name,
-                element.Convention.BindableProperty,
+                typeof(IScreen).IsAssignableFrom(boundProperty.PropertyType)
+                    ? View.ModelProperty
+                    : element.Convention.BindableProperty,
                 path,
                 boundProperty.CanWrite ? BindingMode.TwoWay : BindingMode.OneWay,
                 ShouldValidate(boundProperty),
-                false
+                false,
+                null
                 );
         }
     }

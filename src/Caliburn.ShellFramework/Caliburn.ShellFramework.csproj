@@ -55,14 +55,10 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="BindableEnum.silverlight.cs" />
-    <Compile Include="BindableEnumCollection.silverlight.cs" />
     <Compile Include="ButtonModel.cs" />
     <Compile Include="Controls\ButtonConverter.cs" />
     <Compile Include="Controls\ButtonPanel.cs" />
     <Compile Include="Controls\DialogChrome.cs" />
-    <Compile Include="Converters\BooleanToVisibilityConverter.silverlight.cs" />
-    <Compile Include="Converters\EnumConverter.silverlight.cs" />
     <Compile Include="History\ExtensionMethods.silverlight.cs" />
     <Compile Include="History\HistoryConfiguration.silverlight.cs" />
     <Compile Include="History\HistoryCoordinator.silverlight.cs" />
@@ -77,8 +73,7 @@
     <Compile Include="Questions\Answer.cs" />
     <Compile Include="Questions\ExtensionMethods.cs" />
     <Compile Include="Questions\IQuestionDialog.cs" />
-    <Compile Include="Questions\Question.silverlight.cs" />
-    <Compile Include="Questions\Question.wpf.cs" />
+    <Compile Include="Questions\Question.cs" />
     <Compile Include="Questions\QuestionDialogViewModel.cs" />
     <Compile Include="Resources\DefaultResourceManager.cs" />
     <Compile Include="Resources\ExtensionMethods.cs" />

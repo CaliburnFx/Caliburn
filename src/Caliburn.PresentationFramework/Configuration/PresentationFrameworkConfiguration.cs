@@ -29,6 +29,7 @@
         ConventionalModule<PresentationFrameworkConfiguration, IPresentationFrameworkServicesDescription>
     {
         private bool _registerAllScreensWithSubjects;
+        private bool _nameInstances;
 
 #if !SILVERLIGHT
         private static readonly bool _isInDesignMode = DesignerProperties.GetIsInDesignMode(new DependencyObject());
@@ -62,7 +63,16 @@
         /// </summary>
         public void RegisterAllScreensWithSubjects()
         {
+            RegisterAllScreensWithSubjects(false);
+        }
+
+        /// <summary>
+        /// Searches the <see cref="IAssemblySource"/> and registers all screens which concretely implement <see cref="IScreen{T}"/> using their closed interface type.
+        /// </summary>
+        public void RegisterAllScreensWithSubjects(bool nameInstances)
+        {
             _registerAllScreensWithSubjects = true;
+            _nameInstances = nameInstances;
         }
 
         /// <summary>
@@ -117,16 +127,16 @@
             }
         }
 
-        private static void RegisterScreens(IRegistry registry, Assembly assembly) 
+        private void RegisterScreens(IRegistry registry, Assembly assembly)
         {
             var matches = from type in assembly.GetExportedTypes()
                           let service = type.FindInterfaceThatCloses(typeof(IScreen<>))
                           where service != null
                           select new PerRequest
                           {
-                              Service = service, 
+                              Service = service,
                               Implementation = type,
-                              Name = type.AssemblyQualifiedName
+                              Name = _nameInstances ? type.AssemblyQualifiedName : null
                           };
 
             registry.Register(matches.OfType<IComponentRegistration>());

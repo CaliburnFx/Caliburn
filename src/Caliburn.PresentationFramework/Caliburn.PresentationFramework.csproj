@@ -90,6 +90,8 @@
     <Compile Include="Conventions\IViewConventionCategory.cs" />
     <Compile Include="Conventions\SubActionConvention.cs" />
     <Compile Include="Conventions\ViewConventionBase.cs" />
+    <Compile Include="Converters\BooleanToVisibilityConverter.silverlight.cs" />
+    <Compile Include="Converters\EnumConverter.cs" />
     <Compile Include="ResultCompletionEventArgs.cs" />
     <Compile Include="ResultExecutionContext.cs" />
     <Compile Include="Screens\ScreenExtensions.cs" />
@@ -107,6 +109,8 @@
     <Compile Include="Screens\ScreenConductorWithCollectionAllScreensActive.cs" />
     <Compile Include="Screens\ScreenConductorWithCollectionOneScreenActive.cs" />
     <Compile Include="Screens\ScreenSubject.cs" />
+    <Compile Include="ViewModels\BindableEnum.cs" />
+    <Compile Include="ViewModels\BindableEnumCollection.cs" />
     <Compile Include="ViewModels\DefaultValidationError.cs" />
     <Compile Include="ViewModels\DefaultValidator.silverlight.cs" />
     <Compile Include="ViewModels\DefaultValidator.wpf.cs" />

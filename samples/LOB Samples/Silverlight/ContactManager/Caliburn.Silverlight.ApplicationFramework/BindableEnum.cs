@@ -15,10 +15,13 @@
         {
             var otherBindable = obj as BindableEnum;
 
-            if(otherBindable != null) 
+            if (otherBindable != null)
                 return UnderlyingValue == otherBindable.UnderlyingValue;
 
-            return obj != null && UnderlyingValue.Equals((int)obj);
+            if (obj is int)
+                return UnderlyingValue.Equals((int)obj);
+
+            return false;
         }
 
         public override int GetHashCode()

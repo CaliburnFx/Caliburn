@@ -17,6 +17,7 @@
         private readonly BindingMode _mode;
         private readonly bool _validate;
         private readonly bool _checkTemplate;
+        private readonly IValueConverter _converter;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ApplicableBinding"/> class.
@@ -27,7 +28,9 @@
         /// <param name="mode">The mode.</param>
         /// <param name="validate">Inidicates whether or not to turn on validation for the binding.</param>
         /// <param name="checkTemplate">if set to <c>true</c> [check item template].</param>
-        public ApplicableBinding(string elementName, DependencyProperty dependencyProperty, string path, BindingMode mode, bool validate, bool checkTemplate)
+        /// <param name="converter">The value converter to apply.</param>
+        public ApplicableBinding(string elementName, DependencyProperty dependencyProperty, string path, 
+            BindingMode mode, bool validate, bool checkTemplate, IValueConverter converter)
         {
             _elementName = elementName;
             _dependencyProperty = dependencyProperty;
@@ -35,6 +38,7 @@
             _mode = mode;
             _validate = validate;
             _checkTemplate = checkTemplate;
+            _converter = converter;
         }
 
         /// <summary>
@@ -47,7 +51,12 @@
 
             if (_dependencyProperty != null && ValueNotSet(element))
             {
-                var binding = new Binding(_path) { Mode = _mode };
+                var binding = new Binding(_path)
+                {
+                    Mode = _mode,
+                    Converter = _converter
+                };
+
                 var dependencyProperty = CheckForViewModelProperty(element, _dependencyProperty);
                 TryAddValidation(element, binding, dependencyProperty);
                 element.SetBinding(dependencyProperty, binding);

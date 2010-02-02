@@ -3,6 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:pf="clr-namespace:Caliburn.PresentationFramework;assembly=Caliburn.PresentationFramework"
              xmlns:Controls="clr-namespace:Caliburn.Silverlight.ApplicationFramework.Controls;assembly=Caliburn.Silverlight.ApplicationFramework"
+             xmlns:cal="clr-namespace:Caliburn.PresentationFramework.ViewModels;assembly=Caliburn.PresentationFramework"
              Height="400"
              Width="750"
              pf:Message.Attach="[Event Loaded] = [Action LoadContacts]">

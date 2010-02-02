@@ -36,7 +36,7 @@
 
         protected override void ConfigurePresentationFramework(PresentationFrameworkConfiguration module)
         {
-            module.RegisterAllScreensWithSubjects();
+            module.RegisterAllScreensWithSubjects(true);
         }
 
         private void AddLazyTaskBarItem(string name)

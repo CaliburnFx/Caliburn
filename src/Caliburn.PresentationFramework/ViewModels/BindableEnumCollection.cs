@@ -1,29 +1,34 @@
-﻿#if SILVERLIGHT
-
-namespace Caliburn.ShellFramework
+﻿namespace Caliburn.PresentationFramework.ViewModels
 {
     using System;
     using System.ComponentModel;
     using System.Linq;
     using System.Reflection;
     using Core;
-    using PresentationFramework;
 
+    /// <summary>
+    /// A collection of <see cref="BindableEnum"/> based on an <see cref="Enum"/>.
+    /// </summary>
+    /// <typeparam name="T">The Enum type.</typeparam>
     public class BindableEnumCollection<T> : BindableCollection<BindableEnum> where T : struct
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="BindableEnumCollection&lt;T&gt;"/> class.
+        /// </summary>
+        /// <param name="values">The values.</param>
         public BindableEnumCollection(params T[] values)
             : this()
         {
-            var self = this.ToList();
+            var toRemove = from bindableEnum in this
+                           where !values.Contains((T)bindableEnum.Value)
+                           select bindableEnum;
 
-            Clear();
-
-            (from value in values
-             from bindableEnum in self
-             where bindableEnum.Value.Equals(value)
-             select bindableEnum).Apply(Add);
+            toRemove.ToList().Apply(x => Remove(x));
         }
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="BindableEnumCollection&lt;T&gt;"/> class.
+        /// </summary>
         public BindableEnumCollection()
         {
             var type = typeof(T);
@@ -50,5 +55,3 @@ namespace Caliburn.ShellFramework
         }
     }
 }
-
-#endif
