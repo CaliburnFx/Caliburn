@@ -23,10 +23,12 @@
         protected override void Initialize()
         {
             Context.Registering += (s, e) =>{
-                if(!e.TypeTo.ShouldCreateProxy())
+                var typeToCheck = e.TypeTo ?? e.TypeFrom;
+
+                if (!typeToCheck.ShouldCreateProxy())
                     return;
 
-                registry.Add(e.TypeTo);
+                registry.Add(typeToCheck);
             };
 
             var strategy = new ProxyBuilderStrategy(Container, registry);
