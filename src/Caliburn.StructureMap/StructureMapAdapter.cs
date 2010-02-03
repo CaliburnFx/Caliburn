@@ -111,7 +111,7 @@
                         .TheDefaultIsConcreteType<T>()
                         .CacheBy(InstanceScope.Singleton);
 
-                    x.IfTypeMatches(type => type.GetAttributes<IBehavior>(true).Any())
+                    x.IfTypeMatches(type => type.ShouldCreateProxy())
                         .InterceptWith((context, instance) =>{
                             var factory = context.GetInstance<IProxyFactory>();
                             var implementation = instance.GetType();
@@ -125,25 +125,6 @@
                 });
 
             return this;
-        }
-
-        private object[] DetermineConstructorArgs(Type implementation)
-        {
-            var args = new List<object>();
-            var greedyConstructor = (from c in implementation.GetConstructors()
-                                     orderby c.GetParameters().Length descending
-                                     select c).FirstOrDefault();
-
-            if (greedyConstructor != null)
-            {
-                foreach (var info in greedyConstructor.GetParameters())
-                {
-                    var arg = GetInstance(info.ParameterType);
-                    args.Add(arg);
-                }
-            }
-
-            return args.ToArray();
         }
 
         private void HandleSingleton(Singleton singleton)

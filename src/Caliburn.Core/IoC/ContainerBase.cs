@@ -37,6 +37,28 @@ namespace Caliburn.Core.IoC
         }
 
         /// <summary>
+        /// Determines the constructor args.
+        /// </summary>
+        /// <param name="implementation">The implementation.</param>
+        /// <returns></returns>
+        protected object[] DetermineConstructorArgs(Type implementation)
+        {
+            var args = new List<object>();
+            var constructor = implementation.SelectEligibleConstructor();
+
+            if (constructor != null)
+            {
+                foreach (var info in constructor.GetParameters())
+                {
+                    var arg = GetInstance(info.ParameterType);
+                    args.Add(arg);
+                }
+            }
+
+            return args.ToArray();
+        }
+
+        /// <summary>
         /// Installs a proxy factory.
         /// </summary>
         /// <typeparam name="T">The type of the proxy factory.</typeparam>

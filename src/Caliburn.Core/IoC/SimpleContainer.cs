@@ -316,37 +316,20 @@
             if (typeArguments != null && typeArguments.Length > 0)
                 type = type.MakeGenericType(typeArguments);
 
-            var args = new List<object>();
-            var greedyConstructor = (from c in type.GetConstructors()
-                                     orderby c.GetParameters().Length descending
-                                     select c).FirstOrDefault();
+            var args = DetermineConstructorArgs(type);
 
-            if (greedyConstructor != null)
+            if (_inspectingForBehaviors && type.ShouldCreateProxy())
             {
-                foreach (var info in greedyConstructor.GetParameters())
-                {
-                    var arg = GetInstance(info.ParameterType);
-                    args.Add(arg);
-                }
+                var factory = GetInstance<IProxyFactory>();
+
+                return factory.CreateProxy(
+                    type,
+                    type.GetAttributes<IBehavior>(true).ToArray(),
+                    args.ToArray()
+                    );
             }
 
-            if(_inspectingForBehaviors)
-            {
-                var behaviors = type.GetAttributes<IBehavior>(true).ToArray();
-
-                if(behaviors.Length > 0)
-                {
-                    var factory = GetInstance<IProxyFactory>();
-
-                    return factory.CreateProxy(
-                        type,
-                        behaviors,
-                        args.ToArray()
-                        );
-                }
-            }
-
-            return args.Count > 0 ? Activator.CreateInstance(type, args.ToArray()) : Activator.CreateInstance(type);
+            return args.Length > 0 ? Activator.CreateInstance(type, args.ToArray()) : Activator.CreateInstance(type);
         }
     }
 }

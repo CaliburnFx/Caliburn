@@ -110,16 +110,16 @@
 
             builder.Build(Container);
 
+            var factory = GetInstance<IProxyFactory>();
+
             Container.ComponentRegistered += (s, e) =>{
                 var implementation = e.ComponentRegistration.Descriptor
                     .BestKnownImplementationType;
 
-                if(!implementation.GetAttributes<IBehavior>(true).Any())
+                if (!implementation.ShouldCreateProxy())
                     return;
 
                 e.ComponentRegistration.Activating += (s2, e2) =>{
-                    var factory = e.Container.Resolve<IProxyFactory>();
-
                     e2.Instance = factory.CreateProxy(
                         implementation,
                         implementation.GetAttributes<IBehavior>(true).ToArray(),
@@ -129,25 +129,6 @@
             };
 
             return this;
-        }
-
-        private object[] DetermineConstructorArgs(Type implementation)
-        {
-            var args = new List<object>();
-            var greedyConstructor = (from c in implementation.GetConstructors()
-                                     orderby c.GetParameters().Length descending
-                                     select c).FirstOrDefault();
-
-            if (greedyConstructor != null)
-            {
-                foreach (var info in greedyConstructor.GetParameters())
-                {
-                    var arg = GetInstance(info.ParameterType);
-                    args.Add(arg);
-                }
-            }
-
-            return args.ToArray();
         }
 
         private void HandleSingleton(Singleton singleton)

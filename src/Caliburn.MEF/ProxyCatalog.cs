@@ -103,7 +103,7 @@
         {
             var type = ReflectionModelServices.GetPartType(original).Value;
 
-            return type.GetAttributes<IBehavior>(true).Any()
+            return type.ShouldCreateProxy()
                        ? new ProxyPartDefinition(type, original)
                        : original;
         }

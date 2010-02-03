@@ -5,6 +5,7 @@
     using System.Linq;
     using Core;
     using Core.Behaviors;
+    using Core.IoC;
     using global::Spring.Objects.Factory.Config;
 
     /// <summary>
@@ -44,16 +45,15 @@
         public object PostProcessBeforeInitialization(object instance, string name)
         {
             var type = instance.GetType();
-            var behaviors = type.GetAttributes<IBehavior>(true);
 
-            if(!behaviors.Any())
+            if(!type.ShouldCreateProxy())
                 return instance;
 
             var factory = _container.GetInstance<IProxyFactory>();
 
             return factory.CreateProxy(
                 type,
-                behaviors.ToArray(),
+                type.GetAttributes<IBehavior>(true).ToArray(),
                 DetermineConstructorArgs(type)
                 );
         }
@@ -84,9 +84,7 @@
         private object[] DetermineConstructorArgs(Type implementation)
         {
             var args = new List<object>();
-            var greedyConstructor = (from c in implementation.GetConstructors()
-                                     orderby c.GetParameters().Length descending
-                                     select c).FirstOrDefault();
+            var greedyConstructor = implementation.SelectEligibleConstructor();
 
             if(greedyConstructor != null)
             {

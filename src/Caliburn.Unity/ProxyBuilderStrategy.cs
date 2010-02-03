@@ -5,6 +5,7 @@
     using System.Linq;
     using Core;
     using Core.Behaviors;
+    using Core.IoC;
     using Microsoft.Practices.ObjectBuilder2;
     using Microsoft.Practices.Unity;
 
@@ -54,9 +55,7 @@
         private object[] DetermineConstructorArgs(Type implementation)
         {
             var args = new List<object>();
-            var greedyConstructor = (from c in implementation.GetConstructors()
-                                     orderby c.GetParameters().Length descending
-                                     select c).FirstOrDefault();
+            var greedyConstructor = implementation.SelectEligibleConstructor();
 
             if(greedyConstructor != null)
             {

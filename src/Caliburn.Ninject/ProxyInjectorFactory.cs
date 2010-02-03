@@ -41,11 +41,13 @@
         /// <returns></returns>
         public ConstructorInjector Create(ConstructorInfo constructor)
         {
-            var type = constructor.DeclaringType;
-            var behaviors = type.GetAttributes<IBehavior>(true).ToArray();
+            if (typeof(IProxyFactory).IsAssignableFrom(constructor.DeclaringType))
+                return _inner.Create(constructor);
 
-            return behaviors.Length > 0
-                       ? new ProxyHelper(constructor.DeclaringType, behaviors).CreateConstructor
+            var factory = ServiceLocator.Current.GetInstance<IProxyFactory>();
+
+            return constructor.DeclaringType.ShouldCreateProxy()
+                       ? new ProxyHelper(factory, constructor.DeclaringType).CreateConstructor
                        : _inner.Create(constructor);
         }
 
@@ -71,19 +73,20 @@
 
         private class ProxyHelper
         {
+            private readonly IProxyFactory _factory;
             private readonly Type _implementation;
             private readonly IBehavior[] _behaviors;
 
-            public ProxyHelper(Type implementation, IBehavior[] behaviors)
+            public ProxyHelper(IProxyFactory factory, Type implementation)
             {
+                _factory = factory;
                 _implementation = implementation;
-                _behaviors = behaviors;
+                _behaviors = implementation.GetAttributes<IBehavior>(true).ToArray();
             }
 
             public object CreateConstructor(params object[] args)
             {
-                var factory = ServiceLocator.Current.GetInstance<IProxyFactory>();
-                return factory.CreateProxy(
+                return _factory.CreateProxy(
                     _implementation,
                     _behaviors,
                     args

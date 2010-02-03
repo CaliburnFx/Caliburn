@@ -2,8 +2,6 @@
 {
     using System;
     using System.Collections.Generic;
-    using System.Linq;
-    using Core;
     using Core.Behaviors;
     using Microsoft.Practices.Unity;
     using Microsoft.Practices.Unity.ObjectBuilder;
@@ -25,7 +23,7 @@
         protected override void Initialize()
         {
             Context.Registering += (s, e) =>{
-                if(!e.TypeTo.GetAttributes<IBehavior>(true).Any())
+                if(!e.TypeTo.ShouldCreateProxy())
                     return;
 
                 registry.Add(e.TypeTo);

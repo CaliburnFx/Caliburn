@@ -5,6 +5,7 @@
     using System.ComponentModel.Composition;
     using System.ComponentModel.Composition.Hosting;
     using System.Linq;
+    using Core;
     using Core.Behaviors;
     using Core.IoC;
     using Microsoft.Practices.ServiceLocation;
@@ -24,6 +25,16 @@
         public MEFAdapter(CompositionContainer container)
         {
             _container = container;
+
+            Core.IoC.ExtensionMethods.SelectEligibleConstructorImplementation = type =>{
+                return (from c in type.GetConstructors()
+                        where c.GetAttributes<ImportingConstructorAttribute>(false)
+                                  .FirstOrDefault() != null
+                        select c).FirstOrDefault() ??
+                       (from c in type.GetConstructors()
+                        orderby c.GetParameters().Length descending
+                        select c).FirstOrDefault();
+            };
 
             var batch = new CompositionBatch();
 

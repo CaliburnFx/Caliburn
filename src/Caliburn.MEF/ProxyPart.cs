@@ -7,6 +7,7 @@
     using System.Linq;
     using Core;
     using Core.Behaviors;
+    using Core.IoC;
     using Microsoft.Practices.ServiceLocation;
 
     /// <summary>
@@ -199,16 +200,7 @@
         private object[] DetermineConstructorArgs()
         {
             var args = new List<object>();
-            var constructorInfo = (from c in _implementation.GetConstructors()
-                                   where c.GetAttributes<ImportingConstructorAttribute>(false).FirstOrDefault() != null
-                                   select c).FirstOrDefault();
-
-            if(constructorInfo == null)
-            {
-                constructorInfo = (from c in _implementation.GetConstructors()
-                                   orderby c.GetParameters().Length descending
-                                   select c).FirstOrDefault();
-            }
+            var constructorInfo = _implementation.SelectEligibleConstructor();
 
             if(constructorInfo != null)
             {

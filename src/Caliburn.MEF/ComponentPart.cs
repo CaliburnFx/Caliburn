@@ -3,7 +3,9 @@ namespace Caliburn.MEF
     using System;
     using System.Collections.Generic;
     using System.ComponentModel.Composition;
+    using System.ComponentModel.Composition.Hosting;
     using System.ComponentModel.Composition.Primitives;
+    using System.ComponentModel.Composition.ReflectionModel;
     using System.Linq;
     using System.Reflection;
     using Core.IoC;
@@ -13,9 +15,9 @@ namespace Caliburn.MEF
     /// </summary>
     public class ComponentPart : ComposablePart
     {
-        private readonly IComponentRegistration _registration;
+        private readonly ComponentRegistrationBase _registration;
         private readonly List<ImportDefinition> _imports = new List<ImportDefinition>();
-        private readonly ExportDefinition[] _exports;
+        private ExportDefinition[] _exports;
 
         private readonly Dictionary<ImportDefinition, Export> _satisfiedImports =
             new Dictionary<ImportDefinition, Export>();
@@ -31,38 +33,65 @@ namespace Caliburn.MEF
         {
             _registration = registration;
 
-            _greedyConstructor = (from c in GetImplementation(registration).GetConstructors()
-                                  orderby c.GetParameters().Length descending
-                                  select c).FirstOrDefault();
+            var implementation = GetImplementation(registration);
 
-            if(_greedyConstructor != null)
+            _greedyConstructor = implementation
+                .SelectEligibleConstructor();
+
+            ConfigureImportDefinitions();
+            ConfigureExportDefinitions(implementation, registration.Service);
+        }
+
+        private void ConfigureExportDefinitions(Type implementationType, Type contractType)
+        {
+            var lazyMember = new LazyMemberInfo(implementationType);
+            var contractName = !_registration.HasName()
+                                  ? AttributedModelServices.GetContractName(_registration.Service)
+                                  : _registration.Name;
+
+            var metadata = new Lazy<IDictionary<string, object>>(() =>{
+                var md = new Dictionary<string, object>();
+                md.Add(CompositionConstants.ExportTypeIdentityMetadataName,
+                       AttributedModelServices.GetTypeIdentity(contractType));
+                return md;
+            });
+
+            _exports = new[] { ReflectionModelServices.CreateExportDefinition(lazyMember, contractName, metadata, null) };
+        }
+
+        private void ConfigureImportDefinitions()
+        {
+            foreach (var param in _greedyConstructor.GetParameters())
             {
-                foreach(var parameterInfo in _greedyConstructor.GetParameters())
-                {
-                    var parameterType = parameterInfo.ParameterType;
+                var cardinality = GetCardinality(param);
+                var importType = cardinality == ImportCardinality.ZeroOrMore
+                                     ? GetCollectionContractType(param.ParameterType)
+                                     : param.ParameterType;
 
-                    var import = new ImportDefinition(
-                        def => def.ContractName == AttributedModelServices.GetContractName(parameterType),
-                        AttributedModelServices.GetContractName(parameterType),
-                        ImportCardinality.ExactlyOne,
-                        false,
-                        true
-                        );
-
-                    _imports.Add(import);
-                }
+                _imports.Add(
+                    ReflectionModelServices.CreateImportDefinition(
+                        new Lazy<ParameterInfo>(() => param),
+                        AttributedModelServices.GetContractName(importType),
+                        AttributedModelServices.GetTypeIdentity(importType),
+                        Enumerable.Empty<KeyValuePair<string, Type>>(),
+                        cardinality,
+                        CreationPolicy.Any,
+                        null
+                        )
+                    );
             }
+        }
 
-            string contractName = !registration.HasName()
-                                      ? AttributedModelServices.GetContractName(registration.Service)
-                                      : registration.Name;
+        private static Type GetCollectionContractType(Type collectionType)
+        {
+            return collectionType.GetElementType();
+        }
 
-            var export = new ExportDefinition(
-                contractName,
-                null
-                );
-
-            _exports = new[] {export};
+        private static ImportCardinality GetCardinality(ParameterInfo param)
+        {
+            if (param.ParameterType.IsArray)
+                return ImportCardinality.ZeroOrMore;
+            return ImportCardinality.ExactlyOne;
         }
 
         /// <summary>
@@ -111,18 +140,14 @@ namespace Caliburn.MEF
         {
             var args = new List<object>();
 
-            if(_greedyConstructor != null)
+            foreach (var parameterInfo in _greedyConstructor.GetParameters())
             {
-                foreach(var parameterInfo in _greedyConstructor.GetParameters())
-                {
-                    var arg = (from export in _satisfiedImports.Values
-                               where
-                                   export.Definition.ContractName ==
-                                   AttributedModelServices.GetContractName(parameterInfo.ParameterType)
-                               select export).FirstOrDefault();
+                var arg = (from export in _satisfiedImports.Values
+                           where export.Definition.ContractName ==
+                                 AttributedModelServices.GetContractName(parameterInfo.ParameterType)
+                           select export).FirstOrDefault();
 
-                    args.Add(arg.Value);
-                }
+                args.Add(arg.Value);
             }
 
             return args.Count > 0

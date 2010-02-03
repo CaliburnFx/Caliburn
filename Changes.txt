@@ -44,6 +44,7 @@ V1.1 Release
 -Fixed a bug with non-modal window shutdown in DefaultWindowManager.
 -Fixed a core bug in custom attribute discovery.
 -Enabled routed messages to declare default handlers.  Now ActionMessage declares a default handler for its DataContext.  This solves several Menu routing issues.
+-Fixed the apparently completely broken MEF adapter.
 
 V1.1 Release Candidate
 -Added pre-initialization hooks to CaliburnApplication via Marco Amendola's patch.

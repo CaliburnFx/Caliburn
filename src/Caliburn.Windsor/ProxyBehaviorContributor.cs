@@ -1,10 +1,8 @@
 ﻿namespace Caliburn.Windsor
 {
-    using System.Linq;
     using Castle.Core;
     using Castle.MicroKernel;
     using Castle.MicroKernel.ModelBuilder;
-    using Core;
     using Core.Behaviors;
 
     /// <summary>
@@ -21,13 +19,8 @@
         /// <param name="model">The component model</param>
         public void ProcessModel(IKernel kernel, ComponentModel model)
         {
-            var attributes = model.Implementation
-                .GetAttributes<IBehavior>(true);
-
-            if(!attributes.Any())
-                return;
-
-            model.CustomComponentActivator = typeof(ProxyActivator);
+            if (model.Implementation.ShouldCreateProxy())
+                model.CustomComponentActivator = typeof(ProxyActivator);
         }
     }
 }

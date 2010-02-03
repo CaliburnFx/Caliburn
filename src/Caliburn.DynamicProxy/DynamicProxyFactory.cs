@@ -3,6 +3,7 @@
     using System;
     using System.Collections.Generic;
     using System.Linq;
+    using System.Reflection;
     using Castle.DynamicProxy;
     using Configuration;
     using Core;
@@ -99,7 +100,10 @@
         /// <returns>The proxy.</returns>
         public object CreateProxy(Type type, IEnumerable<IBehavior> behaviors, IEnumerable<object> constructorArgs)
         {
+            type = EnsureType(type);
+
             var interfaces = behaviors.SelectMany(x => x.GetInterfaces(type))
+                .Where(x => !x.IsAssignableFrom(type))
                 .Distinct()
                 .ToArray();
 
@@ -107,6 +111,9 @@
                                 from intercepor in _configrations[behavior.GetType()]
                                     .GetInterceptors(type, behavior)
                                 select intercepor).Distinct().ToArray();
+
+            if (!interfaces.Any() && !interceptors.Any())
+                return Activator.CreateInstance(type, constructorArgs.ToArray());
 
             var proxy = _proxyGenerator.CreateClassProxy(
                 type,
@@ -122,6 +129,14 @@
             //_scope.SaveAssembly(false);
 
             return proxy;
+        }
+
+        private static Type EnsureType(Type type)
+        {
+            var method = type.GetMethod("GetProxyType", BindingFlags.Public | BindingFlags.Static | BindingFlags.FlattenHierarchy);
+            if (method != null)
+                return (Type)method.Invoke(null, null);
+            return type;
         }
     }
 }
