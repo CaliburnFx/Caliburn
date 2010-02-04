@@ -41,7 +41,7 @@ namespace Caliburn.PresentationFramework.ApplicationModel
         public void Focus(object viewModel, string propertyPath)
         {
             var view = GetView(viewModel);
-            if (view != null) return;
+            if (view == null) return;
 
             var elements = GetAllElements(view);
 
