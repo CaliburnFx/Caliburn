@@ -179,10 +179,10 @@
         /// <returns></returns>
         protected virtual bool ShouldValidate(PropertyInfo property)
         {
-#if SILVERLIGHT_30 || SILVERLIGHT_40 || NET
-            return Validator.ShouldValidate(property);
+#if SILVERLIGHT_20
+            return false;   
 #else
-            return false;       
+            return Validator.ShouldValidate(property);
 #endif
         }
     }

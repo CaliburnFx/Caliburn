@@ -1,4 +1,4 @@
-﻿#if SILVERLIGHT_40 || NET
+﻿#if !SILVERLIGHT || SILVERLIGHT_40
 namespace Caliburn.PresentationFramework.Behaviors
 {
     using System;

@@ -47,10 +47,10 @@ namespace Caliburn.PresentationFramework.ViewModels
         {
             BindCore(viewModel, view, context);
 
-#if !SILVERLIGHT || SILVERLIGHT_30 || SILVERLIGHT_40
-            var significantView = DefaultWindowManager.GetSignificantView(view);
-#else
+#if SILVERLIGHT_20
             var significantView = view;
+#else
+            var significantView = DefaultWindowManager.GetSignificantView(view);
 #endif
 
             if (ShouldApplyConventions(viewModel, significantView, context))

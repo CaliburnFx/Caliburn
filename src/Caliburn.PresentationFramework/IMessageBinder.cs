@@ -35,7 +35,7 @@ namespace Caliburn.PresentationFramework
         object[] DetermineParameters(IRoutedMessage message, IList<RequiredParameter> requiredParameters, IInteractionNode handlingNode, object context);
 
         /// <summary>
-        /// Binds the return value to the UI.
+        /// Creates a result from the message outcome.
         /// </summary>
         /// <param name="outcome">The outcome of processing the message.</param>
         IResult CreateResult(MessageProcessingOutcome outcome);

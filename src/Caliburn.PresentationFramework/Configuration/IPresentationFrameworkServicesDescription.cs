@@ -63,15 +63,6 @@ namespace Caliburn.PresentationFramework.Configuration
         /// <returns></returns>
         Singleton ViewModelFactory<T>() where T : IViewModelFactory;
 
-#if !SILVERLIGHT_20
-
-        /// <summary>
-        /// Customizes the validator used by Caliburn.
-        /// </summary>
-        /// <typeparam name="T">The validator type.</typeparam>
-        Singleton Validator<T>() where T : IValidator;
-#endif
-
         /// <summary>
         /// Customizes the convention manager used by Caliburn.
         /// </summary>
@@ -82,10 +73,23 @@ namespace Caliburn.PresentationFramework.Configuration
 #if !SILVERLIGHT_20
 
         /// <summary>
+        /// Customizes the validator used by Caliburn.
+        /// </summary>
+        /// <typeparam name="T">The validator type.</typeparam>
+        Singleton Validator<T>() where T : IValidator;
+
+        /// <summary>
         /// Customizes the window manager used by Caliburn.
         /// </summary>
         /// <typeparam name="T">The window manager type.</typeparam>
         Singleton WindowManager<T>() where T : IWindowManager;
+
+        /// <summary>
+        /// Customizes the input manager used by Caliburn.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <returns></returns>
+        Singleton InputManager<T>() where T : IInputManager;
 #endif
     }
 }

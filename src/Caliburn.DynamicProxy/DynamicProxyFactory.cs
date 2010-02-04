@@ -112,14 +112,16 @@
                                     .GetInterceptors(type, behavior)
                                 select intercepor).Distinct().ToArray();
 
+            var args = constructorArgs == null ? new object[] {} : constructorArgs.ToArray();
+
             if (!interfaces.Any() && !interceptors.Any())
-                return Activator.CreateInstance(type, constructorArgs.ToArray());
+                return Activator.CreateInstance(type, args);
 
             var proxy = _proxyGenerator.CreateClassProxy(
                 type,
                 interfaces,
                 ProxyGenerationOptions.Default,
-                constructorArgs == null ? new object[] {} : constructorArgs.ToArray(),
+                args,
                 interceptors
                 );
 

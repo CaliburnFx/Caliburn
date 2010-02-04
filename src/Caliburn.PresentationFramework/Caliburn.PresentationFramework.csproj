@@ -77,6 +77,8 @@
     <Compile Include="ApplicationModel\CaliburnApplication.silverlight.cs" />
     <Compile Include="ApplicationModel\CaliburnApplication.wpf.cs" />
     <Compile Include="ApplicationModel\DeepLinkStateManager.silverlight.cs" />
+    <Compile Include="ApplicationModel\DefaultInputManager.conditional.cs" />
+    <Compile Include="ApplicationModel\DefaultInputManager.cs" />
     <Compile Include="ApplicationModel\DefaultWindowManager.silverlight.cs" />
     <Compile Include="ApplicationModel\IInputManager.cs" />
     <Compile Include="ApplicationModel\IWindowManager.silverlight.cs" />
@@ -228,9 +230,9 @@
     <Compile Include="Triggers\GestureMessageTrigger.silverlight.cs" />
     <Compile Include="Triggers\GestureMessageTrigger.wpf.cs" />
     <Compile Include="Triggers\MouseAction.silverlight.cs" />
-    <Compile Include="Triggers\Support\UnrestrictedKeyGesture.cs" />
-    <Compile Include="Triggers\Support\UnrestrictedKeyGestureConverter.cs" />
-    <Compile Include="Triggers\Support\UnrestrictedKeyGestureValueSerializer.cs" />
+    <Compile Include="Triggers\Support\UnrestrictedKeyGesture.wpf.cs" />
+    <Compile Include="Triggers\Support\UnrestrictedKeyGestureConverter.wpf.cs" />
+    <Compile Include="Triggers\Support\UnrestrictedKeyGestureValueSerializer.wpf.cs" />
     <Compile Include="ViewModels\DefaultViewModelDescription.cs" />
     <Compile Include="ViewModels\DefaultViewModelDescriptionFactory.cs" />
     <Compile Include="ViewModels\IViewModelDescription.cs" />
