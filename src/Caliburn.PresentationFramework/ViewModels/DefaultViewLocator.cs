@@ -60,11 +60,11 @@ namespace Caliburn.PresentationFramework.ViewModels
             if (_cache.ContainsKey(cacheKey))
                 return GetOrCreateViewFromType(_cache[cacheKey]);
 
-            var namesToCheck = GetTypeNamesToCheck(modelType, stringContext);
+            var namesToCheck = GetTypeNamesToCheck(modelType, stringContext).Distinct();
 
             foreach (var name in namesToCheck)
             {
-                foreach (var assembly in _assemblySource.Union(new[] { modelType.Assembly }))
+                foreach (var assembly in new[] { modelType.Assembly }.Union(_assemblySource))
                 {
                     var type = assembly.GetType(name, false);
                     if (type == null) continue;
@@ -117,12 +117,12 @@ namespace Caliburn.PresentationFramework.ViewModels
         protected DependencyObject GetOrCreateViewFromType(Type type)
         {
             var view = _serviceLocator.GetAllInstances(type)
-                .FirstOrDefault();
+                .FirstOrDefault() as DependencyObject;
 
             if (view != null)
-                return (DependencyObject)view;
+                return view;
 
-            if (type.IsInterface || type.IsAbstract)
+            if (type.IsInterface || type.IsAbstract || !typeof(DependencyObject).IsAssignableFrom(type))
                 return null;
 
             return (DependencyObject)Activator.CreateInstance(type);
@@ -143,33 +143,71 @@ namespace Caliburn.PresentationFramework.ViewModels
             foreach (var word in keywords)
             {
                 if (!modelType.FullName.Contains(MakeNamespacePart(word)) && !string.IsNullOrEmpty(word))
+                {
+                    foreach (var w in keywords)
+                    {
+                        var firstPass = ReplaceWithView(
+                            modelType.FullName.Replace(MakeNamespacePart(w), ".Views"),
+                            w
+                            );
+
+                        foreach(var pass in firstPass)
+                        {
+                            foreach (var w2 in keywords)
+                            {
+                                var secondPass = ReplaceWithView(pass, w2);
+
+                                foreach(var pass2 in secondPass)
+                                {
+                                    foreach (var result in ProcessOption(context, secondPass))
+                                    {
+                                        yield return result;
+                                    }
+                                }
+                            }
+                        }
+                    }
+
                     continue;
+                }
 
                 var options = ReplaceWithView(
-                    modelType,
+                    modelType.FullName.Replace(MakeNamespacePart(word), ".Views"),
                     word
                     );
 
-                if (!string.IsNullOrEmpty(context))
+                foreach(var result in ProcessOption(context, options))
                 {
-                    foreach (var option in options)
-                    {
-                        var name = option + "s." + context;
-                        yield return MakeInterface(name); //Namespace.Views.SomethingViews.IEdit
-                        yield return name; //Namespace.Views.SomethingViews.Edit
-                    }
+                    yield return result;
                 }
-                else
-                {
-                    foreach (var option in options)
-                    {
-                        yield return MakeInterface(option); //Namespace.Views.ISomethingView
-                        yield return option; //Namespace.Views.SomethingView
+            }
+        }
 
-                        var name = option + "s." + "Default";
-                        yield return MakeInterface(name); //Namespace.Views.SomethingViews.IDefault
-                        yield return name; //Namespace.Views.SomethingViews.Default
-                    }
+        private IEnumerable<string> ProcessOption(string context, IEnumerable<string> options)
+        {
+            if (!string.IsNullOrEmpty(context))
+            {
+                foreach (var option in options)
+                {
+                    var name = option + "Views." + context;
+                    yield return MakeInterface(name);
+                    yield return name;
+
+                    name = !option.EndsWith("s") ? option + "s." + context : option + "." + context;
+                    yield return MakeInterface(name); //Namespace.Views.SomethingViews.IEdit
+                    yield return name; //Namespace.Views.SomethingViews.Edit
+                }
+            }
+            else
+            {
+                foreach (var option in options)
+                {
+                    yield return MakeInterface(option); //Namespace.Views.ISomethingView
+                    yield return option; //Namespace.Views.SomethingView
+
+                    var name = option + "s." + "Default";
+                    yield return MakeInterface(name); //Namespace.Views.SomethingViews.IDefault
+                    yield return name; //Namespace.Views.SomethingViews.Default
                 }
             }
         }
@@ -194,13 +232,11 @@ namespace Caliburn.PresentationFramework.ViewModels
         /// <summary>
         /// Creates a set of possible type names based on the model type by replacing the toReplace text.
         /// </summary>
-        /// <param name="modelType">Type of the model.</param>
+        /// <param name="part">The model name.</param>
         /// <param name="toReplace">To replace.</param>
         /// <returns></returns>
-        protected virtual IEnumerable<string> ReplaceWithView(Type modelType, string toReplace)
+        protected virtual IEnumerable<string> ReplaceWithView(string part, string toReplace)
         {
-            var part = modelType.FullName.Replace(MakeNamespacePart(toReplace), ".Views");
-
             foreach (var pair in _namespaceAliases)
             {
                 if (part.StartsWith(pair.Key))
