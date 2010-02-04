@@ -41,7 +41,7 @@ namespace Caliburn.ShellFramework.Services
                     _windowManager.ShowDialog(loader, null, null);
                 else
                 {
-                    _viewModelBinder.Bind(loader, view, null);
+                    _viewModelBinder.Bind(loader, view, null, true);
                     loader.SetView(view, null, false);
                     ((UIElement)view).Visibility = Visibility.Visible;
                 }

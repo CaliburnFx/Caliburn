@@ -99,7 +99,7 @@ namespace Caliburn.PresentationFramework.ApplicationModel
         {
             var view = EnsureWindow(rootModel, _viewLocator.Locate(rootModel, null, context), isDialog);
 
-            _viewModelBinder.Bind(rootModel, view, context);
+            _viewModelBinder.Bind(rootModel, view, context, true);
 
             var screen = rootModel as IScreen;
             if (screen != null)
@@ -177,7 +177,7 @@ namespace Caliburn.PresentationFramework.ApplicationModel
         {
             var view = EnsurePage(rootModel, _viewLocator.Locate(rootModel, null, context));
 
-            _viewModelBinder.Bind(rootModel, view, context);
+            _viewModelBinder.Bind(rootModel, view, context, true);
 
             var screen = rootModel as IScreen;
             if (screen != null)

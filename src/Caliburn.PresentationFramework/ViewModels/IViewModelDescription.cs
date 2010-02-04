@@ -28,7 +28,8 @@ namespace Caliburn.PresentationFramework.ViewModels
         /// Gets the conventions for the specified view.
         /// </summary>
         /// <param name="view">The view.</param>
+        /// <param name="useCache">Check cached conventions.</param>
         /// <returns>The applicable conventions.</returns>
-        IEnumerable<IViewApplicable> GetConventionsFor(DependencyObject view);
+        IEnumerable<IViewApplicable> GetConventionsFor(DependencyObject view, bool useCache);
     }
 }

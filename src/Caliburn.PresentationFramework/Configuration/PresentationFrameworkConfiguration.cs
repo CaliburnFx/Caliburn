@@ -84,6 +84,7 @@
             var messageBinder = serviceLocator.GetInstance<IMessageBinder>();
             var parser = serviceLocator.GetInstance<IParser>();
             var conventionManager = serviceLocator.GetInstance<IConventionManager>();
+            var viewModelBinder = serviceLocator.GetInstance<IViewModelBinder>();
 
             parser.RegisterMessageParser("Action", new ActionMessageParser(conventionManager, messageBinder));
             parser.RegisterMessageParser("ResourceCommand", new CommandMessageParser(conventionManager, messageBinder, CommandSource.Resource));
@@ -103,12 +104,14 @@
 
             View.Initialize(
                 serviceLocator.GetInstance<IViewLocator>(),
-                serviceLocator.GetInstance<IViewModelBinder>()
+                viewModelBinder
                 );
 
             ScreenExtensions.Initialize(
                 serviceLocator.GetInstance<IViewModelFactory>()
                 );
+
+            Bind.Initialize(viewModelBinder);
 
             if (!_registerAllScreensWithSubjects)
                 return;

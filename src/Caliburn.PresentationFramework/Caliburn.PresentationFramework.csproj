@@ -111,6 +111,7 @@
     <Compile Include="Screens\ScreenConductorWithCollectionAllScreensActive.cs" />
     <Compile Include="Screens\ScreenConductorWithCollectionOneScreenActive.cs" />
     <Compile Include="Screens\ScreenSubject.cs" />
+    <Compile Include="ViewModels\Bind.cs" />
     <Compile Include="ViewModels\BindableEnum.cs" />
     <Compile Include="ViewModels\BindableEnumCollection.cs" />
     <Compile Include="ViewModels\DefaultValidationError.cs" />

@@ -103,18 +103,23 @@ namespace Caliburn.PresentationFramework.ViewModels
         /// Gets the conventions for the specified view.
         /// </summary>
         /// <param name="view">The view.</param>
+        /// <param name="useCachedConventions">Chech cache for conventions.</param>
         /// <returns>The applicable conventions.</returns>
-        public IEnumerable<IViewApplicable> GetConventionsFor(DependencyObject view)
+        public IEnumerable<IViewApplicable> GetConventionsFor(DependencyObject view, bool useCachedConventions)
         {
             IViewApplicable[] conventions;
 
             var viewType = view.GetType();
 
-            if (!_viewConventions.TryGetValue(viewType, out conventions))
+            if (useCachedConventions)
             {
-                conventions = _conventionManager.DetermineConventions(this, view).ToArray();
-                _viewConventions[viewType] = conventions;
+                if(!_viewConventions.TryGetValue(viewType, out conventions))
+                {
+                    conventions = _conventionManager.DetermineConventions(this, view).ToArray();
+                    _viewConventions[viewType] = conventions;
+                }
             }
+            else conventions = _conventionManager.DetermineConventions(this, view).ToArray();
 
             return conventions;
         }

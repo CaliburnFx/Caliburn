@@ -43,7 +43,8 @@ namespace Caliburn.PresentationFramework.ViewModels
         /// <param name="viewModel">The model.</param>
         /// <param name="view">The view.</param>
         /// <param name="context">The context.</param>
-        public void Bind(object viewModel, DependencyObject view, object context)
+        /// <param name="useCachedConventions">Check the cache for conventions.</param>
+        public void Bind(object viewModel, DependencyObject view, object context, bool useCachedConventions)
         {
             BindCore(viewModel, view, context);
 
@@ -54,7 +55,7 @@ namespace Caliburn.PresentationFramework.ViewModels
 #endif
 
             if (ShouldApplyConventions(viewModel, significantView, context))
-                ApplyConventions(viewModel, significantView);
+                ApplyConventions(viewModel, significantView, useCachedConventions);
         }
 
         /// <summary>
@@ -94,12 +95,13 @@ namespace Caliburn.PresentationFramework.ViewModels
         /// </summary>
         /// <param name="viewModel">The view model.</param>
         /// <param name="view">The view.</param>
-        protected virtual void ApplyConventions(object viewModel, DependencyObject view)
+        /// <param name="useCachedConventions">Check cache for conventions.</param>
+        protected virtual void ApplyConventions(object viewModel, DependencyObject view, bool useCachedConventions)
         {
             var modelType = GetModelType(viewModel);
             var description = _viewModelDescriptionFactory.Create(modelType);
 
-            description.GetConventionsFor(view)
+            description.GetConventionsFor(view, useCachedConventions)
                 .Apply(x => x.ApplyTo(view));
         }
 

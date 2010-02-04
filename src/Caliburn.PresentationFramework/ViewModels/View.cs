@@ -164,7 +164,7 @@
                 var context = GetContext(d);
                 var view = locator.Locate(e.NewValue, d, context);
 
-                _viewModelBinder.Bind(e.NewValue, view, context);
+                _viewModelBinder.Bind(e.NewValue, view, context, true);
 
                 SetContentProperty(d, view);
             }
@@ -187,7 +187,7 @@
 
             var view = locator.Locate(model, d, e.NewValue);
 
-            _viewModelBinder.Bind(model, view, e.NewValue);
+            _viewModelBinder.Bind(model, view, e.NewValue, true);
 
             SetContentProperty(d, view);
         }
@@ -209,7 +209,7 @@
             var context = GetContext(d);
             var view = locator.Locate(model, d, context);
 
-            _viewModelBinder.Bind(model, view, context);
+            _viewModelBinder.Bind(model, view, context, true);
             SetContentProperty(d, view);
         }
 
