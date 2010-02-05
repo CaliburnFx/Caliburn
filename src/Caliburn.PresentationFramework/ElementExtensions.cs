@@ -7,46 +7,14 @@
     using System.Windows.Media;
     using Conventions;
     using Core;
-    using Core.Behaviors;
     using Microsoft.Practices.ServiceLocation;
 
     /// <summary>
-    /// Extension methods related to the PresentationFramework classes.
+    /// Hosts extension methods related to FrameworkElements and FrameworkContentElements.
     /// </summary>
-    public static class ExtensionMethods
+    public static class ElementExtensions
     {
-        /// <summary>
-        /// The overridable implemenation of GetModelType.
-        /// </summary>
-        public static Func<object, Type> GetModelTypeImplementation = DefaultGetModelTypeImplemenation;
-
-        /// <summary>
-        /// Safely converts an object to a string.
-        /// </summary>
-        /// <param name="value">The value to convert.</param>
-        /// <returns>The converted string or null, if the value was null.</returns>
-        internal static string SafeToString(this object value)
-        {
-            return value == null ? null : value.ToString();
-        }
-
-        /// <summary>
-        /// Gets the type of the model.
-        /// </summary>
-        /// <param name="model">The model.</param>
-        /// <returns></returns>
-        public static Type GetModelType(this object model)
-        {
-            return GetModelTypeImplementation(model);
-        }
-
-        private static Type DefaultGetModelTypeImplemenation(this object model)
-        {
-            var proxy = model as IProxy;
-            return proxy != null ? proxy.OriginalType : model.GetType();
-        }
-
-        /// <summary>
+        // <summary>
         /// Gets the parent of the dependency object.
         /// </summary>
         /// <param name="dependencyObject">The dependency object.</param>
@@ -118,7 +86,7 @@
             else
             {
                 var fce = dependencyObject as FrameworkContentElement;
-                if(fce != null)
+                if (fce != null)
                     fce.Loaded += callback;
             }
 #endif
@@ -193,12 +161,12 @@
         public static string GetName(this DependencyObject dependencyObject)
         {
             var fe = dependencyObject as FrameworkElement;
-            if (fe != null) 
+            if (fe != null)
                 return dependencyObject.GetValue(FrameworkElement.NameProperty) as string;
 
 #if !SILVERLIGHT
             var fce = dependencyObject as FrameworkContentElement;
-            if (fce != null) 
+            if (fce != null)
                 return dependencyObject.GetValue(FrameworkContentElement.NameProperty) as string;
 #endif
             return null;
@@ -221,14 +189,14 @@
 
                 if (fe != null)
                 {
-                    if(fe.Resources.Contains(key))
+                    if (fe.Resources.Contains(key))
                         return (T)fe.Resources[key];
                 }
 #if !SILVERLIGHT
                 else
                 {
                     var fce = currentElement as FrameworkContentElement;
-                    if(fce != null)
+                    if (fce != null)
                     {
                         if (fce.Resources.Contains(key))
                             return (T)fce.Resources[key];

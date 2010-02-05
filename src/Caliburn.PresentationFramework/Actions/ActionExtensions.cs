@@ -7,7 +7,7 @@
     /// <summary>
     /// Hosts extension methods related to actions.
     /// </summary>
-    public static class ExtensionMethods
+    public static class ActionExtensions
     {
         /// <summary>
         /// Determines whether the action has trigger effects.

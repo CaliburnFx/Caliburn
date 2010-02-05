@@ -84,7 +84,7 @@ namespace Caliburn.ShellFramework.History
         private IEnumerable<IHistoryKey> FindKeys(Assembly assembly)
         {
             return from type in assembly.GetExportedTypes()
-                   let key = ExtensionMethods.GetHistoryKey((Type)type)
+                   let key = type.GetHistoryKey()
                    where key != null
                    select key;
         }

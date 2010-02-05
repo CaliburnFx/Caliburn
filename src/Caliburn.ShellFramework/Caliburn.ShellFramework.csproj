@@ -59,7 +59,7 @@
     <Compile Include="Controls\ButtonConverter.cs" />
     <Compile Include="Controls\ButtonPanel.cs" />
     <Compile Include="Controls\DialogChrome.cs" />
-    <Compile Include="History\ExtensionMethods.silverlight.cs" />
+    <Compile Include="History\HistoryExtensions.silverlight.cs" />
     <Compile Include="History\HistoryConfiguration.silverlight.cs" />
     <Compile Include="History\HistoryCoordinator.silverlight.cs" />
     <Compile Include="History\HistoryKeyAttribute.silverlight.cs" />
@@ -71,14 +71,14 @@
     <Compile Include="Menus\MenuStyleSelector.wpf.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Questions\Answer.cs" />
-    <Compile Include="Questions\ExtensionMethods.cs" />
+    <Compile Include="Questions\QuestionExtensions.cs" />
     <Compile Include="Questions\IQuestionDialog.cs" />
     <Compile Include="Questions\Question.cs" />
     <Compile Include="Questions\QuestionDialogViewModel.cs" />
     <Compile Include="Resources\DefaultResourceManager.cs" />
-    <Compile Include="Resources\ExtensionMethods.cs" />
+    <Compile Include="Resources\ResourceExtensions.cs" />
     <Compile Include="Resources\IResourceManager.cs" />
-    <Compile Include="Results\ExtensionMethods.cs" />
+    <Compile Include="Results\ResultExtensions.cs" />
     <Compile Include="Results\IOpenResult.cs" />
     <Compile Include="Results\LoadingResult.cs" />
     <Compile Include="Results\MessageBoxResult.cs" />

@@ -7,7 +7,7 @@ namespace Caliburn.ShellFramework.History
     using Core;
     using PresentationFramework.Screens;
 
-    public static class ExtensionMethods
+    public static class HistoryExtensions
     {
         public static string GetHistoryValue(this IScreen screen)
         {

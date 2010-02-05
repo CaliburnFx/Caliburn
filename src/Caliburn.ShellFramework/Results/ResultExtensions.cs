@@ -3,7 +3,7 @@ namespace Caliburn.ShellFramework.Results
     using System;
     using PresentationFramework.Screens;
 
-    public static class ExtensionMethods
+    public static class ResultExtensions
     {
         public static IOpenResult<TChild> ConfigureChild<TChild>(this IOpenResult<TChild> result, Action<TChild> configure)
             where TChild : IScreen

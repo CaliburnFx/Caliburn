@@ -5,7 +5,7 @@
     /// <summary>
     /// Extension methods realted to metadata.
     /// </summary>
-    public static class ExtensionMethods
+    public static class MetadataExtensions
     {
         /// <summary>
         /// Gets the view from metadata.

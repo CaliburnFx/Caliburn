@@ -8,7 +8,7 @@
     /// <summary>
     /// Hosts extension methods related to view model functionality.
     /// </summary>
-    public static class ExtensionMethods
+    public static class ViewModelExtensions
     {
         /// <summary>
         /// The overridable implementation of Locate.

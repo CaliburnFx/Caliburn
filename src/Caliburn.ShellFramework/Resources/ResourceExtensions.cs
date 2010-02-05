@@ -9,7 +9,7 @@
     using System.Windows.Documents;
 #endif
 
-    public static class ExtensionMethods
+    public static class ResourceExtensions
     {
         public static string GetExecutingAssemblyName()
         {

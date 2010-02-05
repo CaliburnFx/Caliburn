@@ -14,7 +14,7 @@
     /// <summary>
     /// Hosts extension methods related to conventions.
     /// </summary>
-    public static class ExtensionMethods
+    public static class ConventionExtensions
     {
         /// <summary>
         /// The overridable implemenation of GetNamedElements.

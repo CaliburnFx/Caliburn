@@ -6,7 +6,7 @@
     using Microsoft.Practices.ServiceLocation;
     using PresentationFramework.ApplicationModel;
 
-    public static class ExtensionMethods
+    public static class QuestionExtensions
     {
         public static void Execute(this ISubordinate model, Action completed)
         {

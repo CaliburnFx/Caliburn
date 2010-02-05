@@ -67,7 +67,7 @@
     <Compile Include="Actions\AsyncActionAttribute.cs" />
     <Compile Include="Actions\AsynchronousAction.cs" />
     <Compile Include="Actions\DefaultActionLocator.cs" />
-    <Compile Include="Actions\ExtensionMethods.cs" />
+    <Compile Include="Actions\ActionExtensions.cs" />
     <Compile Include="Actions\IAction.cs" />
     <Compile Include="Actions\IActionFactory.cs" />
     <Compile Include="Actions\IActionHost.cs" />
@@ -94,6 +94,7 @@
     <Compile Include="Conventions\ViewConventionBase.cs" />
     <Compile Include="Converters\BooleanToVisibilityConverter.silverlight.cs" />
     <Compile Include="Converters\EnumConverter.cs" />
+    <Compile Include="ElementExtensions.cs" />
     <Compile Include="ResultCompletionEventArgs.cs" />
     <Compile Include="ResultExecutionContext.cs" />
     <Compile Include="Screens\ScreenExtensions.cs" />
@@ -120,9 +121,9 @@
     <Compile Include="ViewModels\DefaultViewModelBinder.cs" />
     <Compile Include="ApplicationModel\DefaultWindowManager.wpf.cs" />
     <Compile Include="ViewModels\DefaultViewLocator.cs" />
-    <Compile Include="ApplicationModel\ExtensionMethods.cs" />
+    <Compile Include="ApplicationModel\ApplicationModelExtensions.cs" />
     <Compile Include="ViewModels\DefaultViewModelFactory.cs" />
-    <Compile Include="ViewModels\ExtensionMethods.cs" />
+    <Compile Include="ViewModels\ViewModelExtensions.cs" />
     <Compile Include="ViewModels\IValidationError.cs" />
     <Compile Include="ViewModels\IValidator.cs" />
     <Compile Include="ViewModels\IViewModelBinder.cs" />
@@ -153,7 +154,6 @@
     <Compile Include="Commands\CommandMessageParser.cs" />
     <Compile Include="Commands\CommandSource.cs" />
     <Compile Include="Commands\ICompositeCommand.cs" />
-    <Compile Include="Configuration\ExtensionMethods.cs" />
     <Compile Include="Configuration\IPresentationFrameworkServicesDescription.cs" />
     <Compile Include="Configuration\PresentationFrameworkConfiguration.cs" />
     <Compile Include="Conventions\ApplicableAction.cs" />
@@ -163,7 +163,7 @@
     <Compile Include="Conventions\DefaultConventionManager.cs" />
     <Compile Include="Conventions\DefaultElementConvention.cs" />
     <Compile Include="Conventions\DefaultElementDescription.cs" />
-    <Compile Include="Conventions\ExtensionMethods.cs" />
+    <Compile Include="Conventions\ConventionExtensions.cs" />
     <Compile Include="Conventions\IConventionManager.cs" />
     <Compile Include="Conventions\IElementConvention.cs" />
     <Compile Include="Conventions\IElementDescription.cs" />
@@ -180,7 +180,7 @@
     <Compile Include="RequiredParameter.cs" />
     <Compile Include="SequentialResult.cs" />
     <Compile Include="DefaultResult.cs" />
-    <Compile Include="ExtensionMethods.cs" />
+    <Compile Include="PresentationFrameworkExtensions.cs" />
     <Compile Include="Filters\AutoCheckAvailabilityAttribute.wpf.cs" />
     <Compile Include="Filters\DependenciesAttribute.cs" />
     <Compile Include="Filters\FilterManager.cs" />
@@ -205,7 +205,7 @@
     <Compile Include="IRoutedMessageController.cs" />
     <Compile Include="IRoutedMessageHandler.cs" />
     <Compile Include="Message.cs" />
-    <Compile Include="Metadata\ExtensionMethods.cs" />
+    <Compile Include="Metadata\MetadataExtensions.cs" />
     <Compile Include="Invocation\BatchingDispatcher.wpf.cs" />
     <Compile Include="Invocation\DispatcherImplementation.silverlight.cs" />
     <Compile Include="Invocation\DispatcherImplementation.wpf.cs" />

@@ -6,7 +6,7 @@
     /// <summary>
     /// Hosts extension methods for application model classes.
     /// </summary>
-    public static class ExtensionMethods
+    public static class ApplicationModelExtensions
     {
         /// <summary>
         /// Inserts or updates a value in the state.
