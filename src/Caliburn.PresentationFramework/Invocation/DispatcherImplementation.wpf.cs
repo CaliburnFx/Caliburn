@@ -3,6 +3,7 @@
 namespace Caliburn.PresentationFramework.Invocation
 {
     using System;
+    using System.Windows;
     using System.Windows.Threading;
     using Core.Invocation;
     using Core.Threading;
@@ -20,8 +21,19 @@ namespace Caliburn.PresentationFramework.Invocation
         /// </summary>
         public DispatcherImplementation(IThreadPool threadPool)
         {
-            _dispatcher = Dispatcher.CurrentDispatcher;
+            _dispatcher = GetDispatcher();
             _threadPool = threadPool;
+        }
+
+        /// <summary>
+        /// Gets the dispatcher.
+        /// </summary>
+        /// <returns></returns>
+        protected virtual Dispatcher GetDispatcher()
+        {
+            if (Application.Current != null && Application.Current.Dispatcher != null)
+                return Application.Current.Dispatcher;
+            return Dispatcher.CurrentDispatcher;
         }
 
         /// <summary>

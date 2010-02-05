@@ -22,8 +22,17 @@ namespace Caliburn.PresentationFramework.Invocation
         /// </summary>
         public DispatcherImplementation(IThreadPool threadPool)
         {
-            _dispatcher = Deployment.Current.Dispatcher;
+            _dispatcher = GetDispatcher();
             _threadPool = threadPool;
+        }
+
+        /// <summary>
+        /// Gets the dispatcher.
+        /// </summary>
+        /// <returns></returns>
+        protected virtual Dispatcher GetDispatcher()
+        {
+            return Deployment.Current.Dispatcher;
         }
 
         /// <summary>
