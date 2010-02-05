@@ -2,12 +2,27 @@
 {
     using System;
     using System.Globalization;
+    using System.Linq.Expressions;
+    using Core;
 
     /// <summary>
     /// Hosts extension methods for application model classes.
     /// </summary>
     public static class ApplicationModelExtensions
     {
+#if !SILVERLIGHT_20
+        /// <summary>
+        /// Focuses the control bound to the property on the view model.
+        /// </summary>
+        /// <param name="inputManager">The input manager.</param>
+        /// <param name="viewModel">The view model.</param>
+        /// <param name="property">The property.</param>
+        public static void Focus<T, K>(this IInputManager inputManager, T viewModel, Expression<Func<T, K>> property)
+        {
+            inputManager.Focus(viewModel, property.GetMemberInfo().Name);
+        }
+#endif
+
         /// <summary>
         /// Inserts or updates a value in the state.
         /// </summary>
