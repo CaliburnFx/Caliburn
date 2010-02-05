@@ -36,6 +36,7 @@ V2 Alpha
 -Enabled binding conventions to detect validation scenarios and configure the binding appropriately.
 -Added Caliburn.ShellFramework with History, Results, MessagBox, Questions, Menu, Resources, etc.
 -Added IInputManager and DefaultInputManager for managing control focus and shortcut keys.
+-Removed support for Container Custom Lifetimes.  Caliburn itself does not use this and it can now easilty be added by developers who wish to.
 
 V1.1 Release
 -Fixed an issue in the WPF version of InteractionNode.

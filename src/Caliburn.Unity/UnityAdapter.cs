@@ -29,7 +29,6 @@
 
             AddRegistrationHandler<Singleton>(HandleSingleton);
             AddRegistrationHandler<PerRequest>(HandlePerRequest);
-            AddRegistrationHandler<CustomLifetime>(HandleCustomLifetime);
             AddRegistrationHandler<Instance>(HandleInstance);
         }
 
@@ -103,15 +102,6 @@
             else if (!perRequest.HasService())
                 _container.RegisterType(typeof(object), perRequest.Implementation, perRequest.Name);
             else _container.RegisterType(perRequest.Service, perRequest.Implementation, perRequest.Name);
-        }
-
-        private void HandleCustomLifetime(CustomLifetime customLifetime)
-        {
-            if (!customLifetime.HasName())
-                _container.RegisterType(customLifetime.Service, customLifetime.Implementation, (LifetimeManager)Activator.CreateInstance(customLifetime.Lifetime));
-            else if (!customLifetime.HasService())
-                _container.RegisterType(typeof(object), customLifetime.Implementation, customLifetime.Name, (LifetimeManager)Activator.CreateInstance(customLifetime.Lifetime));
-            else _container.RegisterType(customLifetime.Service, customLifetime.Implementation, customLifetime.Name, (LifetimeManager)Activator.CreateInstance(customLifetime.Lifetime));
         }
 
         private void HandleInstance(Instance instance)

@@ -66,7 +66,6 @@
     <Compile Include="Invocation\DefaultDispatcher.cs" />
     <Compile Include="Invocation\InvocationExtensions.cs" />
     <Compile Include="IoC\ComponentRegistrationBase.cs" />
-    <Compile Include="IoC\CustomLifetime.cs" />
     <Compile Include="IoC\IoCExtensions.cs" />
     <Compile Include="IoC\Instance.cs" />
     <Compile Include="IoC\IRegistry.cs" />
@@ -86,7 +85,6 @@
     <Compile Include="IoC\PerRequestAttribute.cs" />
     <Compile Include="IoC\SingletonAttribute.cs" />
     <Compile Include="Metadata\TypeDescriptor.silverlight.cs" />
-    <Compile Include="IoC\CustomLifetimeAttribute.cs" />
     <Compile Include="PropertyChangedBase.cs" />
     <Compile Include="IoC\RegisterAttribute.cs" />
     <Compile Include="Threading\BackgroundTask.cs" />

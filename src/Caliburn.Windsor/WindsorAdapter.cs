@@ -4,9 +4,7 @@
     using System.Collections.Generic;
     using Core.IoC;
     using Castle.Core;
-    using Castle.MicroKernel;
     using Castle.MicroKernel.Registration;
-    using Castle.MicroKernel.Registration.Lifestyle;
     using Castle.Windsor;
     using Microsoft.Practices.ServiceLocation;
 
@@ -33,7 +31,6 @@
 
             AddRegistrationHandler<Singleton>(HandleSingleton);
             AddRegistrationHandler<PerRequest>(HandlePerRequest);
-            AddRegistrationHandler<CustomLifetime>(HandleCustom);
             AddRegistrationHandler<Instance>(HandleInstance);
         }
 
@@ -109,22 +106,6 @@
             else if (!perRequest.HasService())
                 _container.AddComponentLifeStyle(perRequest.Name, perRequest.Implementation, LifestyleType.Transient);
             else _container.AddComponentLifeStyle(perRequest.Name, perRequest.Service, perRequest.Implementation, LifestyleType.Transient);
-        }
-
-        private void HandleCustom(CustomLifetime customLifetime)
-        {
-            if (!customLifetime.HasName())
-                throw new NotSupportedException();
-
-            var method = typeof(LifestyleGroup<object>).GetMethod(
-                "Custom",
-                new[] {typeof(ILifestyleManager)}
-                );
-
-            var genericMethod = method.MakeGenericMethod(customLifetime.Lifetime);
-
-            var lifestyle = Component.For(customLifetime.Service).ImplementedBy(customLifetime.Implementation).LifeStyle;
-            _container.Register((ComponentRegistration<object>)genericMethod.Invoke(lifestyle, new object[0]));
         }
 
         private void HandleInstance(Instance instance)
