@@ -5,12 +5,23 @@
     using System.Linq;
     using System.Linq.Expressions;
     using System.Reflection;
+    using Configuration;
 
     /// <summary>
     /// Various extension methods used by the framework.
     /// </summary>
-    public static class ExtensionMethods
+    public static class CoreExtensions
     {
+        /// <summary>
+        /// Configures the core.
+        /// </summary>
+        /// <param name="hook">The hook.</param>
+        /// <returns></returns>
+        public static CoreConfiguration Core(this IModuleHook hook)
+        {
+            return CaliburnModule<CoreConfiguration>.Instance;
+        }
+
         /// <summary>
         /// Gets the attributes.
         /// </summary>

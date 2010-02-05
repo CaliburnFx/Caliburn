@@ -43,7 +43,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Behaviors\ExtensionMethods.cs" />
+    <Compile Include="Behaviors\BehaviorExtensions.cs" />
     <Compile Include="Behaviors\IBehavior.cs" />
     <Compile Include="Behaviors\IProxy.cs" />
     <Compile Include="Behaviors\IProxyFactory.cs" />
@@ -52,7 +52,6 @@
     <Compile Include="Configuration\CaliburnModule.cs" />
     <Compile Include="Configuration\ConventionalModule.cs" />
     <Compile Include="Configuration\CoreConfiguration.cs" />
-    <Compile Include="Configuration\ExtensionMethods.cs" />
     <Compile Include="Configuration\ICaliburnFramework.cs" />
     <Compile Include="Configuration\ICoreServicesDescription.cs" />
     <Compile Include="Configuration\IConfigurationBuilder.cs" />
@@ -60,15 +59,15 @@
     <Compile Include="Configuration\IModuleHook.cs" />
     <Compile Include="Configuration\ModuleBase.cs" />
     <Compile Include="DefaultAssemblySource.cs" />
-    <Compile Include="ExtensionMethods.cs" />
+    <Compile Include="CoreExtensions.cs" />
     <Compile Include="IAssemblySource.cs" />
     <Compile Include="Inflector.cs" />
     <Compile Include="INotifyPropertyChangedEx.cs" />
     <Compile Include="Invocation\DefaultDispatcher.cs" />
-    <Compile Include="Invocation\ExtensionMethods.cs" />
+    <Compile Include="Invocation\InvocationExtensions.cs" />
     <Compile Include="IoC\ComponentRegistrationBase.cs" />
     <Compile Include="IoC\CustomLifetime.cs" />
-    <Compile Include="IoC\ExtensionMethods.cs" />
+    <Compile Include="IoC\IoCExtensions.cs" />
     <Compile Include="IoC\Instance.cs" />
     <Compile Include="IoC\IRegistry.cs" />
     <Compile Include="IoC\IContainer.cs" />
@@ -80,7 +79,7 @@
     <Compile Include="IoC\IComponentRegistration.cs" />
     <Compile Include="IoC\PerRequest.cs" />
     <Compile Include="IoC\Singleton.cs" />
-    <Compile Include="Metadata\ExtensionMethods.cs" />
+    <Compile Include="Metadata\MetadataExtensions.cs" />
     <Compile Include="Metadata\IMetadataContainer.cs" />
     <Compile Include="Metadata\MetadataContainer.cs" />
     <Compile Include="Metadata\IMetadata.cs" />

@@ -5,7 +5,7 @@
     /// <summary>
     /// Hosts extension methods related to Metadata.
     /// </summary>
-    public static class ExtensionMethods
+    public static class MetadataExtensions
     {
         /// <summary>
         /// Retrieves metadata from the store.

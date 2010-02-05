@@ -26,7 +26,7 @@
         {
             _container = container;
 
-            Core.IoC.ExtensionMethods.SelectEligibleConstructorImplementation = type =>{
+            IoCExtensions.SelectEligibleConstructorImplementation = type =>{
                 return (from c in type.GetConstructors()
                         where c.GetAttributes<ImportingConstructorAttribute>(false)
                                   .FirstOrDefault() != null

@@ -7,7 +7,7 @@
     /// <summary>
     /// Hosts extension methods related to behaviors.
     /// </summary>
-    public static class ExtensionMethods
+    public static class BehaviorExtensions
     {
         /// <summary>
         /// The overridable implemenation of ShouldCreateProxy.

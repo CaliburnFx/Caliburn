@@ -7,7 +7,7 @@
     /// <summary>
     /// Extension methods related to IoC.
     /// </summary>
-    public static class ExtensionMethods
+    public static class IoCExtensions
     {
         /// <summary>
         /// The overridable implemenation of GetModelType.

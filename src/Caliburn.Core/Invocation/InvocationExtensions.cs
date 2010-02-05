@@ -3,7 +3,7 @@
     /// <summary>
     /// Hosts invocation related extension methods.
     /// </summary>
-    public static class ExtensionMethods
+    public static class InvocationExtensions
     {
         /// <summary>
         /// Wires an event handler to the sender for the specified event.
