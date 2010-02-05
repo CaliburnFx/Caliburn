@@ -24,11 +24,12 @@
         }
 
         /// <summary>
-        /// Initializes the core.
+        /// Initializes this module.
         /// </summary>
-        /// <param name="serviceLocator">The service locator.</param>
-        protected override void InitializeCore(IServiceLocator serviceLocator)
+        /// <param name="serviceLocator"></param>
+        public override void Initialize(IServiceLocator serviceLocator)
         {
+            base.Initialize(serviceLocator);
             Execute.Initialize(serviceLocator.GetInstance<IDispatcher>());
         }
 

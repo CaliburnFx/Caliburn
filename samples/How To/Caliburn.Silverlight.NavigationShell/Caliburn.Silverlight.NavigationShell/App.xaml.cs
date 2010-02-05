@@ -6,6 +6,7 @@
     using Microsoft.Practices.Unity;
     using PresentationFramework.ApplicationModel;
     using PresentationFramework.Configuration;
+    using PresentationFramework.ViewModels;
     using Unity;
 
     public partial class App : CaliburnApplication
@@ -36,7 +37,15 @@
 
         protected override void ConfigurePresentationFramework(PresentationFrameworkConfiguration module)
         {
-            module.RegisterAllScreensWithSubjects(true);
+            module
+                .RegisterAllScreensWithSubjects(true)
+                .Using(x => x.ViewLocator<DefaultViewLocator>())
+                    .Configured(x =>{
+                        x.AddNamespaceAlias("Caliburn.ShellFramework.Questions",
+                                            "Caliburn.Silverlight.NavigationShell.Shell.Views");
+                        x.AddNamespaceAlias("Caliburn.ShellFramework.Services",
+                                            "Caliburn.Silverlight.NavigationShell.Shell.Views");
+                    });
         }
 
         private void AddLazyTaskBarItem(string name)

@@ -60,26 +60,29 @@
         /// <summary>
         /// Searches the <see cref="IAssemblySource"/> and registers all screens which concretely implement <see cref="IScreen{T}"/> using their closed interface type.
         /// </summary>
-        public void RegisterAllScreensWithSubjects()
+        public PresentationFrameworkConfiguration RegisterAllScreensWithSubjects()
         {
-            RegisterAllScreensWithSubjects(false);
+            return RegisterAllScreensWithSubjects(false);
         }
 
         /// <summary>
         /// Searches the <see cref="IAssemblySource"/> and registers all screens which concretely implement <see cref="IScreen{T}"/> using their closed interface type.
         /// </summary>
-        public void RegisterAllScreensWithSubjects(bool nameInstances)
+        public PresentationFrameworkConfiguration RegisterAllScreensWithSubjects(bool nameInstances)
         {
             _registerAllScreensWithSubjects = true;
             _nameInstances = nameInstances;
+            return this;
         }
 
         /// <summary>
         /// Initializes the core.
         /// </summary>
         /// <param name="serviceLocator">The service locator.</param>
-        protected override void InitializeCore(IServiceLocator serviceLocator)
+        public override void Initialize(IServiceLocator serviceLocator)
         {
+            base.Initialize(serviceLocator);
+
             var controller = serviceLocator.GetInstance<IRoutedMessageController>();
             var messageBinder = serviceLocator.GetInstance<IMessageBinder>();
             var parser = serviceLocator.GetInstance<IParser>();

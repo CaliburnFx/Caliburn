@@ -14,34 +14,16 @@ namespace Caliburn.Core.Configuration
         /// Gets the component information for this module.
         /// </summary>
         /// <returns></returns>
-        IEnumerable<IComponentRegistration> IModule.GetComponents()
-        {
-            return GetComponentsCore();
-        }
-
-        /// <summary>
-        /// Gets the components.
-        /// </summary>
-        /// <returns></returns>
-        protected virtual IEnumerable<IComponentRegistration> GetComponentsCore()
+        public virtual IEnumerable<IComponentRegistration> GetComponents()
         {
             yield break;
         }
 
         /// <summary>
-        /// Initializes this module.
-        /// </summary>
-        /// <param name="serviceLocator">The service locator.</param>
-        void IModule.Initialize(IServiceLocator serviceLocator)
-        {
-            InitializeCore(serviceLocator);
-        }
-
-        /// <summary>
-        /// Initializes this module.
+        /// Initializes the specified locator.
         /// </summary>
         /// <param name="locator">The locator.</param>
-        protected virtual void InitializeCore(IServiceLocator locator) { }
+        public virtual void Initialize(IServiceLocator locator) { }
 
         /// <summary>
         /// Creates a singleton registration.

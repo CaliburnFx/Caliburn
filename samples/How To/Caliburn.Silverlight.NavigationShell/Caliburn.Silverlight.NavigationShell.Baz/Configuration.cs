@@ -7,16 +7,15 @@
 
     public class Configuration : ModuleBase
     {
-        protected override IEnumerable<IComponentRegistration> GetComponentsCore()
+        public override IEnumerable<IComponentRegistration> GetComponents()
         {
             //yield module specific components
-            return base.GetComponentsCore();
+            yield break;
         }
 
-        protected override void InitializeCore(IServiceLocator locator)
+        public override void Initialize(IServiceLocator locator)
         {
             //execute module specific initialization
-            base.InitializeCore(locator);
         }
     }
 }

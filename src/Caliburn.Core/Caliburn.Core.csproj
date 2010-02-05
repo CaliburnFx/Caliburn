@@ -53,11 +53,14 @@
     <Compile Include="Configuration\ConventionalModule.cs" />
     <Compile Include="Configuration\CoreConfiguration.cs" />
     <Compile Include="Configuration\ICaliburnFramework.cs" />
+    <Compile Include="Configuration\IConfiguredRegistration.cs" />
     <Compile Include="Configuration\ICoreServicesDescription.cs" />
     <Compile Include="Configuration\IConfigurationBuilder.cs" />
     <Compile Include="Configuration\IModule.cs" />
     <Compile Include="Configuration\IModuleHook.cs" />
+    <Compile Include="Configuration\IServiceConfiguration.cs" />
     <Compile Include="Configuration\ModuleBase.cs" />
+    <Compile Include="Configuration\ServiceConfiguration.cs" />
     <Compile Include="DefaultAssemblySource.cs" />
     <Compile Include="CoreExtensions.cs" />
     <Compile Include="IAssemblySource.cs" />

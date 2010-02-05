@@ -236,7 +236,7 @@
         /// Gets the component information for this module.
         /// </summary>
         /// <returns></returns>
-        protected override IEnumerable<IComponentRegistration> GetComponentsCore()
+        public override IEnumerable<IComponentRegistration> GetComponents()
         {
             yield return Singleton(typeof(ILoggerFacade), _loggerFacade);
             yield return Singleton(typeof(IModuleInitializer), _moduleInitializer);
@@ -270,14 +270,15 @@
             yield return PerRequest(typeof(SyncRegionContextWithHostBehavior), typeof(SyncRegionContextWithHostBehavior));
             yield return PerRequest(typeof(RegionManagerRegistrationBehavior), typeof(RegionManagerRegistrationBehavior));
             yield return PerRequest(typeof(DelayedRegionCreationBehavior), typeof(DelayedRegionCreationBehavior));
-            
         }
 
         /// <summary>
         /// Initializes this module.
         /// </summary>
-        protected override void InitializeCore(IServiceLocator serviceLocator)
+        public override void Initialize(IServiceLocator serviceLocator)
         {
+            base.Initialize(serviceLocator);
+
             ConfigureRegionAdapterMappings();
             ConfigureRegionBehaviors();
             RegisterFrameworkExceptionTypes();
