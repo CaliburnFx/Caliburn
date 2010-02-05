@@ -1,5 +1,7 @@
 namespace Caliburn.Core.IoC
 {
+    using System;
+
     /// <summary>
     /// Represents the registration of an existing instance.
     /// </summary>
@@ -10,5 +12,15 @@ namespace Caliburn.Core.IoC
         /// </summary>
         /// <value>The implementation.</value>
         public object Implementation { get; set; }
+
+        /// <summary>
+        /// Gets the component info.
+        /// </summary>
+        /// <param name="decoratedType">Type of the decorated.</param>
+        /// <returns></returns>
+        public override IComponentRegistration GetComponentInfo(Type decoratedType)
+        {
+            throw new NotSupportedException();
+        }
     }
 }

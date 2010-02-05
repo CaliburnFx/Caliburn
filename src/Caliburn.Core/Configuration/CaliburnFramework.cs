@@ -184,7 +184,7 @@
 
             foreach (var type in types)
             {
-                foreach (var attribute in type.GetAttributes<RegisterAttribute>(true))
+                foreach (var attribute in type.GetAttributes<IComponentMetadata>(true))
                     componentList.Add(attribute.GetComponentInfo(type));
             }
 

@@ -66,6 +66,7 @@
     <Compile Include="Invocation\DefaultDispatcher.cs" />
     <Compile Include="Invocation\InvocationExtensions.cs" />
     <Compile Include="IoC\ComponentRegistrationBase.cs" />
+    <Compile Include="IoC\IComponentMetadata.cs" />
     <Compile Include="IoC\IoCExtensions.cs" />
     <Compile Include="IoC\Instance.cs" />
     <Compile Include="IoC\IRegistry.cs" />
@@ -82,11 +83,8 @@
     <Compile Include="Metadata\IMetadataContainer.cs" />
     <Compile Include="Metadata\MetadataContainer.cs" />
     <Compile Include="Metadata\IMetadata.cs" />
-    <Compile Include="IoC\PerRequestAttribute.cs" />
-    <Compile Include="IoC\SingletonAttribute.cs" />
     <Compile Include="Metadata\TypeDescriptor.silverlight.cs" />
     <Compile Include="PropertyChangedBase.cs" />
-    <Compile Include="IoC\RegisterAttribute.cs" />
     <Compile Include="Threading\BackgroundTask.cs" />
     <Compile Include="Invocation\IEventHandler.cs" />
     <Compile Include="Invocation\DefaultEventHandlerFactory.cs" />

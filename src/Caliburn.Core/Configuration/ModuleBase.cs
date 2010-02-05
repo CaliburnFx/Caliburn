@@ -51,7 +51,7 @@ namespace Caliburn.Core.Configuration
         /// <returns>The registration.</returns>
         protected Singleton Singleton(Type service, Type implementation)
         {
-            return new Singleton{ Service = service, Implementation = implementation};
+            return new Singleton(service) {Implementation = implementation};
         }
 
         /// <summary>
@@ -62,7 +62,7 @@ namespace Caliburn.Core.Configuration
         /// <returns>The registration.</returns>
         protected PerRequest PerRequest(Type service, Type implementation)
         {
-            return new PerRequest { Service = service, Implementation = implementation };
+            return new PerRequest(service) { Implementation = implementation };
         }
 
         /// <summary>
@@ -71,7 +71,7 @@ namespace Caliburn.Core.Configuration
         /// <returns>The registration.</returns>
         protected Singleton Singleton<TService, TImplementation>()
         {
-            return new Singleton { Service = typeof(TService), Implementation = typeof(TImplementation) };
+            return new Singleton(typeof(TService)) {Implementation = typeof(TImplementation)};
         }
 
         /// <summary>
@@ -80,7 +80,7 @@ namespace Caliburn.Core.Configuration
         /// <returns>The registration.</returns>
         protected PerRequest PerRequest<TService, TImplementation>()
         {
-            return new PerRequest { Service = typeof(TService), Implementation = typeof(TImplementation) };
+            return new PerRequest(typeof(TService)) {Implementation = typeof(TImplementation)};
         }
     }
 }

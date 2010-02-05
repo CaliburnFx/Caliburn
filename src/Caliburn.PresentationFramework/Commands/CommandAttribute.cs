@@ -6,7 +6,7 @@
     /// <summary>
     /// Specifies a command which should be registered with the container and optionally allows customization of the executiion method.
     /// </summary>
-    public class CommandAttribute : RegisterAttribute
+    public class CommandAttribute : IComponentMetadata
     {
         /// <summary>
         /// The suffix that is removed from the class name when registering by Key with the container.
@@ -45,13 +45,9 @@
         /// </summary>
         /// <param name="decoratedType">The decorated type.</param>
         /// <returns></returns>
-        public override IComponentRegistration GetComponentInfo(Type decoratedType)
+        public IComponentRegistration GetComponentInfo(Type decoratedType)
         {
-            return new PerRequest
-            {
-                Name = GetCommandName(decoratedType),
-                Implementation = decoratedType
-            };
+            return new PerRequest(GetCommandName(decoratedType)) {Implementation = decoratedType};
         }
 
         /// <summary>
