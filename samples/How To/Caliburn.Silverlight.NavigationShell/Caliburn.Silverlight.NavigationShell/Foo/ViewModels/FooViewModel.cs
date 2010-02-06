@@ -23,5 +23,18 @@
                 "Just imagine how much easier it would be to handle web services and loaders with this technique."
                 );
         }
+
+        //The following overrides insure that all instances of this screen are treated as
+        //equal by the screen activation mechanism without forcing a singleton registration
+        //in the container.
+        public override bool Equals(object obj)
+        {
+            return obj != null && obj.GetType() == GetType();
+        }
+
+        public override int GetHashCode()
+        {
+            return GetType().GetHashCode();
+        }
     }
 }

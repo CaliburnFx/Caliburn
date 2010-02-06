@@ -25,5 +25,18 @@
 
             yield return Show.MessageBox("You opened " + dialog.File.Name + ".", "File");
         }
+
+        //The following overrides insure that all instances of this screen are treated as
+        //equal by the screen activation mechanism without forcing a singleton registration
+        //in the container.
+        public override bool Equals(object obj)
+        {
+            return obj != null && obj.GetType() == GetType();
+        }
+
+        public override int GetHashCode()
+        {
+            return GetType().GetHashCode();
+        }
     }
 }

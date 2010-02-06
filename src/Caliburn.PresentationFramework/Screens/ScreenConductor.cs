@@ -106,6 +106,9 @@
             get { return _activeScreen; }
             set
             {
+                if(value != null && value.Equals(_activeScreen))
+                    return;
+
                 _changingThroughProperty = true;
 
                 ShutdownActiveScreen(
@@ -140,6 +143,12 @@
             if (screen == null)
             {
                 completed(false);
+                return;
+            }
+
+            if (screen.Equals(_activeScreen))
+            {
+                completed(true);
                 return;
             }
 

@@ -49,6 +49,7 @@ V1.1 Release
 -Fixed the apparently completely broken MEF adapter.
 -Greatly improved the flexibility of the DefaultViewStrategy.
 -Fixed a bug in the WPF DispatcherImpelmentation.
+-Fixed a bug in PresenterManager and MultiPresenterManager which caused screen changes to the same screen.
 
 V1.1 Release Candidate
 -Added pre-initialization hooks to CaliburnApplication via Marco Amendola's patch.
