@@ -1,6 +1,8 @@
 ﻿namespace Caliburn.ShellFramework.Results
 {
     using System;
+    using System.Linq.Expressions;
+    using Core;
     using Microsoft.Practices.ServiceLocation;
     using Microsoft.Win32;
     using PresentationFramework.Screens;
@@ -90,6 +92,21 @@
         public static LoadingResult NoLoader()
         {
             return new LoadingResult(false, null);
+        }
+
+        public static FocusResult Focus(object model)
+        {
+            return new FocusResult(model, null);
+        }
+
+        public static FocusResult Focus(object model, string property)
+        {
+            return new FocusResult(model, property);
+        }
+
+        public static FocusResult Focus<T,K>(T model, Expression<Func<T,K>> property)
+        {
+            return new FocusResult(model, property.GetMemberInfo().Name);
         }
 
         public static PlayAnimationResult Animation(string animationKey)
