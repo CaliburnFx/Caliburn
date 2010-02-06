@@ -33,21 +33,25 @@
             if (model == null)
                 return null;
 
-#if !SILVERLIGHT
+
             var metadataContainer = model as IMetadataContainer;
             if (metadataContainer != null)
             {
                 var view = metadataContainer.GetView<DependencyObject>(context);
                 if (view != null)
                 {
+#if !SILVERLIGHT
                     var windowCheck = view as Window;
                     if (windowCheck == null || !windowCheck.IsLoaded)
                     {
                         return view;
                     }
+#else
+                    return view;
+#endif
                 }
             }
-#endif
+
 
             return locator.Locate(model.GetModelType(), displayLocation, context);
         }

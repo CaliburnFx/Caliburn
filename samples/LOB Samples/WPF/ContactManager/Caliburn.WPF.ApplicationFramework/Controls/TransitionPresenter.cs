@@ -81,7 +81,13 @@
             else view = newContent as UIElement;
 
             if(view == null) return;
-            if(Children.Contains(view)) return;
+
+            if (Children.Contains(view))
+            {
+                Children.Clear();
+                Children.Add(view);
+                return;
+            }
 
             if(Children.Count > 0)
             {
@@ -105,7 +111,9 @@
 
         public void TransitionEnded(ITransition transition, UIElement oldContent, UIElement newContent)
         {
-            if(oldContent != null) Children.Remove(oldContent);
+            if (oldContent != null && Children.Count > 1)
+                Children.Remove(oldContent);
+
             TransitionCompleted(this, EventArgs.Empty);
         }
     }
