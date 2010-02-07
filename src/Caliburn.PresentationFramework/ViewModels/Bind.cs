@@ -54,7 +54,7 @@
             if(e.NewValue == null || e.NewValue == e.OldValue)
                 return;
 
-            _binder.Bind(e.NewValue, null, null, false);
+            _binder.Bind(e.NewValue, null, null);
         }
     }
 }

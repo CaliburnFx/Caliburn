@@ -21,7 +21,6 @@ namespace Caliburn.PresentationFramework.ViewModels
         /// <param name="viewModel">The model.</param>
         /// <param name="view">The view.</param>
         /// <param name="context">The context.</param>
-        /// <param name="useCachedConventions">Check the cache for conventions.</param>
-        void Bind(object viewModel, DependencyObject view, object context, bool useCachedConventions);
+        void Bind(object viewModel, DependencyObject view, object context);
     }
 }

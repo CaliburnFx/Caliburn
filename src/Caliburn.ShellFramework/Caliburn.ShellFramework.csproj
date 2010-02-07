@@ -78,6 +78,7 @@
     <Compile Include="Resources\DefaultResourceManager.cs" />
     <Compile Include="Resources\ResourceExtensions.cs" />
     <Compile Include="Resources\IResourceManager.cs" />
+    <Compile Include="Results\FocusResult.cs" />
     <Compile Include="Results\ResultExtensions.cs" />
     <Compile Include="Results\IOpenResult.cs" />
     <Compile Include="Results\LoadingResult.cs" />

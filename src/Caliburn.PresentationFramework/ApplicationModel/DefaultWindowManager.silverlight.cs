@@ -76,7 +76,7 @@ namespace Caliburn.PresentationFramework.ApplicationModel
         {
             var view = EnsureWindow(rootModel, _viewLocator.Locate(rootModel, null, context));
 
-            _binder.Bind(rootModel, view, context, true);
+            _binder.Bind(rootModel, view, context);
 
             var screen = rootModel as IScreen;
             if (screen != null)

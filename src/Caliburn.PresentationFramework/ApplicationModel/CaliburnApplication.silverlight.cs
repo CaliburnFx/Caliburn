@@ -142,7 +142,7 @@ namespace Caliburn.PresentationFramework.ApplicationModel
             var view = locator.Locate(model, null, null);
 
             var binder = Container.GetInstance<IViewModelBinder>();
-            binder.Bind(model, view, null, true);
+            binder.Bind(model, view, null);
 
             var screen = model as IScreen;
             if(screen != null)

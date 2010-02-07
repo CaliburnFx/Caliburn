@@ -5,6 +5,7 @@ namespace Caliburn.PresentationFramework.ViewModels
     using System.Linq;
     using System.Reflection;
     using System.Windows;
+    using System.Windows.Controls;
     using Actions;
     using Conventions;
     using Core.Metadata;
@@ -103,15 +104,15 @@ namespace Caliburn.PresentationFramework.ViewModels
         /// Gets the conventions for the specified view.
         /// </summary>
         /// <param name="view">The view.</param>
-        /// <param name="useCachedConventions">Chech cache for conventions.</param>
         /// <returns>The applicable conventions.</returns>
-        public IEnumerable<IViewApplicable> GetConventionsFor(DependencyObject view, bool useCachedConventions)
+        public IEnumerable<IViewApplicable> GetConventionsFor(DependencyObject view)
         {
             IViewApplicable[] conventions;
 
             var viewType = view.GetType();
+            var useConventionCache = ShouldUseConventionCache(view);
 
-            if (useCachedConventions)
+            if (useConventionCache)
             {
                 if(!_viewConventions.TryGetValue(viewType, out conventions))
                 {
@@ -122,6 +123,17 @@ namespace Caliburn.PresentationFramework.ViewModels
             else conventions = _conventionManager.DetermineConventions(this, view).ToArray();
 
             return conventions;
+        }
+
+        protected virtual bool ShouldUseConventionCache(DependencyObject view)
+        {
+#if !SILVERLIGHT
+            return view is UserControl || view is Window;
+#elif SILVERLIGHT_20
+            return view is UserControl;
+#else
+            return view is UserControl || view is ChildWindow;
+#endif
         }
     }
 }
