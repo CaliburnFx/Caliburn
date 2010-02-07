@@ -33,7 +33,6 @@
             if (model == null)
                 return null;
 
-
             var metadataContainer = model as IMetadataContainer;
             if (metadataContainer != null)
             {
@@ -51,7 +50,6 @@
 #endif
                 }
             }
-
 
             return locator.Locate(model.GetModelType(), displayLocation, context);
         }

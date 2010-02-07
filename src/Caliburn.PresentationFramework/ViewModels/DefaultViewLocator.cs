@@ -139,6 +139,7 @@ namespace Caliburn.PresentationFramework.ViewModels
             //starts as: Namespace.ViewModels.SomethingViewModel
 
             var keywords = GetSingularKeywords();
+			var modelTypeName = modelType.FullName;
 
             foreach (var word in keywords)
             {
@@ -157,12 +158,10 @@ namespace Caliburn.PresentationFramework.ViewModels
                             {
                                 var secondPass = ReplaceWithView(pass, w2);
 
-                                foreach(var pass2 in secondPass)
+                                foreach (var result in ProcessOption(context, secondPass))
                                 {
-                                    foreach (var result in ProcessOption(context, secondPass))
-                                    {
+                                    if (!result.Equals(modelTypeName))
                                         yield return result;
-                                    }
                                 }
                             }
                         }
@@ -178,7 +177,8 @@ namespace Caliburn.PresentationFramework.ViewModels
 
                 foreach(var result in ProcessOption(context, options))
                 {
-                    yield return result;
+                    if (!result.Equals(modelTypeName))
+                        yield return result;
                 }
             }
         }
