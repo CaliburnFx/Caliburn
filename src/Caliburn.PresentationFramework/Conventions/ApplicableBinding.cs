@@ -1,5 +1,6 @@
 ﻿namespace Caliburn.PresentationFramework.Conventions
 {
+    using System;
     using System.Windows;
     using System.Windows.Controls;
     using System.Windows.Data;
@@ -59,6 +60,7 @@
 
                 var dependencyProperty = CheckForViewModelProperty(element, _dependencyProperty);
                 TryAddValidation(element, binding, dependencyProperty);
+                CheckTextBox(element, binding, dependencyProperty);
                 element.SetBinding(dependencyProperty, binding);
             }
 
@@ -99,24 +101,25 @@
             if (!_validate)
                 return;
 
-#if NET
+#if NET || SILVERLIGHT_40
             binding.ValidatesOnDataErrors = true;
-            if(element is TextBox && dependencyProperty == TextBox.TextProperty)
-                binding.UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged;
-#elif SILVERLIGHT_40
-            binding.ValidatesOnDataErrors = true;
-
-            var textBox = element as TextBox;
-            if(textBox != null && dependencyProperty == TextBox.TextProperty)
-            {
-                textBox.TextChanged += delegate {
-                    textBox.GetBindingExpression(TextBox.TextProperty).UpdateSource();
-                };
-            }
-
 #elif SILVERLIGHT_30
             binding.ValidatesOnExceptions = true;
+#endif
+        }
 
+        /// <summary>
+        /// Checks if the element is a text box and uses UpdateSourceTrigger.PropertyChanged if so.
+        /// </summary>
+        /// <param name="element">The element.</param>
+        /// <param name="property">The property.</param>
+        /// <param name="binding"></param>
+        protected virtual void CheckTextBox(DependencyObject element, Binding binding, DependencyProperty dependencyProperty)
+        {
+#if NET
+            if(element is TextBox && dependencyProperty == TextBox.TextProperty)
+                binding.UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged;
+#elif SILVERLIGHT_40 || SILVERLIGHT_30
             var textBox = element as TextBox;
             if(textBox != null && dependencyProperty == TextBox.TextProperty)
             {
