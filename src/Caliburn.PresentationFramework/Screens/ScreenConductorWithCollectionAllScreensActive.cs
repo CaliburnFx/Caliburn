@@ -23,7 +23,17 @@
             /// </summary>
             public class AllScreensActive : ScreenCollectionBase<T>
             {
+                private readonly bool _openPublicScreens;
                 private readonly IObservableCollection<T> _screens = new BindableCollection<T>();
+
+                /// <summary>
+                /// Initializes a new instance of the <see cref="ScreenConductor&lt;T&gt;.WithCollection.AllScreensActive"/> class.
+                /// </summary>
+                /// <param name="openPublicScreens">if set to <c>true</c> automatically opens screens represented by public properties.</param>
+                public AllScreensActive(bool openPublicScreens)
+                {
+                    _openPublicScreens = openPublicScreens;
+                }
 
                 /// <summary>
                 /// Gets the screens that are currently managed.
@@ -59,6 +69,18 @@
                     if (!IsInitialized)
                     {
                         OnInitialize();
+
+                        if(_openPublicScreens)
+                        {
+                            var properties = GetType().GetProperties()
+                                .Where(x => typeof(IScreen).IsAssignableFrom(x.PropertyType));
+
+                            foreach(var info in properties)
+                            {
+                                var value = info.GetValue(this, null) as T;
+                                if(value != null) this.OpenScreen(value);
+                            }
+                        }
 
                         foreach (var screen in _screens)
                         {

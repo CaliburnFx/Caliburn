@@ -10,7 +10,7 @@
 
         protected override ScreenBase CreateScreen()
         {
-            return new ScreenConductor<IScreen>.WithCollection.AllScreensActive();
+            return new ScreenConductor<IScreen>.WithCollection.AllScreensActive(false);
         }
 
         protected override void given_the_context_of()
