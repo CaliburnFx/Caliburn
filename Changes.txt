@@ -52,6 +52,7 @@ V1.1 Release
 -Fixed a bug in PresenterManager and MultiPresenterManager which caused screen changes to the same screen.
 -Enabled view chaching for Silverlight.
 -Fixed some bugs in the LOB samples.
+-Added Hyperlink/HyerlinkButton element defaults.
 
 V1.1 Release Candidate
 -Added pre-initialization hooks to CaliburnApplication via Marco Amendola's patch.

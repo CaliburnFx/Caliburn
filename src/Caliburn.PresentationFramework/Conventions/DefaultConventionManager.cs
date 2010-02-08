@@ -165,6 +165,7 @@ namespace Caliburn.PresentationFramework.Conventions
         protected virtual IEnumerable<IElementConvention> GetDefaultElementConventions()
         {
 #if !SILVERLIGHT
+                yield return ElementConvention<Hyperlink>("Click", Hyperlink.DataContextProperty, (c, o) => c.DataContext = o, c => c.DataContext);
                 yield return ElementConvention<RichTextBox>("TextChanged", RichTextBox.DataContextProperty, (c, o) => c.Document = (FlowDocument)o, c => c.Document);
                 yield return ElementConvention<Menu>("Click", Menu.ItemsSourceProperty, (c, o) => c.DataContext = o, c => c.DataContext);
                 yield return ElementConvention<MenuItem>("Click", MenuItem.ItemsSourceProperty, (c, o) => c.DataContext = o, c => c.DataContext);
@@ -202,6 +203,7 @@ namespace Caliburn.PresentationFramework.Conventions
                                   });
                 yield return ElementConvention<ComboBox>("SelectionChanged", ComboBox.ItemsSourceProperty, (c, o) => c.ItemsSource = (IEnumerable)o, c => c.IsEditable ? c.Text : c.SelectedItem);
 #else
+                yield return ElementConvention<HyperlinkButton>("Click", HyperlinkButton.ContentProperty, (c, o) => c.DataContext = o, c => c.DataContext);
                 yield return ElementConvention<UserControl>("Loaded", null, (c, o) => c.DataContext = o, c => c.DataContext);
                 yield return ElementConvention<ListBox>("SelectionChanged", ListBox.ItemsSourceProperty, (c, o) => c.ItemsSource = (IEnumerable) o, c => c.SelectedItem);
                 yield return ElementConvention<ComboBox>("SelectionChanged", ComboBox.ItemsSourceProperty, (c, o) => c.ItemsSource = (IEnumerable) o, c => c.SelectedItem);
