@@ -9,6 +9,7 @@ namespace Caliburn.PresentationFramework.Conventions
     using System.Windows.Controls;
     using System.Windows.Controls.Primitives;
     using System.Windows.Documents;
+    using System.Windows.Media;
     using Actions;
     using Core;
     using Core.Invocation;
@@ -208,6 +209,8 @@ namespace Caliburn.PresentationFramework.Conventions
                 yield return ElementConvention<ListBox>("SelectionChanged", ListBox.ItemsSourceProperty, (c, o) => c.ItemsSource = (IEnumerable) o, c => c.SelectedItem);
                 yield return ElementConvention<ComboBox>("SelectionChanged", ComboBox.ItemsSourceProperty, (c, o) => c.ItemsSource = (IEnumerable) o, c => c.SelectedItem);
 #endif
+
+                yield return ElementConvention<Image>("Loaded", Image.SourceProperty, (c, o) => c.Source = (ImageSource)o, c => c.Source);
                 yield return ElementConvention<ButtonBase>("Click", ButtonBase.ContentProperty, (c, o) => c.DataContext = o, c => c.DataContext);
                 yield return ElementConvention<Button>("Click", Button.ContentProperty, (c, o) => c.DataContext = o, c => c.DataContext);
                 yield return ElementConvention<ToggleButton>("Click", ToggleButton.IsCheckedProperty, (c, o) => c.IsChecked = (bool)o, c => c.IsChecked);

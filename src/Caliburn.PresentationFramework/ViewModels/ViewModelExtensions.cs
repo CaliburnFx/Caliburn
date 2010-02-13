@@ -2,6 +2,7 @@
 {
     using System;
     using System.Windows;
+    using System.Windows.Interop;
     using Core.Metadata;
     using Metadata;
 
@@ -41,7 +42,7 @@
                 {
 #if !SILVERLIGHT
                     var windowCheck = view as Window;
-                    if (windowCheck == null || !windowCheck.IsLoaded)
+                    if (windowCheck == null || (!windowCheck.IsLoaded && !(new WindowInteropHelper(windowCheck).Handle == IntPtr.Zero)))
                     {
                         return view;
                     }
