@@ -33,17 +33,24 @@ namespace Caliburn.PresentationFramework.Conventions
         DependencyProperty BindableProperty { get; }
 
         /// <summary>
+        /// Inidicates whether or not the BindableProperty should be overriden by the View.Model property.
+        /// </summary>
+        /// <param name="element">The element.</param>
+        /// <returns></returns>
+        bool ShouldOverrideBindablePropertyWithViewModel(DependencyObject element);
+
+        /// <summary>
         /// Gets the default value for the element.
         /// </summary>
         /// <param name="element">The element.</param>
         /// <returns>The value.</returns>
-        object GetValue(object element);
+        object GetValue(DependencyObject element);
 
         /// <summary>
         /// Sets the default value on the element.
         /// </summary>
         /// <param name="element">The element.</param>
         /// <param name="value">The value.</param>
-        void SetValue(object element, object value);
+        void SetValue(DependencyObject element, object value);
     }
 }

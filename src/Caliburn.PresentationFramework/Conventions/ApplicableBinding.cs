@@ -12,7 +12,7 @@
     /// </summary>
     public class ApplicableBinding : IViewApplicable
     {
-        private readonly string _elementName;
+        private readonly IElementDescription _elementDescription;
         private readonly DependencyProperty _dependencyProperty;
         private readonly string _path;
         private readonly BindingMode _mode;
@@ -23,17 +23,17 @@
         /// <summary>
         /// Initializes a new instance of the <see cref="ApplicableBinding"/> class.
         /// </summary>
-        /// <param name="elementName">Name of the element.</param>
+        /// <param name="elementDescription">The element description.</param>
         /// <param name="dependencyProperty">The dependency property.</param>
         /// <param name="path">The path.</param>
         /// <param name="mode">The mode.</param>
         /// <param name="validate">Inidicates whether or not to turn on validation for the binding.</param>
         /// <param name="checkTemplate">if set to <c>true</c> [check item template].</param>
         /// <param name="converter">The value converter to apply.</param>
-        public ApplicableBinding(string elementName, DependencyProperty dependencyProperty, string path, 
+        public ApplicableBinding(IElementDescription elementDescription, DependencyProperty dependencyProperty, string path, 
             BindingMode mode, bool validate, bool checkTemplate, IValueConverter converter)
         {
-            _elementName = elementName;
+            _elementDescription = elementDescription;
             _dependencyProperty = dependencyProperty;
             _path = path;
             _mode = mode;
@@ -48,7 +48,7 @@
         /// <param name="view">The view.</param>
         public void ApplyTo(DependencyObject view)
         {
-            var element = view.FindName(_elementName);
+            var element = view.FindName(_elementDescription.Name);
 
             if (_dependencyProperty != null && ValueNotSet(element))
             {
@@ -58,7 +58,9 @@
                     Converter = _converter
                 };
 
-                var dependencyProperty = CheckForViewModelProperty(element, _dependencyProperty);
+                var dependencyProperty = _elementDescription.Convention
+                    .ShouldOverrideBindablePropertyWithViewModel(element) ? View.ModelProperty : _dependencyProperty;
+
                 TryAddValidation(element, binding, dependencyProperty);
                 CheckTextBox(element, binding, dependencyProperty);
                 element.SetBinding(dependencyProperty, binding);
@@ -71,26 +73,6 @@
 
             if (NeedsItemTemplate(itemsControl))
                 itemsControl.ItemTemplate = CreateTemplate(itemsControl);
-        }
-
-        /// <summary>
-        /// Checks to see if the dependency property should be converted to a view model property.
-        /// </summary>
-        /// <param name="element">The element.</param>
-        /// <param name="property">The property.</param>
-        /// <returns></returns>
-        protected virtual DependencyProperty CheckForViewModelProperty(DependencyObject element, DependencyProperty property)
-        {
-            var contentControl = element as ContentControl;
-            if (contentControl == null) return property;
-
-#if !SILVERLIGHT
-            if (contentControl.ContentTemplate == null && contentControl.ContentTemplateSelector == null)
-                return View.ModelProperty;
-            return property;
-#else
-            return contentControl.ContentTemplate == null ? View.ModelProperty : property;
-#endif
         }
 
         /// <summary>
@@ -112,8 +94,8 @@
         /// Checks if the element is a text box and uses UpdateSourceTrigger.PropertyChanged if so.
         /// </summary>
         /// <param name="element">The element.</param>
-        /// <param name="property">The property.</param>
-        /// <param name="binding"></param>
+        /// <param name="binding">The binding.</param>
+        /// <param name="dependencyProperty">The dependency property.</param>
         protected virtual void CheckTextBox(DependencyObject element, Binding binding, DependencyProperty dependencyProperty)
         {
 #if NET

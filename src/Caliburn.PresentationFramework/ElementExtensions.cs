@@ -236,7 +236,7 @@
 
                     isLoaded = true;
 
-                    var source = element.FindNameExhaustive<object>(elementName, false);
+                    var source = element.FindNameExhaustive<DependencyObject>(elementName, false);
                     if (source == null)
                         return;
 
@@ -259,7 +259,7 @@
                 });
         }
 
-        private static void WireToDefaultEvent(Parameter parameter, Type type, object source, PropertyInfo property)
+        private static void WireToDefaultEvent(Parameter parameter, Type type, DependencyObject source, PropertyInfo property)
         {
             var defaults = ServiceLocator.Current.GetInstance<IConventionManager>()
                 .GetElementConvention(type);

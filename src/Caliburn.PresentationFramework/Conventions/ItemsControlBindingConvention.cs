@@ -89,7 +89,7 @@ namespace Caliburn.PresentationFramework.Conventions
 #endif
 
             return new ApplicableBinding(
-                element.Name,
+                element,
                 bindableProperty,
                 path,
                 mode,
@@ -99,7 +99,7 @@ namespace Caliburn.PresentationFramework.Conventions
                 );
         }
 
-        private bool ShouldCheckTemplate(PropertyInfo property)
+        private static bool ShouldCheckTemplate(PropertyInfo property)
         {
             return !property.PropertyType.IsEnum &&
                 !property.PropertyType.IsPrimitive &&

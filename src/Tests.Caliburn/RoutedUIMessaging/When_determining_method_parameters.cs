@@ -272,8 +272,8 @@ namespace Tests.Caliburn.RoutedUIMessaging
             _conventionManager.Expect(x => x.GetElementConvention(typeof(TextBox)))
                 .Return(defaults).Repeat.Twice();
 
-            defaults.Expect(x => x.GetValue(Arg<object>.Is.Anything)).Return(param1);
-            defaults.Expect(x => x.GetValue(Arg<object>.Is.Anything)).Return(param2);
+            defaults.Expect(x => x.GetValue(Arg<DependencyObject>.Is.Anything)).Return(param1);
+            defaults.Expect(x => x.GetValue(Arg<DependencyObject>.Is.Anything)).Return(param2);
 
             var message = new FakeMessage();
 

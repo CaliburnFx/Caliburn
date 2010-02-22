@@ -26,7 +26,7 @@ namespace Caliburn.PresentationFramework.Conventions
                 return null;
 
             return new ApplicableBinding(
-                element.Name,
+                element,
                 typeof(IScreen).IsAssignableFrom(boundProperty.PropertyType)
                     ? View.ModelProperty
                     : element.Convention.BindableProperty,

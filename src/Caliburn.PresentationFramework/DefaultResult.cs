@@ -3,6 +3,7 @@ namespace Caliburn.PresentationFramework
     using System;
     using System.Linq;
     using System.Reflection;
+    using System.Windows;
     using Conventions;
     using Core;
 
@@ -47,7 +48,7 @@ namespace Caliburn.PresentationFramework
 
             if (string.IsNullOrEmpty(context.Message.OutcomePath))
             {
-                var target = element.FindNameExhaustive<object>(context.Message.DefaultOutcomeElement, false);
+                var target = element.FindNameExhaustive<DependencyObject>(context.Message.DefaultOutcomeElement, false);
 
                 if (target != null)
                 {

@@ -5,6 +5,7 @@
     using System.ComponentModel;
     using System.Globalization;
     using System.Reflection;
+    using System.Windows;
     using Conventions;
     using Core;
     using System.Linq;
@@ -130,7 +131,7 @@
 
                 if (!DetermineSpecialValue(parameter.Name.ToLower(), sourceNode, context, out value))
                 {
-                    var control = handlingNode.UIElement.FindNameExhaustive<object>(parameter.Name, true);
+                    var control = handlingNode.UIElement.FindNameExhaustive<DependencyObject>(parameter.Name, true);
                     var convention = _conventionManager.FindElementConventionOrFail(control);
                     value = convention.GetValue(control);
                 }

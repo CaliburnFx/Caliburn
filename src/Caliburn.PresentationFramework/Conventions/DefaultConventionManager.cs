@@ -171,18 +171,18 @@ namespace Caliburn.PresentationFramework.Conventions
                 yield return ElementConvention<Menu>("Click", Menu.ItemsSourceProperty, (c, o) => c.DataContext = o, c => c.DataContext);
                 yield return ElementConvention<MenuItem>("Click", MenuItem.ItemsSourceProperty, (c, o) => c.DataContext = o, c => c.DataContext);
                 yield return ElementConvention<Label>("DataContextChanged", Label.ContentProperty, (c, o) => c.Content = o, c => c.Content);
-                yield return ElementConvention<DockPanel>("Loaded", DockPanel.DataContextProperty, (c, o) => c.DataContext = o, c => c.DataContext);
-                yield return ElementConvention<UniformGrid>("Loaded", UniformGrid.DataContextProperty, (c, o) => c.DataContext = o, c => c.DataContext);
-                yield return ElementConvention<WrapPanel>("Loaded", WrapPanel.DataContextProperty, (c, o) => c.DataContext = o, c => c.DataContext);
-                yield return ElementConvention<Viewbox>("Loaded", Viewbox.DataContextProperty, (c, o) => c.DataContext = o, c => c.DataContext);
-                yield return ElementConvention<BulletDecorator>("Loaded", BulletDecorator.DataContextProperty, (c, o) => c.DataContext = o, c => c.DataContext);
+                yield return ElementConvention<DockPanel>("Loaded", DockPanel.VisibilityProperty, (c, o) => c.DataContext = o, c => c.DataContext);
+                yield return ElementConvention<UniformGrid>("Loaded", UniformGrid.VisibilityProperty, (c, o) => c.DataContext = o, c => c.DataContext);
+                yield return ElementConvention<WrapPanel>("Loaded", WrapPanel.VisibilityProperty, (c, o) => c.DataContext = o, c => c.DataContext);
+                yield return ElementConvention<Viewbox>("Loaded", Viewbox.VisibilityProperty, (c, o) => c.DataContext = o, c => c.DataContext);
+                yield return ElementConvention<BulletDecorator>("Loaded", BulletDecorator.VisibilityProperty, (c, o) => c.DataContext = o, c => c.DataContext);
                 yield return ElementConvention<Slider>("ValueChanged", Slider.ValueProperty, (c, o) => c.Value = (double)o, c => c.Value);
                 yield return ElementConvention<Expander>("Expanded", Expander.IsExpandedProperty, (c, o) => c.IsExpanded = (bool)o, c => c.IsExpanded);
-                yield return ElementConvention<UserControl>("Loaded", UserControl.ContentProperty, (c, o) => c.DataContext = o, c => c.DataContext);
+                yield return ElementConvention<UserControl>("Loaded", UserControl.VisibilityProperty, (c, o) => c.DataContext = o, c => c.DataContext);
                 yield return ElementConvention<Window>("Loaded", Window.DataContextProperty, (c, o) => c.DataContext = o, c => c.DataContext);
                 yield return ElementConvention<StatusBar>("Loaded", StatusBar.ItemsSourceProperty, (c, o) => c.DataContext = o, c => c.DataContext);
                 yield return ElementConvention<ToolBar>("Loaded", ToolBar.ItemsSourceProperty, (c, o) => c.DataContext = o, c => c.DataContext);
-                yield return ElementConvention<ToolBarTray>("Loaded", ToolBarTray.DataContextProperty, (c, o) => c.DataContext = o, c => c.DataContext);
+                yield return ElementConvention<ToolBarTray>("Loaded", ToolBarTray.VisibilityProperty, (c, o) => c.DataContext = o, c => c.DataContext);
                 yield return ElementConvention<TreeView>("SelectedItemChanged", TreeView.ItemsSourceProperty, (c, o) => c.ItemsSource = (IEnumerable)o, c => c.SelectedItem);
                 yield return ElementConvention<TabControl>("SelectionChanged", TabControl.ItemsSourceProperty, (c, o) => c.ItemsSource = (IEnumerable)o, c => c.SelectedItem);
                 yield return ElementConvention<TabItem>("DataContextChanged", TabItem.ContentProperty, (c, o) => c.DataContext = o, c => c.DataContext);
@@ -205,7 +205,7 @@ namespace Caliburn.PresentationFramework.Conventions
                 yield return ElementConvention<ComboBox>("SelectionChanged", ComboBox.ItemsSourceProperty, (c, o) => c.ItemsSource = (IEnumerable)o, c => c.IsEditable ? c.Text : c.SelectedItem);
 #else
                 yield return ElementConvention<HyperlinkButton>("Click", HyperlinkButton.ContentProperty, (c, o) => c.DataContext = o, c => c.DataContext);
-                yield return ElementConvention<UserControl>("Loaded", null, (c, o) => c.DataContext = o, c => c.DataContext);
+                yield return ElementConvention<UserControl>("Loaded", UserControl.VisibilityProperty, (c, o) => c.DataContext = o, c => c.DataContext);
                 yield return ElementConvention<ListBox>("SelectionChanged", ListBox.ItemsSourceProperty, (c, o) => c.ItemsSource = (IEnumerable) o, c => c.SelectedItem);
                 yield return ElementConvention<ComboBox>("SelectionChanged", ComboBox.ItemsSourceProperty, (c, o) => c.ItemsSource = (IEnumerable) o, c => c.SelectedItem);
 #endif
@@ -219,11 +219,18 @@ namespace Caliburn.PresentationFramework.Conventions
                 yield return ElementConvention<TextBox>("TextChanged", TextBox.TextProperty, (c, o) => c.Text = o.SafeToString(), c => c.Text);
                 yield return ElementConvention<PasswordBox>("PasswordChanged", PasswordBox.DataContextProperty, (c, o) => c.Password = o.SafeToString(), c => c.Password);
                 yield return ElementConvention<TextBlock>("DataContextChanged", TextBlock.TextProperty, (c, o) => c.Text = o.SafeToString(), c => c.Text);
-                yield return ElementConvention<StackPanel>("Loaded", StackPanel.DataContextProperty, (c, o) => c.DataContext = o, c => c.DataContext);
-                yield return ElementConvention<Grid>("Loaded", Grid.DataContextProperty, (c, o) => c.DataContext = o, c => c.DataContext);
-                yield return ElementConvention<Border>("Loaded", Border.DataContextProperty, (c, o) => c.DataContext = o, c => c.DataContext);
-                yield return ElementConvention<ContentControl>("Loaded", ContentControl.ContentProperty, (c, o) => c.DataContext = o, c => c.DataContext);
+                yield return ElementConvention<StackPanel>("Loaded", StackPanel.VisibilityProperty, (c, o) => c.DataContext = o, c => c.DataContext);
+                yield return ElementConvention<Grid>("Loaded", Grid.VisibilityProperty, (c, o) => c.DataContext = o, c => c.DataContext);
+                yield return ElementConvention<Border>("Loaded", Border.VisibilityProperty, (c, o) => c.DataContext = o, c => c.DataContext);
                 yield return ElementConvention<ItemsControl>("Loaded", ItemsControl.ItemsSourceProperty, (c, o) => c.DataContext = o, c => c.DataContext);
+                yield return new DefaultElementConvention<ContentControl>("Loaded", ContentControl.ContentProperty, (c, o) => c.DataContext = o, c => c.DataContext,
+                    c =>{
+#if !SILVERLIGHT
+                        return c.ContentTemplate == null && c.ContentTemplateSelector == null;
+#else
+                        return c.ContentTemplate == null;
+#endif
+                    });
         }
 
         /// <summary>
@@ -236,13 +243,15 @@ namespace Caliburn.PresentationFramework.Conventions
         /// <param name="getter">The getter.</param>
         /// <returns>The element convention.</returns>
         protected virtual IElementConvention ElementConvention<T>(string defaultEvent, DependencyProperty bindableProperty, Action<T, object> setter, Func<T, object> getter)
+            where T : DependencyObject
         {
             return new DefaultElementConvention<T>(
                 _eventHandlerFactory,
                 defaultEvent,
                 bindableProperty,
                 setter,
-                getter
+                getter,
+                null
                 );
         }
     }

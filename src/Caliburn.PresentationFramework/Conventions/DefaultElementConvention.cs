@@ -11,12 +11,14 @@ namespace Caliburn.PresentationFramework.Conventions
     /// </summary>
     /// <typeparam name="T">The type of element the convention applies to.</typeparam>
     public class DefaultElementConvention<T> : IElementConvention
+        where T : DependencyObject
     {
         private readonly IEventHandlerFactory _eventHandlerFactory;
         private readonly string _defaultEventName;
         private readonly Action<T, object> _setter;
         private readonly Func<T, object> _getter;
         private readonly DependencyProperty _bindableProperty;
+        private readonly Func<T, bool> _shouldOverrideBindableProperty;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="DefaultElementConvention&lt;T&gt;"/> class.
@@ -26,13 +28,15 @@ namespace Caliburn.PresentationFramework.Conventions
         /// <param name="setter">The setter.</param>
         /// <param name="getter">The getter.</param>
         /// <param name="bindableProperty">The bindable property.</param>
-        public DefaultElementConvention(IEventHandlerFactory eventHandlerFactory, string defaultEventName, DependencyProperty bindableProperty, Action<T, object> setter, Func<T, object> getter)
+        /// <param name="shouldOverrideBindableProperty">Custom logic for determining whether the bindable property should be replaced by View.Model.</param>
+        public DefaultElementConvention(IEventHandlerFactory eventHandlerFactory, string defaultEventName, DependencyProperty bindableProperty, Action<T, object> setter, Func<T, object> getter, Func<T, bool> shouldOverrideBindableProperty)
         {
             _eventHandlerFactory = eventHandlerFactory;
             _defaultEventName = defaultEventName;
             _bindableProperty = bindableProperty;
             _setter = setter;
             _getter = getter;
+            _shouldOverrideBindableProperty = shouldOverrideBindableProperty;
         }
 
         /// <summary>
@@ -42,8 +46,19 @@ namespace Caliburn.PresentationFramework.Conventions
         /// <param name="bindableProperty">The bindable property.</param>
         /// <param name="setter">The setter.</param>
         /// <param name="getter">The getter.</param>
+        /// <param name="shouldOverrideBindableProperty">Custom logic for determining whether the bindable property should be replaced by View.Model.</param>
+        public DefaultElementConvention(string defaultEventName, DependencyProperty bindableProperty, Action<T, object> setter, Func<T, object> getter, Func<T, bool> shouldOverrideBindableProperty)
+            : this(ServiceLocator.Current.GetInstance<IEventHandlerFactory>(), defaultEventName, bindableProperty, setter, getter, shouldOverrideBindableProperty) { }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="DefaultElementConvention&lt;T&gt;"/> class.
+        /// </summary>
+        /// <param name="defaultEventName">Default name of the event.</param>
+        /// <param name="bindableProperty">The bindable property.</param>
+        /// <param name="setter">The setter.</param>
+        /// <param name="getter">The getter.</param>
         public DefaultElementConvention(string defaultEventName, DependencyProperty bindableProperty, Action<T, object> setter, Func<T, object> getter)
-            : this(ServiceLocator.Current.GetInstance<IEventHandlerFactory>(), defaultEventName, bindableProperty, setter, getter) {}
+            : this(ServiceLocator.Current.GetInstance<IEventHandlerFactory>(), defaultEventName, bindableProperty, setter, getter, null) {}
 
         /// <summary>
         /// Gets the type of the element to which the conventions apply.
@@ -83,11 +98,21 @@ namespace Caliburn.PresentationFramework.Conventions
         }
 
         /// <summary>
+        /// Inidicates whether or not the BindableProperty should be overriden by the View.Model property.
+        /// </summary>
+        /// <param name="element">The element.</param>
+        /// <returns></returns>
+        public bool ShouldOverrideBindablePropertyWithViewModel(DependencyObject element)
+        {
+            return _shouldOverrideBindableProperty != null && _shouldOverrideBindableProperty((T)element);
+        }
+
+        /// <summary>
         /// Gets the default value from the target.
         /// </summary>
         /// <param name="target">The target object.</param>
         /// <returns>The value.</returns>
-        public object GetValue(object target)
+        public object GetValue(DependencyObject target)
         {
             return _getter((T)target);
         }
@@ -97,7 +122,7 @@ namespace Caliburn.PresentationFramework.Conventions
         /// </summary>
         /// <param name="target">The target.</param>
         /// <param name="value">The value.</param>
-        public void SetValue(object target, object value)
+        public void SetValue(DependencyObject target, object value)
         {
             _setter((T)target, value);
         }

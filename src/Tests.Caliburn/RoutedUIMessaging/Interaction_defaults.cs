@@ -19,7 +19,8 @@
                 "Click",
                 Button.ContentProperty,
                 (c, v) => c.DataContext = v,
-                c => c.DataContext
+                c => c.DataContext,
+                null
                 );
         }
 

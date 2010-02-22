@@ -34,7 +34,8 @@
                 "TextChanged",
                 TextBox.TextProperty,
                 (c, v) => c.Text = v.ToString(),
-                c => c.Text
+                c => c.Text,
+                null
                 );
 
             _conventionManager.AddElementConvention(defaults);
@@ -52,7 +53,8 @@
                 "Click",
                 ButtonBase.ContentProperty,
                 (c, v) => c.DataContext = v,
-                c => c.DataContext
+                c => c.DataContext,
+                null
                 );
 
             _conventionManager.AddElementConvention(defaults);
