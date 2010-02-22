@@ -37,6 +37,7 @@
 
   <target name="all" depends="config">
     <call target="platform-net35"/>
+    <call target="platform-net40" />
     <call target="platform-silverlight20"/>
     <call target="platform-silverlight30"/>
     <call target="platform-silverlight40"/>
@@ -113,6 +114,15 @@
 		<property name="current.path.lib" value="${path.lib}/net-3.5" />
 	</target>
 
+  <target name="config-platform-net40">
+    <property name="nant.settings.currentframework" value="net-4.0"/>
+    <property name="build.platform" value="net-4.0"/>
+    <property name="build.defines" value="${global.build.defines},NET,NET_40"/>
+    <property name="current.path.bin" value="${path.bin}/net-4.0/${build.config}"/>
+    <property name="current.path.test" value="${path.bin}/net-4.0/tests" />
+    <property name="current.path.lib" value="${path.lib}/net-4.0" />
+  </target>
+
 	<target name="config-platform-silverlight20">
 		<property name="nant.settings.currentframework" value="silverlight-2.0"/>
 		<property name="build.platform" value="silverlight-2.0"/>
@@ -177,6 +187,38 @@
 			<echo message="The .NET Framework v3.5 compiler is required. Skipping platform."/>
 		</if>
 	</target>
+
+  <target name="platform-net40" depends="config">
+    <if test="${framework::exists('net-4.0')}">
+      <echo message="Building Caliburn ${build.version} for .NET Framework v4.0."/>
+      <call target="config-platform-net40"/>
+      <copy todir="${current.path.bin}">
+        <fileset basedir="${current.path.lib}">
+          <include name="*.dll"/>
+          <include name="*.xml"/>
+        </fileset>
+      </copy>
+      <call target="core"/>
+      <call target="presentationframework"/>
+      <call target="modelframework"/>
+      <call target="shellframework"/>
+      <call target="testability"/>
+      <call target="windsor"/>
+      <call target="dynamicproxy"/>
+      <call target="spring"/>
+      <call target="structuremap"/>
+      <call target="unity"/>
+      <call target="mef"/>
+      <call target="ninject"/>
+      <call target="autofac"/>
+      <call target="prism"/>
+      <!--<call target="test" />-->
+      <call target="package-platform"/>
+    </if>
+    <if test="${not(framework::exists('net-4.0'))}">
+      <echo message="The .NET Framework v4.0 compiler is required. Skipping platform."/>
+    </if>
+  </target>
 
 	<target name="platform-silverlight20" depends="config">
 		<if test="${framework::exists('silverlight-2.0')}">
@@ -299,6 +341,7 @@
 				<include name="PresentationCore.dll"/>
 				<include name="PresentationFramework.dll"/>
 				<include name="WindowsBase.dll"/>
+        <include name="System.Xaml.dll" />
 				<!--Silverlight-->
 				<include name="System.Windows.dll" />
 				<include name="System.Windows.Browser.dll" />
@@ -332,6 +375,7 @@
         <include name="PresentationCore.dll"/>
         <include name="PresentationFramework.dll"/>
         <include name="WindowsBase.dll"/>
+        <include name="System.Xaml.dll" />
         <!--Silverlight-->
         <include name="System.Windows.dll" />
         <include name="System.Windows.Browser.dll" />
@@ -363,6 +407,7 @@
 				<include name="PresentationCore.dll"/>
 				<include name="PresentationFramework.dll"/>
 				<include name="WindowsBase.dll"/>
+        <include name="System.Xaml.dll" />
 				<!--Silverlight-->
 				<include name="System.Windows.dll" />
 			</references>
@@ -393,6 +438,7 @@
 				<include name="PresentationCore.dll"/>
 				<include name="PresentationFramework.dll"/>
 				<include name="WindowsBase.dll"/>
+        <include name="System.Xaml.dll" />
 				<!--Silverlight-->
 				<include name="System.Windows.dll" />
 			</references>
@@ -619,6 +665,7 @@
         <include name="PresentationCore.dll"/>
         <include name="PresentationFramework.dll"/>
         <include name="WindowsBase.dll"/>
+        <include name="System.Xaml.dll" />
         <!--Silverlight-->
         <include name="System.Windows.dll" />
         <include name="System.Windows.Controls.dll" />
@@ -695,6 +742,7 @@
 				<include name="PresentationCore.dll"/>
 				<include name="PresentationFramework.dll"/>
 				<include name="WindowsBase.dll"/>
+        <include name="System.Xaml.dll" />
 				<!--Silverlight-->
 				<include name="System.Windows.dll" />
 			</references>
