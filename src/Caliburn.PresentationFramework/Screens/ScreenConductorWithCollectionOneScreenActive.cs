@@ -207,15 +207,8 @@
                                 return;
                             }
 
-                            int index = _screens.IndexOf(_activeScreen);
-
-                            _screens.Remove(_activeScreen);
-                            _activeScreen.Deactivate();
-                            _activeScreen.Shutdown();
-
-                            var node = _activeScreen as IHierarchicalScreen;
-                            if (node != null) node.Parent = null;
-
+                            var lastActive = _activeScreen;
+                            int index = _screens.IndexOf(lastActive);
                             var next = DetermineNextScreenToActivate(index);
 
                             if (next != null)
@@ -225,6 +218,13 @@
                             }
 
                             ChangeActiveScreenCore(next);
+
+                            _screens.Remove(lastActive);
+                            lastActive.Deactivate();
+                            lastActive.Shutdown();
+
+                            var node = lastActive as IHierarchicalScreen;
+                            if (node != null) node.Parent = null;
 
                             completed(true);
                         });
@@ -239,9 +239,9 @@
                 {
                     var toRemoveAt = lastIndex - 1;
 
-                    if (toRemoveAt == -1 && _screens.Count > 0)
-                        return _screens[0];
-                    if (toRemoveAt > -1 && toRemoveAt < _screens.Count)
+                    if (toRemoveAt == -1 && _screens.Count > 1)
+                        return _screens[1];
+                    if (toRemoveAt > -1 && toRemoveAt < _screens.Count - 1)
                         return _screens[toRemoveAt];
                     return null;
                 }
