@@ -12,10 +12,10 @@ namespace Tests.Caliburn.Adapters
     {
         protected override IServiceLocator CreateServiceLocator()
         {
-            Registry registry = new Registry();
-            registry.ForRequestedType<ILogger>().TheDefaultIsConcreteType<AdvancedLogger>();
-            registry.InstanceOf<ILogger>().IsThis(new SimpleLogger()).WithName(typeof(SimpleLogger).FullName);
-            registry.InstanceOf<ILogger>().IsThis(new AdvancedLogger()).WithName(typeof(AdvancedLogger).FullName);
+            var registry = new Registry();
+            registry.For<ILogger>().Use<AdvancedLogger>();
+            registry.For<ILogger>().Use(new SimpleLogger()).Named(typeof(SimpleLogger).FullName);
+            registry.For<ILogger>().Use(new AdvancedLogger()).Named(typeof(AdvancedLogger).FullName);
             IContainer container = new Container(registry);
 
             return new StructureMapAdapter(container);

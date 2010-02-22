@@ -7,8 +7,6 @@
     using Core.Behaviors;
     using Core.IoC;
     using global::StructureMap;
-    using global::StructureMap.Attributes;
-    using global::StructureMap.Pipeline;
     using Microsoft.Practices.ServiceLocation;
     using IContainer=Core.IoC.IContainer;
     using Instance=Core.IoC.Instance;
@@ -30,10 +28,10 @@
         {
             _container = container;
 
-            _container.Configure(reg => reg.InstanceOf<IServiceLocator>().IsThis(this));
-            _container.Configure(reg => reg.InstanceOf<IRegistry>().IsThis(this));
-            _container.Configure(reg => reg.InstanceOf<IContainer>().IsThis(this));
-            _container.Configure(reg => reg.InstanceOf<global::StructureMap.IContainer>().IsThis(_container));
+            _container.Configure(reg => reg.For<IServiceLocator>().Add(this));
+            _container.Configure(reg => reg.For<IRegistry>().Add(this));
+            _container.Configure(reg => reg.For<IContainer>().Add(this));
+            _container.Configure(reg => reg.For<global::StructureMap.IContainer>().Add(_container));
 
             AddRegistrationHandler<Singleton>(HandleSingleton);
             AddRegistrationHandler<PerRequest>(HandlePerRequest);
@@ -107,9 +105,9 @@
         {
             Container.Configure(
                 x =>{
-                    x.ForRequestedType<IProxyFactory>()
-                        .TheDefaultIsConcreteType<T>()
-                        .CacheBy(InstanceScope.Singleton);
+                    x.For<IProxyFactory>()
+                        .Singleton()
+                        .Use<T>();
 
                     x.IfTypeMatches(type => type.ShouldCreateProxy())
                         .InterceptWith((context, instance) =>{
@@ -131,60 +129,51 @@
         {
             if(!singleton.HasName())
                 _exp.For(singleton.Service)
-                    .CacheBy(InstanceScope.Singleton)
-                    .TheDefaultIsConcreteType(singleton.Implementation);
+                    .Singleton()
+                    .Use(singleton.Implementation);
             else if(!singleton.HasService())
                 _exp.For(typeof(object))
-                    .CacheBy(InstanceScope.Singleton)
-                    .TheDefaultIsConcreteType(singleton.Implementation)
-                    .WithName(singleton.Name);
+                    .Singleton()
+                    .Use(singleton.Implementation)
+                    .Named(singleton.Name);
             else
                 _exp.For(singleton.Service)
-                    .CacheBy(InstanceScope.Singleton)
-                    .TheDefaultIsConcreteType(singleton.Implementation)
-                    .WithName(singleton.Name);
+                    .Singleton()
+                    .Use(singleton.Implementation)
+                    .Named(singleton.Name);
         }
 
         private void HandlePerRequest(PerRequest perRequest)
         {
             if (!perRequest.HasName())
                 _exp.For(perRequest.Service)
-                    .CacheBy(InstanceScope.PerRequest)
-                    .TheDefaultIsConcreteType(perRequest.Implementation);
+                    .LifecycleIs(InstanceScope.PerRequest)
+                    .Use(perRequest.Implementation);
             else if (!perRequest.HasService())
                 _exp.For(typeof(object))
-                    .CacheBy(InstanceScope.PerRequest)
-                    .TheDefaultIsConcreteType(perRequest.Implementation)
-                    .WithName(perRequest.Name);
+                    .LifecycleIs(InstanceScope.PerRequest)
+                    .Use(perRequest.Implementation)
+                    .Named(perRequest.Name);
             else
                 _exp.For(perRequest.Service)
-                    .CacheBy(InstanceScope.PerRequest)
-                    .TheDefaultIsConcreteType(perRequest.Implementation)
-                    .WithName(perRequest.Name);
+                    .LifecycleIs(InstanceScope.PerRequest)
+                    .Use(perRequest.Implementation)
+                    .Named(perRequest.Name);
         }
 
         private void HandleInstance(Instance instance)
         {
-            if (!instance.HasName())
+            if(!instance.HasName())
                 _exp.For(instance.Service)
-                    .Add(new CustomInstance(instance.Implementation));
-            else if (!instance.HasService())
+                    .Use(instance.Implementation);
+            else if(!instance.HasService())
                 _exp.For(typeof(object))
-                    .Add(new CustomInstance(instance.Implementation).WithName(instance.Name));
+                    .Use(instance.Implementation)
+                    .Named(instance.Name);
             else
                 _exp.For(instance.Service)
-                    .Add(new CustomInstance(instance.Implementation).WithName(instance.Name));
-        }
-
-        private class CustomInstance : LiteralInstance
-        {
-            public CustomInstance(object anObject) : 
-                base(anObject) {}
-
-            protected override bool canBePartOfPluginFamily(global::StructureMap.Graph.PluginFamily family)
-            {
-                return true;
-            }
+                    .Use(instance.Implementation)
+                    .Named(instance.Name);
         }
     }
 }
