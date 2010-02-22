@@ -54,6 +54,7 @@ V1.1 Release
 -Fixed some bugs in the LOB samples.
 -Added Hyperlink/HyerlinkButton element defaults.
 -Update StructureMap to version 2.6.1.
+-Updated Windsor to version 2.1.1.
 
 V1.1 Release Candidate
 -Added pre-initialization hooks to CaliburnApplication via Marco Amendola's patch.
