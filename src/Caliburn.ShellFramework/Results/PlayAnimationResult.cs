@@ -15,6 +15,11 @@
             _animationKey = animationKey;
         }
 
+        public string AnimationKey
+        {
+            get { return _animationKey; }
+        }
+
         public PlayAnimationResult Wait()
         {
             _wait = true;

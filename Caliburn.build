@@ -432,6 +432,7 @@
 				<include name="System.Core.dll"/>
 				<include name="Caliburn.Core.dll"/>
 				<include name="Caliburn.PresentationFramework.dll"/>
+        <include name="Caliburn.ShellFramework.dll"/>
 				<include name="Caliburn.ModelFramework.dll"/>
         <include name="Microsoft.Practices.ServiceLocation.dll"/>
 				<!--WPF-->
@@ -714,6 +715,7 @@
 				<include name="Caliburn.ModelFramework.dll"/>
 				<include name="Caliburn.Testability.dll"/>
         <include name="Microsoft.Practices.ServiceLocation.dll"/>
+        <include name="Caliburn.ShellFramework.dll"/>
 				<!--Adapters-->
 				<include name="Caliburn.Windsor.dll"/>
 				<include name="Castle.Core.dll"/>

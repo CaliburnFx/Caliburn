@@ -247,6 +247,7 @@
     <Compile Include="Testability\When_leveraging_enumerator_settings.cs" />
     <Compile Include="Testability\When_looking_for_ambiguities.cs" />
     <Compile Include="Testability\When_testing_basic_binding.cs" />
+    <Compile Include="Testability\When_testing_IResult_enumerables.cs" />
     <Compile Include="Testability\When_testing_that_a_scenario_affects_change_notification.cs" />
     <Compile Include="Testability\When_testing_that_properties_implement_change_notification.cs" />
     <Compile Include="Testability\When_testing_data_templates.cs" />
@@ -260,6 +261,10 @@
     <ProjectReference Include="..\Caliburn.Autofac\Caliburn.Autofac.csproj">
       <Project>{AFBDDB74-139F-4C7D-AC94-99C5173F76C7}</Project>
       <Name>Caliburn.Autofac</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Caliburn.ShellFramework\Caliburn.ShellFramework.csproj">
+      <Project>{1A4EFC27-E9C2-41D5-A801-58854CA50F86}</Project>
+      <Name>Caliburn.ShellFramework</Name>
     </ProjectReference>
     <ProjectReference Include="..\Caliburn.Windsor\Caliburn.Windsor.csproj">
       <Project>{1E9926A2-E544-44AE-A602-2F9EC3D069A8}</Project>

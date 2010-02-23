@@ -8,8 +8,7 @@
     /// </summary>
     public class SequentialResult : IResult
     {
-        private readonly IEnumerable<IResult> _children;
-        private IEnumerator<IResult> _enumerator;
+        private readonly IEnumerator<IResult> _enumerator;
         private ResultExecutionContext _context;
 
         /// <summary>
@@ -18,7 +17,7 @@
         /// <param name="children">The children.</param>
         public SequentialResult(IEnumerable<IResult> children)
         {
-            _children = children;
+            _enumerator = children.GetEnumerator();
         }
 
         /// <summary>
@@ -27,23 +26,12 @@
         public event EventHandler<ResultCompletionEventArgs> Completed = delegate { };
 
         /// <summary>
-        /// Gets the children.
-        /// </summary>
-        /// <value>The children.</value>
-        public IEnumerable<IResult> Children
-        {
-            get { return _children; }
-        }
-
-        /// <summary>
         /// Executes the result within the specified context.
         /// </summary>
         /// <param name="context">The context.</param>
         public void Execute(ResultExecutionContext context)
         {
             _context = context;
-            _enumerator = _children.GetEnumerator();
-
             ChildCompleted(null, new ResultCompletionEventArgs());
         }
 
@@ -85,9 +73,6 @@
 
         private void OnComplete(Exception error, bool wasCancelled) 
         {
-            _enumerator = null;
-            _context = null;
-
             Completed(this, new ResultCompletionEventArgs{ Error = error, WasCancelled = wasCancelled});
         }
     }
