@@ -82,7 +82,7 @@
     <Compile Include="Results\FocusResult.cs" />
     <Compile Include="Results\ResultExtensions.cs" />
     <Compile Include="Results\IOpenResult.cs" />
-    <Compile Include="Results\LoadingResult.cs" />
+    <Compile Include="Results\BusyResult.cs" />
     <Compile Include="Results\MessageBoxResult.cs" />
     <Compile Include="Results\OpenChildResult.cs" />
     <Compile Include="Results\OpenDialogResult.cs" />
@@ -93,9 +93,8 @@
     <Compile Include="Results\SaveFileDialogResult.silverlight.cs" />
     <Compile Include="Results\Show.cs" />
     <Compile Include="Results\ShowCommonDialogResult.wpf.cs" />
-    <Compile Include="Services\DefaultLoader.cs" />
-    <Compile Include="Services\ILoader.cs" />
-    <Compile Include="Services\LoadScreenViewModel.cs" />
+    <Compile Include="Services\DefaultBusyService.cs" />
+    <Compile Include="Services\IBusyService.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Caliburn.Core\Caliburn.Core.csproj">

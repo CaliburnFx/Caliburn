@@ -43,7 +43,7 @@
                     .Configured(x =>{
                         x.AddNamespaceAlias("Caliburn.ShellFramework.Questions",
                                             "Caliburn.Silverlight.NavigationShell.Shell.Views");
-                        x.AddNamespaceAlias("Caliburn.ShellFramework.Services",
+                        x.AddNamespaceAlias("Caliburn.Silverlight.NavigationShell.Framework",
                                             "Caliburn.Silverlight.NavigationShell.Shell.Views");
                     });
         }

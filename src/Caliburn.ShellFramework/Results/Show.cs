@@ -79,19 +79,19 @@
 
 #endif
 
-        public static LoadingResult Loader()
+        public static BusyResult Busy()
         {
-            return new LoadingResult(true, "Loading...");
+            return new BusyResult(true, null);
         }
 
-        public static LoadingResult Loader(string message)
+        public static BusyResult Busy(object busyViewModel)
         {
-            return new LoadingResult(true, message);
+            return new BusyResult(true, busyViewModel);
         }
 
-        public static LoadingResult NoLoader()
+        public static BusyResult NotBusy()
         {
-            return new LoadingResult(false, null);
+            return new BusyResult(false, null);
         }
 
         public static FocusResult Focus(object model)

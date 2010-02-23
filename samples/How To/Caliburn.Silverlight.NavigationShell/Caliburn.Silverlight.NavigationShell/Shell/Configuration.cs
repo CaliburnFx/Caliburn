@@ -23,7 +23,7 @@
             yield return Singleton<IResourceManager, DefaultResourceManager>();
             yield return Singleton<IStateManager, DeepLinkStateManager>();
             yield return Singleton<IShell, ShellViewModel>();
-            yield return Singleton<ILoader, DefaultLoader>();
+            yield return Singleton<IBusyService, DefaultBusyService>();
 
             var moduleTypes = from type in Assembly.GetExecutingAssembly().GetExportedTypes()
                               where typeof(ITaskBarItem).IsAssignableFrom(type)

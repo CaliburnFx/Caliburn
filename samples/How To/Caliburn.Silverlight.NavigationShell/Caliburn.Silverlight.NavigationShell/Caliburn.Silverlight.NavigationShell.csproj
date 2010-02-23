@@ -105,8 +105,8 @@
       <DependentUpon>Spinner.xaml</DependentUpon>
     </Compile>
     <Compile Include="Shell\ViewModels\ShellViewModel.cs" />
-    <Compile Include="Shell\Views\LoadScreenView.xaml.cs">
-      <DependentUpon>LoadScreenView.xaml</DependentUpon>
+    <Compile Include="Shell\Views\BusyView.xaml.cs">
+      <DependentUpon>BusyView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Shell\Views\QuestionDialogView.xaml.cs">
       <DependentUpon>QuestionDialogView.xaml</DependentUpon>
@@ -138,7 +138,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:MarkupCompilePass1</Generator>
     </Page>
-    <Page Include="Shell\Views\LoadScreenView.xaml">
+    <Page Include="Shell\Views\BusyView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:MarkupCompilePass1</Generator>
     </Page>

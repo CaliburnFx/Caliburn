@@ -43,14 +43,14 @@
         {
             if(_actualEntryPoint == null)
             {
-                yield return Show.Loader();
+                yield return Show.Busy(new BusyScreen());
 
                 var request = new WebClientResult(GetUri(_assemblyName));
                 yield return request;
 
                 LoadAndConfigureModule(request.Stream);
 
-                yield return Show.NoLoader();
+                yield return Show.NotBusy();
             }
 
             foreach(var result in _actualEntryPoint.Enter())
@@ -61,7 +61,7 @@
 
         public bool OpenFailed(Exception exception)
         {
-            Show.NoLoader().Execute();
+            Show.NotBusy().Execute();
             Show.MessageBox("There was a problem downloading the module.", "Error").Execute();
 
             return true;

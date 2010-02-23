@@ -64,6 +64,7 @@
     <Reference Include="System.Windows.Browser" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="BusyScreen.cs" />
     <Compile Include="IEntryPoint.cs" />
     <Compile Include="ITaskBarItem.cs" />
     <Compile Include="LazyTaskBarItem.cs" />

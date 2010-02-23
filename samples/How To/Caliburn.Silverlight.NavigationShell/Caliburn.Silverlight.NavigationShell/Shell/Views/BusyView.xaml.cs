@@ -2,9 +2,9 @@
 {
     using ShellFramework.Controls;
 
-    public partial class LoadScreenView : DialogChrome
+    public partial class BusyView : DialogChrome
     {
-        public LoadScreenView()
+        public BusyView()
         {
             InitializeComponent();
         }
