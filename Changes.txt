@@ -56,6 +56,8 @@ V1.1 Release
 -Update StructureMap to version 2.6.1.
 -Updated Windsor to version 2.1.1.
 -Added official support for .NET 4.0.
+-Fixed a bug in MultiPresenterManager for .NET 4.0.
+-Updated to MEF Preview 9.
 
 V1.1 Release Candidate
 -Added pre-initialization hooks to CaliburnApplication via Marco Amendola's patch.

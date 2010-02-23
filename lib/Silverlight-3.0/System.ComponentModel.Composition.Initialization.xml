@@ -1,0 +1,306 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>System.ComponentModel.Composition.Initialization</name>
+    </assembly>
+    <members>
+        <member name="T:System.ComponentModel.Composition.Hosting.DeploymentCatalog">
+            <summary>
+            Implements a MEF catalog that supports Asynchronous download of Silverlast Xap files.
+            </summary>
+        </member>
+        <member name="M:System.ComponentModel.Composition.Hosting.DeploymentCatalog.#ctor">
+            <summary>
+            Construct a Deployment catalog with the parts from the main Xap.
+            </summary>
+        </member>
+        <member name="M:System.ComponentModel.Composition.Hosting.DeploymentCatalog.#ctor(System.String)">
+            <summary>
+            Construct a Deployment catalog with a string form relative uri.
+            </summary>
+            <value>
+                A relative Uri to the Download Xap file
+                <see cref="T:System.ComponentModel.Composition.Hosting.DeploymentCatalog"/>.
+            </value>
+            <exception cref="T:System.ArgumentException">
+                The argument is null or an empty string.
+            </exception>
+        </member>
+        <member name="M:System.ComponentModel.Composition.Hosting.DeploymentCatalog.#ctor(System.Uri)">
+            <summary>
+            Construct a Deployment catalog with the parts from uri.
+            </summary>
+            <value>
+                A Uri to the Download Xap file
+                <see cref="T:System.Uri"/>.
+            </value>
+            <exception cref="T:System.ArgumentException">
+                The argument is null.
+            </exception>
+        </member>
+        <member name="M:System.ComponentModel.Composition.Hosting.DeploymentCatalog.DiscoverParts(System.Collections.Generic.IEnumerable{System.Reflection.Assembly})">
+            <summary>
+            </summary>
+            <param name="assemblies">
+            </param>
+            <exception cref="T:System.ObjectDisposedException">
+                The <see cref="T:System.ComponentModel.Composition.Hosting.DeploymentCatalog"/> has been disposed of.
+            </exception>
+        </member>
+        <member name="M:System.ComponentModel.Composition.Hosting.DeploymentCatalog.GetExports(System.ComponentModel.Composition.Primitives.ImportDefinition)">
+            <summary>
+                Returns the export definitions that match the constraint defined by the specified definition.
+            </summary>
+            <param name="definition">
+                The <see cref="T:System.ComponentModel.Composition.Primitives.ImportDefinition"/> that defines the conditions of the 
+                <see cref="T:System.ComponentModel.Composition.Primitives.ExportDefinition"/> objects to return.
+            </param>
+            <returns>
+                An <see cref="T:System.Collections.Generic.IEnumerable`1"/> of <see cref="T:System.Tuple`2"/> containing the 
+                <see cref="T:System.ComponentModel.Composition.Primitives.ExportDefinition"/> objects and their associated 
+                <see cref="T:System.ComponentModel.Composition.Primitives.ComposablePartDefinition"/> for objects that match the constraint defined 
+                by <paramref name="definition"/>.
+            </returns>
+            <exception cref="T:System.ArgumentNullException">
+                <paramref name="definition"/> is <see langword="null"/>.
+            </exception>
+            <exception cref="T:System.ObjectDisposedException">
+                The <see cref="T:System.ComponentModel.Composition.Hosting.DeploymentCatalog"/> has been disposed of.
+            </exception>
+        </member>
+        <member name="M:System.ComponentModel.Composition.Hosting.DeploymentCatalog.CancelAsync">
+            <summary>
+            Cancel the async operation.
+            </summary>
+        </member>
+        <member name="M:System.ComponentModel.Composition.Hosting.DeploymentCatalog.DownloadAsync">
+            <summary>
+            Begin the asynchronous download.
+            </summary>
+        </member>
+        <member name="M:System.ComponentModel.Composition.Hosting.DeploymentCatalog.OnChanged(System.ComponentModel.Composition.Hosting.ComposablePartCatalogChangeEventArgs)">
+            <summary>
+                Raises the <see cref="E:System.ComponentModel.Composition.Hosting.INotifyComposablePartCatalogChanged.Changed"/> event.
+            </summary>
+            <param name="e">
+                An <see cref="T:System.ComponentModel.Composition.Hosting.ComposablePartCatalogChangeEventArgs"/> containing the data for the event.
+            </param>
+        </member>
+        <member name="M:System.ComponentModel.Composition.Hosting.DeploymentCatalog.OnChanging(System.ComponentModel.Composition.Hosting.ComposablePartCatalogChangeEventArgs)">
+            <summary>
+                Raises the <see cref="E:System.ComponentModel.Composition.Hosting.INotifyComposablePartCatalogChanged.Changing"/> event.
+            </summary>
+            <param name="e">
+                An <see cref="T:System.ComponentModel.Composition.Hosting.ComposablePartCatalogChangeEventArgs"/> containing the data for the event.
+            </param>
+        </member>
+        <member name="M:System.ComponentModel.Composition.Hosting.DeploymentCatalog.OnDownloadCompleted(System.ComponentModel.AsyncCompletedEventArgs)">
+            <summary>
+                Raises the <see cref="E:System.ComponentModel.Composition.Hosting.DeploymentCatalog.DownloadCompleted"/> event.
+            </summary>
+            <param name="e">
+                An <see cref="T:System.ComponentModel.AsyncCompletedEventArgs"/> containing the data for the event.
+            </param>
+        </member>
+        <member name="M:System.ComponentModel.Composition.Hosting.DeploymentCatalog.OnDownloadProgressChanged(System.Net.DownloadProgressChangedEventArgs)">
+            <summary>
+                Raises the <see cref="E:System.ComponentModel.Composition.Hosting.DeploymentCatalog.DownloadProgressChanged"/> event.
+            </summary>
+            <param name="e">
+                An <see cref="T:System.ComponentModel.ProgressChangedEventArgs"/> containing the data for the event.
+            </param>
+        </member>
+        <member name="E:System.ComponentModel.Composition.Hosting.DeploymentCatalog.Changed">
+            <summary>
+            Notify when the contents of the Catalog has changed.
+            </summary>
+        </member>
+        <member name="E:System.ComponentModel.Composition.Hosting.DeploymentCatalog.Changing">
+            <summary>
+            Notify when the contents of the Catalog is changing.
+            </summary>
+        </member>
+        <member name="E:System.ComponentModel.Composition.Hosting.DeploymentCatalog.DownloadCompleted">
+            <summary>
+            Notify when the download has been completed.
+            </summary>
+        </member>
+        <member name="E:System.ComponentModel.Composition.Hosting.DeploymentCatalog.DownloadProgressChanged">
+            <summary>
+            Notify when the contents of the Progress of the download has changed.
+            </summary>
+        </member>
+        <member name="P:System.ComponentModel.Composition.Hosting.DeploymentCatalog.WebClient">
+            <summary>
+            Retrieve or create the WebClient.
+            </summary>
+            <exception cref="T:System.ObjectDisposedException">
+                The <see cref="T:System.ComponentModel.Composition.Hosting.DeploymentCatalog"/> has been disposed of.
+            </exception>
+        </member>
+        <member name="P:System.ComponentModel.Composition.Hosting.DeploymentCatalog.Parts">
+            <summary>
+                Gets the part definitions of the Deployment catalog.
+            </summary>
+            <value>
+                A <see cref="T:System.Linq.IQueryable`1"/> of <see cref="T:System.ComponentModel.Composition.Primitives.ComposablePartDefinition"/> objects of the 
+                <see cref="T:System.ComponentModel.Composition.Hosting.DeploymentCatalog"/>.
+            </value>
+            <exception cref="T:System.ObjectDisposedException">
+                The <see cref="T:System.ComponentModel.Composition.Hosting.DeploymentCatalog"/> has been disposed of.
+            </exception>
+        </member>
+        <member name="P:System.ComponentModel.Composition.Hosting.DeploymentCatalog.Uri">
+            <summary>
+                Gets the Uri of this catalog
+            </summary>
+            <exception cref="T:System.ObjectDisposedException">
+                The <see cref="T:System.ComponentModel.Composition.Hosting.DeploymentCatalog"/> has been disposed of.
+            </exception>
+        </member>
+        <member name="T:System.ComponentModel.Composition.Strings">
+            <summary>
+              A strongly-typed resource class, for looking up localized strings, etc.
+            </summary>
+        </member>
+        <member name="P:System.ComponentModel.Composition.Strings.ResourceManager">
+            <summary>
+              Returns the cached ResourceManager instance used by this class.
+            </summary>
+        </member>
+        <member name="P:System.ComponentModel.Composition.Strings.Culture">
+            <summary>
+              Overrides the current thread's CurrentUICulture property for all
+              resource lookups using this strongly typed resource class.
+            </summary>
+        </member>
+        <member name="P:System.ComponentModel.Composition.Strings.ArgumentException_EmptyString">
+            <summary>
+              Looks up a localized string similar to &apos;{0}&apos; cannot be an empty string (&quot;&quot;)..
+            </summary>
+        </member>
+        <member name="P:System.ComponentModel.Composition.Strings.ArgumentException_TypeHasExports">
+            <summary>
+              Looks up a localized string similar to Cannot call SatisfyImports on a object of type &apos;{0}&apos; because it is marked with one or more ExportAttributes..
+            </summary>
+        </member>
+        <member name="P:System.ComponentModel.Composition.Strings.InvalidOperationException_DeploymentCatalogInvalidStateChange">
+            <summary>
+              Looks up a localized string similar to Catalog is trying to transition to an invalid state. Occurs when you call DownloadAsync more than once or CancelAsync is called at an incorrect time..
+            </summary>
+        </member>
+        <member name="P:System.ComponentModel.Composition.Strings.InvalidOperationException_ErrorReadingXap">
+            <summary>
+              Looks up a localized string similar to The package downloaded successfully but an error occurred while reading the contents of the package. See the inner exception for more details..
+            </summary>
+        </member>
+        <member name="P:System.ComponentModel.Composition.Strings.InvalidOperationException_GlobalContainerAlreadyInitialized">
+            <summary>
+              Looks up a localized string similar to The container has already been initialized either by another call to InitializeContainer or by someone causing the default container to be constructed. Ensure that InitializeContainer is one of the first things that happens in the application host to ensure that it is ready for the first composition..
+            </summary>
+        </member>
+        <member name="M:System.ComponentModel.Composition.CompositionInitializer.SatisfyImports(System.Object)">
+            <summary>
+                Will satisfy the imports on a object instance based on a <see cref="T:System.ComponentModel.Composition.Hosting.CompositionContainer"/>
+                registered with the <see cref="T:System.ComponentModel.Composition.Hosting.CompositionHost"/>. By default if no <see cref="T:System.ComponentModel.Composition.Hosting.CompositionContainer"/>
+                is registered the first time this is called it will be initialized to a catalog
+                that contains all the assemblies loaded by the initial application XAP.
+            </summary>
+            <param name="attributedPart">
+                Object instance that contains <see cref="T:System.ComponentModel.Composition.ImportAttribute"/>s that need to be satisfied.
+            </param>
+            <exception cref="T:System.ArgumentNullException">
+                <paramref name="instance"/> is <see langword="null"/>.
+            </exception>
+            <exception cref="T:System.ArgumentException">
+                <paramref name="instance"/> contains <see cref="T:System.ComponentModel.Composition.ExportAttribute"/>s applied on its type.
+            </exception>
+            <exception cref="T:System.ComponentModel.Composition.ChangeRejectedException">
+                One or more of the imports on the object instance could not be satisfied.
+            </exception>
+            <exception cref="T:System.ComponentModel.Composition.CompositionException">
+                One or more of the imports on the object instance caused an error while composing.
+            </exception>
+        </member>
+        <member name="M:System.ComponentModel.Composition.CompositionInitializer.SatisfyImports(System.ComponentModel.Composition.Primitives.ComposablePart)">
+            <summary>
+                Will satisfy the imports on a part based on a <see cref="T:System.ComponentModel.Composition.Hosting.CompositionContainer"/>
+                registered with the <see cref="T:System.ComponentModel.Composition.Hosting.CompositionHost"/>. By default if no <see cref="T:System.ComponentModel.Composition.Hosting.CompositionContainer"/>
+                is registered the first time this is called it will be initialized to a catalog
+                that contains all the assemblies loaded by the initial application XAP.
+            </summary>
+            <param name="part">
+                Part with imports that need to be satisfied.
+            </param>
+            <exception cref="T:System.ArgumentNullException">
+                <paramref name="instance"/> is <see langword="null"/>.
+            </exception>
+            <exception cref="T:System.ArgumentException">
+                <paramref name="instance"/> contains <see cref="T:System.ComponentModel.Composition.ExportAttribute"/>s applied on its type.
+            </exception>
+            <exception cref="T:System.ComponentModel.Composition.ChangeRejectedException">
+                One or more of the imports on the object instance could not be satisfied.
+            </exception>
+            <exception cref="T:System.ComponentModel.Composition.CompositionException">
+                One or more of the imports on the object instance caused an error while composing.
+            </exception>
+        </member>
+        <member name="T:System.ComponentModel.Composition.Hosting.Package">
+            <summary>
+                Helper functions for accessing the Silverlight manifest
+            </summary>
+        </member>
+        <member name="M:System.ComponentModel.Composition.Hosting.Package.GetDeploymentParts(System.Windows.Resources.StreamResourceInfo)">
+            <summary>
+                Only reads AssemblyParts and does not support external parts (aka Platform Extensions or TPEs).
+            </summary>
+        </member>
+        <member name="P:System.ComponentModel.Composition.Hosting.Package.CurrentAssemblies">
+            <summary>
+                Retrieves The current list of assemblies for the application XAP load. Depends on the Deployment.Current property being setup and
+                so can only be accessed after the Application object has be completely constructed.
+                No caching occurs at this level.
+            </summary>
+        </member>
+        <member name="M:System.ComponentModel.Composition.Hosting.CompositionHost.Initialize(System.ComponentModel.Composition.Hosting.CompositionContainer)">
+            <summary>
+                This method can be used to initialize the global container used by <see cref="M:System.ComponentModel.Composition.CompositionInitializer.SatisfyImports(System.Object)"/>
+                in case where the default container doesn't provide enough flexibility. 
+                
+                If this method is needed it should be called exactly once and as early as possible in the application host. It will need
+                to be called before the first call to <see cref="M:System.ComponentModel.Composition.CompositionInitializer.SatisfyImports(System.Object)"/>
+            </summary>
+            <param name="container">
+                <see cref="T:System.ComponentModel.Composition.Hosting.CompositionContainer"/> that should be used instead of the default global container.
+            </param>
+            <exception cref="T:System.ArgumentNullException">
+                <paramref name="container"/> is <see langword="null"/>.
+            </exception>
+            <exception cref="T:System.InvalidOperationException">
+                Either <see cref="M:System.ComponentModel.Composition.Hosting.CompositionHost.Initialize(System.ComponentModel.Composition.Hosting.CompositionContainer)"/> or <see cref="M:System.ComponentModel.Composition.Hosting.CompositionHost.Initialize(System.ComponentModel.Composition.Primitives.ComposablePartCatalog[])"/> has already been called or someone has already made use of the global 
+                container via <see cref="M:System.ComponentModel.Composition.CompositionInitializer.SatisfyImports(System.Object)"/>. In either case you need to ensure that it 
+                is called only once and that it is called early in the application host startup code.
+            </exception>
+        </member>
+        <member name="M:System.ComponentModel.Composition.Hosting.CompositionHost.Initialize(System.ComponentModel.Composition.Primitives.ComposablePartCatalog[])">
+            <summary>
+                This method can be used to initialize the global container used by <see cref="M:System.ComponentModel.Composition.CompositionInitializer.SatisfyImports(System.Object)"/>
+                in case where the default container doesn't provide enough flexibility. 
+                
+                If this method is needed it should be called exactly once and as early as possible in the application host. It will need
+                to be called before the first call to <see cref="M:System.ComponentModel.Composition.CompositionInitializer.SatisfyImports(System.Object)"/>
+            </summary>
+            <param name="catalogs">
+                An array of <see cref="T:System.ComponentModel.Composition.Primitives.ComposablePartCatalog"/> that should be used to initialize the <see cref="T:System.ComponentModel.Composition.Hosting.CompositionContainer"/> with.
+            </param>
+            <exception cref="T:System.ArgumentNullException">
+                <paramref name="catalogs"/> is <see langword="null"/>.
+            </exception>
+            <exception cref="T:System.InvalidOperationException">
+                Either <see cref="M:System.ComponentModel.Composition.Hosting.CompositionHost.Initialize(System.ComponentModel.Composition.Hosting.CompositionContainer)"/> or <see cref="M:System.ComponentModel.Composition.Hosting.CompositionHost.Initialize(System.ComponentModel.Composition.Primitives.ComposablePartCatalog[])"/>has already been called or someone has already made use of the global 
+                container via <see cref="M:System.ComponentModel.Composition.CompositionInitializer.SatisfyImports(System.Object)"/>. In either case you need to ensure that it 
+                is called only once and that it is called early in the application host startup code.
+            </exception>
+        </member>
+    </members>
+</doc>
