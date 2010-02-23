@@ -15,9 +15,9 @@
         public void can_enumerate_results_without_executing()
         {
             var results = new TestResultEnumerator(DoAnimation());
-            var animation = results.Next<PlayAnimationResult>();
+            var animation = results.Next<AnimationResult>();
 
-            Assert.That(animation.AnimationKey, Is.EqualTo("4"));
+            Assert.That(animation.Key, Is.EqualTo("4"));
         }
 
         [Test]
@@ -25,8 +25,8 @@
         {
             var results = new TestResultEnumerator(DoSeveralThings());
 
-            var animation = results.Next<PlayAnimationResult>();
-            Assert.That(animation.AnimationKey, Is.EqualTo("4"));
+            var animation = results.Next<AnimationResult>();
+            Assert.That(animation.Key, Is.EqualTo("4"));
 
             var showChild = results.Next<OpenChildResult<FakeScreen>>();
             Assert.That(showChild, Is.Not.Null);
@@ -35,7 +35,7 @@
         private IEnumerable<IResult> DoAnimation()
         {
             int i = 2 * 2;
-            yield return Show.Animation(i.ToString());
+            yield return Animation.Begin(i.ToString());
         }
 
         private IEnumerable<IResult> DoSeveralThings()

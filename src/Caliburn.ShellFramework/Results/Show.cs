@@ -109,11 +109,6 @@
             return new FocusResult(model, property.GetMemberInfo().Name);
         }
 
-        public static PlayAnimationResult Animation(string animationKey)
-        {
-            return new PlayAnimationResult(animationKey);
-        }
-
         public static MessageBoxResult MessageBox(string text)
         {
             return new MessageBoxResult(text);
