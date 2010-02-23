@@ -45,16 +45,14 @@
                 if(success)
                 {
                     var notifier = child as ILifecycleNotifier;
-                    if(notifier != null)
+                    if (notifier != null && _onShutDown != null)
                     {
                         notifier.WasShutdown += delegate{
-                            if(_onShutDown != null)
                                 _onShutDown(child);
-
-                            OnCompleted(null, false);
                         };
                     }
-                    else OnCompleted(null, false);
+                    
+                    OnCompleted(null, false);
                 }
                 else OnCompleted(null, true);
             });
