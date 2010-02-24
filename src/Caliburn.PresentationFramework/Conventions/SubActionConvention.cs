@@ -13,13 +13,14 @@
         /// <summary>
         /// Tries to creates the application of the convention.
         /// </summary>
+        /// <param name="conventionManager">The convention manager.</param>
         /// <param name="description">The description.</param>
         /// <param name="element">The element.</param>
         /// <param name="target">The target.</param>
         /// <returns>
         /// The convention application, or null if not applicable
         /// </returns>
-        public override IViewApplicable TryCreateApplication(IViewModelDescription description, IElementDescription element, PropertyInfo target)
+        public override IViewApplicable TryCreateApplication(IConventionManager conventionManager, IViewModelDescription description, IElementDescription element, PropertyInfo target)
         {
             var path = DeterminePropertyPath(element.Name);
             var index = path.LastIndexOf(".");

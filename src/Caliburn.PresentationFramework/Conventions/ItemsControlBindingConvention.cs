@@ -8,7 +8,6 @@ namespace Caliburn.PresentationFramework.Conventions
     using System.Windows.Data;
     using Core;
     using ViewModels;
-    using Converters;
 
     /// <summary>
     /// An implemenation of <see cref="IViewConvention{T}"/> that bindings SelectedItem and Header for Selectors and HeaderedItemsControls respectively.
@@ -18,7 +17,6 @@ namespace Caliburn.PresentationFramework.Conventions
     {
         private static readonly Type _itemsControlType = typeof(ItemsControl);
         private static readonly Type _selectorControlType = typeof(Selector);
-        private static readonly EnumConverter _enumConverter = new EnumConverter();
 
 #if !SILVERLIGHT
         private static readonly Type _headeredItemsControlType = typeof(HeaderedItemsControl);
@@ -26,11 +24,12 @@ namespace Caliburn.PresentationFramework.Conventions
         /// <summary>
         /// Creates the application of the convention.
         /// </summary>
+        /// <param name="conventionManager">The convention manager.</param>
         /// <param name="description">The description.</param>
         /// <param name="element">The element.</param>
         /// <param name="property">The property.</param>
         /// <returns>The convention application.</returns>
-        public override IViewApplicable TryCreateApplication(IViewModelDescription description, IElementDescription element, PropertyInfo property)
+        public override IViewApplicable TryCreateApplication(IConventionManager conventionManager, IViewModelDescription description, IElementDescription element, PropertyInfo property)
         {
             var originalPath = DeterminePropertyPath(element.Name);
             var boundProperty = GetBoundProperty(property, originalPath);
@@ -61,9 +60,7 @@ namespace Caliburn.PresentationFramework.Conventions
                     bindableProperty = Selector.SelectedItemProperty;
                     mode = selectionProperty.CanWrite ? BindingMode.TwoWay : BindingMode.OneWay;
                     checkTemplate = ShouldCheckTemplate(selectionProperty);
-                    converter = typeof(BindableCollection<BindableEnum>).IsAssignableFrom(boundProperty.PropertyType)
-                                    ? _enumConverter
-                                    : null;
+                    converter = conventionManager.GetValueConverter(bindableProperty, selectionProperty.PropertyType);
                 }
                 else return null;
             }
@@ -83,6 +80,7 @@ namespace Caliburn.PresentationFramework.Conventions
                     bindableProperty = HeaderedItemsControl.HeaderProperty;
                     mode = headerProperty.CanWrite ? BindingMode.TwoWay : BindingMode.OneWay;
                     checkTemplate = ShouldCheckTemplate(headerProperty);
+                    converter = conventionManager.GetValueConverter(bindableProperty, headerProperty.PropertyType);
                 }
                 else return null;
             }

@@ -26,14 +26,15 @@ namespace Caliburn.PresentationFramework.Conventions
         /// <summary>
         /// Gets the applications.
         /// </summary>
+        /// <param name="conventionManager">The convention manager.</param>
         /// <param name="viewModelDescription">The view model description.</param>
         /// <param name="elementDescription">The element description.</param>
         /// <returns>The applications.</returns>
-        public IEnumerable<IViewApplicable> GetApplications(IViewModelDescription viewModelDescription, IElementDescription elementDescription)
+        public IEnumerable<IViewApplicable> GetApplications(IConventionManager conventionManager, IViewModelDescription viewModelDescription, IElementDescription elementDescription)
         {
             return from convention in _conventions
                    from target in _getTargets(viewModelDescription)
-                   let application = convention.TryCreateApplication(viewModelDescription, elementDescription, target)
+                   let application = convention.TryCreateApplication(conventionManager, viewModelDescription, elementDescription, target)
                    where application != null
                    select application;
         }

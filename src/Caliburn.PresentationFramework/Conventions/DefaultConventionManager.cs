@@ -8,9 +8,11 @@ namespace Caliburn.PresentationFramework.Conventions
     using System.Windows;
     using System.Windows.Controls;
     using System.Windows.Controls.Primitives;
+    using System.Windows.Data;
     using System.Windows.Documents;
     using System.Windows.Media;
     using Actions;
+    using Converters;
     using Core;
     using Core.Invocation;
     using Filters;
@@ -21,12 +23,20 @@ namespace Caliburn.PresentationFramework.Conventions
     /// </summary>
     public class DefaultConventionManager : IConventionManager
     {
+        private class ConverterConvention
+        {
+            public DependencyProperty Target;
+            public Type Source;
+            public IValueConverter Converter;
+        }
+
         private readonly IMethodFactory _methodFactory;
         private readonly IEventHandlerFactory _eventHandlerFactory;
 
         private readonly Dictionary<Type, IElementConvention> _elementConventions = new Dictionary<Type, IElementConvention>();
         private readonly List<IViewConventionCategory> _viewConventions = new List<IViewConventionCategory>();
-
+        private readonly List<ConverterConvention> _converters = new List<ConverterConvention>();
+        
         /// <summary>
         /// Initializes a new instance of the <see cref="DefaultConventionManager"/> class.
         /// </summary>
@@ -41,6 +51,8 @@ namespace Caliburn.PresentationFramework.Conventions
                 .Apply(AddElementConvention);
 
             SetupDefaultViewConventions();
+
+            SetupDefaultConverterConventions();
         }
 
         /// <summary>
@@ -82,6 +94,38 @@ namespace Caliburn.PresentationFramework.Conventions
         }
 
         /// <summary>
+        /// Gets the conventional value converter.
+        /// </summary>
+        /// <param name="target">The target.</param>
+        /// <param name="source">The source.</param>
+        /// <returns>
+        /// The converter or null if none is defined.
+        /// </returns>
+        public IValueConverter GetValueConverter(DependencyProperty target, Type source)
+        {
+            return (from convention in _converters
+            where convention.Target == target
+                && convention.Source.IsAssignableFrom(source)
+            select convention.Converter).FirstOrDefault();
+        }
+
+        /// <summary>
+        /// Adds the value converter convention.
+        /// </summary>
+        /// <param name="target">The target.</param>
+        /// <param name="source">The source.</param>
+        /// <param name="converter">The converter.</param>
+        public void AddConverterConvention(DependencyProperty target, Type source, IValueConverter converter)
+        {
+            _converters.Add(new ConverterConvention
+            {
+                Target = target, 
+                Source = source, 
+                Converter = converter
+            });
+        }
+
+        /// <summary>
         /// Determines the conventions for a view model and a set of UI elements.
         /// </summary>
         /// <param name="viewModelDescription">The view model description.</param>
@@ -93,7 +137,7 @@ namespace Caliburn.PresentationFramework.Conventions
             {
                 foreach(var set in _viewConventions)
                 {
-                    var applications = set.GetApplications(viewModelDescription, elementDescription);
+                    var applications = set.GetApplications(this, viewModelDescription, elementDescription);
 
                     foreach(var application in applications)
                     {
@@ -157,6 +201,15 @@ namespace Caliburn.PresentationFramework.Conventions
             var subActions = new DefaultViewConventionCategory<PropertyInfo>(x => x.Properties);
             subActions.AddConvention(new SubActionConvention());
             AddViewConventions(subActions);
+        }
+
+        /// <summary>
+        /// Sets up the default converter conventions.
+        /// </summary>
+        protected virtual void SetupDefaultConverterConventions()
+        {
+            AddConverterConvention(UIElement.VisibilityProperty, typeof(bool), new BooleanToVisibilityConverter());
+            AddConverterConvention(Selector.SelectedItemProperty, typeof(BindableCollection<BindableEnum>), new EnumConverter());
         }
 
         /// <summary>

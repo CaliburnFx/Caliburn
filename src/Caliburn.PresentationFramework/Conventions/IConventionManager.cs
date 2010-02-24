@@ -2,6 +2,8 @@ namespace Caliburn.PresentationFramework.Conventions
 {
     using System;
     using System.Collections.Generic;
+    using System.Windows;
+    using System.Windows.Data;
     using Actions;
     using Core.Invocation;
     using ViewModels;
@@ -29,6 +31,22 @@ namespace Caliburn.PresentationFramework.Conventions
         /// <param name="elementType">Type of the element.</param>
         /// <returns>The convention.</returns>
         IElementConvention GetElementConvention(Type elementType);
+
+        /// <summary>
+        /// Adds the value converter convention.
+        /// </summary>
+        /// <param name="target">The target.</param>
+        /// <param name="source">The source.</param>
+        /// <param name="converter">The converter.</param>
+        void AddConverterConvention(DependencyProperty target, Type source, IValueConverter converter);
+
+        /// <summary>
+        /// Gets the conventional value converter.
+        /// </summary>
+        /// <param name="target">The target.</param>
+        /// <param name="source">The source.</param>
+        /// <returns>The converter or null if none is defined.</returns>
+        IValueConverter GetValueConverter(DependencyProperty target, Type source);
 
         /// <summary>
         /// Determines the conventions for a view model and a set of UI elements.

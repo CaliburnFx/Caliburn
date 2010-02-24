@@ -13,11 +13,12 @@ namespace Caliburn.PresentationFramework.Conventions
         /// <summary>
         /// Creates the application of the convention.
         /// </summary>
+        /// <param name="conventionManager">The convention manager.</param>
         /// <param name="description">The description.</param>
         /// <param name="element">The element.</param>
         /// <param name="property">The property.</param>
         /// <returns>The convention application.</returns>
-        public override IViewApplicable TryCreateApplication(IViewModelDescription description, IElementDescription element, PropertyInfo property)
+        public override IViewApplicable TryCreateApplication(IConventionManager conventionManager, IViewModelDescription description, IElementDescription element, PropertyInfo property)
         {
             var path = DeterminePropertyPath(element.Name);
             var boundProperty = GetBoundProperty(property, path);
@@ -25,16 +26,18 @@ namespace Caliburn.PresentationFramework.Conventions
             if (boundProperty == null)
                 return null;
 
+            var dependencyProperty = typeof(IScreen).IsAssignableFrom(boundProperty.PropertyType)
+                ? View.ModelProperty
+                : element.Convention.BindableProperty;
+
             return new ApplicableBinding(
                 element,
-                typeof(IScreen).IsAssignableFrom(boundProperty.PropertyType)
-                    ? View.ModelProperty
-                    : element.Convention.BindableProperty,
+                dependencyProperty,
                 path,
                 boundProperty.CanWrite ? BindingMode.TwoWay : BindingMode.OneWay,
                 ShouldValidate(boundProperty),
                 false,
-                null
+                conventionManager.GetValueConverter(dependencyProperty, boundProperty.PropertyType)
                 );
         }
     }

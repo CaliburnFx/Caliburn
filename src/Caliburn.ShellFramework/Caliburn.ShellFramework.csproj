@@ -63,7 +63,7 @@
     <Compile Include="Controls\DialogChrome.cs" />
     <Compile Include="History\HistoryExtensions.silverlight.cs" />
     <Compile Include="History\HistoryConfiguration.silverlight.cs" />
-    <Compile Include="History\HistoryCoordinator.silverlight.cs" />
+    <Compile Include="History\DefaultHistoryCoordinator.silverlight.cs" />
     <Compile Include="History\HistoryKeyAttribute.silverlight.cs" />
     <Compile Include="History\IHistoryCoordinator.silverlight.cs" />
     <Compile Include="History\IHistoryKey.silverlight.cs" />

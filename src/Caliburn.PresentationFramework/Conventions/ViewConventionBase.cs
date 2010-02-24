@@ -34,13 +34,14 @@
         /// <summary>
         /// Tries to creates the application of the convention.
         /// </summary>
+        /// <param name="conventionManager">The convention manager.</param>
         /// <param name="description">The description.</param>
         /// <param name="element">The element.</param>
         /// <param name="target">The target.</param>
         /// <returns>
         /// The convention application, or null if not applicable
         /// </returns>
-        public abstract IViewApplicable TryCreateApplication(IViewModelDescription description, IElementDescription element, T target);
+        public abstract IViewApplicable TryCreateApplication(IConventionManager conventionManager, IViewModelDescription description, IElementDescription element, T target);
 
         /// <summary>
         /// Determines the property path.
