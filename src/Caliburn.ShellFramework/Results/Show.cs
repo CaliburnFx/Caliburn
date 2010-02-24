@@ -15,6 +15,13 @@
 
     public static class Show
     {
+        private static IViewModelFactory _viewModelFactory;
+
+        public static void Initialize(IViewModelFactory viewModelFactory)
+        {
+            _viewModelFactory = viewModelFactory;
+        }
+
         public static OpenScreenSubjectResult ChildFor(IScreenSubject screenSubject)
         {
             return new OpenScreenSubjectResult(screenSubject);
@@ -40,9 +47,7 @@
 
         public static OpenDialogResult<IScreen<T>> DialogFor<T>(T subject)
         {
-            var factory = ServiceLocator.Current.GetInstance<IViewModelFactory>();
-            var screen = factory.CreateFor(subject);
-
+            var screen = _viewModelFactory.CreateFor(subject);
             return new OpenDialogResult<IScreen<T>>(screen);
         }
 

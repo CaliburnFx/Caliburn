@@ -39,11 +39,24 @@
             var description = ((MethodCallExpression)service.Body).Method;
             var serviceType = DetermineService(description);
 
+            return AddService<TRegistration, TImplementation>(serviceType);
+        }
+
+        /// <summary>
+        /// Adds the service configuration.
+        /// </summary>
+        /// <typeparam name="TRegistration">The type of the registration.</typeparam>
+        /// <typeparam name="TImplementation">The type of the implementation.</typeparam>
+        /// <param name="serviceType">Type of the service.</param>
+        /// <returns></returns>
+        protected ServiceConfiguration<TModule, TServicesDescription, TRegistration, TImplementation> AddService<TRegistration, TImplementation>(Type serviceType)
+            where TRegistration : ComponentRegistrationBase, new()
+        {
             var configuration = new ServiceConfiguration<TModule, TServicesDescription, TRegistration, TImplementation>(
                 (TModule)this,
                 serviceType
                 );
-            
+
             _services[serviceType] = configuration;
 
             return configuration;

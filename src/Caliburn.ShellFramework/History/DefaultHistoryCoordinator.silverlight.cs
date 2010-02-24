@@ -12,7 +12,7 @@ namespace Caliburn.ShellFramework.History
     using PresentationFramework.ApplicationModel;
     using PresentationFramework.Screens;
 
-    public class HistoryCoordinator : IHistoryCoordinator
+    public class DefaultHistoryCoordinator : IHistoryCoordinator
     {
         private readonly IStateManager _stateManager;
         private readonly IAssemblySource _assemblySource;
@@ -21,7 +21,7 @@ namespace Caliburn.ShellFramework.History
         private IScreen _previousScreen;
         private IList<IHistoryKey> _historyKeys;
 
-        public HistoryCoordinator(IStateManager stateManager, IAssemblySource assemblySource)
+        public DefaultHistoryCoordinator(IStateManager stateManager, IAssemblySource assemblySource)
         {
             _stateManager = stateManager;
             _assemblySource = assemblySource;

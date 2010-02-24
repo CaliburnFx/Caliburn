@@ -7,6 +7,8 @@
     using PresentationFramework.ApplicationModel;
     using PresentationFramework.Configuration;
     using PresentationFramework.ViewModels;
+    using ShellFramework;
+    using ShellFramework.History;
     using Unity;
 
     public partial class App : CaliburnApplication
@@ -37,12 +39,14 @@
 
         protected override void ConfigurePresentationFramework(PresentationFrameworkConfiguration module)
         {
+            module.With.ShellFramework()
+                .ConfigureDeepLinking<DeepLinkStateManager, DefaultHistoryCoordinator>()
+                .RedirectViewNamespace("Caliburn.Silverlight.NavigationShell.Shell.Views");
+
             module
                 .RegisterAllScreensWithSubjects(true)
                 .Using(x => x.ViewLocator<DefaultViewLocator>())
                     .Configured(x =>{
-                        x.AddNamespaceAlias("Caliburn.ShellFramework.Questions",
-                                            "Caliburn.Silverlight.NavigationShell.Shell.Views");
                         x.AddNamespaceAlias("Caliburn.Silverlight.NavigationShell.Framework",
                                             "Caliburn.Silverlight.NavigationShell.Shell.Views");
                     });

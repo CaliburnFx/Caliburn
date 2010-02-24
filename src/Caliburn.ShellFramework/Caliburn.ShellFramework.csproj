@@ -56,6 +56,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ButtonModel.cs" />
+    <Compile Include="Configuration\IShellFrameworkServicesDescription.cs" />
+    <Compile Include="Configuration\ShellFrameworkConfiguration.cs" />
     <Compile Include="Controls\ButtonConverter.cs" />
     <Compile Include="Controls\ButtonPanel.cs" />
     <Compile Include="Controls\DialogChrome.cs" />
@@ -95,6 +97,7 @@
     <Compile Include="Results\ShowCommonDialogResult.wpf.cs" />
     <Compile Include="Services\DefaultBusyService.cs" />
     <Compile Include="Services\IBusyService.cs" />
+    <Compile Include="ShellFrameworkExtensions.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Caliburn.Core\Caliburn.Core.csproj">

@@ -7,23 +7,13 @@
     using Core.Configuration;
     using Core.IoC;
     using Framework;
-    using PresentationFramework.ApplicationModel;
-    using ShellFramework.History;
-    using ShellFramework.Questions;
-    using ShellFramework.Resources;
-    using ShellFramework.Services;
     using ViewModels;
 
     public class Configuration : ModuleBase
     {
         public override IEnumerable<IComponentRegistration> GetComponents()
         {
-            yield return PerRequest<IHistoryCoordinator, HistoryCoordinator>();
-            yield return PerRequest<IQuestionDialog, QuestionDialogViewModel>();
-            yield return Singleton<IResourceManager, DefaultResourceManager>();
-            yield return Singleton<IStateManager, DeepLinkStateManager>();
             yield return Singleton<IShell, ShellViewModel>();
-            yield return Singleton<IBusyService, DefaultBusyService>();
 
             var moduleTypes = from type in Assembly.GetExecutingAssembly().GetExportedTypes()
                               where typeof(ITaskBarItem).IsAssignableFrom(type)
