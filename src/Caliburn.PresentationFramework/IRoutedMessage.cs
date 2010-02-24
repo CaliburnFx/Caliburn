@@ -4,10 +4,6 @@
     using System.Collections.Generic;
     using System.Windows;
 
-#if SILVERLIGHT
-    using System.Collections.Generic;
-#endif
-
     /// <summary>
     /// Instances of this interface can be routed through the interaction hierarchy.
     /// </summary>

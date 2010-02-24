@@ -4,7 +4,6 @@ namespace Caliburn.PresentationFramework.ViewModels
     using System.Collections.Generic;
     using System.Linq;
     using System.Windows;
-    using System.Windows.Controls;
     using Core;
     using Microsoft.Practices.ServiceLocation;
 
@@ -78,22 +77,7 @@ namespace Caliburn.PresentationFramework.ViewModels
                 }
             }
 
-            var message = namesToCheck.Aggregate(
-                "A default view was not found for " + modelType.FullName + ".  Views searched for include: ", 
-                (a, c) => a + Environment.NewLine + c
-                );
-
-            var generated = new TextBlock
-            {
-                Text = message,
-                TextWrapping = TextWrapping.Wrap,
-                VerticalAlignment = VerticalAlignment.Stretch,
-                HorizontalAlignment = HorizontalAlignment.Stretch
-            };
-
-            ToolTipService.SetToolTip(generated, message);
-
-            return generated;
+            return new NotFoundView(modelType, namesToCheck);
         }
 
         /// <summary>
