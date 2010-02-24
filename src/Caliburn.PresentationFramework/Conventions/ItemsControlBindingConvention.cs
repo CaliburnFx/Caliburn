@@ -60,7 +60,7 @@ namespace Caliburn.PresentationFramework.Conventions
                     bindableProperty = Selector.SelectedItemProperty;
                     mode = selectionProperty.CanWrite ? BindingMode.TwoWay : BindingMode.OneWay;
                     checkTemplate = ShouldCheckTemplate(selectionProperty);
-                    converter = conventionManager.GetValueConverter(bindableProperty, selectionProperty.PropertyType);
+                    converter = conventionManager.GetValueConverter(bindableProperty, boundProperty.PropertyType);
                 }
                 else return null;
             }
