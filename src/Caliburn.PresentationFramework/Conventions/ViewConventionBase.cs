@@ -4,59 +4,33 @@
     using System.Linq;
     using System.Reflection;
     using Actions;
-    using Microsoft.Practices.ServiceLocation;
     using ViewModels;
+
+    public abstract class ViewConventionBase
+    {
+        protected static IMessageBinder MessageBinder;
+        protected static IViewModelDescriptionFactory ViewModelDescriptionFactory;
+        protected static IValidator Validator;
+
+        /// <summary>
+        /// Initializes the specified message binder.
+        /// </summary>
+        /// <param name="messageBinder">The message binder.</param>
+        /// <param name="viewModelDescriptionFactory">The view model description factory.</param>
+        /// <param name="validator">The validator.</param>
+        public static void Initialize(IMessageBinder messageBinder, IViewModelDescriptionFactory viewModelDescriptionFactory, IValidator validator)
+        {
+            MessageBinder = messageBinder;
+            ViewModelDescriptionFactory = viewModelDescriptionFactory;
+            Validator = validator;
+        }
+    }
 
     /// <summary>
     /// A base class for binding conventions.
     /// </summary>
-    public abstract class ViewConventionBase<T> : IViewConvention<T>
+    public abstract class ViewConventionBase<T> : ViewConventionBase, IViewConvention<T>
     {
-        private static IMessageBinder _messageBinder;
-        /// <summary>
-        /// Gets the message binder.
-        /// </summary>
-        /// <value>The message binder.</value>
-        protected static IMessageBinder MessageBinder
-        {
-            get
-            {
-                if (_messageBinder == null)
-                    _messageBinder = ServiceLocator.Current.GetInstance<IMessageBinder>();
-                return _messageBinder;
-            }
-        }
-
-        private static IViewModelDescriptionFactory _viewModelDescriptionFactory;
-        /// <summary>
-        /// Gets the view model description factory.
-        /// </summary>
-        /// <value>The view model description factory.</value>
-        protected static IViewModelDescriptionFactory ViewModelDescriptionFactory
-        {
-            get
-            {
-                if (_viewModelDescriptionFactory == null)
-                    _viewModelDescriptionFactory = ServiceLocator.Current.GetInstance<IViewModelDescriptionFactory>();
-                return _viewModelDescriptionFactory;
-            }
-        }
-
-        private static IValidator _validator;
-        /// <summary>
-        /// Gets the validator.
-        /// </summary>
-        /// <value>The validator.</value>
-        protected static IValidator Validator
-        {
-            get
-            {
-                if (_validator == null)
-                    _validator = ServiceLocator.Current.GetInstance<IValidator>();
-                return _validator;
-            }
-        }
-
         /// <summary>
         /// Tries to creates the application of the convention.
         /// </summary>
