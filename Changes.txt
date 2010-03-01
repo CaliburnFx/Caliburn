@@ -62,6 +62,7 @@ V1.1 Release
 -Updated to MEF Preview 9.
 -Applied a patch from Adam Connelly to add AddRange to BindableCollection and IObservableCollection.
 -Update Ninject to official 2.0 release.
+-Fixed a bug in the Disable IAvailabilityEffect which was preventing it from handling ContentElements in WPF correctly.
 
 V1.1 Release Candidate
 -Added pre-initialization hooks to CaliburnApplication via Marco Amendola's patch.
