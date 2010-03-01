@@ -144,6 +144,7 @@
     <Compile Include="Adapters\The_StructureMap_container.cs" />
     <Compile Include="Adapters\The_Unity_container.cs" />
     <Compile Include="Adapters\The_Windsor_container.cs" />
+    <Compile Include="Core\A_bindable_collection.cs" />
     <Compile Include="Core\The_resolve_markup_extension.cs" />
     <Compile Include="Fakes\FakeScreen.cs" />
     <Compile Include="Fakes\FakeShutdownModel.cs" />

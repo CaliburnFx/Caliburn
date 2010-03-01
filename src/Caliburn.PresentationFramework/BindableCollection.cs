@@ -5,6 +5,7 @@
     using System.Collections.ObjectModel;
     using System.Collections.Specialized;
     using System.ComponentModel;
+    using Core;
     using Core.Invocation;
 
 #if SILVERLIGHT
@@ -20,10 +21,12 @@
 #endif
     public class BindableCollection<T> : ObservableCollection<T>, IObservableCollection<T>
     {
+        private bool _raiseCollectionChanged = true;
+
         /// <summary>
         /// Initializes a new instance of the <see cref="BindableCollection&lt;T&gt;"/> class.
         /// </summary>
-        public BindableCollection() {}
+        public BindableCollection() { }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="BindableCollection&lt;T&gt;"/> class.
@@ -57,6 +60,9 @@
         /// <param name="e">Arguments of the event being raised.</param>
         protected override void OnCollectionChanged(NotifyCollectionChangedEventArgs e)
         {
+            if (!_raiseCollectionChanged)
+                return;
+
             Execute.OnUIThread(() => RaiseCollectionChangedEventImmediately(e));
         }
 
@@ -76,6 +82,19 @@
         public void RaisePropertyChangedEventImmediately(PropertyChangedEventArgs e)
         {
             base.OnPropertyChanged(e);
+        }
+
+        /// <summary>
+        /// Adds the range.
+        /// </summary>
+        /// <param name="items">The items.</param>
+        public void AddRange(IEnumerable<T> items)
+        {
+            _raiseCollectionChanged = false;
+            items.Apply(Add);
+            _raiseCollectionChanged = true;
+
+            OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Reset));
         }
     }
 }
