@@ -53,7 +53,7 @@
                 default:
                     return PresentationFrameworkConfiguration.IsInDesignMode || string.IsNullOrEmpty(theString)
                                ? AvailabilityEffect.None
-                               : ServiceLocator.Current.GetInstance(null, theString);
+                               : ServiceLocator.Current.GetInstance(typeof(IAvailabilityEffect), theString);
             }
         }
     }

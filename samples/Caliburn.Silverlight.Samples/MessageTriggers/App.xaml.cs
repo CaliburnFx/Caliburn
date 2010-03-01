@@ -4,8 +4,9 @@
     using System.Diagnostics;
     using System.Windows;
     using System.Windows.Browser;
+    using Caliburn.Core;
     using Caliburn.Core.Configuration;
-    using Caliburn.PresentationFramework.Configuration;
+    using Caliburn.PresentationFramework;
 
     public partial class App : Application
     {

@@ -5,14 +5,15 @@
     using System.Linq;
     using Caliburn.Core.IoC;
     using Caliburn.PresentationFramework;
-    using Caliburn.PresentationFramework.ApplicationModel;
+    using Caliburn.PresentationFramework.Screens;
+    using Caliburn.PresentationFramework.ViewModels;
     using Framework;
 
     //Register this class as implementation of IRunningActionsRegistry
     [Singleton(typeof(IRunningActionsRegistry))]
     //Binds the view for this presenter
     [View(typeof(RunningActionsView))]
-    public class RunningActionsPresenter : Presenter, IRunningActionsRegistry
+    public class RunningActionsPresenter : Screen, IRunningActionsRegistry
     {
         private readonly BindableCollection<IRunningAction> _runningActions = new BindableCollection<IRunningAction>();
 
