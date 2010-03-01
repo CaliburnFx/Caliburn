@@ -6,7 +6,7 @@
     /// <summary>
     /// Specifies a command which should be registered with the container and optionally allows customization of the executiion method.
     /// </summary>
-    public class CommandAttribute : IComponentMetadata
+    public class CommandAttribute : Attribute, IComponentMetadata
     {
         /// <summary>
         /// The suffix that is removed from the class name when registering by Key with the container.
