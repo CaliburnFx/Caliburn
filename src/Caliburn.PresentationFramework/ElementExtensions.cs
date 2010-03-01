@@ -23,11 +23,34 @@
         {
 #if !SILVERLIGHT
             return LogicalTreeHelper.GetParent(dependencyObject) ??
-                   VisualTreeHelper.GetParent(dependencyObject);
+                VisualTreeHelper.GetParent(dependencyObject) ??
+                    GetTemplatedParent(dependencyObject);
 #else
             return VisualTreeHelper.GetParent(dependencyObject);
 #endif
         }
+
+#if !SILVERLIGHT
+
+        /// <summary>
+        /// Gets the templated parent.
+        /// </summary>
+        /// <param name="element">The element.</param>
+        /// <returns></returns>
+        public static DependencyObject GetTemplatedParent(DependencyObject element)
+        {
+            var fe = element as FrameworkElement;
+            if(fe != null)
+                return fe.TemplatedParent;
+
+            var fce = element as FrameworkContentElement;
+            if (fce != null)
+                return fce.TemplatedParent;
+
+            return null;
+        }
+
+#endif
 
         /// <summary>
         /// Sets the data context of the dependency object.
