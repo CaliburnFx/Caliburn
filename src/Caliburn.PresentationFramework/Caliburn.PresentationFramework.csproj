@@ -81,6 +81,7 @@
     <Compile Include="ApplicationModel\DefaultInputManager.cs" />
     <Compile Include="ApplicationModel\DefaultWindowManager.silverlight.cs" />
     <Compile Include="ApplicationModel\IInputManager.cs" />
+    <Compile Include="ApplicationModel\IShortcut.cs" />
     <Compile Include="ApplicationModel\IWindowManager.silverlight.cs" />
     <Compile Include="Behaviors\DependencyMode.cs" />
     <Compile Include="Behaviors\DoNotNotifyAttribute.cs" />

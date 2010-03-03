@@ -19,6 +19,8 @@ namespace Caliburn.PresentationFramework.ApplicationModel
     /// </summary>
     public partial class DefaultInputManager : IInputManager
     {
+        private readonly List<IShortcut> _shortcuts = new List<IShortcut>();
+
         /// <summary>
         /// Focuses the view bound to the view model.
         /// </summary>
@@ -56,6 +58,72 @@ namespace Caliburn.PresentationFramework.ApplicationModel
 
                     element.Focus();
                     return;
+                }
+            }
+        }
+
+        /// <summary>
+        /// Gets all shortcuts.
+        /// </summary>
+        /// <returns></returns>
+        public IEnumerable<IShortcut> GetAllShortcuts()
+        {
+            return _shortcuts;
+        }
+
+        /// <summary>
+        /// Adds the shortcut.
+        /// </summary>
+        /// <param name="shortcut">The shortcut.</param>
+        public void AddShortcut(IShortcut shortcut)
+        {
+            _shortcuts.Add(shortcut);
+        }
+
+        /// <summary>
+        /// Removes the shortcut.
+        /// </summary>
+        /// <param name="shortcut">The shortcut.</param>
+        public void RemoveShortcut(IShortcut shortcut)
+        {
+            _shortcuts.Remove(shortcut);
+        }
+
+        /// <summary>
+        /// Registers the shortcut source.
+        /// </summary>
+        /// <param name="element">The element.</param>
+        public void RegisterShortcutSource(UIElement element)
+        {
+#if !SILVERLIGHT
+            element.PreviewKeyUp += OnKeyUp;
+#else
+            element.KeyUp += OnKeyUp;
+#endif
+        }
+
+        /// <summary>
+        /// Unregisters the shortcut source.
+        /// </summary>
+        /// <param name="element">The element.</param>
+        public void UnregisterShortcutSource(UIElement element)
+        {
+#if !SILVERLIGHT
+            element.PreviewKeyUp -= OnKeyUp;
+#else
+            element.KeyUp -= OnKeyUp;
+#endif
+        }
+
+        private void OnKeyUp(object s, KeyEventArgs e)
+        {
+            foreach (var shortcut in _shortcuts)
+            {
+                if (e.Key == shortcut.Key && Keyboard.Modifiers == shortcut.Modifers)
+                {
+                    if (shortcut.CanExecute)
+                        shortcut.Execute().Execute();
+                    break;
                 }
             }
         }

@@ -2,7 +2,9 @@
 {
     using System;
     using Core.Configuration;
+    using Menus;
     using Microsoft.Practices.ServiceLocation;
+    using PresentationFramework.ApplicationModel;
     using PresentationFramework.ViewModels;
     using Questions;
     using Results;
@@ -47,6 +49,7 @@
             base.Initialize(locator);
 
             Show.Initialize(locator.GetInstance<IViewModelFactory>());
+            MenuItemViewModel.Initialize(locator.GetInstance<IInputManager>());
 
             if(!string.IsNullOrEmpty(_viewNamespace))
             {

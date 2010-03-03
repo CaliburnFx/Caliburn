@@ -2,6 +2,9 @@
 
 namespace Caliburn.PresentationFramework.ApplicationModel
 {
+    using System.Collections.Generic;
+    using System.Windows;
+
     /// <summary>
     /// Implemented by services that provide focus and key binding functionality.
     /// </summary>
@@ -19,6 +22,36 @@ namespace Caliburn.PresentationFramework.ApplicationModel
         /// <param name="viewModel">The view model.</param>
         /// <param name="propertyPath">The property path.</param>
         void Focus(object viewModel, string propertyPath);
+
+        /// <summary>
+        /// Gets all shortcuts.
+        /// </summary>
+        /// <returns></returns>
+        IEnumerable<IShortcut> GetAllShortcuts();
+
+        /// <summary>
+        /// Adds the shortcut.
+        /// </summary>
+        /// <param name="shortcut">The shortcut.</param>
+        void AddShortcut(IShortcut shortcut);
+
+        /// <summary>
+        /// Removes the shortcut.
+        /// </summary>
+        /// <param name="shortcut">The shortcut.</param>
+        void RemoveShortcut(IShortcut shortcut);
+
+        /// <summary>
+        /// Registers the shortcut source.
+        /// </summary>
+        /// <param name="element">The element.</param>
+        void RegisterShortcutSource(UIElement element);
+
+        /// <summary>
+        /// Unregisters the shortcut source.
+        /// </summary>
+        /// <param name="element">The element.</param>
+        void UnregisterShortcutSource(UIElement element);
     }
 }
 
