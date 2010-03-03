@@ -5,7 +5,7 @@ namespace Caliburn.ShellFramework.Results
 
     public static class ResultExtensions
     {
-        public static IOpenResult<TChild> ConfigureChild<TChild>(this IOpenResult<TChild> result, Action<TChild> configure)
+        public static IOpenResult<TChild> Configured<TChild>(this IOpenResult<TChild> result, Action<TChild> configure)
             where TChild : IScreen
         {
             result.OnConfigure = configure;
