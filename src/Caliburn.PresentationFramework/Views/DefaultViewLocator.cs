@@ -4,7 +4,10 @@ namespace Caliburn.PresentationFramework.Views
     using System.Collections.Generic;
     using System.Linq;
     using System.Windows;
+    using System.Windows.Interop;
     using Core;
+    using Core.Metadata;
+    using Metadata;
     using Microsoft.Practices.ServiceLocation;
 
     /// <summary>
@@ -39,13 +42,46 @@ namespace Caliburn.PresentationFramework.Views
         }
 
         /// <summary>
+        /// Locates the view for the specified model instance.
+        /// </summary>
+        /// <param name="model">The model.</param>
+        /// <param name="displayLocation">The display location.</param>
+        /// <param name="context">The context.</param>
+        /// <returns>The view.</returns>
+        public virtual DependencyObject Locate(object model, DependencyObject displayLocation, object context)
+        {
+            if (model == null)
+                return null;
+
+            var metadataContainer = model as IMetadataContainer;
+            if (metadataContainer != null)
+            {
+                var view = metadataContainer.GetView<DependencyObject>(context);
+                if (view != null)
+                {
+#if !SILVERLIGHT
+                    var windowCheck = view as Window;
+                    if (windowCheck == null || (!windowCheck.IsLoaded && !(new WindowInteropHelper(windowCheck).Handle == IntPtr.Zero)))
+                    {
+                        return view;
+                    }
+#else
+                    return view;
+#endif
+                }
+            }
+
+            return Locate(model.GetModelType(), displayLocation, context);
+        }
+
+        /// <summary>
         /// Locates the View for the specified model type.
         /// </summary>
         /// <param name="modelType">Type of the model.</param>
         /// <param name="displayLocation">The display location.</param>
         /// <param name="context">The context.</param>
         /// <returns>The view.</returns>
-        public DependencyObject Locate(Type modelType, DependencyObject displayLocation, object context)
+        public virtual DependencyObject Locate(Type modelType, DependencyObject displayLocation, object context)
         {
             var customStrategy = modelType.GetAttributes<IViewStrategy>(true)
                 .Where(x => x.Matches(context)).FirstOrDefault();

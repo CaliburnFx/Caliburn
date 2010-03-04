@@ -126,7 +126,6 @@
     <Compile Include="ApplicationModel\ApplicationModelExtensions.cs" />
     <Compile Include="ViewModels\DefaultViewModelFactory.cs" />
     <Compile Include="Views\NotFoundView.cs" />
-    <Compile Include="ViewModels\ViewModelExtensions.cs" />
     <Compile Include="ViewModels\IValidationError.cs" />
     <Compile Include="ViewModels\IValidator.cs" />
     <Compile Include="ViewModels\IViewModelBinder.cs" />
