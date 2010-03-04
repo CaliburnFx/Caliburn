@@ -4,7 +4,8 @@ namespace Caliburn.PresentationFramework.Conventions
     using System.Windows;
     using Core.Invocation;
     using Microsoft.Practices.ServiceLocation;
-    using Triggers;
+    using RoutedMessaging;
+    using RoutedMessaging.Triggers;
 
     /// <summary>
     /// The default implementation of <see cref="IElementConvention"/>.

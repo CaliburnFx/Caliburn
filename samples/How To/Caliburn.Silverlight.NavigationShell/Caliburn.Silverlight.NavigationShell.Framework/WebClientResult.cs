@@ -3,7 +3,7 @@
     using System;
     using System.IO;
     using System.Net;
-    using PresentationFramework;
+    using PresentationFramework.RoutedMessaging;
 
     public class WebClientResult : IResult
     {

@@ -3,7 +3,8 @@
     using System.Windows;
     using System.Windows.Data;
     using Conventions;
-    using Parsers;
+    using RoutedMessaging;
+    using RoutedMessaging.Parsers;
 
     /// <summary>
     /// An implementation of <see cref="ActionMessage"/> for <see cref="IMessageParser"/>.

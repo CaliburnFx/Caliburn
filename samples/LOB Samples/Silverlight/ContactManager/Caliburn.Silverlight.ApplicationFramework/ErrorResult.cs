@@ -6,7 +6,7 @@ namespace Caliburn.Silverlight.ApplicationFramework
     using System.Windows.Controls;
     using System.Windows.Controls.Primitives;
     using ModelFramework;
-    using PresentationFramework;
+    using PresentationFramework.RoutedMessaging;
 
     public class ErrorResult : IResult
     {

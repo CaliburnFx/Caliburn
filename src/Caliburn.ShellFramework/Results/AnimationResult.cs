@@ -3,7 +3,7 @@
     using System;
     using System.Windows;
     using System.Windows.Media.Animation;
-    using PresentationFramework;
+    using PresentationFramework.RoutedMessaging;
 
     public class AnimationResult : IResult
     {

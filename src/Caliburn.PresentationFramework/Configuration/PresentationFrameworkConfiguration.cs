@@ -12,9 +12,11 @@
     using Core.IoC;
     using Invocation;
     using Microsoft.Practices.ServiceLocation;
-    using Parsers;
+    using RoutedMessaging;
+    using RoutedMessaging.Parsers;
     using Screens;
     using ViewModels;
+    using Views;
     using Action=Actions.Action;
 
 #if SILVERLIGHT

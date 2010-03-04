@@ -4,6 +4,7 @@ namespace Caliburn.PresentationFramework.Conventions
     using System.Windows.Data;
     using Screens;
     using ViewModels;
+    using Views;
 
     /// <summary>
     /// The default implementation of <see cref="IViewConvention{T}"/> for bindings.

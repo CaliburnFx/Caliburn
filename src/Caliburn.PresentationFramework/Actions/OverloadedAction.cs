@@ -6,6 +6,7 @@
     using System.Linq;
     using Core;
     using Filters;
+    using RoutedMessaging;
 
     /// <summary>
     /// An overloaded <see cref="IAction"/>.

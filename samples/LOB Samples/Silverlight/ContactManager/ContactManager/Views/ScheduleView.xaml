@@ -1,8 +1,8 @@
 ﻿<UserControl x:Class="ContactManager.Views.ScheduleView"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:pf="clr-namespace:Caliburn.PresentationFramework;assembly=Caliburn.PresentationFramework"
              xmlns:Framework="clr-namespace:Caliburn.Silverlight.ApplicationFramework;assembly=Caliburn.Silverlight.ApplicationFramework"
+             xmlns:rm="clr-namespace:Caliburn.PresentationFramework.RoutedMessaging;assembly=Caliburn.PresentationFramework"
              Height="400"
              Width="325">
     <Grid x:Name="LayoutRoot">
@@ -83,7 +83,7 @@
 
                             <Button Content="+"
                                     Style="{StaticResource openButton}"
-                                    pf:Message.Attach="RemoveAppointment($datacontext)" />
+                                    rm:Message.Attach="RemoveAppointment($datacontext)" />
                         </Grid>
                     </DataTemplate>
                 </ItemsControl.ItemTemplate>

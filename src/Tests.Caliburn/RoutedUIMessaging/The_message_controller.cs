@@ -2,7 +2,7 @@
 {
     using System.Linq;
     using System.Windows.Controls;
-    using global::Caliburn.PresentationFramework;
+    using global::Caliburn.PresentationFramework.RoutedMessaging;
     using NUnit.Framework;
     using NUnit.Framework.SyntaxHelpers;
     using Rhino.Mocks;

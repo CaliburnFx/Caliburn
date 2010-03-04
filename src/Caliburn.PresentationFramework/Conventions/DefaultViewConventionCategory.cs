@@ -4,6 +4,7 @@ namespace Caliburn.PresentationFramework.Conventions
     using System.Collections.Generic;
     using System.Linq;
     using ViewModels;
+    using Views;
 
     /// <summary>
     /// The default implemenation of <see cref="IViewConventionCategory"/>.

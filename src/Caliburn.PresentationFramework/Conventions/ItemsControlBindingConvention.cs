@@ -8,6 +8,7 @@ namespace Caliburn.PresentationFramework.Conventions
     using System.Windows.Data;
     using Core;
     using ViewModels;
+    using Views;
 
     /// <summary>
     /// An implemenation of <see cref="IViewConvention{T}"/> that bindings SelectedItem and Header for Selectors and HeaderedItemsControls respectively.

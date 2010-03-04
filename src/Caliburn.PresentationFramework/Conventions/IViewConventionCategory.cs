@@ -2,6 +2,7 @@ namespace Caliburn.PresentationFramework.Conventions
 {
     using System.Collections.Generic;
     using ViewModels;
+    using Views;
 
     /// <summary>
     /// A set of conventions applicable to a view.

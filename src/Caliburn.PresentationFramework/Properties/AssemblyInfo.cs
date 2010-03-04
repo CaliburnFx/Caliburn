@@ -9,12 +9,18 @@ using System.Windows.Markup;
 
 #if !SILVERLIGHT
 [assembly: CLSCompliant(true)]
+#endif
+
+#if NET || SILVERLIGHT_40
 [assembly: XmlnsDefinition("http://www.caliburnproject.org", "Caliburn.PresentationFramework")]
 [assembly: XmlnsDefinition("http://www.caliburnproject.org", "Caliburn.PresentationFramework.Actions")]
-[assembly: XmlnsDefinition("http://www.caliburnproject.org", "Caliburn.PresentationFramework.Triggers")]
 [assembly: XmlnsDefinition("http://www.caliburnproject.org", "Caliburn.PresentationFramework.Commands")]
 [assembly: XmlnsDefinition("http://www.caliburnproject.org", "Caliburn.PresentationFramework.ApplicationModel")]
 [assembly: XmlnsDefinition("http://www.caliburnproject.org", "Caliburn.PresentationFramework.ViewModels")]
+[assembly: XmlnsDefinition("http://www.caliburnproject.org", "Caliburn.PresentationFramework.Views")]
+[assembly: XmlnsDefinition("http://www.caliburnproject.org", "Caliburn.PresentationFramework.RoutedMessaging")]
+[assembly: XmlnsDefinition("http://www.caliburnproject.org", "Caliburn.PresentationFramework.RoutedMessaging.Triggers")]
+[assembly: XmlnsDefinition("http://www.caliburnproject.org", "Caliburn.PresentationFramework.Converters")]
 #endif
 
 #if !NO_PARTIAL_TRUST

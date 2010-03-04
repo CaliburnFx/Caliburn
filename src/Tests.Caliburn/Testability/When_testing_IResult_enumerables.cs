@@ -1,7 +1,7 @@
 ﻿namespace Tests.Caliburn.Testability
 {
     using System.Collections.Generic;
-    using global::Caliburn.PresentationFramework;
+    using global::Caliburn.PresentationFramework.RoutedMessaging;
     using global::Caliburn.PresentationFramework.Screens;
     using global::Caliburn.ShellFramework.Results;
     using global::Caliburn.Testability;

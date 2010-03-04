@@ -2,9 +2,9 @@
 {
     using System;
     using Caliburn.Core.Metadata;
-    using Caliburn.PresentationFramework;
     using Caliburn.PresentationFramework.Actions;
     using Caliburn.PresentationFramework.Filters;
+    using Caliburn.PresentationFramework.RoutedMessaging;
     using Microsoft.Practices.ServiceLocation;
 
     public class ActionInfoAttribute : Attribute, IInitializable, IPreProcessor

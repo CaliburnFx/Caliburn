@@ -1,8 +1,8 @@
 ﻿namespace Tests.Caliburn.RoutedUIMessaging.Parsers
 {
     using global::Caliburn.Core.Invocation;
-    using global::Caliburn.PresentationFramework.Parsers;
-    using global::Caliburn.PresentationFramework.Triggers;
+    using global::Caliburn.PresentationFramework.RoutedMessaging.Parsers;
+    using global::Caliburn.PresentationFramework.RoutedMessaging.Triggers;
     using Microsoft.Practices.ServiceLocation;
     using NUnit.Framework;
     using NUnit.Framework.SyntaxHelpers;

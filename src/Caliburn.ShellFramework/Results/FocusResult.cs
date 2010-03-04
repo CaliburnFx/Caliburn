@@ -1,8 +1,8 @@
 ﻿namespace Caliburn.ShellFramework.Results
 {
     using System;
-    using PresentationFramework;
     using PresentationFramework.ApplicationModel;
+    using PresentationFramework.RoutedMessaging;
 
     public class FocusResult : IResult
     {

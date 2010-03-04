@@ -5,7 +5,7 @@
     using System.Windows.Controls;
     using System.Windows.Data;
     using System.Windows.Markup;
-    using ViewModels;
+    using Views;
 
     /// <summary>
     /// An <see cref="IViewApplicable"/> that sets a databinding on an element.

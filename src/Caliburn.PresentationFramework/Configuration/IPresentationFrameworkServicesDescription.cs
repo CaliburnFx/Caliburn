@@ -5,9 +5,10 @@ namespace Caliburn.PresentationFramework.Configuration
     using Conventions;
     using Core.Configuration;
     using Core.IoC;
-    using PresentationFramework;
-    using Parsers;
+    using RoutedMessaging;
+    using RoutedMessaging.Parsers;
     using ViewModels;
+    using Views;
 
     /// <summary>
     /// Desscribes the services required for the presentation framework to function.

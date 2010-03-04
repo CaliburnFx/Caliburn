@@ -5,8 +5,9 @@
     using System.Linq;
     using Caliburn.Core.IoC;
     using Caliburn.PresentationFramework;
+    using Caliburn.PresentationFramework.RoutedMessaging;
     using Caliburn.PresentationFramework.Screens;
-    using Caliburn.PresentationFramework.ViewModels;
+    using Caliburn.PresentationFramework.Views;
     using Framework;
 
     //Register this class as implementation of IRunningActionsRegistry

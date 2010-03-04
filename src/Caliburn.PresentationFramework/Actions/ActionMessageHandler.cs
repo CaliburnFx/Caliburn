@@ -3,6 +3,7 @@
     using System.Linq;
     using Core;
     using Core.Metadata;
+    using RoutedMessaging;
 
     /// <summary>
     /// An implementation of <see cref="IRoutedMessageController"/> for action messages.

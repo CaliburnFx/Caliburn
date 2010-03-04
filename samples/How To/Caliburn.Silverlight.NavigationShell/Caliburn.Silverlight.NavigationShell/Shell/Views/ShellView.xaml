@@ -3,7 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:ct="clr-namespace:System.Windows.Controls;assembly=System.Windows.Controls.Toolkit"
              xmlns:ca="clr-namespace:Caliburn.PresentationFramework.Actions;assembly=Caliburn.PresentationFramework"
-             xmlns:pf="clr-namespace:Caliburn.PresentationFramework;assembly=Caliburn.PresentationFramework">
+             xmlns:rm="clr-namespace:Caliburn.PresentationFramework.RoutedMessaging;assembly=Caliburn.PresentationFramework">
     <ct:DockPanel>
         <ItemsControl x:Name="TaskBarItems"
                       ct:DockPanel.Dock="Top"
@@ -16,7 +16,7 @@
             <ItemsControl.ItemTemplate>
                 <DataTemplate>
                     <Button ca:Action.Target="{Binding}"
-                            pf:Message.Attach="Enter"
+                            rm:Message.Attach="Enter"
                             ToolTipService.ToolTip="{Binding DisplayName}"
                             Width="50"
                             Height="50"

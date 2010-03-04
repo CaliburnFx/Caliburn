@@ -7,10 +7,11 @@ using Rhino.Mocks;
 namespace Tests.Caliburn.Actions
 {
     using System.Collections.Generic;
-    using global::Caliburn.PresentationFramework;
     using global::Caliburn.PresentationFramework.Actions;
     using global::Caliburn.PresentationFramework.Filters;
+    using global::Caliburn.PresentationFramework.RoutedMessaging;
     using Microsoft.Practices.ServiceLocation;
+    using IInteractionNode=global::Caliburn.PresentationFramework.RoutedMessaging.IInteractionNode;
 
     [TestFixture]
     public class A_synchronous_action : TestBase

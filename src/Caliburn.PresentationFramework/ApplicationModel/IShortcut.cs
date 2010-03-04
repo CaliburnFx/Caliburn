@@ -2,6 +2,7 @@ namespace Caliburn.PresentationFramework.ApplicationModel
 {
     using System.Collections.Generic;
     using System.Windows.Input;
+    using RoutedMessaging;
 
     /// <summary>
     /// Represents a shortcut.

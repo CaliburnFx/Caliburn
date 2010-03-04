@@ -1,7 +1,7 @@
 ﻿namespace Caliburn.ShellFramework.Results
 {
     using System;
-    using PresentationFramework;
+    using PresentationFramework.RoutedMessaging;
 
     public abstract class OpenResultBase<TTarget> : IOpenResult<TTarget>
     {

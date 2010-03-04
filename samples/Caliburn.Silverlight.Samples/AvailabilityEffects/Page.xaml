@@ -3,8 +3,8 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:local="clr-namespace:AvailabilityEffects"
              xmlns:ca="clr-namespace:Caliburn.PresentationFramework.Actions;assembly=Caliburn.PresentationFramework"
-             xmlns:pf="clr-namespace:Caliburn.PresentationFramework;assembly=Caliburn.PresentationFramework"
-             xmlns:ct="clr-namespace:Caliburn.PresentationFramework.Triggers;assembly=Caliburn.PresentationFramework"
+             xmlns:rm="clr-namespace:Caliburn.PresentationFramework.RoutedMessaging;assembly=Caliburn.PresentationFramework"
+             xmlns:tr="clr-namespace:Caliburn.PresentationFramework.RoutedMessaging.Triggers;assembly=Caliburn.PresentationFramework"
              Width="400"
              Height="300">
     <!--Note: Sets a target for the actions.  -->
@@ -40,47 +40,47 @@
 
         <!--Note: The UI will be enabled/disabled based on the action.-->
         <Button Content="Divide (Attachment w/ Default (Disable) Availability)"
-                pf:Message.Attach="Divide(left.Text, right.Text) : DivideResult.Text" />
+                rm:Message.Attach="Divide(left.Text, right.Text) : DivideResult.Text" />
 
         <!--Note: The UI will not be affected by the state of the action.-->
         <Button Content="Divide (Attachment w/ None Availability)"
-                pf:Message.AvailabilityEffect="None"
-                pf:Message.Attach="Divide(left.Text, right.Text) : DivideResult.Text" />
+                rm:Message.AvailabilityEffect="None"
+                rm:Message.Attach="Divide(left.Text, right.Text) : DivideResult.Text" />
 
         <!--Note: The UI will be hidden when the action is not available.-->
         <Button Content="Divide (Attachment w/ Hide Availability)"
-                pf:Message.AvailabilityEffect="Hide"
-                pf:Message.Attach="Divide(left.Text, right.Text) : DivideResult.Text" />
+                rm:Message.AvailabilityEffect="Hide"
+                rm:Message.Attach="Divide(left.Text, right.Text) : DivideResult.Text" />
 
         <!--Note: The Ui will be collapsed when the action is not available.-->
         <Button Content="Divide (Attachment w/ Collapse Availability)"
-                pf:Message.AvailabilityEffect="Collapse"
-                pf:Message.Attach="Divide(left.Text, right.Text) : DivideResult.Text" />
+                rm:Message.AvailabilityEffect="Collapse"
+                rm:Message.Attach="Divide(left.Text, right.Text) : DivideResult.Text" />
 
         <!--Note: Custom availability applies by key.-->
         <Button Content="Divide (Attachment w/ Custom Availability)"
-                pf:Message.AvailabilityEffect="Opacity"
-                pf:Message.Attach="Divide(left.Text, right.Text) : DivideResult.Text" />
+                rm:Message.AvailabilityEffect="Opacity"
+                rm:Message.Attach="Divide(left.Text, right.Text) : DivideResult.Text" />
 
         <!--Note: IAvailabilityEffect can be applied on a per message basis.-->
         <Button Content="Divide (Trigger Collection w/ Hide Availability)">
-            <pf:Message.Triggers>
-                <pf:RoutedMessageTriggerCollection>
-                    <ct:EventMessageTrigger EventName="Click">
-                        <ct:EventMessageTrigger.Message>
+            <rm:Message.Triggers>
+                <rm:RoutedMessageTriggerCollection>
+                    <tr:EventMessageTrigger EventName="Click">
+                        <tr:EventMessageTrigger.Message>
                             <ca:ActionMessage MethodName="Divide"
                                            OutcomePath="DivideResult.Text"
                                            AvailabilityEffect="Hide">
                                 <!--Note: The declaration of parameters is different from WPF.-->
-                                <pf:Parameter ElementName="left" 
+                                <rm:Parameter ElementName="left" 
                                               Path="Text" />
-                                <pf:Parameter ElementName="right" 
+                                <rm:Parameter ElementName="right" 
                                               Path="Text" />
                             </ca:ActionMessage>
-                        </ct:EventMessageTrigger.Message>
-                    </ct:EventMessageTrigger>
-                </pf:RoutedMessageTriggerCollection>
-            </pf:Message.Triggers>
+                        </tr:EventMessageTrigger.Message>
+                    </tr:EventMessageTrigger>
+                </rm:RoutedMessageTriggerCollection>
+            </rm:Message.Triggers>
         </Button>
     </StackPanel>
     

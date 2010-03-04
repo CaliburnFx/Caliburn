@@ -10,6 +10,7 @@ namespace Caliburn.PresentationFramework.ApplicationModel
     using PresentationFramework.ApplicationModel;
     using Screens;
     using ViewModels;
+    using Views;
 
     /// <summary>
     /// An implementation of <see cref="IWindowManager"/>.

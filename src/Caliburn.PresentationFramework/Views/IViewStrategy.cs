@@ -1,9 +1,9 @@
-namespace Caliburn.PresentationFramework.ViewModels
+namespace Caliburn.PresentationFramework.Views
 {
     using Core.Metadata;
 
     /// <summary>
-    /// An <see cref="IViewLocator"/> as <see cref="IMetadata"/> with conditional matching.
+    /// An <see cref="IMetadata"/> as <see cref="IViewLocator"/> with conditional matching.
     /// </summary>
     public interface IViewStrategy : IViewLocator, IMetadata
     {

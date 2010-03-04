@@ -1,6 +1,7 @@
 namespace Caliburn.PresentationFramework.Conventions
 {
     using ViewModels;
+    using Views;
 
     /// <summary>
     /// A convention that applies to a view.

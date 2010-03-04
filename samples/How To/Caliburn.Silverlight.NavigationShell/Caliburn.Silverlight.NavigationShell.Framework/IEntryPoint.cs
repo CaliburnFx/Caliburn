@@ -1,7 +1,7 @@
 namespace Caliburn.Silverlight.NavigationShell.Framework
 {
     using System.Collections.Generic;
-    using PresentationFramework;
+    using PresentationFramework.RoutedMessaging;
 
     public interface IEntryPoint
     {

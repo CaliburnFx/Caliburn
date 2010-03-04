@@ -2,8 +2,8 @@
 {
     using System;
     using System.Linq;
-    using PresentationFramework;
     using PresentationFramework.ApplicationModel;
+    using PresentationFramework.RoutedMessaging;
     using PresentationFramework.Screens;
     using PresentationFramework.ViewModels;
 

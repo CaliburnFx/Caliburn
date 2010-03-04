@@ -12,6 +12,7 @@ namespace Caliburn.PresentationFramework.Commands
     using Core;
     using Core.Metadata;
     using Microsoft.Practices.ServiceLocation;
+    using RoutedMessaging;
     using ViewModels;
     using Action=System.Action;
 

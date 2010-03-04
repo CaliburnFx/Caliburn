@@ -11,6 +11,7 @@ namespace Caliburn.PresentationFramework.Actions
     using Core.Invocation;
     using Microsoft.Practices.ServiceLocation;
     using ViewModels;
+    using RoutedMessaging;
 
     /// <summary>
     /// An <see cref="IRoutedMessage"/> for actions.

@@ -6,13 +6,14 @@
     using System.Windows;
     using global::Caliburn.Core.Configuration;
     using global::Caliburn.Core.IoC;
-    using global::Caliburn.PresentationFramework;
     using global::Caliburn.PresentationFramework.Actions;
     using global::Caliburn.PresentationFramework.ApplicationModel;
     using global::Caliburn.PresentationFramework.Configuration;
     using global::Caliburn.PresentationFramework.Conventions;
-    using global::Caliburn.PresentationFramework.Parsers;
+    using global::Caliburn.PresentationFramework.RoutedMessaging;
+    using global::Caliburn.PresentationFramework.RoutedMessaging.Parsers;
     using global::Caliburn.PresentationFramework.ViewModels;
+    using global::Caliburn.PresentationFramework.Views;
     using NUnit.Framework;
     using NUnit.Framework.SyntaxHelpers;
 

@@ -1,5 +1,7 @@
 namespace Caliburn.PresentationFramework.Filters
 {
+    using RoutedMessaging;
+
     /// <summary>
     /// A filter that is executed after something.
     /// </summary>

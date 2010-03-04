@@ -1,8 +1,8 @@
 ﻿namespace Tests.Caliburn.RoutedUIMessaging.Parsers
 {
     using System.Windows.Input;
-    using global::Caliburn.PresentationFramework.Parsers;
-    using global::Caliburn.PresentationFramework.Triggers;
+    using global::Caliburn.PresentationFramework.RoutedMessaging.Parsers;
+    using global::Caliburn.PresentationFramework.RoutedMessaging.Triggers;
     using NUnit.Framework;
     using NUnit.Framework.SyntaxHelpers;
 

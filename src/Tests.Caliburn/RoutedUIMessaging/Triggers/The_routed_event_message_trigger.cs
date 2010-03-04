@@ -5,8 +5,8 @@ namespace Tests.Caliburn.RoutedUIMessaging.Triggers
     using Fakes;
     using Fakes.UI;
     using global::Caliburn.Core;
-    using global::Caliburn.PresentationFramework;
-    using global::Caliburn.PresentationFramework.Triggers;
+    using global::Caliburn.PresentationFramework.RoutedMessaging;
+    using global::Caliburn.PresentationFramework.RoutedMessaging.Triggers;
     using NUnit.Framework;
     using NUnit.Framework.SyntaxHelpers;
     using Rhino.Mocks;

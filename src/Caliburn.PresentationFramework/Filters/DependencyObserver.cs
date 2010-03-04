@@ -5,6 +5,7 @@ namespace Caliburn.PresentationFramework.Filters
     using Core;
     using Core.Metadata;
     using Core.Invocation;
+    using RoutedMessaging;
 
     /// <summary>
     /// Metadata which can be used to trigger availability changes in triggers based on <see cref="INotifyPropertyChanged"/>.

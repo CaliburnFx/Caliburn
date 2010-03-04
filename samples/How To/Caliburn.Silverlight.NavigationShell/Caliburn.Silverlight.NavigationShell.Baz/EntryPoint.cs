@@ -2,7 +2,7 @@
 {
     using System.Collections.Generic;
     using Framework;
-    using PresentationFramework;
+    using PresentationFramework.RoutedMessaging;
     using ShellFramework.Results;
     using ViewModels;
 

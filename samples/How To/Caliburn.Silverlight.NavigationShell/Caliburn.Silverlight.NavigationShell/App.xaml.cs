@@ -7,6 +7,7 @@
     using PresentationFramework.ApplicationModel;
     using PresentationFramework.Configuration;
     using PresentationFramework.ViewModels;
+    using PresentationFramework.Views;
     using ShellFramework;
     using ShellFramework.History;
     using Unity;

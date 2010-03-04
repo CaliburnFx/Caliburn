@@ -8,8 +8,8 @@ using Rhino.Mocks;
 namespace Tests.Caliburn.Actions.Filters
 {
     using Fakes.UI;
-    using global::Caliburn.PresentationFramework;
     using global::Caliburn.PresentationFramework.Filters;
+    using global::Caliburn.PresentationFramework.RoutedMessaging;
 
     [TestFixture]
     public class Rescue_filter : TestBase

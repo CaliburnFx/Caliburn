@@ -4,6 +4,7 @@ namespace Tests.Caliburn.Fakes
     using System.Collections.Generic;
     using System.Windows;
     using global::Caliburn.PresentationFramework;
+    using global::Caliburn.PresentationFramework.RoutedMessaging;
 
     public class FakeMessage : IRoutedMessage
     {

@@ -7,6 +7,7 @@ namespace Caliburn.PresentationFramework.Conventions
     using Actions;
     using Core.Invocation;
     using ViewModels;
+    using Views;
 
     /// <summary>
     /// Implemented by services that understand conventions.

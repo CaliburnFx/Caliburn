@@ -5,6 +5,7 @@ namespace Caliburn.ShellFramework.Results
     using System;
     using System.Windows.Controls;
     using PresentationFramework;
+    using PresentationFramework.RoutedMessaging;
 
     public class SaveFileDialogResult : IResult
     {

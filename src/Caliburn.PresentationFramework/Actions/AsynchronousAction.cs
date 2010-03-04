@@ -6,6 +6,7 @@
     using Filters;
 	using System.Threading;
     using Microsoft.Practices.ServiceLocation;
+    using RoutedMessaging;
 
     /// <summary>
     /// An asynchronous <see cref="IAction"/>.

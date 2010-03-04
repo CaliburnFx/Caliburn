@@ -5,6 +5,7 @@
     using Core.Invocation;
     using Microsoft.Practices.ServiceLocation;
     using Core.Metadata;
+    using RoutedMessaging;
 
     /// <summary>
     /// A basic pre execution filter.

@@ -1,6 +1,7 @@
 ﻿namespace Caliburn.PresentationFramework.Filters
 {
     using System;
+    using RoutedMessaging;
 
     /// <summary>
     /// A basic rescue filter.

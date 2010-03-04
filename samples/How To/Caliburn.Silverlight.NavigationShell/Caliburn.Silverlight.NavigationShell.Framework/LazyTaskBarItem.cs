@@ -9,9 +9,9 @@
     using System.Windows.Media.Imaging;
     using Core;
     using Microsoft.Practices.ServiceLocation;
-    using PresentationFramework;
     using PresentationFramework.Filters;
     using ShellFramework.Results;
+    using PresentationFramework.RoutedMessaging;
 
     public class LazyTaskBarItem : ITaskBarItem
     {

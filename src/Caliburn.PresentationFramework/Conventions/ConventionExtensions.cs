@@ -6,6 +6,7 @@
     using System.Windows.Controls;
     using Core;
     using ViewModels;
+    using Views;
 
 #if SILVERLIGHT
     using System.Windows.Media;

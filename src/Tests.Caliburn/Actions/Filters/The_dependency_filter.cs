@@ -2,8 +2,8 @@
 {
     using System.Collections.Generic;
     using global::Caliburn.Core.Metadata;
-    using global::Caliburn.PresentationFramework;
     using global::Caliburn.PresentationFramework.Filters;
+    using global::Caliburn.PresentationFramework.RoutedMessaging;
     using Microsoft.Practices.ServiceLocation;
     using NUnit.Framework;
     using Rhino.Mocks;

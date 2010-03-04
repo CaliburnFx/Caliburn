@@ -6,6 +6,7 @@ namespace Caliburn.PresentationFramework.Filters
     using System.Collections.Generic;
     using System.Windows.Input;
     using Core.Metadata;
+    using RoutedMessaging;
 
     /// <summary>
     /// A filter capable of updating trigger availability based on CommandManager notifications.

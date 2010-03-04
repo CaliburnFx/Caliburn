@@ -4,6 +4,7 @@
     using System.Linq;
     using System.Reflection;
     using ViewModels;
+    using Views;
 
     /// <summary>
     /// An implementation of <see cref="IViewConvention{T}"/> that matches sub-actions.

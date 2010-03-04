@@ -2,6 +2,7 @@ namespace Caliburn.PresentationFramework.Conventions
 {
     using System;
     using System.Windows;
+    using RoutedMessaging;
 
     /// <summary>
     /// Represents an element's conventions.

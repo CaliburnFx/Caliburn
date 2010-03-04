@@ -14,6 +14,7 @@ namespace Caliburn.PresentationFramework.ApplicationModel
     using System.Windows.Browser;
     using System.Diagnostics;
     using ViewModels;
+    using Views;
     using Screens;
 
     /// <summary>

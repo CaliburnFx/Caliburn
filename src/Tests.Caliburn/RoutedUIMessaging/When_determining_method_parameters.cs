@@ -6,8 +6,8 @@ namespace Tests.Caliburn.RoutedUIMessaging
     using System.Windows.Controls;
     using Fakes;
     using Fakes.UI;
-    using global::Caliburn.PresentationFramework;
     using global::Caliburn.PresentationFramework.Conventions;
+    using global::Caliburn.PresentationFramework.RoutedMessaging;
     using NUnit.Framework;
     using NUnit.Framework.SyntaxHelpers;
     using Rhino.Mocks;

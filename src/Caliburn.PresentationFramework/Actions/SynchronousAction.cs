@@ -4,6 +4,7 @@
     using Core.Invocation;
     using Filters;
     using Microsoft.Practices.ServiceLocation;
+    using RoutedMessaging;
 
     /// <summary>
     /// A synchronous <see cref="IAction"/>.

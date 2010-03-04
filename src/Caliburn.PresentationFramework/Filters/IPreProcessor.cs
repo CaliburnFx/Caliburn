@@ -1,5 +1,7 @@
 namespace Caliburn.PresentationFramework.Filters
 {
+    using RoutedMessaging;
+
     /// <summary>
     /// A <see cref="IFilter"/> that is executing before something.
     /// </summary>

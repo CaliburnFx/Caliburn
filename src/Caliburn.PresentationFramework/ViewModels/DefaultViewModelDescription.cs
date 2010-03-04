@@ -10,6 +10,7 @@ namespace Caliburn.PresentationFramework.ViewModels
     using Conventions;
     using Core.Metadata;
     using Filters;
+    using Views;
 
     /// <summary>
     /// The default implementation of <see cref="IViewModelDescription"/>.

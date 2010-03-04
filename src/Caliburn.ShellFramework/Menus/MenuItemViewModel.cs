@@ -11,6 +11,7 @@ namespace Caliburn.ShellFramework.Menus
     using Microsoft.Practices.ServiceLocation;
     using PresentationFramework;
     using PresentationFramework.ApplicationModel;
+    using PresentationFramework.RoutedMessaging;
     using Resources;
 
     public class MenuItemViewModel : PropertyChangedBase, IMenuItem, IShortcut

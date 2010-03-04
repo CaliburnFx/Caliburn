@@ -6,6 +6,7 @@ namespace Caliburn.PresentationFramework.Actions
     using Core.Metadata;
     using Filters;
     using Microsoft.Practices.ServiceLocation;
+    using RoutedMessaging;
 
     /// <summary>
     /// Designates an action as asynchronous.

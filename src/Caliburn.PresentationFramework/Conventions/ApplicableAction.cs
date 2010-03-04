@@ -3,7 +3,8 @@
     using System.Windows;
     using System.Windows.Data;
     using Actions;
-    using ViewModels;
+    using RoutedMessaging;
+    using Views;
 
     /// <summary>
     /// An <see cref="IViewApplicable"/> that attaches an action to an element.

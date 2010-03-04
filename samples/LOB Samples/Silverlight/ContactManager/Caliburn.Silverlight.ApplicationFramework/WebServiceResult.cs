@@ -5,7 +5,7 @@
     using System.Linq.Expressions;
     using Core;
     using Core.Invocation;
-    using PresentationFramework;
+    using PresentationFramework.RoutedMessaging;
 
     public class WebServiceResult<T, K> : IResult
         where T : new()

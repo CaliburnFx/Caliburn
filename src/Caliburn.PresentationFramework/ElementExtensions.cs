@@ -1,13 +1,9 @@
 ﻿namespace Caliburn.PresentationFramework
 {
-    using System;
-    using System.Reflection;
     using System.Windows;
     using System.Windows.Data;
     using System.Windows.Media;
-    using Conventions;
     using Core;
-    using Microsoft.Practices.ServiceLocation;
 
     /// <summary>
     /// Hosts extension methods related to FrameworkElements and FrameworkContentElements.
@@ -40,7 +36,7 @@
         public static DependencyObject GetTemplatedParent(DependencyObject element)
         {
             var fe = element as FrameworkElement;
-            if(fe != null)
+            if (fe != null)
                 return fe.TemplatedParent;
 
             var fce = element as FrameworkContentElement;
@@ -237,66 +233,6 @@
                 return (T)Application.Current.Resources[key];
 
             return default(T);
-        }
-
-        /// <summary>
-        /// Binds the specified parameter to an element's property without using databinding.
-        /// Rather, event name conventions are used to wire to property changes and push updates to the parameter value.
-        /// </summary>
-        /// <param name="parameter">The parameter.</param>
-        /// <param name="element">The element.</param>
-        /// <param name="elementName">Name of the element.</param>
-        /// <param name="path">The path.</param>
-        public static void Bind(this Parameter parameter, DependencyObject element, string elementName, string path)
-        {
-            bool isLoaded = false;
-
-            element.OnLoad(
-                (s, e) =>
-                {
-                    if (isLoaded)
-                        return;
-
-                    isLoaded = true;
-
-                    var source = element.FindNameExhaustive<DependencyObject>(elementName, false);
-                    if (source == null)
-                        return;
-
-                    if (!string.IsNullOrEmpty(path))
-                    {
-                        var sourceType = source.GetType();
-                        var property = sourceType.GetProperty(path);
-
-                        EventInfo changeEvent = null;
-
-                        if (path == "SelectedItem")
-                            changeEvent = sourceType.GetEvent("SelectionChanged");
-                        if (changeEvent == null)
-                            changeEvent = sourceType.GetEvent(path + "Changed");
-                        if (changeEvent == null)
-                            WireToDefaultEvent(parameter, sourceType, source, property);
-                        else parameter.Wire(source, changeEvent, () => property.GetValue(source, null));
-                    }
-                    else WireToDefaultEvent(parameter, source.GetType(), source, null);
-                });
-        }
-
-        private static void WireToDefaultEvent(Parameter parameter, Type type, DependencyObject source, PropertyInfo property)
-        {
-            var defaults = ServiceLocator.Current.GetInstance<IConventionManager>()
-                .GetElementConvention(type);
-
-            if (defaults == null)
-                throw new CaliburnException(
-                    "Insuficient information provided for wiring action parameters.  Please set interaction defaults for " + type.FullName
-                    );
-
-            var eventInfo = type.GetEvent(defaults.EventName);
-
-            if (property == null)
-                parameter.Wire(source, eventInfo, () => defaults.GetValue(source));
-            else parameter.Wire(source, eventInfo, () => property.GetValue(source, null));
         }
     }
 }

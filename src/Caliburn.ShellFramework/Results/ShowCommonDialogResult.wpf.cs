@@ -4,7 +4,7 @@ namespace Caliburn.ShellFramework.Results
 {
     using System;
     using Microsoft.Win32;
-    using PresentationFramework;
+    using PresentationFramework.RoutedMessaging;
 
     public class ShowCommonDialogResult : IResult
     {

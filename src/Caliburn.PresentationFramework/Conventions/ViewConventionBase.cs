@@ -4,7 +4,9 @@
     using System.Linq;
     using System.Reflection;
     using Actions;
+    using RoutedMessaging;
     using ViewModels;
+    using Views;
 
     public abstract class ViewConventionBase
     {

@@ -6,6 +6,7 @@ namespace Caliburn.PresentationFramework.ViewModels
     using Core;
     using Core.Metadata;
     using Metadata;
+    using Views;
     using Action=Actions.Action;
 
     /// <summary>

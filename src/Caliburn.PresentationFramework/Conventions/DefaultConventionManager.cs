@@ -17,6 +17,7 @@ namespace Caliburn.PresentationFramework.Conventions
     using Core.Invocation;
     using Filters;
     using ViewModels;
+    using Views;
 
     /// <summary>
     /// The default implementation of <see cref="IConventionManager"/>.

@@ -3,6 +3,7 @@ namespace Caliburn.PresentationFramework.Actions
     using System;
     using System.Collections.Generic;
     using Filters;
+    using RoutedMessaging;
 
     /// <summary>
     /// Represents a single action.

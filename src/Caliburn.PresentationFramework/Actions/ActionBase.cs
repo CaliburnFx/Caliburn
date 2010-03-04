@@ -5,6 +5,7 @@ namespace Caliburn.PresentationFramework.Actions
     using System.Linq;
     using Core.Invocation;
     using Filters;
+    using RoutedMessaging;
 
     /// <summary>
     /// A base implementation of <see cref="IAction"/>.

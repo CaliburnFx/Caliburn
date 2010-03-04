@@ -6,6 +6,7 @@
     using Core.Invocation;
     using Filters;
     using Microsoft.Practices.ServiceLocation;
+    using RoutedMessaging;
 
     /// <summary>
     /// Provides services and information during creation of an <see cref="IAction"/>.

@@ -1,4 +1,4 @@
-namespace Caliburn.PresentationFramework.ViewModels
+namespace Caliburn.PresentationFramework.Views
 {
     using System;
     using System.Collections.Generic;
@@ -123,7 +123,7 @@ namespace Caliburn.PresentationFramework.ViewModels
             //starts as: Namespace.ViewModels.SomethingViewModel
 
             var keywords = GetSingularKeywords();
-			var modelTypeName = modelType.FullName;
+            var modelTypeName = modelType.FullName;
 
             foreach (var word in keywords)
             {

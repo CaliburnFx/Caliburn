@@ -7,8 +7,8 @@ using Rhino.Mocks;
 namespace Tests.Caliburn.Actions.Filters
 {
     using Fakes.UI;
-    using global::Caliburn.PresentationFramework;
     using global::Caliburn.PresentationFramework.Actions;
+    using global::Caliburn.PresentationFramework.RoutedMessaging;
 
     [TestFixture]
     public class The_async_attribute_filter : TestBase

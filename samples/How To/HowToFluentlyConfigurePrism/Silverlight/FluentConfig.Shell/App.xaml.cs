@@ -8,8 +8,7 @@
     using Caliburn.Core;
     using Caliburn.Core.Configuration;
     using Caliburn.PresentationFramework;
-    using Caliburn.PresentationFramework.ApplicationModel;
-    using Caliburn.PresentationFramework.Configuration;
+    using Caliburn.PresentationFramework.Views;
     using Caliburn.Prism;
     using Microsoft.Practices.Composite.Modularity;
     using Microsoft.Practices.ServiceLocation;

@@ -5,7 +5,8 @@
     using System.Windows.Data;
     using Conventions;
     using Microsoft.Practices.ServiceLocation;
-    using Parsers;
+    using RoutedMessaging;
+    using RoutedMessaging.Parsers;
 
     /// <summary>
     /// An implementation of <see cref="IMessageParser"/> for commands.

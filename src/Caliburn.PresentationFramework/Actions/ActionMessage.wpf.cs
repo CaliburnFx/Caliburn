@@ -7,6 +7,7 @@ namespace Caliburn.PresentationFramework.Actions
     using System.Windows.Markup;
     using Core.Invocation;
     using Microsoft.Practices.ServiceLocation;
+    using RoutedMessaging;
     using ViewModels;
 
     /// <summary>

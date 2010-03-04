@@ -4,7 +4,7 @@
     using System.Reflection;
     using System.Windows.Media.Imaging;
     using Framework;
-    using PresentationFramework;
+    using PresentationFramework.RoutedMessaging;
     using ShellFramework.Resources;
     using ShellFramework.Results;
 

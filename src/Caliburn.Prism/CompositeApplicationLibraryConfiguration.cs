@@ -248,12 +248,18 @@
 
             yield return Singleton(typeof(IModuleManager), _moduleManager);
             yield return Singleton(typeof(RegionAdapterMappings), typeof(RegionAdapterMappings));
-            yield return new Instance {Service = typeof(IModuleCatalog), Implementation = _moduleCatalog  };
-            foreach (var module in _moduleTypes)
-            {
-                yield return Singleton(module, module);
-            }
 
+            if(_moduleCatalog != null)
+                yield return new Instance {Service = typeof(IModuleCatalog), Implementation = _moduleCatalog  };
+    
+            if(_moduleTypes != null)
+            {
+                foreach (var module in _moduleTypes)
+                {
+                    yield return Singleton(module, module);
+                }
+            }
+            
             /* Patch to support Containers that require explicit Component registration */
             //register default adapters
             yield return PerRequest(typeof(SelectorRegionAdapter), typeof(SelectorRegionAdapter));
@@ -333,8 +339,7 @@
             if(_moduleCatalog == null) 
                 return;
  
-            var manager =
-                ServiceLocator.Current.TryResolve<IModuleManager>();
+            var manager = ServiceLocator.Current.TryResolve<IModuleManager>();
             if (manager != null)
                 manager.Run();
         }

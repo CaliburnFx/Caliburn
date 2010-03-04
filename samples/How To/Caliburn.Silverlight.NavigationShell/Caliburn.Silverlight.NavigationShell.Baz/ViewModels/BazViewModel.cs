@@ -2,7 +2,7 @@
 {
     using System.Collections.Generic;
     using System.Windows.Controls;
-    using PresentationFramework;
+    using PresentationFramework.RoutedMessaging;
     using PresentationFramework.Screens;
     using ShellFramework.History;
     using ShellFramework.Results;

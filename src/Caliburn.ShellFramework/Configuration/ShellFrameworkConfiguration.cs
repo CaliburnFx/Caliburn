@@ -6,6 +6,7 @@
     using Microsoft.Practices.ServiceLocation;
     using PresentationFramework.ApplicationModel;
     using PresentationFramework.ViewModels;
+    using PresentationFramework.Views;
     using Questions;
     using Results;
 

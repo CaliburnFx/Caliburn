@@ -6,6 +6,7 @@
     using PresentationFramework;
     using PresentationFramework.ApplicationModel;
     using PresentationFramework.Screens;
+    using PresentationFramework.RoutedMessaging;
     using ShellFramework.History;
     using ShellFramework.Questions;
     using ShellFramework.Results;

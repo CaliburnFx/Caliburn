@@ -13,6 +13,7 @@ namespace Caliburn.PresentationFramework.ApplicationModel
     using Metadata;
     using System.Windows.Controls;
     using System.Windows.Media;
+    using RoutedMessaging;
 
     /// <summary>
     /// The default implemenation of <see cref="IInputManager"/>.

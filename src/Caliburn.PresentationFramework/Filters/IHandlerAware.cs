@@ -1,5 +1,7 @@
 ﻿namespace Caliburn.PresentationFramework.Filters
 {
+    using RoutedMessaging;
+
     /// <summary>
     /// A filter that is aware individual <see cref="IMessageTrigger"/> and <see cref="IRoutedMessageHandler"/> instances.
     /// </summary>

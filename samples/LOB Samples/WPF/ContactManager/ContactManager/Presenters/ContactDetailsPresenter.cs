@@ -3,9 +3,9 @@
     using System;
     using System.ComponentModel;
     using Caliburn.ModelFramework;
-    using Caliburn.PresentationFramework;
     using Caliburn.PresentationFramework.ApplicationModel;
     using Caliburn.PresentationFramework.Filters;
+    using Caliburn.PresentationFramework.RoutedMessaging;
     using Caliburn.PresentationFramework.Screens;
     using Caliburn.WPF.ApplicationFramework;
     using Interfaces;

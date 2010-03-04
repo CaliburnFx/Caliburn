@@ -1,7 +1,7 @@
 ﻿namespace Caliburn.Testability
 {
     using System.Collections.Generic;
-    using PresentationFramework;
+    using PresentationFramework.RoutedMessaging;
 
     /// <summary>
     /// Enumerates <see cref="IResult"/> instances without calling execute or waiting for completion.

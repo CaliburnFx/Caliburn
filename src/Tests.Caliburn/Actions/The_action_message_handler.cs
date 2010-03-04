@@ -7,9 +7,9 @@ using Tests.Caliburn.Fakes;
 
 namespace Tests.Caliburn.Actions
 {
-    using global::Caliburn.PresentationFramework;
     using global::Caliburn.PresentationFramework.Actions;
     using global::Caliburn.PresentationFramework.Filters;
+    using global::Caliburn.PresentationFramework.RoutedMessaging;
 
     [TestFixture]
     public class The_action_message_handler : TestBase

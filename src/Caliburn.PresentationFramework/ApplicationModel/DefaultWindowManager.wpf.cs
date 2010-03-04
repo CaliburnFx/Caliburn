@@ -10,6 +10,7 @@ namespace Caliburn.PresentationFramework.ApplicationModel
     using System.Windows.Navigation;
     using Screens;
     using ViewModels;
+    using Views;
 
     /// <summary>
     /// An implementation of <see cref="IWindowManager"/>.

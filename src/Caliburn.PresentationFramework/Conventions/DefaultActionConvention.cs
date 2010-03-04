@@ -3,6 +3,7 @@ namespace Caliburn.PresentationFramework.Conventions
     using System;
     using Actions;
     using ViewModels;
+    using Views;
 
     /// <summary>
     /// The default implementation of <see cref="IViewConvention{T}"/> for actions.

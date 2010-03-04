@@ -1,8 +1,8 @@
 ﻿namespace CustomFilters
 {
     using System;
-    using Caliburn.PresentationFramework;
     using Caliburn.PresentationFramework.Filters;
+    using Caliburn.PresentationFramework.RoutedMessaging;
 
     //Note: A custom filter that will be executed before the action.
     //Note: Custom filters can also be IPostProcessor or IRescue

@@ -5,6 +5,7 @@
     using Caliburn.Core.IoC;
     using Caliburn.PresentationFramework;
     using Caliburn.PresentationFramework.ApplicationModel;
+    using Caliburn.PresentationFramework.RoutedMessaging;
     using Caliburn.PresentationFramework.Screens;
     using Caliburn.Silverlight.ApplicationFramework;
     using Interfaces;

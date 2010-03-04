@@ -1,7 +1,7 @@
 ﻿namespace Caliburn.Silverlight.NavigationShell.Foo.ViewModels
 {
     using System.Collections.Generic;
-    using PresentationFramework;
+    using PresentationFramework.RoutedMessaging;
     using PresentationFramework.Screens;
     using ShellFramework.History;
     using ShellFramework.Results;

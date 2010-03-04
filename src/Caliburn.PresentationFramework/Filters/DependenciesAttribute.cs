@@ -5,6 +5,7 @@
     using Core.Invocation;
     using Core.Metadata;
     using Microsoft.Practices.ServiceLocation;
+    using RoutedMessaging;
 
     /// <summary>
     /// A filter capable of specifying the dependencies raised by an implementor of <see cref="INotifyPropertyChanged"/> which can cause a trigger's availability to be re-evaluated.

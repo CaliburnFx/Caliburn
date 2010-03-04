@@ -1,8 +1,6 @@
 ﻿namespace CaliBrism.Modules.Calculator
 {
-    using System.Windows.Controls;
-    using Caliburn.Core;
-    using Caliburn.PresentationFramework.ApplicationModel;
+    using Caliburn.PresentationFramework.Views;
     using Microsoft.Practices.Composite.Modularity;
     using Microsoft.Practices.Composite.Regions;
     using Microsoft.Practices.ServiceLocation;

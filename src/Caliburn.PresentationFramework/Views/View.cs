@@ -1,9 +1,10 @@
-﻿namespace Caliburn.PresentationFramework.ViewModels
+﻿namespace Caliburn.PresentationFramework.Views
 {
     using System.Linq;
     using System.Windows;
     using System.Windows.Markup;
     using Core;
+    using ViewModels;
 
     /// <summary>
     /// Hosts attached properties related to view models.
@@ -24,7 +25,7 @@
             _viewModelBinder = viewModelBinder;
         }
 
-	/// <summary>
+        /// <summary>
         /// A dependency property for assigning a context to a particular portion of the UI.
         /// </summary>
         public static readonly DependencyProperty ContextProperty =
@@ -217,7 +218,7 @@
         {
             var type = d.GetType();
             var contentProperty = type.GetAttributes<ContentPropertyAttribute>(true)
-                                      .FirstOrDefault() ?? new ContentPropertyAttribute("Content");
+                .FirstOrDefault() ?? new ContentPropertyAttribute("Content");
 
             type.GetProperty(contentProperty.Name)
                 .SetValue(d, view, null);

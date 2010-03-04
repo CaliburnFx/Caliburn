@@ -7,6 +7,7 @@
     using global::Caliburn.PresentationFramework;
     using global::Caliburn.PresentationFramework.Actions;
     using global::Caliburn.PresentationFramework.Filters;
+    using global::Caliburn.PresentationFramework.RoutedMessaging;
     using Microsoft.Practices.ServiceLocation;
     using NUnit.Framework;
     using NUnit.Framework.SyntaxHelpers;

@@ -5,6 +5,7 @@
     using System.Windows.Interop;
     using Core.Metadata;
     using Metadata;
+    using Views;
 
     /// <summary>
     /// Hosts extension methods related to view model functionality.

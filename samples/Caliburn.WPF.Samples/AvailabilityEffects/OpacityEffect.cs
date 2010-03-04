@@ -1,7 +1,7 @@
 ﻿namespace AvailabilityEffects
 {
     using System.Windows;
-    using Caliburn.PresentationFramework;
+    using Caliburn.PresentationFramework.RoutedMessaging;
 
     //Note: Implement IAvailabilityEffect to create custom effects.
     public class OpacityEffect : IAvailabilityEffect

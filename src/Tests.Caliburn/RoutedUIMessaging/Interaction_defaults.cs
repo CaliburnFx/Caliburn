@@ -3,7 +3,7 @@
     using System.Windows.Controls;
     using global::Caliburn.Core.Invocation;
     using global::Caliburn.PresentationFramework.Conventions;
-    using global::Caliburn.PresentationFramework.Triggers;
+    using global::Caliburn.PresentationFramework.RoutedMessaging.Triggers;
     using NUnit.Framework;
     using NUnit.Framework.SyntaxHelpers;
 

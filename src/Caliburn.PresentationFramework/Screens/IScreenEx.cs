@@ -2,7 +2,7 @@ namespace Caliburn.PresentationFramework.Screens
 {
     using ApplicationModel;
     using Core.Metadata;
-    using ViewModels;
+    using Views;
 
     /// <summary>
     /// An <see cref="IScreen"/> which also implements <see cref="IMetadataContainer"/>, <see cref="IHierarchicalScreen"/>, <see cref="ILifecycleNotifier"/> and <see cref="IViewAware"/>.

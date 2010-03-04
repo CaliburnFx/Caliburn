@@ -9,6 +9,7 @@
     using Core.Invocation;
     using Filters;
     using Microsoft.Practices.ServiceLocation;
+    using RoutedMessaging;
 
     /// <summary>
     /// The default implementation of <see cref="IActionLocator"/>.

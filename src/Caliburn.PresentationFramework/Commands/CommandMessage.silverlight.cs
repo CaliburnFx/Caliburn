@@ -14,9 +14,10 @@ namespace Caliburn.PresentationFramework.Commands
     using Configuration;
     using Core;
     using Core.Metadata;
-    using Triggers;
     using Microsoft.Practices.ServiceLocation;
     using ViewModels;
+    using RoutedMessaging;
+    using RoutedMessaging.Triggers;
 
     /// <summary>
     /// An <see cref="IRoutedMessage"/> for commands.

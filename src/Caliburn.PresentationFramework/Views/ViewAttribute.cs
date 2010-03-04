@@ -1,4 +1,4 @@
-namespace Caliburn.PresentationFramework.ViewModels
+namespace Caliburn.PresentationFramework.Views
 {
     using System;
     using System.Linq;
@@ -65,8 +65,8 @@ namespace Caliburn.PresentationFramework.ViewModels
             var instances = ServiceLocator.Current.GetAllInstances(_key);
 
             var view = instances.Count() > 0
-                           ? instances.First()
-                           : Activator.CreateInstance(_key);
+                ? instances.First()
+                : Activator.CreateInstance(_key);
 
             return (DependencyObject)view;
         }

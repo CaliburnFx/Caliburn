@@ -3,7 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:local="clr-namespace:AsyncActions"
              xmlns:ca="clr-namespace:Caliburn.PresentationFramework.Actions;assembly=Caliburn.PresentationFramework"
-             xmlns:cm="clr-namespace:Caliburn.PresentationFramework;assembly=Caliburn.PresentationFramework"
+             xmlns:rm="clr-namespace:Caliburn.PresentationFramework.RoutedMessaging;assembly=Caliburn.PresentationFramework"
              Width="400"
              Height="300">
     <!--Note: Sets a target for the actions.  -->
@@ -40,7 +40,7 @@
         <!--Note: UI availability will be updated.-->
         <!--Note: This is the preferred mechanism.-->
         <Button Content="Divide"
-                cm:Message.Attach="Divide(left.Text, right.Text) : DivideResult.Text" />
+                rm:Message.Attach="Divide(left.Text, right.Text) : DivideResult.Text" />
 
     </StackPanel>
 </UserControl>

@@ -3,7 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:local="clr-namespace:DependentActions"
              xmlns:ca="clr-namespace:Caliburn.PresentationFramework.Actions;assembly=Caliburn.PresentationFramework"
-             xmlns:cm="clr-namespace:Caliburn.PresentationFramework;assembly=Caliburn.PresentationFramework"
+             xmlns:rm="clr-namespace:Caliburn.PresentationFramework.RoutedMessaging;assembly=Caliburn.PresentationFramework"
              Width="400"
              Height="300">
     <!--Note: Sets a target for the actions.  -->
@@ -40,7 +40,7 @@
         <!--Note: Calls the Divide action.  The framework must infer the trigger and message type.-->
         <!--Note: The UI availability will be updated based on declared dependents.-->
         <Button Content="Divide"
-                cm:Message.Attach="Divide" />
+                rm:Message.Attach="Divide" />
 
     </StackPanel>
 </UserControl>

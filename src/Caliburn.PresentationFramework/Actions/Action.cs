@@ -2,6 +2,7 @@
 {
     using System.Windows;
     using Microsoft.Practices.ServiceLocation;
+    using RoutedMessaging;
     using ViewModels;
 
     /// <summary>

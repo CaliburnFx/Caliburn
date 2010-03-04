@@ -3,7 +3,7 @@
     using System;
     using System.Windows;
     using System.Windows.Controls.Primitives;
-    using Caliburn.PresentationFramework;
+    using Caliburn.PresentationFramework.RoutedMessaging;
 
     public class ShowPopupResult : IResult
     {

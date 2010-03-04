@@ -7,8 +7,8 @@ namespace Caliburn.DynamicProxy.Interceptors
     using Castle.Core.Interceptor;
     using Core;
     using Microsoft.Practices.ServiceLocation;
-    using PresentationFramework;
     using PresentationFramework.Behaviors;
+    using PresentationFramework.RoutedMessaging;
     using PresentationFramework.Screens;
 
     /// <summary>
