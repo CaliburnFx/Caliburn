@@ -109,7 +109,7 @@
                                       try
                                       {
                                           var outcome = new MessageProcessingOutcome(
-                                              e.Result,
+                                              e.Cancelled ? null : e.Result,
                                               _method.Info.ReturnType,
                                               e.Cancelled
                                               );
@@ -146,7 +146,7 @@
                               });
 
 			Interlocked.Increment(ref _runningCount);
-            CurrentTask.Enqueue(this);
+            CurrentTask.Start(this);
             CurrentTask = null;
         }
 

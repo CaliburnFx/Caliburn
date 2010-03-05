@@ -1,6 +1,7 @@
 namespace Caliburn.Core.Invocation
 {
     using System;
+    using System.ComponentModel;
     using Threading;
 
     /// <summary>
@@ -15,17 +16,17 @@ namespace Caliburn.Core.Invocation
         /// <param name="backgroundAction">The background action.</param>
         /// <param name="uiCallback">The UI callback.</param>
         /// <param name="progressChanged">The progress change callback.</param>
-        public IBackgroundTask ExecuteOnBackgroundThread(Action backgroundAction, Action<BackgroundTaskCompletedEventArgs> uiCallback, Action<BackgroundTaskProgressChangedEventArgs> progressChanged)
+        public IBackgroundTask ExecuteOnBackgroundThread(Action backgroundAction, RunWorkerCompletedEventHandler uiCallback, ProgressChangedEventHandler progressChanged)
         {
             var task = new ForegroundTask(backgroundAction);
 
             if (uiCallback != null)
-                task.Completed += (s, e) => uiCallback(e);
+                task.Completed += uiCallback;
 
             if (progressChanged != null)
-                task.ProgressChanged += (s, e) => progressChanged(e);
+                task.ProgressChanged += progressChanged;
 
-            task.Enqueue(null);
+            task.Start(null);
 
             return task;
         }
@@ -68,7 +69,7 @@ namespace Caliburn.Core.Invocation
             /// Enqueues the task with the specified user state.
             /// </summary>
             /// <param name="userState">The user supplied state.</param>
-            public void Enqueue(object userState)
+            public void Start(object userState)
             {
                 if (Starting != null)
                     Starting(this, EventArgs.Empty);
@@ -78,18 +79,13 @@ namespace Caliburn.Core.Invocation
                 if (ProgressChanged != null)
                     ProgressChanged(
                         this,
-                        new BackgroundTaskProgressChangedEventArgs(null, 1)
+                        new ProgressChangedEventArgs(100, userState)
                         );
 
-                if(Completed != null)
+                if (Completed != null)
                     Completed(
                         this,
-                        new BackgroundTaskCompletedEventArgs(
-                            null,
-                            null,
-                            false,
-                            null
-                            )
+                        new RunWorkerCompletedEventArgs(null, null, false)
                         );
             }
 
@@ -126,12 +122,12 @@ namespace Caliburn.Core.Invocation
             /// <summary>
             /// Occurs when the background task indicates that progress has changed.
             /// </summary>
-            public event EventHandler<BackgroundTaskProgressChangedEventArgs> ProgressChanged;
+            public event ProgressChangedEventHandler ProgressChanged;
 
             /// <summary>
             /// Occurs when the background task has completed either successfully, by cancellation or with an error.
             /// </summary>
-            public event EventHandler<BackgroundTaskCompletedEventArgs> Completed;
+            public event RunWorkerCompletedEventHandler Completed;
         }
 
         private class FakeDispatcherOperation : IDispatcherOperation

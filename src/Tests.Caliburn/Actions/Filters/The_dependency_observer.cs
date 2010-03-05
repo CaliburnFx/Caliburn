@@ -3,7 +3,6 @@
     using System;
     using System.Collections.Generic;
     using global::Caliburn.Core.Invocation;
-    using global::Caliburn.Core.Threading;
     using global::Caliburn.PresentationFramework;
     using global::Caliburn.PresentationFramework.Filters;
     using global::Caliburn.PresentationFramework.RoutedMessaging;
@@ -24,9 +23,7 @@
         {
             _expectationsWasSet = false;
 
-            var methodFactory = new DefaultMethodFactory(
-                new DefaultThreadPool()
-                );
+            var methodFactory = new DefaultMethodFactory();
 
             _handler = StrictMock<IRoutedMessageHandler>();
             _notifier = new TheNotifierClass();

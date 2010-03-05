@@ -220,7 +220,6 @@
     <Compile Include="Core\The_core_configuration.cs" />
     <Compile Include="Core\The_SimpleContainer.cs" />
     <Compile Include="Core\Threading\A_background_task.cs" />
-    <Compile Include="Fakes\FakeThreadPool.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RoutedUIMessaging\An_interaction_node.cs" />
     <Compile Include="RoutedUIMessaging\Interaction_defaults.cs" />

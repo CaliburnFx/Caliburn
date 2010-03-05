@@ -3,6 +3,7 @@
 namespace Caliburn.PresentationFramework.Invocation
 {
     using System;
+    using System.ComponentModel;
     using System.Windows;
     using System.Windows.Controls;
     using System.Windows.Threading;
@@ -15,15 +16,13 @@ namespace Caliburn.PresentationFramework.Invocation
     public class DispatcherImplementation : IDispatcher
     {
         private readonly Dispatcher _dispatcher;
-        private readonly IThreadPool _threadPool;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="DispatcherImplementation"/> class.
         /// </summary>
-        public DispatcherImplementation(IThreadPool threadPool)
+        public DispatcherImplementation()
         {
             _dispatcher = GetDispatcher();
-            _threadPool = threadPool;
         }
 
         /// <summary>
@@ -41,22 +40,21 @@ namespace Caliburn.PresentationFramework.Invocation
         /// <param name="backgroundAction">The background action.</param>
         /// <param name="uiCallback">The UI callback.</param>
         /// <param name="progressChanged">The progress change callback.</param>
-        public IBackgroundTask ExecuteOnBackgroundThread(Action backgroundAction, Action<BackgroundTaskCompletedEventArgs> uiCallback, Action<BackgroundTaskProgressChangedEventArgs> progressChanged)
+        public IBackgroundTask ExecuteOnBackgroundThread(Action backgroundAction, RunWorkerCompletedEventHandler uiCallback, ProgressChangedEventHandler progressChanged)
         {
             var task = new BackgroundTask(
-                _threadPool,
                 () =>{
                     backgroundAction();
                     return null;
                 });
 
             if (uiCallback != null)
-                task.Completed += (s, e) => ExecuteOnUIThread(() => uiCallback(e));
+                task.Completed += (s, e) => ExecuteOnUIThread(() => uiCallback(s, e));
 
             if (progressChanged != null)
-                task.ProgressChanged += (s, e) => ExecuteOnUIThread(() => progressChanged(e));
+                task.ProgressChanged += (s, e) => ExecuteOnUIThread(() => progressChanged(s, e));
 
-            task.Enqueue(null);
+            task.Start(null);
 
             return task;
         }

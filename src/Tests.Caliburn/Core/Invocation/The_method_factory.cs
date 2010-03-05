@@ -11,15 +11,13 @@ namespace Tests.Caliburn.Core.Invocation
     {
         private MethodInvokeTarget _theInvokeTarget;
         private IMethodFactory _factory;
-        private IThreadPool _threadPool;
 
         protected override void given_the_context_of()
         {
             _theInvokeTarget = new MethodInvokeTarget();
             MethodInvokeTarget.Reset();
 
-            _threadPool = Mock<IThreadPool>();
-            _factory = new DefaultMethodFactory(_threadPool);
+            _factory = new DefaultMethodFactory();
         }
 
         [Test]

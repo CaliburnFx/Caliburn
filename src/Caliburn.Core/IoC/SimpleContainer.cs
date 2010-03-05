@@ -2,7 +2,6 @@
 {
     using System;
     using System.Collections.Generic;
-    using System.Linq;
     using Behaviors;
     using Microsoft.Practices.ServiceLocation;
 
@@ -324,12 +323,12 @@
 
                 return factory.CreateProxy(
                     type,
-                    type.GetAttributes<IBehavior>(true).ToArray(),
-                    args.ToArray()
+                    type.GetAttributes<IBehavior>(true),
+                    args
                     );
             }
 
-            return args.Length > 0 ? Activator.CreateInstance(type, args.ToArray()) : Activator.CreateInstance(type);
+            return args.Length > 0 ? Activator.CreateInstance(type, args) : Activator.CreateInstance(type);
         }
     }
 }

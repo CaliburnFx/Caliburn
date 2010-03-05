@@ -1,6 +1,7 @@
 namespace Caliburn.Core.Threading
 {
     using System;
+    using System.ComponentModel;
 
     /// <summary>
     /// A task that can execute asynchronously.
@@ -11,7 +12,7 @@ namespace Caliburn.Core.Threading
         /// Enqueues the task with the specified user state.
         /// </summary>
         /// <param name="userState">The user supplied state.</param>
-        void Enqueue(object userState);
+        void Start(object userState);
 
         /// <summary>
         /// Cancels the task.
@@ -38,11 +39,11 @@ namespace Caliburn.Core.Threading
         /// <summary>
         /// Occurs when the background task indicates that progress has changed.
         /// </summary>
-        event EventHandler<BackgroundTaskProgressChangedEventArgs> ProgressChanged;
+        event ProgressChangedEventHandler ProgressChanged;
 
         /// <summary>
         /// Occurs when the background task has completed either successfully, by cancellation or with an error.
         /// </summary>
-        event EventHandler<BackgroundTaskCompletedEventArgs> Completed;
+        event RunWorkerCompletedEventHandler Completed;
     }
 }

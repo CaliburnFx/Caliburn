@@ -1,6 +1,7 @@
 ﻿namespace Caliburn.Core.Invocation
 {
     using System;
+    using System.ComponentModel;
     using Threading;
 
     /// <summary>
@@ -33,7 +34,7 @@
         /// </summary>
         /// <param name="backgroundAction">The action.</param>
         /// <param name="uiCallback">The UI callback.</param>
-        public static IBackgroundTask OnBackgroundThread(Action backgroundAction, Action<BackgroundTaskCompletedEventArgs> uiCallback)
+        public static IBackgroundTask OnBackgroundThread(Action backgroundAction, RunWorkerCompletedEventHandler uiCallback)
         {
             return _dispatcher.ExecuteOnBackgroundThread(backgroundAction, uiCallback, null);
         }
@@ -44,7 +45,7 @@
         /// <param name="backgroundAction">The action.</param>
         /// <param name="uiCallback">The UI callback.</param>
         /// <param name="progressChanged">The progress change callback.</param>
-        public static IBackgroundTask OnBackgroundThread(Action backgroundAction, Action<BackgroundTaskCompletedEventArgs> uiCallback, Action<BackgroundTaskProgressChangedEventArgs> progressChanged)
+        public static IBackgroundTask OnBackgroundThread(Action backgroundAction, RunWorkerCompletedEventHandler uiCallback, ProgressChangedEventHandler progressChanged)
         {
             return _dispatcher.ExecuteOnBackgroundThread(backgroundAction, uiCallback, progressChanged);
         }
@@ -54,7 +55,7 @@
         /// </summary>
         /// <param name="backgroundAction">The action.</param>
         /// <param name="progressChanged">The progress change callback.</param>
-        public static IBackgroundTask OnBackgroundThread(Action backgroundAction, Action<BackgroundTaskProgressChangedEventArgs> progressChanged)
+        public static IBackgroundTask OnBackgroundThread(Action backgroundAction, ProgressChangedEventHandler progressChanged)
         {
             return _dispatcher.ExecuteOnBackgroundThread(backgroundAction, null, progressChanged);
         }

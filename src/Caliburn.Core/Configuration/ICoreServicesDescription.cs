@@ -2,19 +2,12 @@ namespace Caliburn.Core.Configuration
 {
     using Invocation;
     using IoC;
-    using Threading;
 
     /// <summary>
     /// Describes the services required for the core framework to function.
     /// </summary>
     public interface ICoreServicesDescription
     {
-        /// <summary>
-        /// Customizes the thread pool used by Caliburn.
-        /// </summary>
-        /// <typeparam name="T">The thread pool type.</typeparam>
-        IConfiguredRegistration<Singleton, T> ThreadPool<T>() where T : IThreadPool;
-
         /// <summary>
         /// Customizes the method factory used by Caliburn.
         /// </summary>

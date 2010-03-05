@@ -3,12 +3,10 @@
     using System;
     using System.Linq;
     using System.Reflection;
-    using Fakes;
     using global::Caliburn.Core;
     using global::Caliburn.Core.Configuration;
     using global::Caliburn.Core.Invocation;
     using global::Caliburn.Core.IoC;
-    using global::Caliburn.Core.Threading;
     using NUnit.Framework;
     using NUnit.Framework.SyntaxHelpers;
 
@@ -32,13 +30,6 @@
             var found = (from reg in registrations.OfType<Singleton>()
                          where reg.Service == typeof(IDispatcher)
                          select reg).FirstOrDefault();
-
-            Assert.That(found, Is.Not.Null);
-            Assert.That(found.Implementation, Is.Not.Null);
-
-            found = (from reg in registrations.OfType<Singleton>()
-                     where reg.Service == typeof(IThreadPool)
-                     select reg).FirstOrDefault();
 
             Assert.That(found, Is.Not.Null);
             Assert.That(found.Implementation, Is.Not.Null);
@@ -77,20 +68,6 @@
                          select reg).FirstOrDefault();
 
             Assert.That(found.Implementation, Is.EqualTo(typeof(DefaultDispatcher)));
-        }
-
-        [Test]
-        public void can_provide_a_custom_thread_pool()
-        {
-            _config.Using(x => x.ThreadPool<FakeThreadPool>());
-
-            var registrations = _module.GetComponents();
-
-            var found = (from reg in registrations.OfType<Singleton>()
-                         where reg.Service == typeof(IThreadPool)
-                         select reg).FirstOrDefault();
-
-            Assert.That(found.Implementation, Is.EqualTo(typeof(FakeThreadPool)));
         }
 
         [Test]

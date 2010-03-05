@@ -1,6 +1,7 @@
 namespace Caliburn.Core.Invocation
 {
     using System;
+    using System.ComponentModel;
     using Threading;
 
     /// <summary>
@@ -14,7 +15,7 @@ namespace Caliburn.Core.Invocation
         /// <param name="backgroundAction">The background action.</param>
         /// <param name="uiCallback">The UI callback.</param>
         /// <param name="progressChanged">The progress change callback.</param>
-        IBackgroundTask ExecuteOnBackgroundThread(Action backgroundAction, Action<BackgroundTaskCompletedEventArgs> uiCallback, Action<BackgroundTaskProgressChangedEventArgs> progressChanged);
+        IBackgroundTask ExecuteOnBackgroundThread(Action backgroundAction, RunWorkerCompletedEventHandler uiCallback, ProgressChangedEventHandler progressChanged);
 
         /// <summary>
         /// Executes code on the UI thread.

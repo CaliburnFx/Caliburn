@@ -10,17 +10,7 @@ namespace Caliburn.Core.Invocation
     /// </summary>
     public class DefaultMethodFactory : IMethodFactory
     {
-        private readonly IThreadPool _threadPool;
         private readonly Dictionary<MethodInfo, IMethod> _cache = new Dictionary<MethodInfo, IMethod>();
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="DefaultMethodFactory"/> class.
-        /// </summary>
-        /// <param name="threadPool">The thread pool.</param>
-        public DefaultMethodFactory(IThreadPool threadPool)
-        {
-            _threadPool = threadPool;
-        }
 
         /// <summary>
         /// Creates an instance of <see cref="IMethod"/> using the <see cref="MethodInfo"/>.
@@ -34,8 +24,8 @@ namespace Caliburn.Core.Invocation
             if(!_cache.TryGetValue(methodInfo, out method))
             {
                 if(methodInfo.ReturnType == typeof(void))
-                    method = new Procedure(methodInfo, _threadPool);
-                else method = new Function(methodInfo, _threadPool);
+                    method = new Procedure(methodInfo);
+                else method = new Function(methodInfo);
 
                 _cache[methodInfo] = method;
             }
@@ -49,17 +39,14 @@ namespace Caliburn.Core.Invocation
         private abstract class MethodProxyBase : IMethod
         {
             private readonly MethodInfo _info;
-            private readonly IThreadPool _threadPool;
 
             /// <summary>
             /// Initializes a new instance of the <see cref="MethodProxyBase"/> class.
             /// </summary>
             /// <param name="info">The info.</param>
-            /// <param name="threadPool">The thread pool.</param>
-            protected MethodProxyBase(MethodInfo info, IThreadPool threadPool)
+            protected MethodProxyBase(MethodInfo info)
             {
                 _info = info;
-                _threadPool = threadPool;
             }
 
             /// <summary>
@@ -94,7 +81,7 @@ namespace Caliburn.Core.Invocation
             /// </returns>
             public IBackgroundTask CreateBackgroundTask(object instance, params object[] parameters)
             {
-                return new BackgroundTask(_threadPool, () => SafeInvoke(instance, parameters));
+                return new BackgroundTask(() => SafeInvoke(instance, parameters));
             }
 
             protected abstract object SafeInvoke(object instance, object[] parameters);
@@ -130,9 +117,8 @@ namespace Caliburn.Core.Invocation
             /// Initializes a new instance of the <see cref="Procedure"/> class.
             /// </summary>
             /// <param name="info">The info.</param>
-            /// <param name="threadPool">The thread pool.</param>
-            public Procedure(MethodInfo info, IThreadPool threadPool)
-                : base(info, threadPool)
+            public Procedure(MethodInfo info)
+                : base(info)
             {
                 _theDelegate = DelegateFactory.Create<DelegateFactory.LateBoundProc>(info);
             }
@@ -164,9 +150,8 @@ namespace Caliburn.Core.Invocation
             /// Initializes a new instance of the <see cref="Function"/> class.
             /// </summary>
             /// <param name="info">The info.</param>
-            /// <param name="threadPool">The thread pool.</param>
-            public Function(MethodInfo info, IThreadPool threadPool)
-                : base(info, threadPool)
+            public Function(MethodInfo info)
+                : base(info)
             {
                 _theDelegate = DelegateFactory.Create<DelegateFactory.LateBoundFunc>(info);
             }

@@ -52,7 +52,7 @@
                 //notify change to other listeners of IBackgroundTask.ProgressChanged
                 //only if progress change is NOT originated from another notification
                 if (!_updatingProgressFromInnerIBackgroundTask)
-                    BackgroundTask.CurrentContext.UpdateProgress(value);
+                    BackgroundTask.CurrentContext.ReportProgress((int)(value * 100));
             }
         }
 
@@ -61,9 +61,9 @@
             get { return _bgTask.CancellationPending; }
         }
 
-        public static void UpdateProgress(double percentage)
+        public static void UpdateProgress(int percentage)
         {
-            BackgroundTask.CurrentContext.UpdateProgress(percentage);
+            BackgroundTask.CurrentContext.ReportProgress(percentage);
         }
 
         public RunningAction(IBackgroundTask bgTask, bool isIndeterminate, bool isCancellable)
@@ -78,7 +78,7 @@
                 _updatingProgressFromInnerIBackgroundTask = true;
                 try
                 {
-                    CurrentPercentage = e.Percentage;
+                    CurrentPercentage = e.ProgressPercentage/100.0;
                 }
                 finally
                 {

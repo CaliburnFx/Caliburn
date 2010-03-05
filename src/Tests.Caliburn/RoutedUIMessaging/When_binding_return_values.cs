@@ -6,7 +6,6 @@ namespace Tests.Caliburn.RoutedUIMessaging
     using System.Windows.Controls;
     using Fakes.UI;
     using global::Caliburn.Core.Invocation;
-    using global::Caliburn.Core.Threading;
     using global::Caliburn.PresentationFramework.Conventions;
     using global::Caliburn.PresentationFramework.RoutedMessaging;
     using Microsoft.Practices.ServiceLocation;
@@ -26,7 +25,7 @@ namespace Tests.Caliburn.RoutedUIMessaging
 
         protected override void given_the_context_of()
         {
-            _factory = new DefaultMethodFactory(new DefaultThreadPool());
+            _factory = new DefaultMethodFactory();
             _conventionManager = Mock<IConventionManager>();
             _binder = new DefaultMessageBinder(_conventionManager);
             _handlingNode = Stub<IInteractionNode>();

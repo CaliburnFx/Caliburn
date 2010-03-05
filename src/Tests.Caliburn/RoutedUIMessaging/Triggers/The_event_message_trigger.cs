@@ -36,8 +36,8 @@ namespace Tests.Caliburn.RoutedUIMessaging.Triggers
                 EventName = FakeElement.EventName
             };
 
-            _node.Expect(x => x.UIElement).Return(_element);
-            factory.Expect(x => x.Wire(_element, FakeElement.EventName)).Return(handler);
+            _node.Expect(x => x.UIElement).Return(_element).Repeat.Any();
+            factory.Expect(x => x.Wire(_element, typeof(FakeElement).GetEvent(FakeElement.EventName))).Return(handler);
             handler.Expect(x => x.SetActualHandler(Arg<Action<object[]>>.Is.NotNull));
 
 
@@ -57,7 +57,7 @@ namespace Tests.Caliburn.RoutedUIMessaging.Triggers
                 EventName = FakeElement.EventName
             };
 
-            _node.Expect(x => x.UIElement).Return(_element);
+            _node.Expect(x => x.UIElement).Return(_element).Repeat.Any();
             _node.Expect(x => x.ProcessMessage(Arg<IRoutedMessage>.Is.Equal(_message), Arg<EventArgs>.Is.TypeOf));
 
 
@@ -77,7 +77,7 @@ namespace Tests.Caliburn.RoutedUIMessaging.Triggers
             };
 
             _node.Expect(x => x.UIElement).Return(_element);
-            factory.Expect(x => x.Wire(_element, FakeElement.EventName)).Return(handler);
+            factory.Expect(x => x.Wire(_element, typeof(FakeElement).GetEvent(FakeElement.EventName))).Return(handler);
             handler.Expect(x => x.SetActualHandler(Arg<Action<object[]>>.Is.NotNull));
 
             _node.Expect(x => x.UIElement).Return(_element);

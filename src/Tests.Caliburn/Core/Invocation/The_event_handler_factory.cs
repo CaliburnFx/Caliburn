@@ -34,21 +34,5 @@ namespace Tests.Caliburn.Core.Invocation
 
             Assert.That(theHandlerWasCalled);
         }
-
-        [Test]
-        public void can_wire_an_event_based_on_name()
-        {
-            var handler = _factory.Wire(_theInvokeTarget, "AnEvent");
-
-            Assert.That(handler, Is.Not.Null);
-            Assert.That(handler, Is.InstanceOfType(typeof(IEventHandler)));
-
-            bool theHandlerWasCalled = false;
-            handler.SetActualHandler(delegate { theHandlerWasCalled = true; });
-
-            _theInvokeTarget.FireAnEvent();
-
-            Assert.That(theHandlerWasCalled);
-        }
     }
 }

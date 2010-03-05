@@ -39,7 +39,7 @@
             var eventName = methodCall.Method.Name.Replace("Async", "Completed");
 
             var service = new T();
-            var handler = factory.Wire(service, eventName);
+            var handler = factory.Wire(service, service.GetType().GetEvent(eventName));
 
             handler.SetActualHandler(args =>{
                 context.ServiceLocator.GetInstance<ILoadScreen>().StopLoading();

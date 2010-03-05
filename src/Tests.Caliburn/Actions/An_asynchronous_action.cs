@@ -176,7 +176,7 @@ namespace Tests.Caliburn.Actions
             _method.Stub(x => x.CreateBackgroundTask(target, parameters))
                 .Return(task);
 
-            task.Expect(x => x.Enqueue(null));
+            task.Expect(x => x.Start(null));
 
             _action.Execute(message, handlingNode, context);
         }

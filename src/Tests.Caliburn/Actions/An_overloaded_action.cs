@@ -3,8 +3,6 @@
     using System.Linq;
     using global::Caliburn.Core;
     using global::Caliburn.Core.Invocation;
-    using global::Caliburn.Core.Threading;
-    using global::Caliburn.PresentationFramework;
     using global::Caliburn.PresentationFramework.Actions;
     using global::Caliburn.PresentationFramework.Filters;
     using global::Caliburn.PresentationFramework.RoutedMessaging;
@@ -19,9 +17,7 @@
 
         protected override void given_the_context_of()
         {
-            var methodFactory = new DefaultMethodFactory(
-                new DefaultThreadPool()
-                );
+            var methodFactory = new DefaultMethodFactory();
 
             _action = new OverloadedAction("Test");
 

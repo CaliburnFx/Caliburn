@@ -11,12 +11,12 @@ namespace Caliburn.Core.Threading
         /// <value>
         /// 	<c>true</c> if cancelled; otherwise, <c>false</c>.
         /// </value>
-        bool IsCancelled { get; }
+        bool CancellationPending { get; }
 
         /// <summary>
         /// Enables the current task to update its progress.
         /// </summary>
         /// <param name="percentage">The percentage.</param>
-        void UpdateProgress(double percentage);
+        void ReportProgress(int percentage);
     }
 }
