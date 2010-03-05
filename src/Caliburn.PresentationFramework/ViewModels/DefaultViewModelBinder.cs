@@ -4,8 +4,6 @@ namespace Caliburn.PresentationFramework.ViewModels
     using System.Windows;
     using ApplicationModel;
     using Core;
-    using Core.Metadata;
-    using Metadata;
     using Views;
     using Action=Actions.Action;
 
@@ -68,13 +66,9 @@ namespace Caliburn.PresentationFramework.ViewModels
         {
             Action.SetTarget(view, viewModel);
 
-            var metadataContainer = viewModel as IMetadataContainer;
-            if (metadataContainer != null) 
-                metadataContainer.SetView(view, context, false);
-
             var viewAware = viewModel as IViewAware;
             if (viewAware != null)
-                view.OnLoad(delegate { viewAware.ViewLoaded(view, context); });
+                view.OnLoad(delegate { viewAware.AttachView(view, context); });
         }
 
         /// <summary>

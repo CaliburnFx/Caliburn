@@ -1,9 +1,11 @@
 namespace Caliburn.ModelFramework
 {
+    using PresentationFramework.Views;
+
     /// <summary>
     /// A type of <see cref="IModelNode"/> that represents a property.
     /// </summary>
-    public interface IProperty : IModelNode, ISupportInterrogation
+    public interface IProperty : IModelNode, ISupportInterrogation, IViewAware
     {
         /// <summary>
         /// Gets the definition.

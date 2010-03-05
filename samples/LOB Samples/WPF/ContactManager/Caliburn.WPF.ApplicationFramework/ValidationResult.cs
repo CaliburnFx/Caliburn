@@ -2,7 +2,6 @@
 {
     using System.Windows.Controls;
     using ModelFramework;
-    using PresentationFramework.Metadata;
 
     public class ValidationResult : IValidationResult
     {
@@ -18,7 +17,7 @@
 
         public void DrawAttentionTo()
         {
-            var view = _invalidProperty.GetView<Control>(null);
+            var view = (Control)_invalidProperty.GetView(null);
             view.Focus();
 
             var box = view as TextBox;

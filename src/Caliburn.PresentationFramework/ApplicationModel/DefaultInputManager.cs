@@ -9,11 +9,10 @@ namespace Caliburn.PresentationFramework.ApplicationModel
     using System.Windows;
     using System.Windows.Data;
     using System.Windows.Input;
-    using Core.Metadata;
-    using Metadata;
     using System.Windows.Controls;
     using System.Windows.Media;
     using RoutedMessaging;
+    using Views;
 
     /// <summary>
     /// The default implemenation of <see cref="IInputManager"/>.
@@ -136,10 +135,10 @@ namespace Caliburn.PresentationFramework.ApplicationModel
         /// <returns></returns>
         protected virtual DependencyObject GetView(object model)
         {
-            var container = model as IMetadataContainer;
-            if (container == null) return null;
+            var viewAware = model as IViewAware;
+            if (viewAware == null) return null;
 
-            return container.GetView<DependencyObject>(null);
+            return viewAware.GetView(null);
         }
 
         private static IEnumerable<string> GetBindingPaths(DependencyObject element)

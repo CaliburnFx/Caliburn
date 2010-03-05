@@ -39,6 +39,9 @@ V2 Alpha
 -Removed support for Container Custom Lifetimes.  Caliburn itself does not use this and it can now easilty be added by developers who wish to.
 -Added TestResultEnumerator for easier unit testing of methods that return IEnumerable<IResult>
 -Added a dedicated control called NotFoundView which represents views that are not found by an IViewLocator.
+-Massive reorganization of routed messagig into their own namespace.
+-Massive reorganization of view related classes into their own namespace.
+-Removed ViewMetadata by extending IViewAware.
 
 V1.1 Release
 -Fixed an issue in the WPF version of InteractionNode.

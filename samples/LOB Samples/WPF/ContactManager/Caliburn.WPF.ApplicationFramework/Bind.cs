@@ -7,7 +7,6 @@
     using System.Windows.Data;
     using Converters;
     using ModelFramework;
-    using PresentationFramework.Metadata;
 
     public static class Bind
     {
@@ -124,7 +123,7 @@
             var model = (IModel)element.DataContext;
             var state = model[modelProperty];
 
-            state.SetView(element, null, true);
+            state.AttachView(element, null);
 
             element.SetBinding(
                 dependencyProperty,

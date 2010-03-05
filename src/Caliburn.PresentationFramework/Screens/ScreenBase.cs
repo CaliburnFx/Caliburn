@@ -1,16 +1,19 @@
 namespace Caliburn.PresentationFramework.Screens
 {
     using System;
+    using System.Collections.Generic;
     using System.Windows;
     using Behaviors;
     using Core.Metadata;
-    using Metadata;
+    using Views;
 
     /// <summary>
     /// Implements common functionality used by all implementors of <see cref="IScreen"/>.
     /// </summary>
     public abstract class ScreenBase : MetadataContainer, IScreenEx
     {
+        private readonly Dictionary<object, DependencyObject> _views = new Dictionary<object, DependencyObject>();
+
         private IScreenCollection _parent;
         private bool _isActive;
         private bool _isInitialized;
@@ -195,7 +198,22 @@ namespace Caliburn.PresentationFramework.Screens
         /// </summary>
         /// <param name="view">The view.</param>
         /// <param name="context">The context.</param>
-        public virtual void ViewLoaded(DependencyObject view, object context) {}
+        public virtual void AttachView(DependencyObject view, object context)
+        {
+            _views[context ?? DefaultViewLocator.DefaultContext] = view;
+        }
+
+        /// <summary>
+        /// Gets the view.
+        /// </summary>
+        /// <param name="context">The context.</param>
+        /// <returns>The view</returns>
+        public virtual DependencyObject GetView(object context)
+        {
+            DependencyObject view;
+            _views.TryGetValue(context ?? DefaultViewLocator.DefaultContext, out view);
+            return view;
+        }
 
         /// <summary>
         /// Closes this instance by asking its Parent to initiate shutdown or by asking it's corresponding default view to close.
@@ -206,7 +224,7 @@ namespace Caliburn.PresentationFramework.Screens
                 Parent.ShutdownScreen(this, delegate { });
             else
             {
-                var view = this.GetView<object>(null);
+                var view = GetView(null);
 
                 if (view == null)
                     throw new NotSupportedException(
@@ -233,7 +251,7 @@ namespace Caliburn.PresentationFramework.Screens
         /// <param name="dialogResult">The dialog result.</param>
         public virtual void Close(bool? dialogResult)
         {
-            var view = this.GetView<object>(null);
+            var view = GetView(null);
 
             if(view != null)
             {

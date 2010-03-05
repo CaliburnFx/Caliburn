@@ -6,8 +6,6 @@ namespace Caliburn.PresentationFramework.Views
     using System.Windows;
     using System.Windows.Interop;
     using Core;
-    using Core.Metadata;
-    using Metadata;
     using Microsoft.Practices.ServiceLocation;
 
     /// <summary>
@@ -15,6 +13,11 @@ namespace Caliburn.PresentationFramework.Views
     /// </summary>
     public class DefaultViewLocator : IViewLocator
     {
+        /// <summary>
+        /// The default view context.
+        /// </summary>
+        public static readonly object DefaultContext = new object();
+
         private readonly IAssemblySource _assemblySource;
         private readonly IServiceLocator _serviceLocator;
         private readonly Dictionary<string, Type> _cache = new Dictionary<string, Type>();
@@ -53,10 +56,10 @@ namespace Caliburn.PresentationFramework.Views
             if (model == null)
                 return null;
 
-            var metadataContainer = model as IMetadataContainer;
-            if (metadataContainer != null)
+            var viewAware = model as IViewAware;
+            if (viewAware != null)
             {
-                var view = metadataContainer.GetView<DependencyObject>(context);
+                var view = viewAware.GetView(context);
                 if (view != null)
                 {
 #if !SILVERLIGHT

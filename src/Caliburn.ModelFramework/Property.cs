@@ -3,8 +3,10 @@ namespace Caliburn.ModelFramework
     using System;
     using System.Collections.Generic;
     using System.ComponentModel;
+    using System.Windows;
     using Core.Metadata;
     using PresentationFramework;
+    using PresentationFramework.Views;
 
     /// <summary>
     /// An implementation of <see cref="IProperty{T}"/>.
@@ -12,6 +14,7 @@ namespace Caliburn.ModelFramework
     /// <typeparam name="T"></typeparam>
     public class Property<T> : MetadataContainer, IProperty<T>
     {
+        private readonly Dictionary<object, DependencyObject> _views = new Dictionary<object, DependencyObject>();
         private readonly IPropertyDefinition<T> _definition;
         private IModelNode _parent;
 
@@ -182,6 +185,28 @@ namespace Caliburn.ModelFramework
         /// Occurs when the model has changed.
         /// </summary>
         public event Action<IModelNode, IUndoRedoHandle> ModelChanged = delegate { };
+
+        /// <summary>
+        /// Called when the screen's view is loaded.
+        /// </summary>
+        /// <param name="view">The view.</param>
+        /// <param name="context">The context.</param>
+        public void AttachView(DependencyObject view, object context)
+        {
+            _views[context ?? DefaultViewLocator.DefaultContext] = view;
+        }
+
+        /// <summary>
+        /// Gets the view.
+        /// </summary>
+        /// <param name="context">The context.</param>
+        /// <returns>The view</returns>
+        public DependencyObject GetView(object context)
+        {
+            DependencyObject view;
+            _views.TryGetValue(context ?? DefaultViewLocator.DefaultContext, out view);
+            return view;
+        }
 
         private void SetValue(T value, bool clearErrors, bool raiseUndoRedo)
         {

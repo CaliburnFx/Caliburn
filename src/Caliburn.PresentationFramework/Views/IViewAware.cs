@@ -8,10 +8,17 @@ namespace Caliburn.PresentationFramework.Views
     public interface IViewAware
     {
         /// <summary>
-        /// Called when the implementor's view is loaded.
+        /// Attaches a view to this instance.
         /// </summary>
         /// <param name="view">The view.</param>
         /// <param name="context">The context.</param>
-        void ViewLoaded(DependencyObject view, object context);
+        void AttachView(DependencyObject view, object context);
+
+        /// <summary>
+        /// Gets the view.
+        /// </summary>
+        /// <param name="context">The context.</param>
+        /// <returns>The view</returns>
+        DependencyObject GetView(object context);
     }
 }

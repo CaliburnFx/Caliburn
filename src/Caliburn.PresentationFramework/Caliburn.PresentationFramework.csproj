@@ -207,11 +207,9 @@
     <Compile Include="RoutedMessaging\IRoutedMessageController.cs" />
     <Compile Include="RoutedMessaging\IRoutedMessageHandler.cs" />
     <Compile Include="RoutedMessaging\Message.cs" />
-    <Compile Include="Metadata\MetadataExtensions.cs" />
     <Compile Include="Invocation\BatchingDispatcher.wpf.cs" />
     <Compile Include="Invocation\DispatcherImplementation.silverlight.cs" />
     <Compile Include="Invocation\DispatcherImplementation.wpf.cs" />
-    <Compile Include="Metadata\ViewMetadata.cs" />
     <Compile Include="RoutedMessaging\DefaultMessageBinder.cs" />
     <Compile Include="RoutedMessaging\Parameter.silverlight.cs" />
     <Compile Include="RoutedMessaging\Parameter.wpf.cs" />

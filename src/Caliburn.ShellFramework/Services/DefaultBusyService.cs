@@ -6,10 +6,9 @@ namespace Caliburn.ShellFramework.Services
     using System.Windows;
     using System.Windows.Markup;
     using Core;
-    using Core.Metadata;
     using PresentationFramework;
     using PresentationFramework.ApplicationModel;
-    using PresentationFramework.Metadata;
+    using PresentationFramework.Views;
 
     public class DefaultBusyService : IBusyService
     {
@@ -152,11 +151,11 @@ namespace Caliburn.ShellFramework.Services
 
         private UIElement GetView(object viewModel) 
         {
-            var metadataContainer = viewModel as IMetadataContainer;
-            if (metadataContainer == null)
+            var viewAware = viewModel as IViewAware;
+            if (viewAware == null)
                 return null;
 
-            return metadataContainer.GetView<DependencyObject>(null) as UIElement;
+            return viewAware.GetView(null) as UIElement;
         }
     }
 }
