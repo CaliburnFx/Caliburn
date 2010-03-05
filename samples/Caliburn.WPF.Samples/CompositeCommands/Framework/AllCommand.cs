@@ -2,7 +2,7 @@
 {
     using System;
     using System.Collections.Generic;
-    using Caliburn.Core;
+    using Caliburn.PresentationFramework;
     using Caliburn.PresentationFramework.Commands;
     using Caliburn.PresentationFramework.Filters;
 

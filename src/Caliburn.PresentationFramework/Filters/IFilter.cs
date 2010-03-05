@@ -1,11 +1,9 @@
 namespace Caliburn.PresentationFramework.Filters
 {
-    using Core.Metadata;
-
     /// <summary>
     /// A filter.
     /// </summary>
-    public interface IFilter : IMetadata
+    public interface IFilter
     {
         /// <summary>
         /// Gets the priority used to order filters.

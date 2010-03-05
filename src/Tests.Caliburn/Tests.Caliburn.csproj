@@ -167,10 +167,6 @@
     <Compile Include="Core\Invocation\The_event_handler_factory.cs" />
     <Compile Include="Core\Invocation\The_method_factory.cs" />
     <Compile Include="Fakes\ITestService.cs" />
-    <Compile Include="Core\Metadata\A_metadata_container.cs" />
-    <Compile Include="Fakes\FakeMetadata.cs" />
-    <Compile Include="Fakes\FakeMetadataContainer.cs" />
-    <Compile Include="Core\Metadata\The_metadata_provider.cs" />
     <Compile Include="Actions\An_asynchronous_action.cs" />
     <Compile Include="Actions\A_synchronous_action.cs" />
     <Compile Include="Actions\The_action_message_handler.cs" />

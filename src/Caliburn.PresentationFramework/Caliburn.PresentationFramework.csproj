@@ -96,6 +96,8 @@
     <Compile Include="Converters\BooleanToVisibilityConverter.silverlight.cs" />
     <Compile Include="Converters\EnumConverter.cs" />
     <Compile Include="ElementExtensions.cs" />
+    <Compile Include="INotifyPropertyChangedEx.cs" />
+    <Compile Include="PropertyChangedBase.cs" />
     <Compile Include="RoutedMessaging\MessagingExtensions.cs" />
     <Compile Include="RoutedMessaging\ResultCompletionEventArgs.cs" />
     <Compile Include="RoutedMessaging\ResultExecutionContext.cs" />

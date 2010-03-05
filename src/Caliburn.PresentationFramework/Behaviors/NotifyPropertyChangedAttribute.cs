@@ -3,7 +3,6 @@ namespace Caliburn.PresentationFramework.Behaviors
     using System;
     using System.Collections.Generic;
     using System.ComponentModel;
-    using Core;
     using Core.Behaviors;
 
     /// <summary>

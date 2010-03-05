@@ -1,13 +1,12 @@
 namespace Caliburn.PresentationFramework.Screens
 {
     using ApplicationModel;
-    using Core.Metadata;
     using Views;
 
     /// <summary>
-    /// An <see cref="IScreen"/> which also implements <see cref="IMetadataContainer"/>, <see cref="IHierarchicalScreen"/>, <see cref="ILifecycleNotifier"/> and <see cref="IViewAware"/>.
+    /// An <see cref="IScreen"/> which also implements <see cref="IHierarchicalScreen"/>, <see cref="ILifecycleNotifier"/> and <see cref="IViewAware"/>.
     /// </summary>
-    public interface IScreenEx : IMetadataContainer, IHierarchicalScreen, ILifecycleNotifier, IViewAware
+    public interface IScreenEx : IHierarchicalScreen, ILifecycleNotifier, IViewAware
     {
         /// <summary>
         /// Gets or sets a value indicating whether this instance is initialized.

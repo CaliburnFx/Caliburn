@@ -3,15 +3,31 @@ namespace Caliburn.ModelFramework
     using System;
     using System.Collections;
     using System.Collections.Generic;
-    using Core.Metadata;
 
     /// <summary>
     /// An implementation of <see cref="IModelDefinition"/>.
     /// </summary>
-    public class ModelDefinition : MetadataContainer, IModelDefinition
+    public class ModelDefinition : IModelDefinition
     {
         private readonly Dictionary<string, IPropertyDefinition> _propertyDefinitions =
             new Dictionary<string, IPropertyDefinition>();
+
+        private IList<object> _metadata;
+
+        /// <summary>
+        /// Gets the metadata.
+        /// </summary>
+        /// <value>The metadata.</value>
+        public IList<object> Metadata
+        {
+            get
+            {
+                if (_metadata == null)
+                    _metadata = new List<object>();
+
+                return _metadata;
+            }
+        }
 
         /// <summary>
         /// Creates an instance of <see cref="IModel"/> that matches this definition.

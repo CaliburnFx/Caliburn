@@ -8,14 +8,13 @@ namespace Caliburn.PresentationFramework.ViewModels
     using System.Windows.Controls;
     using Actions;
     using Conventions;
-    using Core.Metadata;
     using Filters;
     using Views;
 
     /// <summary>
     /// The default implementation of <see cref="IViewModelDescription"/>.
     /// </summary>
-    public class DefaultViewModelDescription : MetadataContainer, IViewModelDescription
+    public class DefaultViewModelDescription : IViewModelDescription
     {
         private readonly IConventionManager _conventionManager;
         private readonly Type _targetType;
@@ -33,8 +32,6 @@ namespace Caliburn.PresentationFramework.ViewModels
             _conventionManager = conventionManager;
             _targetType = targetType;
             _properties = targetType.GetProperties();
-
-            AddMetadataFrom(targetType);
         }
 
         /// <summary>

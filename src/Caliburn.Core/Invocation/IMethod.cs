@@ -1,13 +1,12 @@
 namespace Caliburn.Core.Invocation
 {
     using System.Reflection;
-    using Metadata;
     using Threading;
 
     /// <summary>
     /// Abstracts a generic way of invoking procedures and functions without using reflection.
     /// </summary>
-    public interface IMethod : IMetadataContainer
+    public interface IMethod
     {
         /// <summary>
         /// Gets the <see cref="MethodInfo"/> to which this instance applies.

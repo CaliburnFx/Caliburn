@@ -65,7 +65,7 @@ namespace Caliburn.PresentationFramework.ViewModels
                 return customFactory.Create(targetType);
 
             var description = new DefaultViewModelDescription(_conventionManager, targetType);
-            var filters = new FilterManager(targetType, description, _serviceLocator);
+            var filters = new FilterManager(targetType, description.TargetType, _serviceLocator);
             var actions = _actionLocator.Locate(new ActionLocationContext(_serviceLocator, targetType, filters));
 
             description.Filters = filters;

@@ -6,8 +6,6 @@ using Tests.Caliburn.Fakes;
 
 namespace Tests.Caliburn.Core.Invocation
 {
-    using global::Caliburn.Core.Metadata;
-
     [TestFixture]
     public class The_method_factory : TestBase
     {
@@ -43,8 +41,6 @@ namespace Tests.Caliburn.Core.Invocation
 
             Assert.That(task, Is.Not.Null);
             Assert.That(task, Is.InstanceOfType(typeof(IBackgroundTask)));
-
-            Assert.That(method.GetMetadata<FakeMetadata>(), Is.Not.Null);
         }
 
         [Test]
@@ -67,8 +63,6 @@ namespace Tests.Caliburn.Core.Invocation
 
             Assert.That(task, Is.Not.Null);
             Assert.That(task, Is.InstanceOfType(typeof(IBackgroundTask)));
-
-            Assert.That(method.GetMetadata<FakeMetadata>(), Is.Not.Null);
         }
 
         [Test]
@@ -90,8 +84,6 @@ namespace Tests.Caliburn.Core.Invocation
 
             Assert.That(task, Is.Not.Null);
             Assert.That(task, Is.InstanceOfType(typeof(IBackgroundTask)));
-
-            Assert.That(method.GetMetadata<FakeMetadata>(), Is.Not.Null);
         }
 
         [Test]
@@ -114,8 +106,6 @@ namespace Tests.Caliburn.Core.Invocation
 
             Assert.That(task, Is.Not.Null);
             Assert.That(task, Is.InstanceOfType(typeof(IBackgroundTask)));
-
-            Assert.That(method.GetMetadata<FakeMetadata>(), Is.Not.Null);
         }
 
         [Test]

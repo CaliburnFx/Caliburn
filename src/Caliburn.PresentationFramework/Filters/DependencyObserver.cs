@@ -3,14 +3,13 @@ namespace Caliburn.PresentationFramework.Filters
     using System.Collections.Generic;
     using System.ComponentModel;
     using Core;
-    using Core.Metadata;
     using Core.Invocation;
     using RoutedMessaging;
 
     /// <summary>
     /// Metadata which can be used to trigger availability changes in triggers based on <see cref="INotifyPropertyChanged"/>.
     /// </summary>
-    public class DependencyObserver : IMetadata
+    public class DependencyObserver
     {
         private readonly IRoutedMessageHandler _messageHandler;
         private readonly IMethodFactory _methodFactory;

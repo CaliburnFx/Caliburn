@@ -5,7 +5,6 @@ namespace Caliburn.PresentationFramework.ApplicationModel
     using System.IO;
     using System.IO.IsolatedStorage;
     using System.Xml;
-    using Core;
 
     /// <summary>
     /// An implementation of <see cref="IStateManager"/> that uses isolated storage as its backing store.

@@ -3,7 +3,6 @@ namespace Caliburn.Core.Invocation
     using System;
     using System.Collections.Generic;
     using System.Reflection;
-    using Metadata;
     using Threading;
 
     /// <summary>
@@ -47,7 +46,7 @@ namespace Caliburn.Core.Invocation
         /// <summary>
         /// A base class for <see cref="IMethod"/> implementations.
         /// </summary>
-        private abstract class MethodProxyBase : MetadataContainer, IMethod
+        private abstract class MethodProxyBase : IMethod
         {
             private readonly MethodInfo _info;
             private readonly IThreadPool _threadPool;
@@ -61,8 +60,6 @@ namespace Caliburn.Core.Invocation
             {
                 _info = info;
                 _threadPool = threadPool;
-
-                AddMetadataFrom(_info);
             }
 
             /// <summary>

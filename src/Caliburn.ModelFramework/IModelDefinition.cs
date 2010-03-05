@@ -2,13 +2,18 @@ namespace Caliburn.ModelFramework
 {
     using System;
     using System.Collections.Generic;
-    using Core.Metadata;
 
     /// <summary>
     /// Implemented by presentation model definitions.
     /// </summary>
-    public interface IModelDefinition : IMetadataContainer, IEnumerable<IPropertyDefinition>
+    public interface IModelDefinition : IEnumerable<IPropertyDefinition>
     {
+        /// <summary>
+        /// Gets the metadata.
+        /// </summary>
+        /// <value>The metadata.</value>
+        IList<object> Metadata { get; }
+
         /// <summary>
         /// Creates an instance of <see cref="IModel"/> that matches this definition.
         /// </summary>

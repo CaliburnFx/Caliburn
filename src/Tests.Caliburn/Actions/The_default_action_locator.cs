@@ -1,11 +1,9 @@
 ﻿namespace Tests.Caliburn.Actions
 {
     using System;
-    using System.Collections.Generic;
     using System.Linq;
     using System.Reflection;
     using global::Caliburn.Core.Invocation;
-    using global::Caliburn.Core.Metadata;
     using global::Caliburn.PresentationFramework.Actions;
     using global::Caliburn.PresentationFramework.Conventions;
     using global::Caliburn.PresentationFramework.Filters;
@@ -99,7 +97,7 @@
             return new ActionLocationContext(
                 _serviceLocator,
                 type,
-                new FilterManager(type, new MetadataContainer(), _serviceLocator)
+                new FilterManager(type, type, _serviceLocator)
                 );
         }
 
@@ -111,12 +109,6 @@
                 .Return(method);
 
             method.Stub(x => x.Info).Return(typeof(T).GetMethods().First()).Repeat.Any();
-            method.Expect(x => x.FindMetadata<IFilter>()).Return(
-                new List<IFilter>()
-                );
-            method.Expect(x => x.FindMetadata<PreviewAttribute>()).Return(
-                new List<PreviewAttribute>()
-                );
         }
 
         public class SimpleActionTarget

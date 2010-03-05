@@ -1,6 +1,7 @@
 ﻿namespace Caliburn.Core
 {
     using System;
+    using System.Collections;
     using System.Collections.Generic;
     using System.Linq;
     using System.Linq.Expressions;
@@ -20,6 +21,17 @@
         public static CoreConfiguration Core(this IModuleHook hook)
         {
             return CaliburnModule<CoreConfiguration>.Instance;
+        }
+
+        /// <summary>
+        /// Gets the first or default of the given type.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="enumerable">The enumerable.</param>
+        /// <returns></returns>
+        public static T FirstOrDefaultOfType<T>(this IEnumerable enumerable)
+        {
+            return enumerable.OfType<T>().FirstOrDefault();
         }
 
         /// <summary>

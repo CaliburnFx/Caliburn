@@ -2,9 +2,10 @@
 {
     using System;
     using System.ComponentModel;
+    using System.Reflection;
+    using Core;
     using Core.Invocation;
     using Microsoft.Practices.ServiceLocation;
-    using Core.Metadata;
     using RoutedMessaging;
 
     /// <summary>
@@ -46,11 +47,11 @@
         /// Initializes the filter.
         /// </summary>
         /// <param name="targetType">Type of the target.</param>
-        /// <param name="metadataContainer">The metadata container.</param>
+        /// <param name="member">The member.</param>
         /// <param name="serviceLocator">The serviceLocator.</param>
-        public override void Initialize(Type targetType, IMetadataContainer metadataContainer, IServiceLocator serviceLocator)
+        public override void Initialize(Type targetType, MemberInfo member, IServiceLocator serviceLocator)
         {
-            base.Initialize(targetType, metadataContainer, serviceLocator);
+            base.Initialize(targetType, member, serviceLocator);
             _methodFactory = serviceLocator.GetInstance<IMethodFactory>();
         }
 
@@ -81,11 +82,11 @@
             var notifier = messageHandler.Unwrap() as INotifyPropertyChanged;
             if (notifier == null) return;
 
-            var helper = messageHandler.GetMetadata<DependencyObserver>();
+            var helper = messageHandler.Metadata.FirstOrDefaultOfType<DependencyObserver>();
             if (helper != null) return;
 
             helper = new DependencyObserver(messageHandler, _methodFactory, notifier);
-            messageHandler.AddMetadata(helper);
+            messageHandler.Metadata.Add(helper);
         }
 
         /// <summary>
@@ -98,10 +99,10 @@
             if (!AffectsTriggers || !IsGetter)
                 return;
 
-            var helper = messageHandler.GetMetadata<DependencyObserver>();
+            var helper = messageHandler.Metadata.FirstOrDefaultOfType<DependencyObserver>();
             if (helper == null) return;
 
-            if (trigger.Message.RelatesTo(Target))
+            if (trigger.Message.RelatesTo(Member))
                 helper.MakeAwareOf(trigger, new[] { MethodName });
         }
     }

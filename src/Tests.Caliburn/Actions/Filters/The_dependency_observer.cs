@@ -2,9 +2,9 @@
 {
     using System;
     using System.Collections.Generic;
-    using global::Caliburn.Core;
     using global::Caliburn.Core.Invocation;
     using global::Caliburn.Core.Threading;
+    using global::Caliburn.PresentationFramework;
     using global::Caliburn.PresentationFramework.Filters;
     using global::Caliburn.PresentationFramework.RoutedMessaging;
     using NUnit.Framework;

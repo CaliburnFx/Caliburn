@@ -2,7 +2,6 @@
 {
     using System;
     using System.Collections.Generic;
-    using Core.Metadata;
 
     /// <summary>
     /// Implemented by models that support interrogation.
@@ -20,6 +19,6 @@
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="borrower">The borrower.</param>
-        void UseInterrogators<T>(Action<IEnumerable<T>> borrower) where T : IMetadata;
+        void UseInterrogators<T>(Action<IEnumerable<T>> borrower);
     }
 }

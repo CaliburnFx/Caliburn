@@ -1,12 +1,10 @@
 namespace Caliburn.ModelFramework
 {
-    using Core.Metadata;
-
     /// <summary>
     /// Implemented by types capable of validating a presentation model.
     /// </summary>
     /// <typeparam name="T"></typeparam>
-    public interface IModelValidator<T> : IMetadata
+    public interface IModelValidator<T>
         where T : IModel
     {
         /// <summary>

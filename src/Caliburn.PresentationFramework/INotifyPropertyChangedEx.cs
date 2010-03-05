@@ -1,4 +1,4 @@
-namespace Caliburn.Core
+namespace Caliburn.PresentationFramework
 {
     using System.ComponentModel;
 

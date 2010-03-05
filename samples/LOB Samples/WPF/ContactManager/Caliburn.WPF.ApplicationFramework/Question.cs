@@ -1,6 +1,6 @@
 ﻿namespace Caliburn.WPF.ApplicationFramework
 {
-    using Core;
+    using PresentationFramework;
     using PresentationFramework.ApplicationModel;
     using PresentationFramework.Screens;
 

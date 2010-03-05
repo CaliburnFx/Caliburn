@@ -3,8 +3,9 @@ namespace Caliburn.ModelFramework
     using System;
     using System.Collections.Generic;
     using System.ComponentModel;
+    using System.Linq;
     using System.Windows;
-    using Core.Metadata;
+    using Core;
     using PresentationFramework;
     using PresentationFramework.Views;
 
@@ -12,7 +13,7 @@ namespace Caliburn.ModelFramework
     /// An implementation of <see cref="IProperty{T}"/>.
     /// </summary>
     /// <typeparam name="T"></typeparam>
-    public class Property<T> : MetadataContainer, IProperty<T>
+    public class Property<T> : PropertyChangedBase, IProperty<T>
     {
         private readonly Dictionary<object, DependencyObject> _views = new Dictionary<object, DependencyObject>();
         private readonly IPropertyDefinition<T> _definition;
@@ -154,7 +155,7 @@ namespace Caliburn.ModelFramework
         {
             get
             {
-                var converter = _definition.GetMetadata<IPropertyValueConverter<T>>();
+                var converter = _definition.Metadata.FirstOrDefaultOfType<IPropertyValueConverter<T>>();
 
                 if(converter != null)
                     return converter.ConvertBack(this, Value);
@@ -163,7 +164,7 @@ namespace Caliburn.ModelFramework
             set
             {
                 _errors.Clear();
-                var converter = _definition.GetMetadata<IPropertyValueConverter<T>>();
+                var converter = _definition.Metadata.FirstOrDefaultOfType<IPropertyValueConverter<T>>();
 
                 if(converter != null)
                     SetValue(converter.Convert(this, value), false, true);
@@ -275,11 +276,10 @@ namespace Caliburn.ModelFramework
         /// <typeparam name="K"></typeparam>
         /// <param name="borrower">The borrower.</param>
         public void UseInterrogators<K>(Action<IEnumerable<K>> borrower)
-            where K : IMetadata
         {
             _isInterrogating = true;
 
-            borrower(_definition.FindMetadata<K>());
+            borrower(_definition.Metadata.OfType<K>());
 
             _isInterrogating = false;
         }

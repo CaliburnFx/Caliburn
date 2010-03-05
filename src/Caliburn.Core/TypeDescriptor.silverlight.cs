@@ -1,6 +1,6 @@
 ﻿#if SILVERLIGHT
 
-namespace Caliburn.Core.Metadata
+namespace Caliburn.Core
 {
     using System;
     using System.Collections.Generic;

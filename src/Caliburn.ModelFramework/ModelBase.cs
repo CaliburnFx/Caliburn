@@ -3,8 +3,8 @@ namespace Caliburn.ModelFramework
     using System;
     using System.Collections;
     using System.Collections.Generic;
+    using System.Linq;
     using System.Linq.Expressions;
-    using Core.Metadata;
     using PresentationFramework;
     using PresentationFramework.Screens;
 
@@ -146,9 +146,8 @@ namespace Caliburn.ModelFramework
         /// <typeparam name="T"></typeparam>
         /// <param name="borrower">The borrower.</param>
         public void UseInterrogators<T>(Action<IEnumerable<T>> borrower)
-            where T : IMetadata
         {
-            borrower(_definition.FindMetadata<T>());
+            borrower(_definition.Metadata.OfType<T>());
         }
 
         /// <summary>

@@ -1,11 +1,13 @@
 ﻿namespace Tests.Caliburn.Actions.Filters
 {
     using System.Collections.Generic;
-    using global::Caliburn.Core.Metadata;
+    using global::Caliburn.Core;
+    using global::Caliburn.PresentationFramework;
     using global::Caliburn.PresentationFramework.Filters;
     using global::Caliburn.PresentationFramework.RoutedMessaging;
     using Microsoft.Practices.ServiceLocation;
     using NUnit.Framework;
+    using NUnit.Framework.SyntaxHelpers;
     using Rhino.Mocks;
 
     [TestFixture]
@@ -30,21 +32,22 @@
         [Test]
         public void can_initialize_DependencyObserver()
         {
+            var metadata = new List<object>();
+
             _attribute = new DependenciesAttribute("AProperty", "A.Property.Path");
-            _attribute.Initialize(typeof(TheMethodHost), _methodHost, _container);
-            _handler.Stub(x => x.FindMetadata<DependencyObserver>()).Return(new List<DependencyObserver>());
+            _handler.Stub(x => x.Metadata).Return(metadata).Repeat.Any();
+            _attribute.Initialize(typeof(TheMethodHost), typeof(TheMethodHost), _container);
+            _handler.Stub(x => x.Unwrap()).Return(_methodHost).Repeat.Any();
             _attribute.MakeAwareOf(_handler);
-            _handler.AssertWasCalled(x => x.AddMetadata(null), options => options.IgnoreArguments());
 
-            var args = _handler.GetArgumentsForCallsMadeOn(x => x.AddMetadata(null));
-            var observer = args[0][0] as DependencyObserver;
-            Assert.IsNotNull(observer);
+            Assert.That(metadata.FirstOrDefaultOfType<DependencyObserver>(), Is.Not.Null);
 
-            _handler.Stub(x => x.FindMetadata<DependencyObserver>()).Return(new List<DependencyObserver> { observer });
             _attribute.MakeAwareOf(_handler, _trigger);
             //TODO: assert DependencyObserver.MakeAwareOf(IMessageTrigger trigger, IEnumerable<string> dependencies)
         }
 
-        internal class TheMethodHost : MetadataContainer { }
+        private class TheMethodHost : PropertyChangedBase
+        {
+        }
     }
 }

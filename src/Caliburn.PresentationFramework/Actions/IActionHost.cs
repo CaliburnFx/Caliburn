@@ -2,13 +2,12 @@ namespace Caliburn.PresentationFramework.Actions
 {
     using System;
     using System.Collections.Generic;
-    using Core.Metadata;
     using Filters;
 
     /// <summary>
     /// Hosts instances of <see cref="IAction"/> and related metadata.
     /// </summary>
-    public interface IActionHost : IMetadataContainer
+    public interface IActionHost
     {
         /// <summary>
         /// Gets the type of the target.

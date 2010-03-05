@@ -3,9 +3,9 @@
 namespace Caliburn.PresentationFramework.Actions
 {
     using System.Collections.Generic;
+    using System.Reflection;
     using System.Windows;
     using System.Windows.Markup;
-    using Core.Invocation;
     using Microsoft.Practices.ServiceLocation;
     using RoutedMessaging;
     using ViewModels;
@@ -144,10 +144,10 @@ namespace Caliburn.PresentationFramework.Actions
         /// <returns></returns>
         public bool RelatesTo(object potentialTarget)
         {
-            var method = potentialTarget as IMethod;
-            if (method == null) return false;
+            var memberInfo = potentialTarget as MemberInfo;
+            if (memberInfo == null) return false;
 
-            return method.Info.Name == MethodName;
+            return memberInfo.Name == MethodName;
         }
 
         /// <summary>

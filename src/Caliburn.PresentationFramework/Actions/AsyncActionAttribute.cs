@@ -3,7 +3,6 @@ namespace Caliburn.PresentationFramework.Actions
     using System;
     using System.Reflection;
     using Core.Invocation;
-    using Core.Metadata;
     using Filters;
     using Microsoft.Practices.ServiceLocation;
     using RoutedMessaging;
@@ -38,19 +37,24 @@ namespace Caliburn.PresentationFramework.Actions
         /// Initializes the filter.
         /// </summary>
         /// <param name="targetType">Type of the target.</param>
-        /// <param name="metadataContainer">The metadata container.</param>
+        /// <param name="member">The member.</param>
         /// <param name="serviceLocator">The service locator.</param>
-        public virtual void Initialize(Type targetType, IMetadataContainer metadataContainer, IServiceLocator serviceLocator)
+        public virtual void Initialize(Type targetType, MemberInfo member, IServiceLocator serviceLocator)
         {
             if(string.IsNullOrEmpty(Callback)) return;
 
-            var methodInfo = targetType.GetMethod(Callback,
-                                                  BindingFlags.Public | BindingFlags.Instance |
-                                                  BindingFlags.Static);
+            var methodInfo = targetType.GetMethod(
+                Callback,
+                BindingFlags.Public | BindingFlags.Instance | BindingFlags.Static
+                );
 
-            if(methodInfo == null)
-                throw new Exception(string.Format("Method '{0}' could not be found on '{1}'.", Callback,
-                                                  targetType.FullName));
+            if (methodInfo == null)
+                throw new Exception(
+                    string.Format("Method '{0}' could not be found on '{1}'.",
+                        Callback,
+                        targetType.FullName
+                        )
+                    );
 
             _callback = serviceLocator.GetInstance<IMethodFactory>().CreateFrom(methodInfo);
         }

@@ -9,7 +9,7 @@ namespace ContactManager.Model.Interrogators
     {
         public static IPropertyDefinition<TimeSpan> IsConstrainedToUserSettings(this IPropertyDefinition<TimeSpan> model)
         {
-            model.AddMetadata(new AppointmentRange(ServiceLocator.Current.GetInstance<ISettings>()));
+            model.Metadata.Add(new AppointmentRange(ServiceLocator.Current.GetInstance<ISettings>()));
             return model;
         }
     }

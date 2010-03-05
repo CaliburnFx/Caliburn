@@ -4,13 +4,12 @@ namespace Caliburn.PresentationFramework.Screens
     using System.Collections.Generic;
     using System.Windows;
     using Behaviors;
-    using Core.Metadata;
     using Views;
 
     /// <summary>
     /// Implements common functionality used by all implementors of <see cref="IScreen"/>.
     /// </summary>
-    public abstract class ScreenBase : MetadataContainer, IScreenEx
+    public abstract class ScreenBase : PropertyChangedBase, IScreenEx
     {
         private readonly Dictionary<object, DependencyObject> _views = new Dictionary<object, DependencyObject>();
 
@@ -27,8 +26,6 @@ namespace Caliburn.PresentationFramework.Screens
             var runtimeType = GetType();
 
             _displayName = runtimeType.Name;
-
-            AddMetadataFrom(runtimeType);
         }
 
         /// <summary>

@@ -159,7 +159,7 @@ namespace Caliburn.PresentationFramework.Conventions
         public virtual void ApplyActionCreationConventions(IAction action, IMethod targetMethod)
         {
             var canExecuteName = DeriveCanExecuteName(targetMethod.Info.Name);
-            var found = targetMethod.FindMetadata<PreviewAttribute>()
+            var found = targetMethod.Info.GetAttributes<PreviewAttribute>(true)
                 .FirstOrDefault(x => x.MethodName == canExecuteName);
 
             if (found != null)

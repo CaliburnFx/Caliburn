@@ -2,7 +2,7 @@
 {
     using System;
     using System.Collections.Generic;
-    using Core;
+    using PresentationFramework;
 
     /// <summary>
     /// Catches and manages all undo/redo events for an instance of <see cref="IModelNode"/>.

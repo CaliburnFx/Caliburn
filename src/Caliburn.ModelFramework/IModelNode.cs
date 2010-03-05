@@ -2,12 +2,11 @@
 {
     using System;
     using System.ComponentModel;
-    using Core.Metadata;
 
     /// <summary>
     /// Implemented by different types of models.
     /// </summary>
-    public interface IModelNode : IEditableObject, INotifyPropertyChanged, IMetadataContainer
+    public interface IModelNode : IEditableObject, INotifyPropertyChanged
     {
         /// <summary>
         /// Gets a value indicating whether this instance is dirty.

@@ -42,6 +42,8 @@ V2 Alpha
 -Massive reorganization of routed messagig into their own namespace.
 -Massive reorganization of view related classes into their own namespace.
 -Removed ViewMetadata by extending IViewAware.
+-Removed Metadata
+-Moved PropertyChangedBase to PresentationFramework
 
 V1.1 Release
 -Fixed an issue in the WPF version of InteractionNode.

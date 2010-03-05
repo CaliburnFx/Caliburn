@@ -3,7 +3,6 @@ namespace Caliburn.PresentationFramework.Filters
     using System;
     using System.Reflection;
     using Core.Invocation;
-    using Core.Metadata;
     using Microsoft.Practices.ServiceLocation;
 
     /// <summary>
@@ -16,7 +15,7 @@ namespace Caliburn.PresentationFramework.Filters
         /// </summary>
         protected IMethod _method;
         private readonly string _methodName;
-        private IMetadataContainer _target;
+        private MemberInfo _member;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="MethodCallFilterBase"/> class.
@@ -64,30 +63,31 @@ namespace Caliburn.PresentationFramework.Filters
         /// Gets the target.
         /// </summary>
         /// <value>The target.</value>
-        protected IMetadataContainer Target
+        protected MemberInfo Member
         {
-            get { return _target; }
+            get { return _member; }
         }
 
         /// <summary>
         /// Initializes the filter.
         /// </summary>
         /// <param name="targetType">Type of the target.</param>
-        /// <param name="metadataContainer">The metadata container.</param>
+        /// <param name="member">The metadata container.</param>
         /// <param name="serviceLocator">The serviceLocator.</param>
-        public virtual void Initialize(Type targetType, IMetadataContainer metadataContainer, IServiceLocator serviceLocator)
+        public virtual void Initialize(Type targetType, MemberInfo member, IServiceLocator serviceLocator)
         {
-            _target = metadataContainer;
+            _member = member;
 
             if (_method != null)
                 return;
 
-            var methodInfo = targetType.GetMethod(_methodName,
-                                                  BindingFlags.Public | BindingFlags.Instance |
-                                                  BindingFlags.Static)
-                             ?? targetType.GetMethod("get_" + _methodName,
-                                                     BindingFlags.Public | BindingFlags.Instance |
-                                                     BindingFlags.Static);
+            var methodInfo = targetType.GetMethod(
+                _methodName,
+                BindingFlags.Public | BindingFlags.Instance | BindingFlags.Static)
+                    ?? targetType.GetMethod(
+                        "get_" + _methodName,
+                        BindingFlags.Public | BindingFlags.Instance | BindingFlags.Static
+                        );
 
             if (methodInfo == null)
                 throw new Exception(

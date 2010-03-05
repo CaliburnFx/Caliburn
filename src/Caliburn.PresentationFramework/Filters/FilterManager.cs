@@ -3,8 +3,8 @@
     using System;
     using System.Collections.Generic;
     using System.Linq;
+    using System.Reflection;
     using Core;
-    using Core.Metadata;
     using Microsoft.Practices.ServiceLocation;
 
     /// <summary>
@@ -13,7 +13,7 @@
     public class FilterManager : IFilterManager
     {
         private readonly Type _targetType;
-        private readonly IMetadataContainer _metadataContainer;
+        private readonly MemberInfo _memberInfo;
         private readonly IServiceLocator _serviceLocator;
 
         private IPreProcessor[] _preExecute;
@@ -26,19 +26,19 @@
         /// Initializes a new instance of the <see cref="FilterManager"/> class.
         /// </summary>
         /// <param name="targetType">Type of the target.</param>
-        /// <param name="metadataContainer">The metadata container.</param>
+        /// <param name="member">The member.</param>
         /// <param name="serviceLocator">The serviceLocator.</param>
-        public FilterManager(Type targetType, IMetadataContainer metadataContainer, IServiceLocator serviceLocator)
+        public FilterManager(Type targetType, MemberInfo member, IServiceLocator serviceLocator)
         {
             _targetType = targetType;
-            _metadataContainer = metadataContainer;
+            _memberInfo = member;
             _serviceLocator = serviceLocator;
 
-            var filters = metadataContainer.FindMetadata<IFilter>()
+            var filters = member.GetAttributes<IFilter>(true)
                 .OrderByDescending(x => x.Priority);
 
             filters.OfType<IInitializable>()
-                .Apply(x => x.Initialize(targetType, metadataContainer, serviceLocator));
+                .Apply(x => x.Initialize(targetType, member, serviceLocator));
 
             _handlerAware = filters.OfType<IHandlerAware>().ToArray();
 
@@ -64,13 +64,13 @@
         /// <param name="instanceAwareFilters">The instance aware.</param>
         /// <param name="rescues">The rescues</param>
         /// <param name="targetType">The target type.</param>
-        /// <param name="metadataContainer">The metadatacontainer.</param>
-        private FilterManager(Type targetType, IMetadataContainer metadataContainer, IServiceLocator serviceLocator,
+        /// <param name="member">The member.</param>
+        private FilterManager(Type targetType, MemberInfo member, IServiceLocator serviceLocator,
             IEnumerable<IPreProcessor> preExecute, IEnumerable<IPreProcessor> triggerEffects,
             IEnumerable<IPostProcessor> postExecute, IEnumerable<IHandlerAware> instanceAwareFilters, IEnumerable<IRescue> rescues)
         {
             _targetType = targetType;
-            _metadataContainer = metadataContainer;
+            _memberInfo = member;
             _serviceLocator = serviceLocator;
 
             _preExecute = preExecute.ToArray();
@@ -133,7 +133,7 @@
         {
             var initializable = filter as IInitializable;
             if (initializable != null)
-                initializable.Initialize(_targetType, _metadataContainer, _serviceLocator);
+                initializable.Initialize(_targetType, _memberInfo, _serviceLocator);
 
             TryAdd(ref _preExecute, filter);
             TryAdd(ref _postExecute, filter);
@@ -166,7 +166,7 @@
 
             var newManager = new FilterManager(
                 _targetType,
-                _metadataContainer,
+                _memberInfo,
                 _serviceLocator,
                 _preExecute.Union(filterManager.PreProcessors),
                 _triggerEffects.Union(filterManager.TriggerEffects),

@@ -1,7 +1,7 @@
 ﻿namespace BackgroundProcessing.Framework
 {
     using System;
-    using Caliburn.Core.Metadata;
+    using System.Reflection;
     using Caliburn.PresentationFramework.Actions;
     using Caliburn.PresentationFramework.Filters;
     using Caliburn.PresentationFramework.RoutedMessaging;
@@ -28,7 +28,7 @@
         public bool IsCancellable { get; set; }
         public int Priority { get; set; }
 
-        void IInitializable.Initialize(Type targetType, IMetadataContainer metadataContainer, IServiceLocator serviceLocator)
+        void IInitializable.Initialize(Type targetType, MemberInfo member, IServiceLocator serviceLocator)
         {
             _runningActionPresenter = serviceLocator.GetInstance<IRunningActionsRegistry>();
         }

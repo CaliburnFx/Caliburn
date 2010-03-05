@@ -1,12 +1,10 @@
 ﻿namespace Caliburn.ModelFramework
 {
-    using Core.Metadata;
-
     /// <summary>
     /// Implemented by types capable of converting property values.
     /// </summary>
     /// <typeparam name="T"></typeparam>
-    public interface IPropertyValueConverter<T> : IMetadata
+    public interface IPropertyValueConverter<T>
     {
         /// <summary>
         /// Converts the proposed value to the property type.

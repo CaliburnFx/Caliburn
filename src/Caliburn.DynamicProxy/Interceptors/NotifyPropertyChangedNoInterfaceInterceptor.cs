@@ -2,7 +2,7 @@
 {
     using System;
     using System.ComponentModel;
-    using Core;
+    using PresentationFramework;
     using PresentationFramework.Behaviors;
 
     /// <summary>

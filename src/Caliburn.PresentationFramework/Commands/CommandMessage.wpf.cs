@@ -10,7 +10,6 @@ namespace Caliburn.PresentationFramework.Commands
     using Actions;
     using Configuration;
     using Core;
-    using Core.Metadata;
     using Microsoft.Practices.ServiceLocation;
     using RoutedMessaging;
     using ViewModels;
@@ -87,7 +86,7 @@ namespace Caliburn.PresentationFramework.Commands
 
         private ActionMessage _actionMessage;
         private IAction _action;
-        private readonly MetadataContainer _metadataContainer = new MetadataContainer();
+        private IList<object> _metadata;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="CommandMessage"/> class.
@@ -108,6 +107,21 @@ namespace Caliburn.PresentationFramework.Commands
             _factory = factory;
 
             SetValue(ParametersProperty, new FreezableCollection<Parameter>());
+        }
+
+        /// <summary>
+        /// Gets the metadata.
+        /// </summary>
+        /// <value>The metadata.</value>
+        public IList<object> Metadata
+        {
+            get
+            {
+                if(_metadata == null)
+                    _metadata = new List<object>();
+
+                return _metadata;
+            }
         }
 
         /// <summary>
@@ -359,26 +373,6 @@ namespace Caliburn.PresentationFramework.Commands
 
             _action = host.GetAction(_actionMessage);
             _action.Completed += delegate { OnCompleted(); };
-        }
-
-        /// <summary>
-        /// Adds metadata to the store.
-        /// </summary>
-        /// <param name="metadata">The metadata.</param>
-        public void AddMetadata(IMetadata metadata)
-        {
-            _metadataContainer.AddMetadata(metadata);
-        }
-
-        /// <summary>
-        /// Finds the matching metadata.
-        /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <returns></returns>
-        public IEnumerable<T> FindMetadata<T>()
-            where T : IMetadata
-        {
-            return _metadataContainer.FindMetadata<T>();
         }
 
         /// <summary>

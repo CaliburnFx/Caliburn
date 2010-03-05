@@ -7,7 +7,6 @@ namespace Caliburn.ModelFramework
     using System.ComponentModel;
     using System.Linq;
     using Core;
-    using Core.Metadata;
     using PresentationFramework;
 
     /// <summary>
@@ -21,7 +20,6 @@ namespace Caliburn.ModelFramework
         private bool _isEditing;
         private bool _isPerformingUndoRedo;
         private List<T> _clearedItems;
-        private readonly MetadataContainer _metadataContainer = new MetadataContainer();
 
         /// <summary>
         /// Gets or sets the parent model.
@@ -349,37 +347,6 @@ namespace Caliburn.ModelFramework
         {
             NotifyOfPropertyChange(propertyName);
             if(Parent != null) Parent.BubblePropertyChange(propertyName);
-        }
-
-        /// <summary>
-        /// Adds metadata to the store.
-        /// </summary>
-        /// <param name="metadata">The metadata.</param>
-        public void AddMetadata(IMetadata metadata)
-        {
-            _metadataContainer.AddMetadata(metadata);
-        }
-
-        /// <summary>
-        /// Gets the metadata.
-        /// </summary>
-        /// <typeparam name="K"></typeparam>
-        /// <returns></returns>
-        public K GetMetadata<K>()
-            where K : IMetadata
-        {
-            return _metadataContainer.GetMetadata<K>();
-        }
-
-        /// <summary>
-        /// Gets the matching metadata.
-        /// </summary>
-        /// <typeparam name="K"></typeparam>
-        /// <returns></returns>
-        public IEnumerable<K> FindMetadata<K>()
-            where K : IMetadata
-        {
-            return _metadataContainer.FindMetadata<K>();
         }
     }
 }

@@ -1,9 +1,10 @@
-﻿namespace Caliburn.Core
+﻿namespace Caliburn.PresentationFramework
 {
     using System;
     using System.ComponentModel;
     using System.Linq.Expressions;
-    using Invocation;
+    using Core;
+    using Core.Invocation;
 
     /// <summary>
     /// A base class that implements the infrastructure for property change notification and automatically performs UI thread marshalling.

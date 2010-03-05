@@ -4,8 +4,8 @@ namespace Caliburn.PresentationFramework.Filters
 {
     using System;
     using System.Collections.Generic;
+    using Core;
     using System.Windows.Input;
-    using Core.Metadata;
     using RoutedMessaging;
 
     /// <summary>
@@ -27,11 +27,11 @@ namespace Caliburn.PresentationFramework.Filters
         /// <param name="messageHandler">The message handler.</param>
         public void MakeAwareOf(IRoutedMessageHandler messageHandler)
         {
-            var helper = messageHandler.GetMetadata<AutoCheckAvailabilityHelper>();
+            var helper = messageHandler.Metadata.FirstOrDefaultOfType<AutoCheckAvailabilityHelper>();
             if(helper != null) return;
 
             helper = new AutoCheckAvailabilityHelper(messageHandler);
-            messageHandler.AddMetadata(helper);
+            messageHandler.Metadata.Add(helper);
         }
 
         /// <summary>
@@ -41,13 +41,13 @@ namespace Caliburn.PresentationFramework.Filters
         /// <param name="trigger">The trigger.</param>
         public void MakeAwareOf(IRoutedMessageHandler messageHandler, IMessageTrigger trigger)
         {
-            var helper = messageHandler.GetMetadata<AutoCheckAvailabilityHelper>();
+            var helper = messageHandler.Metadata.FirstOrDefaultOfType<AutoCheckAvailabilityHelper>();
             if(helper == null) return;
 
             helper.MakeAwareOf(trigger);
         }
 
-        private class AutoCheckAvailabilityHelper : IMetadata
+        private class AutoCheckAvailabilityHelper
         {
             private readonly IRoutedMessageHandler _messageHandler;
             private readonly IList<IMessageTrigger> _triggersToNotify;

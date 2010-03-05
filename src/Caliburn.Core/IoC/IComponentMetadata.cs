@@ -1,12 +1,11 @@
 namespace Caliburn.Core.IoC
 {
     using System;
-    using Metadata;
 
     /// <summary>
     /// Metadat the describes a component registration.
     /// </summary>
-    public interface IComponentMetadata : IMetadata
+    public interface IComponentMetadata
     {
         /// <summary>
         /// Gets the component info.

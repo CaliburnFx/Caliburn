@@ -1,18 +1,19 @@
 ﻿namespace Caliburn.PresentationFramework.Actions
 {
+    using System.Collections.Generic;
     using System.Linq;
     using Core;
-    using Core.Metadata;
     using RoutedMessaging;
 
     /// <summary>
     /// An implementation of <see cref="IRoutedMessageController"/> for action messages.
     /// </summary>
-    public class ActionMessageHandler : MetadataContainer, IRoutedMessageHandler
+    public class ActionMessageHandler : IRoutedMessageHandler
     {
         private readonly object _target;
         private readonly IActionHost _host;
         private IInteractionNode _node;
+        private List<object> _metadata;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ActionMessageHandler"/> class.
@@ -36,6 +37,21 @@
         public IActionHost Host
         {
             get { return _host; }
+        }
+
+        /// <summary>
+        /// Gets the metadata.
+        /// </summary>
+        /// <value>The metadata.</value>
+        public IList<object> Metadata
+        {
+            get
+            {
+                if (_metadata == null)
+                    _metadata = new List<object>();
+
+                return _metadata;
+            }
         }
 
         /// <summary>

@@ -1,15 +1,32 @@
 namespace Caliburn.ModelFramework
 {
     using System;
-    using Core.Metadata;
+    using System.Collections.Generic;
+    using PresentationFramework;
 
     /// <summary>
     /// An implementation of <see cref="IPropertyDefinition{T}"/>.
     /// </summary>
     /// <typeparam name="T"></typeparam>
-    public class PropertyDefinition<T> : MetadataContainer, IPropertyDefinition<T>
+    public class PropertyDefinition<T> : PropertyChangedBase, IPropertyDefinition<T>
     {
         private readonly Func<T> _defaultValue;
+        private IList<object> _metadata;
+
+        /// <summary>
+        /// Gets the metadata.
+        /// </summary>
+        /// <value>The metadata.</value>
+        public IList<object> Metadata
+        {
+            get
+            {
+                if (_metadata == null)
+                    _metadata = new List<object>();
+
+                return _metadata;
+            }
+        }
 
         /// <summary>
         /// Gets the name.

@@ -65,7 +65,6 @@
     <Compile Include="CoreExtensions.cs" />
     <Compile Include="IAssemblySource.cs" />
     <Compile Include="Inflector.cs" />
-    <Compile Include="INotifyPropertyChangedEx.cs" />
     <Compile Include="Invocation\DefaultDispatcher.cs" />
     <Compile Include="Invocation\InvocationExtensions.cs" />
     <Compile Include="IoC\ComponentRegistrationBase.cs" />
@@ -82,12 +81,6 @@
     <Compile Include="IoC\IComponentRegistration.cs" />
     <Compile Include="IoC\PerRequest.cs" />
     <Compile Include="IoC\Singleton.cs" />
-    <Compile Include="Metadata\MetadataExtensions.cs" />
-    <Compile Include="Metadata\IMetadataContainer.cs" />
-    <Compile Include="Metadata\MetadataContainer.cs" />
-    <Compile Include="Metadata\IMetadata.cs" />
-    <Compile Include="Metadata\TypeDescriptor.silverlight.cs" />
-    <Compile Include="PropertyChangedBase.cs" />
     <Compile Include="Threading\BackgroundTask.cs" />
     <Compile Include="Invocation\IEventHandler.cs" />
     <Compile Include="Invocation\DefaultEventHandlerFactory.cs" />
@@ -103,6 +96,7 @@
     <Compile Include="IoC\SimpleContainer.cs" />
     <Compile Include="Threading\DefaultThreadPool.cs" />
     <Compile Include="Threading\IThreadPool.cs" />
+    <Compile Include="TypeDescriptor.silverlight.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

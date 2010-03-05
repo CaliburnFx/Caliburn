@@ -29,7 +29,7 @@
         /// <returns></returns>
         public static IFilterManager CreateFilterManager(this ActionCreationContext context, IMethod method)
         {
-            return new FilterManager(context.TargetType, method, context.ServiceLocator).Combine(context.TargetFilters);
+            return new FilterManager(context.TargetType, method.Info, context.ServiceLocator).Combine(context.TargetFilters);
         }
     }
 }

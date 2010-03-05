@@ -1,12 +1,18 @@
 namespace Caliburn.ModelFramework
 {
-    using Core.Metadata;
+    using System.Collections.Generic;
 
     /// <summary>
     /// A definition of a property.
     /// </summary>
-    public interface IPropertyDefinition : IMetadataContainer
+    public interface IPropertyDefinition
     {
+        /// <summary>
+        /// Gets the metadata.
+        /// </summary>
+        /// <value>The metadata.</value>
+        IList<object> Metadata { get; }
+
         /// <summary>
         /// Gets the name.
         /// </summary>

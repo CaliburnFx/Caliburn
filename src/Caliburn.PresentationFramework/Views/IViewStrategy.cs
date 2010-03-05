@@ -2,12 +2,11 @@ namespace Caliburn.PresentationFramework.Views
 {
     using System;
     using System.Windows;
-    using Core.Metadata;
 
     /// <summary>
-    /// An <see cref="IMetadata"/> as <see cref="IViewLocator"/> with conditional matching.
+    /// Applies a specific strategy for locating views to the annotated instance.
     /// </summary>
-    public interface IViewStrategy : IMetadata
+    public interface IViewStrategy
     {
         /// <summary>
         /// Determines whether this strategy applies in the specified context.

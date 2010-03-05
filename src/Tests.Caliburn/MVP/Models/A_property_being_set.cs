@@ -17,7 +17,7 @@
             var myProperty = definition.AddProperty(_propertyName, () => 0);
             var metadata = new FakePropertyChangeAware();
 
-            myProperty.AddMetadata(metadata);
+            myProperty.Metadata.Add(metadata);
             var instance = definition.CreateInstance();
 
             instance.BeginEdit();
@@ -33,7 +33,7 @@
             var myProperty = definition.AddProperty(_propertyName, () => default(DateTime));
             var metadata = new FakePropertyValueConverter();
 
-            myProperty.AddMetadata(metadata);
+            myProperty.Metadata.Add(metadata);
 
             var instance = definition.CreateInstance();
             var property = instance[_propertyName];
@@ -51,7 +51,7 @@
             var myProperty = definition.AddProperty(_propertyName, () => default(DateTime));
             var metadata = new FakePropertyValueConverter();
 
-            myProperty.AddMetadata(metadata);
+            myProperty.Metadata.Add(metadata);
 
             var instance = definition.CreateInstance();
             var property = instance[_propertyName];
@@ -71,7 +71,7 @@
             var myProperty = definition.AddProperty(_propertyName, () => string.Empty);
             var metadata = new FakePropertyValidator();
 
-            myProperty.AddMetadata(metadata);
+            myProperty.Metadata.Add(metadata);
 
             var instance = definition.CreateInstance();
 
@@ -90,8 +90,8 @@
             var metadata1 = new FakePropertyValidator();
             var metadata2 = new FakePropertyChangeAware();
 
-            myProperty.AddMetadata(metadata1);
-            myProperty.AddMetadata(metadata2);
+            myProperty.Metadata.Add(metadata1);
+            myProperty.Metadata.Add(metadata2);
 
             var instance = definition.CreateInstance();
 
