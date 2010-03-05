@@ -138,12 +138,24 @@
         {
             var fe = parent as FrameworkElement;
             if (fe != null)
+            {
+                if (fe.Name == name)
+                    return fe;
                 return fe.FindName(name) as DependencyObject;
+            }
 #if !SILVERLIGHT
-            var fce = parent as FrameworkContentElement;
-            if (fce != null)
-                return fce.FindName(name) as DependencyObject;
+            else
+            {
+                var fce = parent as FrameworkContentElement;
+                if (fce != null)
+                {
+                    if (fce.Name == name)
+                        return fce;
+                    return fce.FindName(name) as DependencyObject;
+                }
+            }
 #endif
+
             return null;
         }
 
