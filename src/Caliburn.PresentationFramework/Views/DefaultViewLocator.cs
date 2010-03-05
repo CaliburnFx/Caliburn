@@ -59,7 +59,7 @@ namespace Caliburn.PresentationFramework.Views
             var viewAware = model as IViewAware;
             if (viewAware != null)
             {
-                var view = viewAware.GetView(context);
+                var view = viewAware.GetView(context) as DependencyObject;
                 if (view != null)
                 {
 #if !SILVERLIGHT

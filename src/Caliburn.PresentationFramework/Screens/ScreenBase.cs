@@ -2,7 +2,6 @@ namespace Caliburn.PresentationFramework.Screens
 {
     using System;
     using System.Collections.Generic;
-    using System.Windows;
     using Behaviors;
     using Views;
 
@@ -11,7 +10,7 @@ namespace Caliburn.PresentationFramework.Screens
     /// </summary>
     public abstract class ScreenBase : PropertyChangedBase, IScreenEx
     {
-        private readonly Dictionary<object, DependencyObject> _views = new Dictionary<object, DependencyObject>();
+        private readonly Dictionary<object, object> _views = new Dictionary<object, object>();
 
         private IScreenCollection _parent;
         private bool _isActive;
@@ -195,7 +194,7 @@ namespace Caliburn.PresentationFramework.Screens
         /// </summary>
         /// <param name="view">The view.</param>
         /// <param name="context">The context.</param>
-        public virtual void AttachView(DependencyObject view, object context)
+        public virtual void AttachView(object view, object context)
         {
             _views[context ?? DefaultViewLocator.DefaultContext] = view;
         }
@@ -205,9 +204,9 @@ namespace Caliburn.PresentationFramework.Screens
         /// </summary>
         /// <param name="context">The context.</param>
         /// <returns>The view</returns>
-        public virtual DependencyObject GetView(object context)
+        public virtual object GetView(object context)
         {
-            DependencyObject view;
+            object view;
             _views.TryGetValue(context ?? DefaultViewLocator.DefaultContext, out view);
             return view;
         }

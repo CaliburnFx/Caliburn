@@ -42,7 +42,7 @@ namespace Caliburn.PresentationFramework.ApplicationModel
         /// <param name="propertyPath">The property path.</param>
         public void Focus(object viewModel, string propertyPath)
         {
-            var view = GetView(viewModel);
+            var view = GetView(viewModel) as DependencyObject;
             if (view == null) return;
 
             var elements = GetAllElements(view);
@@ -133,7 +133,7 @@ namespace Caliburn.PresentationFramework.ApplicationModel
         /// </summary>
         /// <param name="model">The model.</param>
         /// <returns></returns>
-        protected virtual DependencyObject GetView(object model)
+        protected virtual object GetView(object model)
         {
             var viewAware = model as IViewAware;
             if (viewAware == null) return null;

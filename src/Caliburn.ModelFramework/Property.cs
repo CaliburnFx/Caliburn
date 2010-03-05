@@ -4,7 +4,6 @@ namespace Caliburn.ModelFramework
     using System.Collections.Generic;
     using System.ComponentModel;
     using System.Linq;
-    using System.Windows;
     using Core;
     using PresentationFramework;
     using PresentationFramework.Views;
@@ -15,7 +14,7 @@ namespace Caliburn.ModelFramework
     /// <typeparam name="T"></typeparam>
     public class Property<T> : PropertyChangedBase, IProperty<T>
     {
-        private readonly Dictionary<object, DependencyObject> _views = new Dictionary<object, DependencyObject>();
+        private readonly Dictionary<object, object> _views = new Dictionary<object, object>();
         private readonly IPropertyDefinition<T> _definition;
         private IModelNode _parent;
 
@@ -192,7 +191,7 @@ namespace Caliburn.ModelFramework
         /// </summary>
         /// <param name="view">The view.</param>
         /// <param name="context">The context.</param>
-        public void AttachView(DependencyObject view, object context)
+        public void AttachView(object view, object context)
         {
             _views[context ?? DefaultViewLocator.DefaultContext] = view;
         }
@@ -202,9 +201,9 @@ namespace Caliburn.ModelFramework
         /// </summary>
         /// <param name="context">The context.</param>
         /// <returns>The view</returns>
-        public DependencyObject GetView(object context)
+        public object GetView(object context)
         {
-            DependencyObject view;
+            object view;
             _views.TryGetValue(context ?? DefaultViewLocator.DefaultContext, out view);
             return view;
         }
