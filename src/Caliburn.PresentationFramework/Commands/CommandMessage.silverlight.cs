@@ -46,19 +46,47 @@ namespace Caliburn.PresentationFramework.Commands
                 null
                 );
 
+        /// <summary>
+        /// Represents the return path of an command message.
+        /// </summary>
+        public static readonly DependencyProperty OutcomePathProperty =
+            DependencyProperty.Register(
+                "OutcomePath",
+                typeof(string),
+                typeof(CommandMessage),
+                null
+                );
+
+        /// <summary>
+        /// Represents the availability effect of an command message.
+        /// </summary>
+        public static readonly DependencyProperty AvailabilityEffectProperty =
+            DependencyProperty.Register(
+                "AvailabilityEffect",
+                typeof(IAvailabilityEffect),
+                typeof(CommandMessage),
+                null
+                );
+
         private static void CommandChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
             if(e.OldValue != e.NewValue && e.NewValue != null)
             {
-                if(e.NewValue is string)
-                    d.SetValue(CommandProperty, ServiceLocator.Current.GetInstance(null, e.NewValue as string));
-                
                 var message = (CommandMessage)d;
 
-                message.CreateAction();
+                if(e.NewValue is string)
+                {
+                    message._isSetting = true;
+                    d.SetValue(CommandProperty, ServiceLocator.Current.GetInstance(null, e.NewValue as string));
+                    message._isSetting = false;
+                }
+                
+                if(!message._isSetting)
+                    message.CreateAction(true);
             }
         }
 
+        private bool _isSetting;
         private IInteractionNode _source;
         private readonly IViewModelDescriptionFactory _factory;
 
@@ -74,14 +102,6 @@ namespace Caliburn.PresentationFramework.Commands
         {
             if(!PresentationFrameworkConfiguration.IsInDesignMode)
                 _factory = ServiceLocator.Current.GetInstance<IViewModelDescriptionFactory>();
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="CommandMessage"/> class.
-        /// </summary>
-        public CommandMessage(IViewModelDescriptionFactory factory)
-        {
-            _factory = factory;
         }
 
         /// <summary>
@@ -130,10 +150,14 @@ namespace Caliburn.PresentationFramework.Commands
         }
 
         /// <summary>
-        /// Gets or sets the path to use in binding the outcome.
+        /// Gets or sets the path to use in binding the return value.
         /// </summary>
         /// <value>The return path.</value>
-        public string OutcomePath { get; set; }
+        public string OutcomePath
+        {
+            get { return (string)GetValue(OutcomePathProperty); }
+            set { SetValue(OutcomePathProperty, value); }
+        }
 
         /// <summary>
         /// Gets the default element to bind to if no outcome path is specified.
@@ -148,15 +172,10 @@ namespace Caliburn.PresentationFramework.Commands
         /// Gets or sets the availability effect.
         /// </summary>
         /// <value>The availability effect.</value>
-        public IAvailabilityEffect AvailabilityEffect {get; set; }
-
-        /// <summary>
-        /// Gets the source of the message.
-        /// </summary>
-        /// <value>The source.</value>
-        public IInteractionNode Source
+        public IAvailabilityEffect AvailabilityEffect
         {
-            get { return _source; }
+            get { return (IAvailabilityEffect)GetValue(AvailabilityEffectProperty); }
+            set { SetValue(AvailabilityEffectProperty, value); }
         }
 
         /// <summary>
@@ -166,6 +185,15 @@ namespace Caliburn.PresentationFramework.Commands
         public List<Parameter> Parameters
         {
             get { return _parameters; }
+        }
+
+        /// <summary>
+        /// Gets the source of the message.
+        /// </summary>
+        /// <value>The source.</value>
+        public IInteractionNode Source
+        {
+            get { return _source; }
         }
 
         /// <summary>
@@ -312,16 +340,19 @@ namespace Caliburn.PresentationFramework.Commands
                 OutcomePath = OutcomePath
             };
 
-            _actionMessage.Initialize(Source);
-
-            foreach (var parameter in Parameters)
+            foreach(var parameter in Parameters)
             {
                 _actionMessage.Parameters.Add(new Parameter(parameter.Value));
             }
+
+            _actionMessage.Initialize(Source);
         }
 
-        private void CreateAction()
+        private void CreateAction(bool forceRecreate)
         {
+            if(_action != null && !forceRecreate)
+                return;
+
             var host = _factory.Create(Command.GetType());
 
             host.Actions.SelectMany(x => x.Filters.HandlerAware)

@@ -100,16 +100,6 @@ namespace Caliburn.PresentationFramework.Commands
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="CommandMessage"/> class.
-        /// </summary>
-        public CommandMessage(IViewModelDescriptionFactory factory)
-        {
-            _factory = factory;
-
-            SetValue(ParametersProperty, new FreezableCollection<Parameter>());
-        }
-
-        /// <summary>
         /// Gets the metadata.
         /// </summary>
         /// <value>The metadata.</value>
