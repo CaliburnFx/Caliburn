@@ -28,12 +28,12 @@
             client.OpenReadCompleted += (s, e) =>
             {
                 if (e.Error != null)
-                    Core.Invocation.Execute.OnUIThread(
+                    PresentationFramework.Invocation.Execute.OnUIThread(
                         () => Completed(this, new ResultCompletionEventArgs { Error = e.Error }));
                 else
                 {
                     Stream = e.Result;
-                    Core.Invocation.Execute.OnUIThread(() => Completed(this, new ResultCompletionEventArgs()));
+                    PresentationFramework.Invocation.Execute.OnUIThread(() => Completed(this, new ResultCompletionEventArgs()));
                 }
             };
 

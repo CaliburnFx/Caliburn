@@ -1,11 +1,11 @@
 ﻿using System;
-using Caliburn.Core.Threading;
 using NUnit.Framework;
 using NUnit.Framework.SyntaxHelpers;
 
 namespace Tests.Caliburn.Core.Threading
 {
     using System.Threading;
+    using global::Caliburn.Core.Invocation;
 
     [TestFixture]
     [Ignore]

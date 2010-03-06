@@ -2,8 +2,6 @@
 {
     using System;
     using System.Collections.Generic;
-    using Invocation;
-    using Microsoft.Practices.ServiceLocation;
 
     /// <summary>
     /// Configures Caliburn's core.
@@ -21,16 +19,6 @@
         {
             _afterStart.Add(doThis);
             return this;
-        }
-
-        /// <summary>
-        /// Initializes this module.
-        /// </summary>
-        /// <param name="serviceLocator"></param>
-        public override void Initialize(IServiceLocator serviceLocator)
-        {
-            base.Initialize(serviceLocator);
-            Execute.Initialize(serviceLocator.GetInstance<IDispatcher>());
         }
 
         internal void ExecuteAfterStart()

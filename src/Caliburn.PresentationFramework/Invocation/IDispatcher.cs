@@ -1,8 +1,8 @@
-namespace Caliburn.Core.Invocation
+namespace Caliburn.PresentationFramework.Invocation
 {
     using System;
     using System.ComponentModel;
-    using Threading;
+    using Core.Invocation;
 
     /// <summary>
     /// Abstracts a dispatcher capable of executing code on a background or UI thread.

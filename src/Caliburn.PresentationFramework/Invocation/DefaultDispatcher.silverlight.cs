@@ -1,25 +1,25 @@
-#if !SILVERLIGHT
+#if SILVERLIGHT
 
 namespace Caliburn.PresentationFramework.Invocation
 {
     using System;
     using System.ComponentModel;
     using System.Windows;
+    using System.Windows.Controls;
     using System.Windows.Threading;
     using Core.Invocation;
-    using Core.Threading;
 
     /// <summary>
-    /// An implementation of <see cref="IDispatcher"/> for WPF.
+    /// An implementation of <see cref="IDispatcher"/> for Silverlight.
     /// </summary>
-    public class DispatcherImplementation : IDispatcher
+    public class DefaultDispatcher : IDispatcher
     {
         private readonly Dispatcher _dispatcher;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="DispatcherImplementation"/> class.
+        /// Initializes a new instance of the <see cref="DefaultDispatcher"/> class.
         /// </summary>
-        public DispatcherImplementation()
+        public DefaultDispatcher()
         {
             _dispatcher = GetDispatcher();
         }
@@ -30,9 +30,7 @@ namespace Caliburn.PresentationFramework.Invocation
         /// <returns></returns>
         protected virtual Dispatcher GetDispatcher()
         {
-            if (Application.Current != null && Application.Current.Dispatcher != null)
-                return Application.Current.Dispatcher;
-            return Dispatcher.CurrentDispatcher;
+            return Deployment.Current.Dispatcher;
         }
 
         /// <summary>
@@ -49,10 +47,10 @@ namespace Caliburn.PresentationFramework.Invocation
                     return null;
                 });
 
-            if(uiCallback != null)
+            if (uiCallback != null)
                 task.Completed += (s, e) => ExecuteOnUIThread(() => uiCallback(s, e));
 
-            if(progressChanged != null)
+            if (progressChanged != null)
                 task.ProgressChanged += (s, e) => ExecuteOnUIThread(() => progressChanged(s, e));
 
             task.Start(null);
@@ -66,15 +64,9 @@ namespace Caliburn.PresentationFramework.Invocation
         /// <param name="uiAction">The UI action.</param>
         public void ExecuteOnUIThread(Action uiAction)
         {
-            if(_dispatcher.CheckAccess())
+            if (_dispatcher.CheckAccess())
                 uiAction();
-            else
-            {
-                _dispatcher.Invoke(
-                    DispatcherPriority.Send,
-                    uiAction
-                    );
-            }
+            else _dispatcher.BeginInvoke(uiAction);
         }
 
         /// <summary>
@@ -83,14 +75,9 @@ namespace Caliburn.PresentationFramework.Invocation
         /// <param name="uiAction">The UI action.</param>
         public IDispatcherOperation BeginExecuteOnUIThread(Action uiAction)
         {
-            var operation = _dispatcher.BeginInvoke(
-                uiAction,
-                DispatcherPriority.Send
-                );
-
+            var operation = _dispatcher.BeginInvoke(uiAction);
             return new DispatcherOperationProxy(operation);
         }
     }
 }
-
 #endif

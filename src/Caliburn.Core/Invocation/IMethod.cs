@@ -1,7 +1,6 @@
 namespace Caliburn.Core.Invocation
 {
     using System.Reflection;
-    using Threading;
 
     /// <summary>
     /// Abstracts a generic way of invoking procedures and functions without using reflection.

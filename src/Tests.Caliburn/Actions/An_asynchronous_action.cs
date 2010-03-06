@@ -1,6 +1,5 @@
 ﻿using System;
 using Caliburn.Core.Invocation;
-using Caliburn.Core.Threading;
 using NUnit.Framework;
 using NUnit.Framework.SyntaxHelpers;
 using Rhino.Mocks;

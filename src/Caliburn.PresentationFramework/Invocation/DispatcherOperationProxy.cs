@@ -2,7 +2,6 @@
 {
     using System;
     using System.Windows.Threading;
-    using Core.Invocation;
 
     /// <summary>
     /// An implemenation of <see cref="IDispatcherOperation"/>.

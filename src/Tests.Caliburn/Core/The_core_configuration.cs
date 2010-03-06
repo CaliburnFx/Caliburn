@@ -7,6 +7,7 @@
     using global::Caliburn.Core.Configuration;
     using global::Caliburn.Core.Invocation;
     using global::Caliburn.Core.IoC;
+    using global::Caliburn.PresentationFramework.Invocation;
     using NUnit.Framework;
     using NUnit.Framework.SyntaxHelpers;
 
@@ -28,15 +29,8 @@
             var registrations = _module.GetComponents();
 
             var found = (from reg in registrations.OfType<Singleton>()
-                         where reg.Service == typeof(IDispatcher)
+                         where reg.Service == typeof(IMethodFactory)
                          select reg).FirstOrDefault();
-
-            Assert.That(found, Is.Not.Null);
-            Assert.That(found.Implementation, Is.Not.Null);
-
-            found = (from reg in registrations.OfType<Singleton>()
-                     where reg.Service == typeof(IMethodFactory)
-                     select reg).FirstOrDefault();
 
             Assert.That(found, Is.Not.Null);
             Assert.That(found.Implementation, Is.Not.Null);
@@ -47,20 +41,6 @@
 
             Assert.That(found, Is.Not.Null);
             Assert.That(found.Implementation, Is.Not.Null);
-        }
-
-        [Test]
-        public void can_provide_a_custom_dispatcher()
-        {
-            _config.Using(x => x.Dispatcher<DefaultDispatcher>());
-
-            var registrations = _module.GetComponents();
-
-            var found = (from reg in registrations.OfType<Singleton>()
-                         where reg.Service == typeof(IDispatcher)
-                         select reg).FirstOrDefault();
-
-            Assert.That(found.Implementation, Is.EqualTo(typeof(DefaultDispatcher)));
         }
 
         [Test]

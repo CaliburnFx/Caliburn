@@ -5,6 +5,7 @@ namespace Caliburn.PresentationFramework.Configuration
     using Conventions;
     using Core.Configuration;
     using Core.IoC;
+    using Invocation;
     using RoutedMessaging;
     using RoutedMessaging.Parsers;
     using ViewModels;
@@ -15,6 +16,12 @@ namespace Caliburn.PresentationFramework.Configuration
     /// </summary>
     public interface IPresentationFrameworkServicesDescription
     {
+        /// <summary>
+        /// Customizes the dispatcher used by Caliburn.
+        /// </summary>
+        /// <typeparam name="T">The dispatcher type.</typeparam>
+        IConfiguredRegistration<Singleton, T> Dispatcher<T>() where T : IDispatcher;
+
         /// <summary>
         /// Customizes the routed message controller used by Caliburn.
         /// </summary>

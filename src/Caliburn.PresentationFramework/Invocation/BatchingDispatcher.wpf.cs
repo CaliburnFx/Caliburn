@@ -9,7 +9,6 @@ namespace Caliburn.PresentationFramework.Invocation
     using System.Threading;
     using System.Windows.Threading;
     using Core.Invocation;
-    using Core.Threading;
 
     /// <summary>
     /// An impelementation of <see cref="IDispatcher"/> that efficiently batches updates to the UI thread.
@@ -21,7 +20,7 @@ namespace Caliburn.PresentationFramework.Invocation
         private readonly object locker = new object();
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="DispatcherImplementation"/> class.
+        /// Initializes a new instance of the <see cref="BatchingDispatcher"/> class.
         /// </summary>
         public BatchingDispatcher()
         {

@@ -47,6 +47,8 @@ V2 Alpha
 -Removed IThreadPool and DefaultThreadPool
 -Reworked BackgroundTask to use BackgroundWorder under the covers.
 -Removed IEventHandlerFactory and IEventHandler; replaced with a simple event helper.
+-Moved Dispatcher and related components to PresentationFramework.Invocation.
+-Moved IBackgroundTask and related components into Core.Invocation.
 
 V1.1 Release
 -Fixed an issue in the WPF version of InteractionNode.

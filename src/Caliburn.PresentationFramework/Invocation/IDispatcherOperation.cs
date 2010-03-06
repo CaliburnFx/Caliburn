@@ -1,4 +1,4 @@
-﻿namespace Caliburn.Core.Invocation
+﻿namespace Caliburn.PresentationFramework.Invocation
 {
     using System;
 

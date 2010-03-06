@@ -1,4 +1,4 @@
-namespace Caliburn.Core.Threading
+namespace Caliburn.Core.Invocation
 {
     /// <summary>
     /// The context for the currently executing background task.

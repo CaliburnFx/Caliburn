@@ -1,7 +1,7 @@
 ﻿namespace BackgroundProcessing.Framework
 {
     using System;
-    using Caliburn.Core.Threading;
+    using Caliburn.Core.Invocation;
     using Caliburn.PresentationFramework;
 
     public class RunningAction : PropertyChangedBase, IRunningAction

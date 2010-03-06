@@ -2,7 +2,6 @@
 {
     using System;
     using Core.Invocation;
-    using Core.Threading;
     using Filters;
 	using System.Threading;
     using Microsoft.Practices.ServiceLocation;
@@ -94,7 +93,7 @@
         protected void DoExecute(ActionMessage actionMessage, IInteractionNode handlingNode, object[] parameters)
         {
             CurrentTask.Completed +=
-                (s, e) => Core.Invocation.Execute.OnUIThread(
+                (s, e) => Invocation.Execute.OnUIThread(
                               () =>{
                                   Interlocked.Decrement(ref _runningCount);
                                   if(e.Error != null)

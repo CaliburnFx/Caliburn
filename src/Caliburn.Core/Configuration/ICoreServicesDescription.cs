@@ -15,12 +15,6 @@ namespace Caliburn.Core.Configuration
         IConfiguredRegistration<Singleton, T> MethodFactory<T>() where T : IMethodFactory;
 
         /// <summary>
-        /// Customizes the dispatcher implementation.
-        /// </summary>
-        /// <typeparam name="T"></typeparam>
-        IConfiguredRegistration<Singleton, T> Dispatcher<T>() where T : IDispatcher;
-
-        /// <summary>
         /// Usings the assembly source.
         /// </summary>
         /// <typeparam name="T"></typeparam>

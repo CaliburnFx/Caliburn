@@ -39,16 +39,6 @@
 #endif
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="PresentationFrameworkConfiguration"/> class.
-        /// </summary>
-        public PresentationFrameworkConfiguration()
-        {
-            CaliburnModule<CoreConfiguration>
-                .Instance
-                .Using(x => x.Dispatcher<DispatcherImplementation>());
-        }
-
-        /// <summary>
         /// Gets a value indicating whether the framework is in design mode.
         /// </summary>
         /// <value>
@@ -83,6 +73,8 @@
         /// <param name="serviceLocator">The service locator.</param>
         public override void Initialize(IServiceLocator serviceLocator)
         {
+            Execute.Initialize(serviceLocator.GetInstance<IDispatcher>());
+
             base.Initialize(serviceLocator);
 
             var controller = serviceLocator.GetInstance<IRoutedMessageController>();

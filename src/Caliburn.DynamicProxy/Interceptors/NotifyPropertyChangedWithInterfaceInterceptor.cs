@@ -3,8 +3,8 @@
     using System;
     using System.ComponentModel;
     using Castle.Core.Interceptor;
-    using Core.Invocation;
     using PresentationFramework.Behaviors;
+    using PresentationFramework.Invocation;
 
     /// <summary>
     /// Handles <see cref="INotifyPropertyChanged"/> on classes that do not implement the interface.

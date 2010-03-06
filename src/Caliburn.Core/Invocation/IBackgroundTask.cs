@@ -1,4 +1,4 @@
-namespace Caliburn.Core.Threading
+namespace Caliburn.Core.Invocation
 {
     using System;
     using System.ComponentModel;

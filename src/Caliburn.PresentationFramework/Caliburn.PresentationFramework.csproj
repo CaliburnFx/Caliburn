@@ -97,6 +97,9 @@
     <Compile Include="Converters\EnumConverter.cs" />
     <Compile Include="ElementExtensions.cs" />
     <Compile Include="INotifyPropertyChangedEx.cs" />
+    <Compile Include="Invocation\Execute.cs" />
+    <Compile Include="Invocation\IDispatcher.cs" />
+    <Compile Include="Invocation\IDispatcherOperation.cs" />
     <Compile Include="PropertyChangedBase.cs" />
     <Compile Include="RoutedMessaging\MessagingExtensions.cs" />
     <Compile Include="RoutedMessaging\ResultCompletionEventArgs.cs" />
@@ -210,8 +213,8 @@
     <Compile Include="RoutedMessaging\IRoutedMessageHandler.cs" />
     <Compile Include="RoutedMessaging\Message.cs" />
     <Compile Include="Invocation\BatchingDispatcher.wpf.cs" />
-    <Compile Include="Invocation\DispatcherImplementation.silverlight.cs" />
-    <Compile Include="Invocation\DispatcherImplementation.wpf.cs" />
+    <Compile Include="Invocation\DefaultDispatcher.silverlight.cs" />
+    <Compile Include="Invocation\DefaultDispatcher.wpf.cs" />
     <Compile Include="RoutedMessaging\DefaultMessageBinder.cs" />
     <Compile Include="RoutedMessaging\Parameter.silverlight.cs" />
     <Compile Include="RoutedMessaging\Parameter.wpf.cs" />

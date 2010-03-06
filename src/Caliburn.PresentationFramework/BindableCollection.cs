@@ -6,7 +6,7 @@
     using System.Collections.Specialized;
     using System.ComponentModel;
     using Core;
-    using Core.Invocation;
+    using Invocation;
 
 #if SILVERLIGHT
     using Core;
