@@ -3,7 +3,6 @@
     using System;
     using System.Linq.Expressions;
     using Core;
-    using Microsoft.Practices.ServiceLocation;
     using Microsoft.Win32;
     using PresentationFramework.Screens;
     using PresentationFramework.ViewModels;

@@ -68,7 +68,7 @@ namespace Caliburn.PresentationFramework.ViewModels
 
             var viewAware = viewModel as IViewAware;
             if (viewAware != null)
-                view.OnLoad(delegate { viewAware.AttachView(view, context); });
+                viewAware.AttachView(view, context);
         }
 
         /// <summary>
