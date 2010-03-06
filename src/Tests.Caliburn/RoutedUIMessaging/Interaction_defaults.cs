@@ -1,7 +1,6 @@
 ﻿namespace Tests.Caliburn.RoutedUIMessaging
 {
     using System.Windows.Controls;
-    using global::Caliburn.Core.Invocation;
     using global::Caliburn.PresentationFramework.Conventions;
     using global::Caliburn.PresentationFramework.RoutedMessaging.Triggers;
     using NUnit.Framework;
@@ -15,7 +14,6 @@
         protected override void given_the_context_of()
         {
             _defaults = new DefaultElementConvention<Button>(
-                Mock<IEventHandlerFactory>(),
                 "Click",
                 Button.ContentProperty,
                 (c, v) => c.DataContext = v,

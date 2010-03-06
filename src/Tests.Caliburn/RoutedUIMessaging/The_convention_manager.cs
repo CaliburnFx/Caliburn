@@ -2,7 +2,6 @@
 {
     using System.Windows.Controls.Primitives;
     using global::Caliburn.Core.Invocation;
-    using global::Caliburn.PresentationFramework;
     using global::Caliburn.PresentationFramework.Conventions;
     using NUnit.Framework;
     using System.Windows.Controls;
@@ -13,16 +12,13 @@
     {
         private IConventionManager _conventionManager;
         private IMethodFactory _methodFactory;
-        private IEventHandlerFactory _eventHandlerFactory;
 
         protected override void given_the_context_of()
         {
             _methodFactory = Mock<IMethodFactory>();
-            _eventHandlerFactory = Mock<IEventHandlerFactory>();
 
             _conventionManager = new DefaultConventionManager(
-                _methodFactory,
-                _eventHandlerFactory
+                _methodFactory
                 );
         }
 
@@ -30,7 +26,6 @@
         public void can_register_interaction_defaults()
         {
             var defaults = new DefaultElementConvention<TextBox>(
-                Mock<IEventHandlerFactory>(),
                 "TextChanged",
                 TextBox.TextProperty,
                 (c, v) => c.Text = v.ToString(),
@@ -49,7 +44,6 @@
         public void can_get_defaults_if_only_a_base_class_is_registered()
         {
             var defaults = new DefaultElementConvention<ButtonBase>(
-                Mock<IEventHandlerFactory>(),
                 "Click",
                 ButtonBase.ContentProperty,
                 (c, v) => c.DataContext = v,

@@ -42,13 +42,6 @@
             Assert.That(found.Implementation, Is.Not.Null);
 
             found = (from reg in registrations.OfType<Singleton>()
-                     where reg.Service == typeof(IEventHandlerFactory)
-                     select reg).FirstOrDefault();
-
-            Assert.That(found, Is.Not.Null);
-            Assert.That(found.Implementation, Is.Not.Null);
-
-            found = (from reg in registrations.OfType<Singleton>()
                      where reg.Service == typeof(IAssemblySource)
                      select reg).FirstOrDefault();
 
@@ -84,36 +77,9 @@
             Assert.That(found.Implementation, Is.EqualTo(typeof(FakeMethodFactory)));
         }
 
-        [Test]
-        public void can_provide_a_custom_event_handler_factory()
-        {
-            _config.Using(x => x.EventHandlerFactory<FakeEventHandlerFactory>());
-
-            var registrations = _module.GetComponents();
-
-            var found = (from reg in registrations.OfType<Singleton>()
-                         where reg.Service == typeof(IEventHandlerFactory)
-                         select reg).FirstOrDefault();
-
-            Assert.That(found.Implementation, Is.EqualTo(typeof(FakeEventHandlerFactory)));
-        }
-
         private class FakeMethodFactory : IMethodFactory
         {
             public IMethod CreateFrom(MethodInfo methodInfo)
-            {
-                throw new NotImplementedException();
-            }
-        }
-
-        private class FakeEventHandlerFactory : IEventHandlerFactory
-        {
-            public IEventHandler Wire(object sender, string eventName)
-            {
-                throw new NotImplementedException();
-            }
-
-            public IEventHandler Wire(object sender, EventInfo eventInfo)
             {
                 throw new NotImplementedException();
             }

@@ -15,12 +15,6 @@ namespace Caliburn.Core.Configuration
         IConfiguredRegistration<Singleton, T> MethodFactory<T>() where T : IMethodFactory;
 
         /// <summary>
-        /// Customizes the event handler factory.
-        /// </summary>
-        /// <typeparam name="T">The event handler factory type.</typeparam>
-        IConfiguredRegistration<Singleton, T> EventHandlerFactory<T>() where T : IEventHandlerFactory;
-
-        /// <summary>
         /// Customizes the dispatcher implementation.
         /// </summary>
         /// <typeparam name="T"></typeparam>

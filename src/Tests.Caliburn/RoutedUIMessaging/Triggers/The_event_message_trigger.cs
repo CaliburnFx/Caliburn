@@ -3,7 +3,6 @@ namespace Tests.Caliburn.RoutedUIMessaging.Triggers
     using System;
     using Fakes;
     using Fakes.UI;
-    using global::Caliburn.Core.Invocation;
     using global::Caliburn.PresentationFramework.RoutedMessaging;
     using global::Caliburn.PresentationFramework.RoutedMessaging.Triggers;
     using NUnit.Framework;
@@ -28,18 +27,13 @@ namespace Tests.Caliburn.RoutedUIMessaging.Triggers
         [Test]
         public void can_attach_itself_to_an_element()
         {
-            var factory = Mock<IEventHandlerFactory>();
-            var handler = Mock<IEventHandler>();
-            var trigger = new EventMessageTrigger(factory)
+            var trigger = new EventMessageTrigger
             {
                 Message = _message,
                 EventName = FakeElement.EventName
             };
 
             _node.Expect(x => x.UIElement).Return(_element).Repeat.Any();
-            factory.Expect(x => x.Wire(_element, typeof(FakeElement).GetEvent(FakeElement.EventName))).Return(handler);
-            handler.Expect(x => x.SetActualHandler(Arg<Action<object[]>>.Is.NotNull));
-
 
             trigger.Attach(_node);
 
@@ -51,7 +45,7 @@ namespace Tests.Caliburn.RoutedUIMessaging.Triggers
         [Test]
         public void can_trigger_message_processing()
         {
-            var trigger = new EventMessageTrigger(new DefaultEventHandlerFactory())
+            var trigger = new EventMessageTrigger
             {
                 Message = _message,
                 EventName = FakeElement.EventName
@@ -68,17 +62,13 @@ namespace Tests.Caliburn.RoutedUIMessaging.Triggers
         [Test]
         public void can_update_availability()
         {
-            var factory = Mock<IEventHandlerFactory>();
-            var handler = Mock<IEventHandler>();
-            var trigger = new EventMessageTrigger(factory)
+            var trigger = new EventMessageTrigger
             {
                 Message = _message,
                 EventName = FakeElement.EventName
             };
 
             _node.Expect(x => x.UIElement).Return(_element);
-            factory.Expect(x => x.Wire(_element, typeof(FakeElement).GetEvent(FakeElement.EventName))).Return(handler);
-            handler.Expect(x => x.SetActualHandler(Arg<Action<object[]>>.Is.NotNull));
 
             _node.Expect(x => x.UIElement).Return(_element);
             _message.AvailabilityEffect.Expect(x => x.ApplyTo(_element, false));

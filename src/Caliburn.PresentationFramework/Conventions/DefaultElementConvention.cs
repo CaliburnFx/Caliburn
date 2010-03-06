@@ -2,8 +2,6 @@ namespace Caliburn.PresentationFramework.Conventions
 {
     using System;
     using System.Windows;
-    using Core.Invocation;
-    using Microsoft.Practices.ServiceLocation;
     using RoutedMessaging;
     using RoutedMessaging.Triggers;
 
@@ -14,7 +12,6 @@ namespace Caliburn.PresentationFramework.Conventions
     public class DefaultElementConvention<T> : IElementConvention
         where T : DependencyObject
     {
-        private readonly IEventHandlerFactory _eventHandlerFactory;
         private readonly string _defaultEventName;
         private readonly Action<T, object> _setter;
         private readonly Func<T, object> _getter;
@@ -24,15 +21,13 @@ namespace Caliburn.PresentationFramework.Conventions
         /// <summary>
         /// Initializes a new instance of the <see cref="DefaultElementConvention&lt;T&gt;"/> class.
         /// </summary>
-        /// <param name="eventHandlerFactory">The event handler factory.</param>
         /// <param name="defaultEventName">Default name of the event.</param>
         /// <param name="setter">The setter.</param>
         /// <param name="getter">The getter.</param>
         /// <param name="bindableProperty">The bindable property.</param>
         /// <param name="shouldOverrideBindableProperty">Custom logic for determining whether the bindable property should be replaced by View.Model.</param>
-        public DefaultElementConvention(IEventHandlerFactory eventHandlerFactory, string defaultEventName, DependencyProperty bindableProperty, Action<T, object> setter, Func<T, object> getter, Func<T, bool> shouldOverrideBindableProperty)
+        public DefaultElementConvention(string defaultEventName, DependencyProperty bindableProperty, Action<T, object> setter, Func<T, object> getter, Func<T, bool> shouldOverrideBindableProperty)
         {
-            _eventHandlerFactory = eventHandlerFactory;
             _defaultEventName = defaultEventName;
             _bindableProperty = bindableProperty;
             _setter = setter;
@@ -47,19 +42,8 @@ namespace Caliburn.PresentationFramework.Conventions
         /// <param name="bindableProperty">The bindable property.</param>
         /// <param name="setter">The setter.</param>
         /// <param name="getter">The getter.</param>
-        /// <param name="shouldOverrideBindableProperty">Custom logic for determining whether the bindable property should be replaced by View.Model.</param>
-        public DefaultElementConvention(string defaultEventName, DependencyProperty bindableProperty, Action<T, object> setter, Func<T, object> getter, Func<T, bool> shouldOverrideBindableProperty)
-            : this(ServiceLocator.Current.GetInstance<IEventHandlerFactory>(), defaultEventName, bindableProperty, setter, getter, shouldOverrideBindableProperty) { }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="DefaultElementConvention&lt;T&gt;"/> class.
-        /// </summary>
-        /// <param name="defaultEventName">Default name of the event.</param>
-        /// <param name="bindableProperty">The bindable property.</param>
-        /// <param name="setter">The setter.</param>
-        /// <param name="getter">The getter.</param>
         public DefaultElementConvention(string defaultEventName, DependencyProperty bindableProperty, Action<T, object> setter, Func<T, object> getter)
-            : this(ServiceLocator.Current.GetInstance<IEventHandlerFactory>(), defaultEventName, bindableProperty, setter, getter, null) {}
+            : this(defaultEventName, bindableProperty, setter, getter, null) {}
 
         /// <summary>
         /// Gets the type of the element to which the conventions apply.
@@ -95,7 +79,7 @@ namespace Caliburn.PresentationFramework.Conventions
         /// <value>The default trigger.</value>
         public IMessageTrigger CreateTrigger()
         {
-            return new EventMessageTrigger(_eventHandlerFactory) {EventName = _defaultEventName};
+            return new EventMessageTrigger {EventName = _defaultEventName};
         }
 
         /// <summary>

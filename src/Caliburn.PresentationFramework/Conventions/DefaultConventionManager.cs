@@ -32,7 +32,6 @@ namespace Caliburn.PresentationFramework.Conventions
         }
 
         private readonly IMethodFactory _methodFactory;
-        private readonly IEventHandlerFactory _eventHandlerFactory;
 
         private readonly Dictionary<Type, IElementConvention> _elementConventions = new Dictionary<Type, IElementConvention>();
         private readonly List<IViewConventionCategory> _viewConventions = new List<IViewConventionCategory>();
@@ -42,11 +41,9 @@ namespace Caliburn.PresentationFramework.Conventions
         /// Initializes a new instance of the <see cref="DefaultConventionManager"/> class.
         /// </summary>
         /// <param name="methodFactory">The method factory.</param>
-        /// <param name="eventHandlerFactory">The event handler factory.</param>
-        public DefaultConventionManager(IMethodFactory methodFactory, IEventHandlerFactory eventHandlerFactory)
+        public DefaultConventionManager(IMethodFactory methodFactory)
         {
             _methodFactory = methodFactory;
-            _eventHandlerFactory = eventHandlerFactory;
 
             GetDefaultElementConventions()
                 .Apply(AddElementConvention);
@@ -300,7 +297,6 @@ namespace Caliburn.PresentationFramework.Conventions
             where T : DependencyObject
         {
             return new DefaultElementConvention<T>(
-                _eventHandlerFactory,
                 defaultEvent,
                 bindableProperty,
                 setter,

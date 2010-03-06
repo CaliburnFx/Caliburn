@@ -164,7 +164,6 @@
     <Compile Include="Fakes\UI\ControlHost.cs" />
     <Compile Include="Fakes\IDependentService.cs" />
     <Compile Include="Fakes\MethodInvokeTarget.cs" />
-    <Compile Include="Core\Invocation\The_event_handler_factory.cs" />
     <Compile Include="Core\Invocation\The_method_factory.cs" />
     <Compile Include="Fakes\ITestService.cs" />
     <Compile Include="Actions\An_asynchronous_action.cs" />

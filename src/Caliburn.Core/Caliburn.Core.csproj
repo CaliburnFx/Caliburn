@@ -66,6 +66,7 @@
     <Compile Include="IAssemblySource.cs" />
     <Compile Include="Inflector.cs" />
     <Compile Include="Invocation\DefaultDispatcher.cs" />
+    <Compile Include="Invocation\EventHelper.cs" />
     <Compile Include="IoC\ComponentRegistrationBase.cs" />
     <Compile Include="IoC\IComponentMetadata.cs" />
     <Compile Include="IoC\IoCExtensions.cs" />
@@ -81,9 +82,6 @@
     <Compile Include="IoC\PerRequest.cs" />
     <Compile Include="IoC\Singleton.cs" />
     <Compile Include="Threading\BackgroundTask.cs" />
-    <Compile Include="Invocation\IEventHandler.cs" />
-    <Compile Include="Invocation\DefaultEventHandlerFactory.cs" />
-    <Compile Include="Invocation\IEventHandlerFactory.cs" />
     <Compile Include="Invocation\IMethod.cs" />
     <Compile Include="Invocation\IMethodFactory.cs" />
     <Compile Include="Threading\IBackgroundContext.cs" />

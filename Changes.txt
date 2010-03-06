@@ -44,6 +44,9 @@ V2 Alpha
 -Removed ViewMetadata by extending IViewAware.
 -Removed Metadata
 -Moved PropertyChangedBase to PresentationFramework
+-Removed IThreadPool and DefaultThreadPool
+-Reworked BackgroundTask to use BackgroundWorder under the covers.
+-Removed IEventHandlerFactory and IEventHandler; replaced with a simple event helper.
 
 V1.1 Release
 -Fixed an issue in the WPF version of InteractionNode.
