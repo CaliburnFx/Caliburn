@@ -266,8 +266,9 @@ namespace Caliburn.PresentationFramework.Commands
 				if (_action.HasTriggerEffects())
 				{
 					bool isAvailable = _action.ShouldTriggerBeAvailable(_actionMessage, Source);
-					trigger.UpdateAvailabilty(isAvailable);
+					
 					TryUpdateParentAvailability(isAvailable);
+                    trigger.UpdateAvailabilty(isAvailable);
 				}
 			}
         }
@@ -285,8 +286,9 @@ namespace Caliburn.PresentationFramework.Commands
             if(_action.HasTriggerEffects())
             {
                 bool isAvailable = _action.ShouldTriggerBeAvailable(_actionMessage, Source);
-                trigger.UpdateAvailabilty(isAvailable);
+                
                 TryUpdateParentAvailability(isAvailable);
+                trigger.UpdateAvailabilty(isAvailable);
             }
 
             _action.Filters.HandlerAware.Apply(x => x.MakeAwareOf(this, trigger));
@@ -340,12 +342,12 @@ namespace Caliburn.PresentationFramework.Commands
                 OutcomePath = OutcomePath
             };
 
+            _actionMessage.Initialize(Source);
+
             foreach(var parameter in Parameters)
             {
                 _actionMessage.Parameters.Add(new Parameter(parameter.Value));
             }
-
-            _actionMessage.Initialize(Source);
         }
 
         private void CreateAction(bool forceRecreate)

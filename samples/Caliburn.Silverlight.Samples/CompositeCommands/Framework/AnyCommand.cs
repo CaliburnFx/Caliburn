@@ -4,7 +4,6 @@
     using System.Collections.Generic;
     using Caliburn.PresentationFramework;
     using Caliburn.PresentationFramework.Commands;
-    using Caliburn.PresentationFramework.Filters;
 
     /// <summary>
     /// An <see cref="ICompositeCommand"/> that can execute when any of its children are available.
@@ -14,7 +13,7 @@
         private readonly WeakKeyedDictionary<CommandMessage, bool?> _children =
             new WeakKeyedDictionary<CommandMessage, bool?>();
 
-        private bool _isAvailable = true;
+        private bool _canExecute = true;
 
         /// <summary>
         /// Gets a value indicating whether this instance is available.
@@ -22,16 +21,14 @@
         /// <value>
         /// 	<c>true</c> if this instance is available; otherwise, <c>false</c>.
         /// </value>
-        public bool IsAvailable
+        public bool CanExecute
         {
-            get { return _isAvailable; }
+            get { return _canExecute; }
         }
 
         /// <summary>
         /// Executes this instance.
         /// </summary>
-        [Preview("CanExecute")]
-        [Dependencies("IsAvailable")]
         public void Execute()
         {
             _children.RemoveCollectedEntries();
@@ -70,17 +67,6 @@
         }
 
         /// <summary>
-        /// Determines whether this instance can execute.
-        /// </summary>
-        /// <returns>
-        /// 	<c>true</c> if this instance can execute; otherwise, <c>false</c>.
-        /// </returns>
-        public bool CanExecute()
-        {
-            return IsAvailable;
-        }
-
-        /// <summary>
         /// Adds or updates the child command.
         /// </summary>
         /// <param name="child">The child.</param>
@@ -106,18 +92,18 @@
         private void DetermineAvailability()
         {
             _children.RemoveCollectedEntries();
-            _isAvailable = false;
+            _canExecute = false;
 
             foreach(var state in _children.Values)
             {
                 if(state.GetValueOrDefault(false))
                 {
-                    _isAvailable = true;
+                    _canExecute = true;
                     break;
                 }
             }
 
-            NotifyOfPropertyChange("IsAvailable");
+            NotifyOfPropertyChange(() => CanExecute);
         }
     }
 }
