@@ -159,7 +159,7 @@
         /// </returns>
 		public override bool ShouldTriggerBeAvailable(ActionMessage actionMessage, IInteractionNode handlingNode)
 		{
-			if (BlockInteraction && _runningCount > 0) return false;
+			if (BlockInteraction && _runningCount > 1) return false;
 			return base.ShouldTriggerBeAvailable(actionMessage, handlingNode);
 		}
     }
