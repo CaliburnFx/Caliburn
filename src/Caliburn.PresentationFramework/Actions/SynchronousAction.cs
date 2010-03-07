@@ -37,14 +37,14 @@
         {
             try
             {
-                TryUpdateTrigger(actionMessage, handlingNode, true);
-
                 var parameters = _messageBinder.DetermineParameters(
                     actionMessage,
                     _requirements,
                     handlingNode,
                     context
                     );
+
+                TryUpdateTrigger(actionMessage, handlingNode, true);
 
                 foreach (var filter in _filters.PreProcessors)
                 {

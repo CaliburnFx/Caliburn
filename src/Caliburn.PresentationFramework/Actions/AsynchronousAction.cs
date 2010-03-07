@@ -53,14 +53,14 @@
         {
             try
             {
-                TryUpdateTrigger(actionMessage, handlingNode, true);
-
                 var parameters = _messageBinder.DetermineParameters(
                     actionMessage,
                     _requirements,
                     handlingNode,
                     context
                     );
+
+                TryUpdateTrigger(actionMessage, handlingNode, true);
 
                 CurrentTask = _method.CreateBackgroundTask(handlingNode.MessageHandler.Unwrap(), parameters);
 
