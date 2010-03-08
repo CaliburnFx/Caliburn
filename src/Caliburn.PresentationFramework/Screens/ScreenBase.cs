@@ -2,6 +2,7 @@ namespace Caliburn.PresentationFramework.Screens
 {
     using System;
     using System.Collections.Generic;
+    using System.Windows;
     using Behaviors;
     using Views;
 
@@ -197,7 +198,17 @@ namespace Caliburn.PresentationFramework.Screens
         public virtual void AttachView(object view, object context)
         {
             _views[context ?? DefaultViewLocator.DefaultContext] = view;
+
+            var dependencyObject = view as DependencyObject;
+            if (dependencyObject != null)
+                dependencyObject.OnLoad(delegate { OnViewLoaded(view); });
         }
+
+        /// <summary>
+        /// Called when an attached view is loaded.
+        /// </summary>
+        /// <param name="view">The view.</param>
+        protected virtual void OnViewLoaded(object view) {}
 
         /// <summary>
         /// Gets the view.
