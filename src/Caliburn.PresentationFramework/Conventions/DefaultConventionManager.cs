@@ -275,11 +275,15 @@ namespace Caliburn.PresentationFramework.Conventions
                 yield return ElementConvention<Border>("Loaded", Border.VisibilityProperty, (c, o) => c.DataContext = o, c => c.DataContext);
                 yield return ElementConvention<ItemsControl>("Loaded", ItemsControl.ItemsSourceProperty, (c, o) => c.DataContext = o, c => c.DataContext);
                 yield return new DefaultElementConvention<ContentControl>("Loaded", ContentControl.ContentProperty, (c, o) => c.DataContext = o, c => c.DataContext,
-                    c =>{
+                    (element, property) =>{
 #if !SILVERLIGHT
-                        return c.ContentTemplate == null && c.ContentTemplateSelector == null;
+                        return element.ContentTemplate == null && element.ContentTemplateSelector == null
+                            ? View.ModelProperty
+                            : property;
 #else
-                        return c.ContentTemplate == null;
+                        return element.ContentTemplate == null
+                             ? View.ModelProperty
+                             : property;
 #endif
                     });
         }

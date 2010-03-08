@@ -16,7 +16,7 @@ namespace Caliburn.PresentationFramework.Conventions
         private readonly Action<T, object> _setter;
         private readonly Func<T, object> _getter;
         private readonly DependencyProperty _bindableProperty;
-        private readonly Func<T, bool> _shouldOverrideBindableProperty;
+        private readonly Func<T, DependencyProperty, DependencyProperty> _ensureBindableProperty;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="DefaultElementConvention&lt;T&gt;"/> class.
@@ -25,14 +25,14 @@ namespace Caliburn.PresentationFramework.Conventions
         /// <param name="setter">The setter.</param>
         /// <param name="getter">The getter.</param>
         /// <param name="bindableProperty">The bindable property.</param>
-        /// <param name="shouldOverrideBindableProperty">Custom logic for determining whether the bindable property should be replaced by View.Model.</param>
-        public DefaultElementConvention(string defaultEventName, DependencyProperty bindableProperty, Action<T, object> setter, Func<T, object> getter, Func<T, bool> shouldOverrideBindableProperty)
+        /// <param name="ensureBindableProperty">Custom logic for determining whether the bindable property should be replaced by another.</param>
+        public DefaultElementConvention(string defaultEventName, DependencyProperty bindableProperty, Action<T, object> setter, Func<T, object> getter, Func<T, DependencyProperty, DependencyProperty> ensureBindableProperty)
         {
             _defaultEventName = defaultEventName;
             _bindableProperty = bindableProperty;
             _setter = setter;
             _getter = getter;
-            _shouldOverrideBindableProperty = shouldOverrideBindableProperty;
+            _ensureBindableProperty = ensureBindableProperty;
         }
 
         /// <summary>
@@ -83,13 +83,16 @@ namespace Caliburn.PresentationFramework.Conventions
         }
 
         /// <summary>
-        /// Inidicates whether or not the BindableProperty should be overriden by the View.Model property.
+        /// Inspects the element instance to confirm that the bindable property is correct.
         /// </summary>
         /// <param name="element">The element.</param>
+        /// <param name="property">The property.</param>
         /// <returns></returns>
-        public bool ShouldOverrideBindablePropertyWithViewModel(DependencyObject element)
+        public DependencyProperty EnsureBindableProperty(DependencyObject element, DependencyProperty property)
         {
-            return _shouldOverrideBindableProperty != null && _shouldOverrideBindableProperty((T)element);
+            return _ensureBindableProperty != null
+                ? _ensureBindableProperty((T)element, property)
+                : property;
         }
 
         /// <summary>

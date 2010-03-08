@@ -59,7 +59,7 @@
                 };
 
                 var dependencyProperty = _elementDescription.Convention
-                    .ShouldOverrideBindablePropertyWithViewModel(element) ? View.ModelProperty : _dependencyProperty;
+                    .EnsureBindableProperty(element, _dependencyProperty);
 
                 TryAddValidation(element, binding, dependencyProperty);
                 CheckTextBox(element, binding, dependencyProperty);
