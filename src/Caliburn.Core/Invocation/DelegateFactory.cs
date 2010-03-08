@@ -30,17 +30,20 @@ namespace Caliburn.Core.Invocation
             var instanceParameter = Expression.Parameter(typeof(object), "target");
             var argumentsParameter = Expression.Parameter(typeof(object[]), "arguments");
 
-            var call = Expression.Call(
-                Expression.Convert(instanceParameter, method.DeclaringType),
-                method,
-                method.GetParameters().Select(
-                    (parameter, index) =>
-                    Expression.Convert(
-                        Expression.ArrayIndex(argumentsParameter, Expression.Constant(index)),
-                        parameter.ParameterType
-                        )
-                    ).ToArray()
-                );
+            MethodCallExpression call;
+
+            if (method.IsStatic)
+            {
+                call = Expression.Call(
+                    method,
+                    CreateParameterExpressions(method, argumentsParameter)
+                    );
+            }
+            else call = Expression.Call(
+                    Expression.Convert(instanceParameter, method.DeclaringType),
+                    method,
+                    CreateParameterExpressions(method, argumentsParameter)
+                    );
 
             var lambda = Expression.Lambda<T>(
                 typeof(LateBoundProc).IsAssignableFrom(typeof(T))
@@ -51,6 +54,17 @@ namespace Caliburn.Core.Invocation
                 );
 
             return lambda.Compile();
+        }
+
+        private static Expression[] CreateParameterExpressions(MethodInfo method, Expression argumentsParameter)
+        {
+            return method.GetParameters().Select(
+                (parameter, index) =>
+                Expression.Convert(
+                    Expression.ArrayIndex(argumentsParameter, Expression.Constant(index)),
+                    parameter.ParameterType
+                    )
+                ).ToArray();
         }
     }
 }
