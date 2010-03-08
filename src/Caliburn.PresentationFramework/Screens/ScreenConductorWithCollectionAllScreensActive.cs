@@ -73,7 +73,7 @@
                         if(_openPublicScreens)
                         {
                             var properties = GetType().GetProperties()
-                                .Where(x => typeof(IScreen).IsAssignableFrom(x.PropertyType));
+                                .Where(x => (x.Name != "Parent") && typeof(IScreen).IsAssignableFrom(x.PropertyType));
 
                             foreach(var info in properties)
                             {
