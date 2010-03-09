@@ -3,6 +3,7 @@ namespace Caliburn.PresentationFramework.Views
     using System;
     using System.Linq;
     using System.Windows;
+    using Core.Logging;
     using Microsoft.Practices.ServiceLocation;
 
     /// <summary>
@@ -11,6 +12,7 @@ namespace Caliburn.PresentationFramework.Views
     [AttributeUsage(AttributeTargets.Class | AttributeTargets.Enum | AttributeTargets.Struct, AllowMultiple = true)]
     public class ViewAttribute : Attribute, IViewStrategy
     {
+        private static readonly ILog Log = LogManager.GetLog(typeof(ViewAttribute));
         private readonly Type _key;
 
         /// <summary>
@@ -68,6 +70,7 @@ namespace Caliburn.PresentationFramework.Views
                 ? instances.First()
                 : Activator.CreateInstance(_key);
 
+            Log.Info("Custom view {0} located for {1}.", view, modelType);
             return (DependencyObject)view;
         }
     }

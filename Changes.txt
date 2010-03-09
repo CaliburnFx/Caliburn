@@ -49,6 +49,8 @@ V2 Alpha
 -Removed IEventHandlerFactory and IEventHandler; replaced with a simple event helper.
 -Moved Dispatcher and related components to PresentationFramework.Invocation.
 -Moved IBackgroundTask and related components into Core.Invocation.
+-Added logging abstraction to core.
+-Added basic diagnostics to core.
 
 V1.1 Release
 -Fixed an issue in the WPF version of InteractionNode.

@@ -1,6 +1,7 @@
 ﻿namespace Caliburn.PresentationFramework.ViewModels
 {
     using System.Linq;
+    using Core.Logging;
     using Microsoft.Practices.ServiceLocation;
     using Screens;
 
@@ -9,6 +10,7 @@
     /// </summary>
     public class DefaultViewModelFactory : IViewModelFactory
     {
+        private static readonly ILog Log = LogManager.GetLog(typeof(DefaultViewModelFactory));
         private readonly IServiceLocator _serviceLocator;
 
         /// <summary>
@@ -39,7 +41,13 @@
         public IScreen<T> CreateFor<T>(T subject)
         {
             var screen = _serviceLocator.GetAllInstances<IScreen<T>>()
-                             .FirstOrDefault() ?? new Screen<T>();
+                             .FirstOrDefault();
+
+            if(screen == null)
+            {
+                screen = new Screen<T>();
+                Log.Warn("Screen not found for subject {0}.  Created default Screen<T>.", subject);
+            }
 
             return screen.WithSubject(subject);
         }

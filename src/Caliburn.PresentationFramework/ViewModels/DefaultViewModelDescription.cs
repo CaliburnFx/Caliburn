@@ -8,6 +8,7 @@ namespace Caliburn.PresentationFramework.ViewModels
     using System.Windows.Controls;
     using Actions;
     using Conventions;
+    using Core.Logging;
     using Filters;
     using Views;
 
@@ -16,6 +17,8 @@ namespace Caliburn.PresentationFramework.ViewModels
     /// </summary>
     public class DefaultViewModelDescription : IViewModelDescription
     {
+        private static readonly ILog Log = LogManager.GetLog(typeof(DefaultViewModelDescription));
+
         private readonly IConventionManager _conventionManager;
         private readonly Type _targetType;
         private readonly Dictionary<string, IAction> _actions = new Dictionary<string, IAction>();
@@ -116,9 +119,15 @@ namespace Caliburn.PresentationFramework.ViewModels
                 {
                     conventions = _conventionManager.DetermineConventions(this, view).ToArray();
                     _viewConventions[viewType] = conventions;
+                    Log.Info("Cached conventions for {0}.", view);
                 }
+                else Log.Info("Using convention cache for {0}.", view);
             }
-            else conventions = _conventionManager.DetermineConventions(this, view).ToArray();
+            else
+            {
+                conventions = _conventionManager.DetermineConventions(this, view).ToArray();
+                Log.Info("Ignoring convention cache for {0}.", view);
+            }
 
             return conventions;
         }

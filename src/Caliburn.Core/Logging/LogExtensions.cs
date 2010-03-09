@@ -15,5 +15,16 @@
         {
             log.Info(string.Format(format, args));
         }
+
+        /// <summary>
+        /// Logs the message as a warning.
+        /// </summary>
+        /// <param name="log">The log.</param>
+        /// <param name="format">The message.</param>
+        /// <param name="args">The args.</param>
+        public static void Warn(this ILog log, string format, params object[] args)
+        {
+            log.Info(string.Format(format, args));
+        }
     }
 }

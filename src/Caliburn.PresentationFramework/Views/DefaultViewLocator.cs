@@ -6,6 +6,7 @@ namespace Caliburn.PresentationFramework.Views
     using System.Windows;
     using System.Windows.Interop;
     using Core;
+    using Core.Logging;
     using Microsoft.Practices.ServiceLocation;
 
     /// <summary>
@@ -13,6 +14,8 @@ namespace Caliburn.PresentationFramework.Views
     /// </summary>
     public class DefaultViewLocator : IViewLocator
     {
+        private static readonly ILog Log = LogManager.GetLog(typeof(DefaultViewLocator));
+
         /// <summary>
         /// The default view context.
         /// </summary>
@@ -66,9 +69,11 @@ namespace Caliburn.PresentationFramework.Views
                     var windowCheck = view as Window;
                     if (windowCheck == null || (!windowCheck.IsLoaded && !(new WindowInteropHelper(windowCheck).Handle == IntPtr.Zero)))
                     {
+                        Log.Info("Cached view returned for {0}.", model);
                         return view;
                     }
 #else
+                    Log.Info("Cached view returned for {0}.", model);
                     return view;
 #endif
                 }
@@ -112,11 +117,18 @@ namespace Caliburn.PresentationFramework.Views
 
                     _cache[cacheKey] = type;
 
+                    Log.Info("Located view {0} for {1}.", view, modelType);
                     return view;
                 }
             }
 
-            return new NotFoundView(modelType, namesToCheck);
+            var message = namesToCheck.Aggregate(
+                "A default view was not found for " + modelType.FullName + ".  Views searched for include: ",
+                (a, c) => a + Environment.NewLine + c
+                );
+
+            Log.Warn(message);
+            return new NotFoundView(message);
         }
 
         /// <summary>

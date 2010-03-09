@@ -4,6 +4,7 @@ namespace Caliburn.PresentationFramework.ViewModels
     using System.Windows;
     using ApplicationModel;
     using Core;
+    using Core.Logging;
     using Views;
     using Action=Actions.Action;
 
@@ -12,6 +13,8 @@ namespace Caliburn.PresentationFramework.ViewModels
     /// </summary>
     public class DefaultViewModelBinder : IViewModelBinder
     {
+        private static readonly ILog Log = LogManager.GetLog(typeof(DefaultViewModelBinder));
+
         private readonly IViewModelDescriptionFactory _viewModelDescriptionFactory;
         private bool _applyConventionsByDefault = true;
 
@@ -54,6 +57,7 @@ namespace Caliburn.PresentationFramework.ViewModels
 
             if (ShouldApplyConventions(viewModel, significantView, context))
                 ApplyConventions(viewModel, significantView);
+            else Log.Info("Skipped conventions for {0} and {1}.", view, viewModel);
         }
 
         /// <summary>
@@ -68,7 +72,10 @@ namespace Caliburn.PresentationFramework.ViewModels
 
             var viewAware = viewModel as IViewAware;
             if (viewAware != null)
+            {
                 viewAware.AttachView(view, context);
+                Log.Info("Attached view {0} to {1}.", view, viewModel);
+            }
         }
 
         /// <summary>
@@ -96,6 +103,8 @@ namespace Caliburn.PresentationFramework.ViewModels
 
             description.GetConventionsFor(view)
                 .Apply(x => x.ApplyTo(view));
+
+            Log.Info("Applied conventions to {0} and {1}.", view, viewModel);
         }
 
         /// <summary>

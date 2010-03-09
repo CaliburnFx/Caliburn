@@ -4,12 +4,15 @@
     using System.Windows.Data;
     using System.Windows.Media;
     using Core;
+    using Core.Logging;
 
     /// <summary>
     /// Hosts extension methods related to FrameworkElements and FrameworkContentElements.
     /// </summary>
     public static class ElementExtensions
     {
+        private static readonly ILog Log = LogManager.GetLog(typeof(ElementExtensions));
+
         // <summary>
         /// Gets the parent of the dependency object.
         /// </summary>
@@ -83,12 +86,15 @@
             if (fce != null)
                 return fce.DataContext;
 #endif
-            throw new CaliburnException(
+            var exception = new CaliburnException(
                 string.Format(
                     "Instance {0} must be a FrameworkElement or FrameworkContentElement in order to get its DataContext property.",
                     dependencyObject.GetType().Name
                     )
                 );
+
+            Log.Error(exception);
+            throw exception;
         }
 
         /// <summary>
@@ -177,9 +183,15 @@
                 found = (name == "$this" ? element as T : element.FindName(name) as T) ?? element.GetResource<T>(name);
             }
 
-            if (found == null && shouldFail) throw new CaliburnException(
+            if (found == null && shouldFail) 
+            {
+                var exception = new CaliburnException(
                     string.Format("Could not locate {0} with name {1}.", typeof(T).Name, name)
                     );
+
+                Log.Error(exception);
+                throw exception;
+            }
 
             return found;
         }

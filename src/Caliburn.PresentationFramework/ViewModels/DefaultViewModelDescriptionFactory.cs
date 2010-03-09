@@ -6,6 +6,7 @@ namespace Caliburn.PresentationFramework.ViewModels
     using Actions;
     using Conventions;
     using Core;
+    using Core.Logging;
     using Filters;
     using Microsoft.Practices.ServiceLocation;
 
@@ -14,6 +15,8 @@ namespace Caliburn.PresentationFramework.ViewModels
     /// </summary>
     public class DefaultViewModelDescriptionFactory : IViewModelDescriptionFactory
     {
+        private static readonly ILog Log = LogManager.GetLog(typeof(DefaultViewModelDescriptionFactory));
+
         private readonly IServiceLocator _serviceLocator;
         private readonly IActionLocator _actionLocator;
         private readonly IConventionManager _conventionManager;
@@ -45,6 +48,7 @@ namespace Caliburn.PresentationFramework.ViewModels
             {
                 description = CreateCore(targetType);
                 _cache[targetType] = description;
+                Log.Info("Created and cached view model description for {0}", targetType);
             }
 
             return description;
