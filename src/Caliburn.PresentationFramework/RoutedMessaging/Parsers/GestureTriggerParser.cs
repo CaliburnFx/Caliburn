@@ -1,9 +1,11 @@
-﻿namespace Caliburn.PresentationFramework.Parsers
+﻿namespace Caliburn.PresentationFramework.RoutedMessaging.Parsers
 {
     using System;
     using System.Windows;
     using System.Windows.Input;
     using Core;
+    using Core.Logging;
+    using RoutedMessaging;
     using Triggers;
 
     /// <summary>
@@ -11,6 +13,8 @@
     /// </summary>
     public class GestureTriggerParser : ITriggerParser
     {
+        private static readonly ILog Log = LogManager.GetLog(typeof(GestureMessageTrigger));
+
         /// <summary>
         /// Parses the specified trigger text.
         /// </summary>
@@ -51,7 +55,9 @@
 #endif
                         break;
                     default:
-                        throw new CaliburnException(keyValues[i] + " was not recognized by the gesture trigger parser.");
+                        var exception = new CaliburnException(keyValues[i] + " was not recognized by the gesture trigger parser.");
+                        Log.Error(exception);
+                        throw exception;
                 }
             }
 

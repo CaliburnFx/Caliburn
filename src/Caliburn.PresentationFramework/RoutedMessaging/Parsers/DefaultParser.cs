@@ -1,4 +1,4 @@
-﻿namespace Caliburn.PresentationFramework.Parsers
+﻿namespace Caliburn.PresentationFramework.RoutedMessaging.Parsers
 {
     using System;
     using System.Collections.Generic;
@@ -6,6 +6,8 @@
     using System.Windows;
     using Conventions;
     using Core;
+    using Core.Logging;
+    using RoutedMessaging;
 
 #if SILVERLIGHT
     using System.Globalization;
@@ -16,6 +18,8 @@
     /// </summary>
     public class DefaultParser : IParser
     {
+        private static readonly ILog Log = LogManager.GetLog(typeof(DefaultParser));
+
         private readonly IConventionManager _conventionManager;
         private readonly Dictionary<string, ITriggerParser> _triggerParsers = new Dictionary<string, ITriggerParser>();
         private readonly Dictionary<string, IMessageParser> _messageParsers = new Dictionary<string, IMessageParser>();
@@ -65,6 +69,7 @@
         public void RegisterTriggerParser(string key, ITriggerParser parser)
         {
             _triggerParsers[key] = parser;
+            Log.Info("Registered {0} as {1}.", parser, key);
         }
 
         /// <summary>
@@ -123,6 +128,7 @@
             {
                 message = _messageParsers[_defaultMessageParserKey]
                     .Parse(target, messageDetail);
+                Log.Info("Using default parser {0} for {1} on {2}.", _defaultMessageParserKey, messageText, target);
             }
 
             IMessageTrigger trigger = null;
@@ -131,6 +137,7 @@
             {
                 var defaults = _conventionManager.FindElementConventionOrFail(target);
                 trigger = defaults.CreateTrigger();
+                Log.Info("Using default trigger {0} for {1} on {2}.", trigger, messageText, target);
             }
             else
             {
@@ -151,7 +158,11 @@
             }
 
             if (trigger == null)
-                throw new CaliburnException("Could not determine trigger type.");
+            {
+                var exception = new CaliburnException("Could not determine trigger type.");
+                Log.Error(exception);
+                throw exception;
+            }
 
             trigger.Message = message;
 

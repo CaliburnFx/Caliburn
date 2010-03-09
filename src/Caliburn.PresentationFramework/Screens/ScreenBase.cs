@@ -4,6 +4,7 @@ namespace Caliburn.PresentationFramework.Screens
     using System.Collections.Generic;
     using System.Windows;
     using Behaviors;
+    using Core.Logging;
     using Views;
 
     /// <summary>
@@ -11,22 +12,13 @@ namespace Caliburn.PresentationFramework.Screens
     /// </summary>
     public abstract class ScreenBase : PropertyChangedBase, IScreenEx
     {
+        private static readonly ILog Log = LogManager.GetLog(typeof(ScreenBase));
         private readonly Dictionary<object, object> _views = new Dictionary<object, object>();
 
         private IScreenCollection _parent;
         private bool _isActive;
         private bool _isInitialized;
         private string _displayName;
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="ScreenBase"/> class.
-        /// </summary>
-        protected ScreenBase()
-        {
-            var runtimeType = GetType();
-
-            _displayName = runtimeType.Name;
-        }
 
         /// <summary>
         /// Gets or sets the parent.
@@ -82,7 +74,13 @@ namespace Caliburn.PresentationFramework.Screens
         [DoNotNotify]
         public virtual string DisplayName
         {
-            get { return _displayName; }
+            get
+            {
+                if (string.IsNullOrEmpty(_displayName))
+                    _displayName = GetType().Name;
+                
+                return _displayName;
+            }
             set
             {
                 _displayName = value;
@@ -153,6 +151,7 @@ namespace Caliburn.PresentationFramework.Screens
         protected virtual void OnInitialize()
         {
             Initialized(this, EventArgs.Empty);
+            Log.Info("Initialized {0}.", this);
         }
 
         /// <summary>
@@ -172,6 +171,7 @@ namespace Caliburn.PresentationFramework.Screens
         protected virtual void OnShutdown()
         {
             WasShutdown(this, EventArgs.Empty);
+            Log.Info("Shut down {0}.", this);
         }
 
         /// <summary>
@@ -180,6 +180,7 @@ namespace Caliburn.PresentationFramework.Screens
         protected virtual void OnActivate()
         {
             Activated(this, EventArgs.Empty);
+            Log.Info("Activated {0}.", this);
         }
 
         /// <summary>
@@ -188,6 +189,7 @@ namespace Caliburn.PresentationFramework.Screens
         protected virtual void OnDeactivate()
         {
             Deactivated(this, EventArgs.Empty);
+            Log.Info("Deactivated {0}.", this);
         }
 
         /// <summary>
@@ -201,7 +203,10 @@ namespace Caliburn.PresentationFramework.Screens
 
             var dependencyObject = view as DependencyObject;
             if (dependencyObject != null)
-                dependencyObject.OnLoad(delegate { OnViewLoaded(view); });
+                dependencyObject.OnLoad(delegate{
+                    OnViewLoaded(view);
+                    Log.Info("View {0} loaded for {1}.", view, this);
+                });
         }
 
         /// <summary>
@@ -234,16 +239,26 @@ namespace Caliburn.PresentationFramework.Screens
                 var view = GetView(null);
 
                 if (view == null)
-                    throw new NotSupportedException(
+                {
+                    var exception = new NotSupportedException(
                         "You cannot close an instance without a parent or a default view."
                         );
+
+                    Log.Error(exception);
+                    throw exception;
+                }
 
                 var method = view.GetType().GetMethod("Close");
 
                 if (method == null)
-                    throw new NotSupportedException(
+                {
+                    var exception = new NotSupportedException(
                         "The default view does not support the Close operation."
                         );
+
+                    Log.Error(exception);
+                    throw exception;
+                }
 
                 method.Invoke(view, null);
             }
