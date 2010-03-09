@@ -6,6 +6,7 @@
     using System.Linq.Expressions;
     using System.Reflection;
     using IoC;
+    using Logging;
     using Microsoft.Practices.ServiceLocation;
 
     /// <summary>
@@ -16,6 +17,7 @@
     public abstract class ConventionalModule<TModule, TServicesDescription> : CaliburnModule<TModule>
         where TModule : ConventionalModule<TModule, TServicesDescription>, new()
     {
+        private static readonly ILog Log = LogManager.GetLog(typeof(ConventionalModule<TModule, TServicesDescription>));
         private readonly Dictionary<Type, IServiceConfiguration> _services = new Dictionary<Type, IServiceConfiguration>();
 
         /// <summary>
@@ -68,6 +70,7 @@
         /// <returns></returns>
         public override IEnumerable<IComponentRegistration> GetComponents()
         {
+            Log.Info("Getting components for {0}.", this);
             return _services.Values.Select(x => x.CreateRegistration());
         }
 
@@ -77,6 +80,7 @@
         /// <param name="locator">The locator.</param>
         public override void Initialize(IServiceLocator locator)
         {
+            Log.Info("Initializing {0}.", this);
             _services.Values.Apply(x => x.ConfigureService(locator));
         }
 

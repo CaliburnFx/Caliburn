@@ -3,12 +3,14 @@ namespace Caliburn.Core.Invocation
     using System;
     using System.Collections.Generic;
     using System.Reflection;
+    using Logging;
 
     /// <summary>
     /// An implementation of <see cref="IMethodFactory"/>.
     /// </summary>
     public class DefaultMethodFactory : IMethodFactory
     {
+        private static readonly ILog Log = LogManager.GetLog(typeof(DefaultMethodFactory));
         private readonly Dictionary<MethodInfo, IMethod> _cache = new Dictionary<MethodInfo, IMethod>();
 
         /// <summary>
@@ -25,6 +27,8 @@ namespace Caliburn.Core.Invocation
                 if(methodInfo.ReturnType == typeof(void))
                     method = new Procedure(methodInfo);
                 else method = new Function(methodInfo);
+
+                Log.Info("Created method for {0}.", method);
 
                 _cache[methodInfo] = method;
             }

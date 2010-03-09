@@ -3,6 +3,7 @@ namespace Caliburn.Core.IoC
     using System;
     using System.Collections.Generic;
     using Behaviors;
+    using Logging;
     using Microsoft.Practices.ServiceLocation;
 
     /// <summary>
@@ -10,6 +11,7 @@ namespace Caliburn.Core.IoC
     /// </summary>
     public abstract class ContainerBase : ServiceLocatorImplBase, IContainer
     {
+        private static readonly ILog Log = LogManager.GetLog(typeof(ContainerBase));
         private readonly Dictionary<Type, Delegate> _handlers = new Dictionary<Type, Delegate>();
 
         /// <summary>
@@ -25,7 +27,9 @@ namespace Caliburn.Core.IoC
 
                 if (_handlers.TryGetValue(key, out handler))
                     handler.DynamicInvoke(registration);
-                else throw new CaliburnException(
+                else 
+                {
+                    var exception = new CaliburnException(
                         string.Format(
                             "{0} cannot handle registrations of type {1}. Please add an appropriate registration handler.",
                             GetType().FullName,
@@ -33,6 +37,9 @@ namespace Caliburn.Core.IoC
                             )
                         );
 
+                    Log.Error(exception);
+                    throw exception;
+                }
             }
         }
 

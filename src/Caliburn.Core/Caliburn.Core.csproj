@@ -83,6 +83,9 @@
     <Compile Include="Invocation\IBackgroundContext.cs" />
     <Compile Include="Invocation\IBackgroundTask.cs" />
     <Compile Include="Invocation\DefaultMethodFactory.cs" />
+    <Compile Include="Logging\ILog.cs" />
+    <Compile Include="Logging\LogExtensions.cs" />
+    <Compile Include="Logging\LogManager.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="IoC\SimpleContainer.cs" />
     <Compile Include="TypeDescriptor.silverlight.cs" />

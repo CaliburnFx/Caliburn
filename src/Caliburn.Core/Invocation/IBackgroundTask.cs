@@ -37,12 +37,12 @@ namespace Caliburn.Core.Invocation
         event EventHandler Starting;
 
         /// <summary>
-        /// Occurs when the background task indicates that progress has changed.
+        /// Occurs on the UI thread when the background task indicates that progress has changed.
         /// </summary>
         event ProgressChangedEventHandler ProgressChanged;
 
         /// <summary>
-        /// Occurs when the background task has completed either successfully, by cancellation or with an error.
+        /// Occurs on the UI thread when the background task has completed either successfully, by cancellation or with an error.
         /// </summary>
         event RunWorkerCompletedEventHandler Completed;
     }

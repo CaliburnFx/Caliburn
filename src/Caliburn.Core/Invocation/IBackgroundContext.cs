@@ -18,5 +18,12 @@ namespace Caliburn.Core.Invocation
         /// </summary>
         /// <param name="percentage">The percentage.</param>
         void ReportProgress(int percentage);
+
+        /// <summary>
+        /// Enables the current task to update its progress.
+        /// </summary>
+        /// <param name="percentage">The percentage.</param>
+        /// <param name="userState">The user state.</param>
+        void ReportProgress(int percentage, object userState);
     }
 }

@@ -5,6 +5,7 @@
     using System.Linq;
     using System.Reflection;
     using IoC;
+    using Logging;
     using Microsoft.Practices.ServiceLocation;
 
     /// <summary>
@@ -12,6 +13,8 @@
     /// </summary>
     public class CaliburnFramework : ICaliburnFramework, IConfigurationBuilder, IModuleHook
     {
+        private static readonly ILog Log = LogManager.GetLog(typeof(CaliburnFramework));
+
         /// <summary>
         /// Configures caliburn with the <see cref="SimpleContainer"/>.
         /// </summary>
@@ -66,6 +69,8 @@
 
         private CaliburnFramework(IServiceLocator serviceLocator, Action<IEnumerable<IComponentRegistration>> register)
         {
+            Log.Info("Framework initialization begun.");
+
             _serviceLocator = serviceLocator;
             _register = register;
 
@@ -114,6 +119,8 @@
                 module.Initialize(_serviceLocator);
             }
 
+            Log.Info("Module {0} added.", module);
+
             return module;
         }
 
@@ -161,6 +168,8 @@
             _isStarted = true;
 
             CaliburnModule<CoreConfiguration>.Instance.ExecuteAfterStart();
+
+            Log.Info("Framework initialization complete.");
         }
 
         private void NewAssemblyAdded(Assembly assembly)
@@ -199,6 +208,8 @@
                     modules.Add((IModule)singleton.GetValue(null, null));
                 else modules.Add((IModule)Activator.CreateInstance(type));
             }
+
+            Log.Info("Assembly {0} inspected.", assembly);
         }
     }
 }

@@ -3,12 +3,15 @@ namespace Caliburn.Core
     using System;
     using System.Collections.ObjectModel;
     using System.Reflection;
+    using Logging;
 
     /// <summary>
     /// The default implementation of <see cref="IAssemblySource"/>
     /// </summary>
     public class DefaultAssemblySource : Collection<Assembly>, IAssemblySource
     {
+        private static readonly ILog Log = LogManager.GetLog(typeof(DefaultAssemblySource));
+
         /// <summary>
         /// Occurs when an assembly is added.
         /// </summary>
@@ -28,6 +31,7 @@ namespace Caliburn.Core
         {
             base.InsertItem(index, item);
             AssemblyAdded(item);
+            Log.Info("{0} was added to the default assembly source.", item);
         }
 
         /// <summary>
@@ -44,6 +48,7 @@ namespace Caliburn.Core
         {
             base.SetItem(index, item);
             AssemblyAdded(item);
+            Log.Info("{0} was added to the default assembly source.", item);
         }
     }
 }

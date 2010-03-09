@@ -3,6 +3,7 @@
     using System;
     using System.Collections.Generic;
     using Behaviors;
+    using Logging;
     using Microsoft.Practices.ServiceLocation;
 
     /// <summary>
@@ -10,6 +11,8 @@
     /// </summary>
     public class SimpleContainer : ContainerBase
     {
+        private static readonly ILog Log = LogManager.GetLog(typeof(SimpleContainer));
+
         private readonly Dictionary<string, Func<object>> _typeToHandler
             = new Dictionary<string, Func<object>>();
 
@@ -199,7 +202,11 @@
         public void AddHandler(string key, Func<object> handler)
         {
             if (IsRegistered(key))
-                throw new ArgumentException(key + " was already registered in the container.");
+            {
+                var exception = new ArgumentException(key + " was already registered in the container.");
+                Log.Error(exception);
+                throw exception;
+            }
 
             _typeToHandler.Add(key, handler);
         }
@@ -216,7 +223,11 @@
                 var genericType = type.GetGenericTypeDefinition();
 
                 if (!IsRegistered(genericType))
-                    throw new ArgumentException(type + " is not a registered component.");
+                {
+                    var exception = new ArgumentException(type + " is not a registered component.");
+                    Log.Error(exception);
+                    throw exception;
+                }
 
                 return () => CreateInstance(InternalGetHandler(genericType)() as Type, type.GetGenericArguments());
             }
@@ -250,7 +261,9 @@
                     return GetHandler(type);
                 }
 
-                throw new ArgumentException(type + " is not a registered component.");
+                var exception = new ArgumentException(type + " is not a registered component.");
+                Log.Error(exception);
+                throw exception;
             }
 
             return handler;
@@ -300,7 +313,11 @@
             Func<object> handler;
 
             if (!_typeToHandler.TryGetValue(key, out handler))
-                throw new ArgumentException(key + " is not a registered component key.");
+            {
+                var exception = new ArgumentException(key + " is not a registered component key.");
+                Log.Error(exception);
+                throw exception;
+            }
 
             var instance = handler();
 
