@@ -4,6 +4,7 @@
     using System.Windows;
     using System.Windows.Data;
     using Conventions;
+    using Core.Logging;
     using Microsoft.Practices.ServiceLocation;
     using RoutedMessaging;
     using RoutedMessaging.Parsers;
@@ -13,6 +14,8 @@
     /// </summary>
     public class CommandMessageParser : MessageParserBase<CommandMessage>
     {
+        private static readonly ILog Log = LogManager.GetLog(typeof(CommandMessageParser));
+
         private readonly CommandSource _commandSource;
 
 #if !SILVERLIGHT
@@ -104,7 +107,9 @@
 #endif
                     break;
                 default:
-                    throw new NotSupportedException(_commandSource + " is not a supported command source.");
+                    var ex = new NotSupportedException(_commandSource + " is not a supported command source.");
+                    Log.Error(ex);
+                    throw ex;
             }
         }
     }

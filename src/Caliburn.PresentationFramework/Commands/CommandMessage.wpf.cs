@@ -10,6 +10,7 @@ namespace Caliburn.PresentationFramework.Commands
     using Actions;
     using Configuration;
     using Core;
+    using Core.Logging;
     using Microsoft.Practices.ServiceLocation;
     using RoutedMessaging;
     using ViewModels;
@@ -21,6 +22,8 @@ namespace Caliburn.PresentationFramework.Commands
     [ContentProperty("Parameters")]
     public class CommandMessage : Freezable, IRoutedMessageWithOutcome, IRoutedMessageHandler
     {
+        private static readonly ILog Log = LogManager.GetLog(typeof(CommandMessage));
+
         /// <summary>
         /// Represents the parameters of a command message.
         /// </summary>
@@ -245,12 +248,18 @@ namespace Caliburn.PresentationFramework.Commands
         /// <param name="context">An object that provides additional context for message processing.</param>
         public void Process(IRoutedMessage message, object context)
         {
-            if(message != this)
-                throw new CaliburnException("The handler cannot process the message.");
+            if (message != this)
+            {
+                var ex = new CaliburnException("The handler cannot process the message.");
+                Log.Error(ex);
+                throw ex;
+            }
 
             CreateActionMessage();
 
             _action.Execute(_actionMessage, Source, context);
+
+            Log.Info("Processed {0} on command {1}.", _actionMessage, Command);
         }
 
         /// <summary>
@@ -260,7 +269,11 @@ namespace Caliburn.PresentationFramework.Commands
         public void UpdateAvailability(IMessageTrigger trigger)
         {
             if(trigger.Message != this)
-                throw new CaliburnException("The handler cannot update availability for this trigger.");
+            {
+                var ex = new CaliburnException("The handler cannot update availability for this trigger.");
+                Log.Error(ex);
+                throw ex;
+            }
 
 			if (Command != null)
 			{
@@ -281,7 +294,8 @@ namespace Caliburn.PresentationFramework.Commands
         /// <param name="trigger">The trigger.</param>
         public void MakeAwareOf(IMessageTrigger trigger)
         {
-            if(trigger.Message != this) return;
+            if(trigger.Message != this) 
+                return;
 			
             CreateActionMessage();
 
@@ -293,6 +307,8 @@ namespace Caliburn.PresentationFramework.Commands
             }
 
             _action.Filters.HandlerAware.Apply(x => x.MakeAwareOf(this, trigger));
+
+            Log.Info("Made handler aware of filters for {0}.", Command);
         }
 
         /// <summary>
@@ -322,7 +338,11 @@ namespace Caliburn.PresentationFramework.Commands
         private void TryUpdateParentAvailability(bool isAvailable)
         {
             var parent = ParentCommand ?? Commands.Command.GetParent(Source.UIElement);
-            if(parent != null) parent.AddOrUpdateChild(this, isAvailable);
+            if(parent != null)
+            {
+                parent.AddOrUpdateChild(this, isAvailable);
+                Log.Info("Updating parent {0} availability for {1}.", parent, Command);
+            }
         }
 
         private void CreateActionMessage()
