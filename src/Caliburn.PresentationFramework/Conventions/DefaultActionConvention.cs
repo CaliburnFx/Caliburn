@@ -2,6 +2,7 @@ namespace Caliburn.PresentationFramework.Conventions
 {
     using System;
     using Actions;
+    using Core.Logging;
     using ViewModels;
     using Views;
 
@@ -10,6 +11,8 @@ namespace Caliburn.PresentationFramework.Conventions
     /// </summary>
     public class DefaultActionConvention : ViewConventionBase<IAction>
     {
+        private static readonly ILog Log = LogManager.GetLog(typeof(DefaultActionConvention));
+
         /// <summary>
         /// Creates the application of the convention.
         /// </summary>
@@ -25,6 +28,7 @@ namespace Caliburn.PresentationFramework.Conventions
 
             var message = CreateActionMessage(action);
 
+            Log.Info("Action convention matched for {0}.", element.Name);
             return new ApplicableAction(element.Name, null, message);
         }
     }

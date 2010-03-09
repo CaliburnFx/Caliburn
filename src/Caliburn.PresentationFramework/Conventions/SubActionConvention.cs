@@ -3,6 +3,7 @@
     using System;
     using System.Linq;
     using System.Reflection;
+    using Core.Logging;
     using ViewModels;
     using Views;
 
@@ -11,6 +12,8 @@
     /// </summary>
     public class SubActionConvention : ViewConventionBase<PropertyInfo>
     {
+        private static readonly ILog Log = LogManager.GetLog(typeof(SubActionConvention));
+
         /// <summary>
         /// Tries to creates the application of the convention.
         /// </summary>
@@ -45,6 +48,8 @@
                 return null;
 
             var message = CreateActionMessage(action);
+
+            Log.Info("Sub action convention matched for {0} on {1}.", element.Name, subPath);
 
             return new ApplicableAction(
                 element.Name,

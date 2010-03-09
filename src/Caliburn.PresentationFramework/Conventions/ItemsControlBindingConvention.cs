@@ -7,6 +7,7 @@ namespace Caliburn.PresentationFramework.Conventions
     using System.Windows.Controls.Primitives;
     using System.Windows.Data;
     using Core;
+    using Core.Logging;
     using ViewModels;
     using Views;
 
@@ -16,6 +17,8 @@ namespace Caliburn.PresentationFramework.Conventions
     /// </summary>
     public class ItemsControlBindingConvention : ViewConventionBase<PropertyInfo>
     {
+        private static readonly ILog Log = LogManager.GetLog(typeof(ItemsControlBindingConvention));
+
         private static readonly Type _itemsControlType = typeof(ItemsControl);
         private static readonly Type _selectorControlType = typeof(Selector);
 
@@ -62,6 +65,8 @@ namespace Caliburn.PresentationFramework.Conventions
                     mode = selectionProperty.CanWrite ? BindingMode.TwoWay : BindingMode.OneWay;
                     checkTemplate = ShouldCheckTemplate(selectionProperty);
                     converter = conventionManager.GetValueConverter(bindableProperty, boundProperty.PropertyType);
+
+                    Log.Info("Selector binding convention added to {0}.", element.Name);
                 }
                 else return null;
             }
@@ -82,6 +87,8 @@ namespace Caliburn.PresentationFramework.Conventions
                     mode = headerProperty.CanWrite ? BindingMode.TwoWay : BindingMode.OneWay;
                     checkTemplate = ShouldCheckTemplate(headerProperty);
                     converter = conventionManager.GetValueConverter(bindableProperty, headerProperty.PropertyType);
+
+                    Log.Info("Header binding convention added to {0}.", element.Name);
                 }
                 else return null;
             }

@@ -15,6 +15,7 @@ namespace Caliburn.PresentationFramework.Conventions
     using Converters;
     using Core;
     using Core.Invocation;
+    using Core.Logging;
     using Filters;
     using ViewModels;
     using Views;
@@ -24,6 +25,8 @@ namespace Caliburn.PresentationFramework.Conventions
     /// </summary>
     public class DefaultConventionManager : IConventionManager
     {
+        private static readonly ILog Log = LogManager.GetLog(typeof(DefaultConventionManager));
+
         private class ConverterConvention
         {
             public DependencyProperty Target;
@@ -133,6 +136,8 @@ namespace Caliburn.PresentationFramework.Conventions
         {
             foreach (var elementDescription in elementDescriptions)
             {
+                bool found = false;
+
                 foreach(var set in _viewConventions)
                 {
                     var applications = set.GetApplications(this, viewModelDescription, elementDescription);
@@ -142,9 +147,15 @@ namespace Caliburn.PresentationFramework.Conventions
                         yield return application;
                     }
 
-                    if(applications.Any())
+                    if (applications.Any())
+                    {
+                        found = true;
                         break;
+                    }
                 }
+
+                if(!found)
+                    Log.Warn("No convention matched for {0}.", elementDescription.Name);
             }
         }
 
@@ -169,7 +180,10 @@ namespace Caliburn.PresentationFramework.Conventions
                              ?? targetMethod.Info.DeclaringType.GetMethod("get_" + canExecuteName);
 
             if (canExecute != null)
+            {
                 action.Filters.Add(new PreviewAttribute(_methodFactory.CreateFrom(canExecute)));
+                Log.Info("Action preview convention added for {0} on {1}.", targetMethod.Info.Name, canExecute.Name);
+            }
         }
 
         /// <summary>

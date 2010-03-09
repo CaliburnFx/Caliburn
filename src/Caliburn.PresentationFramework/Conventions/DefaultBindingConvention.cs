@@ -2,6 +2,7 @@ namespace Caliburn.PresentationFramework.Conventions
 {
     using System.Reflection;
     using System.Windows.Data;
+    using Core.Logging;
     using Screens;
     using ViewModels;
     using Views;
@@ -11,6 +12,8 @@ namespace Caliburn.PresentationFramework.Conventions
     /// </summary>
     public class DefaultBindingConvention : ViewConventionBase<PropertyInfo>
     {
+        private static readonly ILog Log = LogManager.GetLog(typeof(DefaultBindingConvention));
+
         /// <summary>
         /// Creates the application of the convention.
         /// </summary>
@@ -30,6 +33,8 @@ namespace Caliburn.PresentationFramework.Conventions
             var dependencyProperty = typeof(IScreen).IsAssignableFrom(boundProperty.PropertyType)
                 ? View.ModelProperty
                 : element.Convention.BindableProperty;
+
+            Log.Info("Binding convention matched for {0}.", element.Name);
 
             return new ApplicableBinding(
                 element,

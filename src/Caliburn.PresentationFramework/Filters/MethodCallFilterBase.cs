@@ -3,6 +3,7 @@ namespace Caliburn.PresentationFramework.Filters
     using System;
     using System.Reflection;
     using Core.Invocation;
+    using Core.Logging;
     using Microsoft.Practices.ServiceLocation;
 
     /// <summary>
@@ -10,6 +11,8 @@ namespace Caliburn.PresentationFramework.Filters
     /// </summary>
     public class MethodCallFilterBase : Attribute, IInitializable
     {
+        private static readonly ILog Log = LogManager.GetLog(typeof(MethodCallFilterBase));
+
         /// <summary>
         /// The method.
         /// </summary>
@@ -90,9 +93,14 @@ namespace Caliburn.PresentationFramework.Filters
                         );
 
             if (methodInfo == null)
-                throw new Exception(
+            {
+                var ex = new Exception(
                     string.Format("Method or property '{0}' could not be found on '{1}'.", _methodName, targetType.FullName)
                     );
+
+                Log.Error(ex);
+                throw ex;
+            }
 
             _method = serviceLocator.GetInstance<IMethodFactory>().CreateFrom(methodInfo);
         }

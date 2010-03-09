@@ -5,6 +5,7 @@
     using System.Windows.Controls;
     using System.Windows.Data;
     using System.Windows.Markup;
+    using Core.Logging;
     using Views;
 
     /// <summary>
@@ -12,6 +13,8 @@
     /// </summary>
     public class ApplicableBinding : IViewApplicable
     {
+        private static readonly ILog Log = LogManager.GetLog(typeof(ApplicableBinding));
+
         private readonly IElementDescription _elementDescription;
         private readonly DependencyProperty _dependencyProperty;
         private readonly string _path;
@@ -64,6 +67,8 @@
                 TryAddValidation(element, binding, dependencyProperty);
                 CheckTextBox(element, binding, dependencyProperty);
                 element.SetBinding(dependencyProperty, binding);
+
+                Log.Info("Applied data binding {0} to {1}.", binding, view);
             }
 
             if(!_checkTemplate) 
@@ -72,7 +77,10 @@
             var itemsControl = (ItemsControl)element;
 
             if (NeedsItemTemplate(itemsControl))
+            {
                 itemsControl.ItemTemplate = CreateTemplate(itemsControl);
+                Log.Info("Applied item template to {0}.", view);
+            }
         }
 
         /// <summary>

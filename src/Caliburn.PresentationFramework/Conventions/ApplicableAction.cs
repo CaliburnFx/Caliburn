@@ -3,6 +3,7 @@
     using System.Windows;
     using System.Windows.Data;
     using Actions;
+    using Core.Logging;
     using RoutedMessaging;
     using Views;
 
@@ -11,6 +12,8 @@
     /// </summary>
     public class ApplicableAction : IViewApplicable
     {
+        private static readonly ILog Log = LogManager.GetLog(typeof(ApplicableAction));
+
         private readonly string _elementName;
         private readonly string _message;
         private readonly string _actionTargetPath;
@@ -43,6 +46,7 @@
             }
 
             Message.SetAttach(element, _message);
+            Log.Info("Attached message {0} to {1}.", _message, view);
         }
     }
 }
