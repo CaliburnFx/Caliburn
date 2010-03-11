@@ -2,6 +2,7 @@
 {
     using System;
     using System.ComponentModel;
+    using System.Windows.Threading;
     using Core.Invocation;
 
     /// <summary>
@@ -80,6 +81,10 @@
 
         private class FakeDispatcher : IDispatcher
         {
+#if !SILVERLIGHT
+            public DispatcherPriority DefaultPriority { get; set; }
+#endif
+
             public IBackgroundTask ExecuteOnBackgroundThread(Action backgroundAction, RunWorkerCompletedEventHandler uiCallback, ProgressChangedEventHandler progressChanged)
             {
                 var task = new ForegroundTask(backgroundAction);

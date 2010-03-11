@@ -53,6 +53,7 @@ V2 Alpha
 -Added basic logging to Core.
 -Added basic logging to PresentationFramework.
 -Added basic logging to ShellFramework.
+-Changed the Dispatcher's DefaultPriority to Normal.
 
 V1.1 Release
 -Fixed an issue in the WPF version of InteractionNode.
@@ -80,6 +81,7 @@ V1.1 Release
 -Fixed a bug in the AvailabilityEffectConverter related to resolving custom effects from the container.
 -Enabled actions to search for handlers by routing through TemplatedParents in WPF.
 -Fixed a bug with expression tree method calls in .NET 4.0.
+-Enabled the dispatcher's default DispatcherPriority to be configured.
 
 V1.1 Release Candidate
 -Added pre-initialization hooks to CaliburnApplication via Marco Amendola's patch.

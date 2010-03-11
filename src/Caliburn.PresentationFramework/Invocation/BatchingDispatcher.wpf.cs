@@ -25,12 +25,19 @@ namespace Caliburn.PresentationFramework.Invocation
         public BatchingDispatcher()
         {
             _dispatcher = Dispatcher.CurrentDispatcher;
+            DefaultPriority = DispatcherPriority.Normal;
 
             new Thread(SendBatchOfUpdates)
             {
                 IsBackground = true
             }.Start();
         }
+
+        /// <summary>
+        /// Gets or sets the default dispatcher priority.
+        /// </summary>
+        /// <value>The default priority.</value>
+        public DispatcherPriority DefaultPriority { get; set; }
 
         /// <summary>
         /// Executes code on the background thread.
@@ -81,7 +88,7 @@ namespace Caliburn.PresentationFramework.Invocation
         {
             var operation = _dispatcher.BeginInvoke(
                 uiAction,
-                DispatcherPriority.Send
+                DefaultPriority
                 );
 
             return new DispatcherOperationProxy(operation);

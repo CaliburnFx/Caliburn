@@ -2,6 +2,7 @@ namespace Caliburn.PresentationFramework.Invocation
 {
     using System;
     using System.ComponentModel;
+    using System.Windows.Threading;
     using Core.Invocation;
 
     /// <summary>
@@ -9,6 +10,14 @@ namespace Caliburn.PresentationFramework.Invocation
     /// </summary>
     public interface IDispatcher
     {
+#if !SILVERLIGHT
+        /// <summary>
+        /// Gets or sets the default dispatcher priority.
+        /// </summary>
+        /// <value>The default priority.</value>
+        DispatcherPriority DefaultPriority { get; set; }
+#endif
+
         /// <summary>
         /// Executes code on the background thread.
         /// </summary>

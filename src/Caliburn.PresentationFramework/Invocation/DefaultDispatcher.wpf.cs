@@ -21,7 +21,14 @@ namespace Caliburn.PresentationFramework.Invocation
         public DefaultDispatcher()
         {
             _dispatcher = GetDispatcher();
+            DefaultPriority = DispatcherPriority.Normal;
         }
+
+        /// <summary>
+        /// Gets or sets the default dispatcher priority.
+        /// </summary>
+        /// <value>The default priority.</value>
+        public DispatcherPriority DefaultPriority { get; set; }
 
         /// <summary>
         /// Gets the dispatcher.
@@ -70,7 +77,7 @@ namespace Caliburn.PresentationFramework.Invocation
             else
             {
                 _dispatcher.Invoke(
-                    DispatcherPriority.Send,
+                    DefaultPriority,
                     uiAction
                     );
             }
@@ -84,7 +91,7 @@ namespace Caliburn.PresentationFramework.Invocation
         {
             var operation = _dispatcher.BeginInvoke(
                 uiAction,
-                DispatcherPriority.Send
+                DefaultPriority
                 );
 
             return new DispatcherOperationProxy(operation);
