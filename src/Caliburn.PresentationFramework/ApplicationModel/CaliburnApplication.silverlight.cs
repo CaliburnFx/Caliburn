@@ -9,6 +9,7 @@ namespace Caliburn.PresentationFramework.ApplicationModel
     using Core;
     using Core.Configuration;
     using Core.IoC;
+    using Core.Logging;
     using Microsoft.Practices.ServiceLocation;
     using System;
     using System.Windows.Browser;
@@ -22,6 +23,7 @@ namespace Caliburn.PresentationFramework.ApplicationModel
     /// </summary>
     public class CaliburnApplication : Application
     {
+        private static readonly ILog Log = LogManager.GetLog(typeof(CaliburnApplication));
         private readonly IServiceLocator _container;
 
         /// <summary>
@@ -127,10 +129,13 @@ namespace Caliburn.PresentationFramework.ApplicationModel
         /// <param name="e">The <see cref="System.Windows.StartupEventArgs"/> instance containing the event data.</param>
         private void OnStartup(object sender, StartupEventArgs e)
         {
-            var model = CreateRootModel();
-            if (model == null) return;
+            Log.Info("Preparing to create root model.");
 
-            SetRootVisual(model);
+            var rootModel = CreateRootModel();
+            if (rootModel == null) 
+                return;
+
+            SetRootVisual(rootModel);
         }
 
         /// <summary>
@@ -152,6 +157,7 @@ namespace Caliburn.PresentationFramework.ApplicationModel
                 screen.Activate();
             }
 
+            Log.Info("Setting root visual.");
             RootVisual = (UIElement)view;
         }
 
@@ -171,6 +177,8 @@ namespace Caliburn.PresentationFramework.ApplicationModel
         /// <param name="e">The <see cref="ApplicationUnhandledExceptionEventArgs"/> instance containing the event data.</param>
         protected virtual void OnUnhandledException(object sender, ApplicationUnhandledExceptionEventArgs e)
         {
+            Log.Error(e.ExceptionObject);
+
             if(Debugger.IsAttached) return;
 
             e.Handled = true;
@@ -190,7 +198,10 @@ namespace Caliburn.PresentationFramework.ApplicationModel
 
                 HtmlPage.Window.Eval("throw new Error(\"Unhandled Error in Silverlight 2 Application " + errorMsg + "\");");
             }
-            catch(Exception) {}
+            catch(Exception ex) 
+            {
+                Log.Error(ex);
+            }
         }
     }
 }

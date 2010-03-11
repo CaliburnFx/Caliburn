@@ -7,6 +7,7 @@ namespace Caliburn.PresentationFramework.ApplicationModel
     using System.Collections.Generic;
     using System.Windows.Browser;
     using Caliburn.Core;
+    using Core.Logging;
 
     /// <summary>
     /// An implementation of <see cref="IStateManager"/> that stores state in the browser's URL.
@@ -14,6 +15,8 @@ namespace Caliburn.PresentationFramework.ApplicationModel
     /// </summary>
     public class DeepLinkStateManager : PropertyChangedBase, IStateManager
     {
+        private static readonly ILog Log = LogManager.GetLog(typeof(DeepLinkStateManager));
+
         private readonly Dictionary<string, string> _state = new Dictionary<string, string>();
         private string _stateName;
         private bool _isLoadingState, _isSavingState, _isInitialized;
@@ -40,6 +43,8 @@ namespace Caliburn.PresentationFramework.ApplicationModel
 
             try
             {
+                Log.Info("Initializing the deep link state manager.");
+
                 var hostID = HtmlPage.Plugin.Id;
 
                 if(string.IsNullOrEmpty(hostID))
@@ -85,12 +90,14 @@ namespace Caliburn.PresentationFramework.ApplicationModel
                 __navigateHandler(this, new Sys.HistoryEventArgs(Sys.Application._state));
             ";
 
+                Log.Info("Injecting javascript.");
                 HtmlPage.Window.Eval(initScript);
 
                 _isInitialized = true;
             }
-            catch
+            catch(Exception ex)
             {
+                Log.Error(ex);
             }
 
             return _isInitialized;
@@ -166,8 +173,9 @@ namespace Caliburn.PresentationFramework.ApplicationModel
 
                 return true;
             }
-            catch
+            catch(Exception ex)
             {
+                Log.Error(ex);
                 return false;
             }
             finally
@@ -183,7 +191,10 @@ namespace Caliburn.PresentationFramework.ApplicationModel
         [ScriptableMember]
         public virtual void HandleNavigate(ScriptObject newState)
         {
-            if(_isLoadingState || _isSavingState) return;
+            Log.Info("Browser navigate occurred.");
+
+            if(_isLoadingState || _isSavingState) 
+                return;
 
             _isLoadingState = true;
 

@@ -5,12 +5,15 @@ namespace Caliburn.PresentationFramework.ApplicationModel
     using System.IO;
     using System.IO.IsolatedStorage;
     using System.Xml;
+    using Core;
+    using Core.Logging;
 
     /// <summary>
     /// An implementation of <see cref="IStateManager"/> that uses isolated storage as its backing store.
     /// </summary>
     public class IsolatedStorageStateManager : PropertyChangedBase, IStateManager
     {
+        private static readonly ILog Log = LogManager.GetLog(typeof(IsolatedStorageStateManager));
         private readonly Dictionary<string, string> _state = new Dictionary<string, string>();
         private string _stateName;
 
@@ -32,7 +35,11 @@ namespace Caliburn.PresentationFramework.ApplicationModel
         public virtual bool Initialize(string stateName)
         {
             if(string.IsNullOrEmpty(stateName))
-                throw new Exception();
+            {
+                var ex = new CaliburnException("State name is null or empty.");
+                Log.Error(ex);
+                throw ex;
+            }
 
             _stateName = stateName;
 
@@ -43,6 +50,8 @@ namespace Caliburn.PresentationFramework.ApplicationModel
         {
             try
             {
+                Log.Info("Loading state.");
+
                 using(var store = IsolatedStorageFile.GetUserStoreForApplication())
                 using(var stream = new IsolatedStorageFileStream(_stateName, FileMode.Open, store))
                 using(var reader = XmlReader.Create(stream))
@@ -65,8 +74,9 @@ namespace Caliburn.PresentationFramework.ApplicationModel
                 AfterStateLoad(this, EventArgs.Empty);
                 return true;
             }
-            catch
+            catch(Exception ex)
             {
+                Log.Error(ex);
                 return false;
             }
         }
@@ -84,6 +94,8 @@ namespace Caliburn.PresentationFramework.ApplicationModel
 
             try
             {
+                Log.Info("Committing state.");
+
                 using(var store = IsolatedStorageFile.GetUserStoreForApplication())
                 using(var stream = new IsolatedStorageFileStream(_stateName, FileMode.OpenOrCreate, store))
                 using(var writer = XmlWriter.Create(stream))
@@ -104,8 +116,9 @@ namespace Caliburn.PresentationFramework.ApplicationModel
 
                 return true;
             }
-            catch
+            catch(Exception ex)
             {
+                Log.Error(ex);
                 return false;
             }
         }

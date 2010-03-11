@@ -50,7 +50,8 @@ V2 Alpha
 -Moved Dispatcher and related components to PresentationFramework.Invocation.
 -Moved IBackgroundTask and related components into Core.Invocation.
 -Added logging abstraction to core.
--Added basic diagnostics to core.
+-Added basic logging to Core.
+-Added basic logging to PresentationFramework.
 
 V1.1 Release
 -Fixed an issue in the WPF version of InteractionNode.

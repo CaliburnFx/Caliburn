@@ -3,6 +3,7 @@
     using System.Collections.Generic;
     using System.Linq;
     using Core;
+    using Core.Logging;
     using RoutedMessaging;
 
     /// <summary>
@@ -10,6 +11,8 @@
     /// </summary>
     public class ActionMessageHandler : IRoutedMessageHandler
     {
+        private static readonly ILog Log = LogManager.GetLog(typeof(ActionMessageHandler));
+
         private readonly object _target;
         private readonly IActionHost _host;
         private IInteractionNode _node;
@@ -92,9 +95,17 @@
         {
             var actionMessage = message as ActionMessage;
 
-            if(actionMessage != null)
+            if (actionMessage != null)
+            {
                 _host.GetAction(actionMessage).Execute(actionMessage, _node, context);
-            else throw new CaliburnException("The handler cannot process this message.");
+                Log.Info("Processed message {0}.", actionMessage);
+            }
+            else
+            {
+                var ex = new CaliburnException("The handler cannot process this message.");
+                Log.Error(ex);
+                throw ex;
+            }
         }
 
         /// <summary>
@@ -106,7 +117,13 @@
             var actionMessage = trigger.Message as ActionMessage;
 
             if(actionMessage == null)
-                throw new CaliburnException("The handler cannot update availability for this trigger.");
+            {
+                var ex = new CaliburnException("The handler cannot update availability for this trigger.");
+                Log.Error(ex);
+                throw ex;
+            }
+            
+            Log.Info("Requesting update avaiability for {0}.", actionMessage);
 
             var action = _host.GetAction(actionMessage);
             if(!action.HasTriggerEffects()) return;
@@ -132,6 +149,7 @@
                 trigger.UpdateAvailabilty(isAvailable);
             }
 
+            Log.Info("Making handlers aware of {0}.", trigger);
             action.Filters.HandlerAware.Apply(x => x.MakeAwareOf(this, trigger));
         }
     }

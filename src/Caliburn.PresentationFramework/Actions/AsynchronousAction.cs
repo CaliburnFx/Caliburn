@@ -2,6 +2,7 @@
 {
     using System;
     using Core.Invocation;
+    using Core.Logging;
     using Filters;
 	using System.Threading;
     using Microsoft.Practices.ServiceLocation;
@@ -12,6 +13,7 @@
     /// </summary>
     public class AsynchronousAction : ActionBase
     {
+        private static readonly ILog Log = LogManager.GetLog(typeof(AsynchronousAction));
         private readonly IServiceLocator _serviceLocator;
 
         [ThreadStatic]
@@ -79,7 +81,10 @@
             {
                 TryUpdateTrigger(actionMessage, handlingNode, false);
                 if(!TryApplyRescue(actionMessage, handlingNode, ex))
+                {
+                    Log.Error(ex);
                     throw;
+                }
                 OnCompleted();
             }
         }
@@ -100,7 +105,10 @@
                                   {
                                       TryUpdateTrigger(actionMessage, handlingNode, false);
                                       if(!TryApplyRescue(actionMessage, handlingNode, e.Error))
+                                      {
+                                          Log.Error(e.Error);
                                           throw e.Error;
+                                      }
                                       OnCompleted();
                                   }
                                   else
@@ -126,7 +134,10 @@
                                               if(arg.Error != null)
                                               {
                                                   if(!TryApplyRescue(actionMessage, handlingNode, arg.Error))
+                                                  {
+                                                      Log.Error(arg.Error);
                                                       throw arg.Error;
+                                                  }
                                               }
 
                                               OnCompleted();
@@ -138,7 +149,10 @@
                                       {
                                           TryUpdateTrigger(actionMessage, handlingNode, false);
                                           if(!TryApplyRescue(actionMessage, handlingNode, ex))
+                                          {
+                                              Log.Error(ex);
                                               throw;
+                                          }
                                           OnCompleted();
                                       }
                                   }

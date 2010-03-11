@@ -6,6 +6,7 @@ namespace Caliburn.PresentationFramework.Actions
     using System.Reflection;
     using System.Windows;
     using System.Windows.Markup;
+    using Core.Logging;
     using Microsoft.Practices.ServiceLocation;
     using RoutedMessaging;
     using ViewModels;
@@ -16,6 +17,8 @@ namespace Caliburn.PresentationFramework.Actions
     [ContentProperty("Parameters")]
     public class ActionMessage : Freezable, IRoutedMessageWithOutcome
     {
+        private static readonly ILog Log = LogManager.GetLog(typeof(ActionMessage));
+
         /// <summary>
         /// Represents the parameters of an action message.
         /// </summary>
@@ -194,6 +197,8 @@ namespace Caliburn.PresentationFramework.Actions
         /// <returns></returns>
         public IEnumerable<IRoutedMessageHandler> GetDefaultHandlers(IInteractionNode node)
         {
+            Log.Info("Checking default handlers for {0}.", this);
+
             var context = node.UIElement.GetDataContext();
             if(context == null)
                 yield break;

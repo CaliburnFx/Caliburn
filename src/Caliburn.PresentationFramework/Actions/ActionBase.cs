@@ -4,6 +4,7 @@ namespace Caliburn.PresentationFramework.Actions
     using System.Collections.Generic;
     using System.Linq;
     using Core.Invocation;
+    using Core.Logging;
     using Filters;
     using RoutedMessaging;
 
@@ -12,6 +13,8 @@ namespace Caliburn.PresentationFramework.Actions
     /// </summary>
     public abstract class ActionBase : IAction
     {
+        private static readonly ILog Log = LogManager.GetLog(typeof(ActionBase));
+
         /// <summary>
         /// The method.
         /// </summary>
@@ -130,9 +133,11 @@ namespace Caliburn.PresentationFramework.Actions
                     break;
                 }
 
+                Log.Info("Action {0} for {1}.", isMatch ? "found" : "not found", this);
                 return isMatch;
             }
 
+            Log.Info("Action not found for {0}.", this);
             return false;
         }
 
@@ -152,6 +157,8 @@ namespace Caliburn.PresentationFramework.Actions
                 handlingNode,
                 null
                 );
+
+            Log.Info("Evaluating trigger effects for {0}.", this);
 
             foreach (var filter in _filters.TriggerEffects)
             {
@@ -181,9 +188,13 @@ namespace Caliburn.PresentationFramework.Actions
             foreach (var rescue in _filters.Rescues)
             {
                 if (rescue.Handle(message, handlingNode, ex))
+                {
+                    Log.Info("Rescue applied for {0}.", this);
                     return true;
+                }
             }
 
+            Log.Warn("Rescue not applied for {0}.", this);
             return false;
         }
 
@@ -205,6 +216,8 @@ namespace Caliburn.PresentationFramework.Actions
         {
             if (!BlockInteraction)
                 return;
+
+            Log.Info("Updating trigger for {0}.", this);
 
             foreach (var messageTrigger in actionMessage.Source.Triggers)
             {

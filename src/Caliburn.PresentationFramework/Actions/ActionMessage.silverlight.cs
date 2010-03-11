@@ -10,6 +10,7 @@ namespace Caliburn.PresentationFramework.Actions
     using System.Windows.Controls;
     using System.Collections.Generic;
     using Core.Invocation;
+    using Core.Logging;
     using Microsoft.Practices.ServiceLocation;
     using ViewModels;
     using RoutedMessaging;
@@ -20,6 +21,8 @@ namespace Caliburn.PresentationFramework.Actions
     [ContentProperty("Parameters")]
     public class ActionMessage : IRoutedMessageWithOutcome
     {
+        private static readonly ILog Log = LogManager.GetLog(typeof(ActionMessage));
+
         private IInteractionNode _source;
         private List<Parameter> _parameters = new List<Parameter>();
 
@@ -131,6 +134,8 @@ namespace Caliburn.PresentationFramework.Actions
         /// <returns></returns>
         public IEnumerable<IRoutedMessageHandler> GetDefaultHandlers(IInteractionNode node)
         {
+            Log.Info("Checking default handlers for {0}.", this);
+
             var context = node.UIElement.GetDataContext();
             if(context == null)
                 yield break;

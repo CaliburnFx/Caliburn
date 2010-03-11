@@ -5,6 +5,7 @@
     using System.Collections.Generic;
     using System.Linq;
     using Core;
+    using Core.Logging;
     using Filters;
     using RoutedMessaging;
 
@@ -13,6 +14,8 @@
     /// </summary>
     public class OverloadedAction : IAction, IEnumerable<IAction>
     {
+        private static readonly ILog Log = LogManager.GetLog(typeof(OverloadedAction));
+
         private readonly string _name;
         private readonly List<IAction> _overloads = new List<IAction>();
 
@@ -110,7 +113,7 @@
 
             if(message.Parameters.Count > 0)
             {
-                throw new CaliburnException(
+                var ex = new CaliburnException(
                     string.Format(
                         "Could not find overload for {0}({1}).",
                         message.MethodName,
@@ -119,14 +122,20 @@
                             .Aggregate((a, c) => a + ", " + c)
                         )
                     );
+
+                Log.Error(ex);
+                throw ex;
             }
 
-            throw new CaliburnException(
+            var ex2 = new CaliburnException(
                 string.Format(
                     "Could not find overload for {0}().",
                     message.MethodName
                     )
                 );
+
+            Log.Error(ex2);
+            throw ex2;
         }
 
         /// <summary>

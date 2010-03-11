@@ -11,6 +11,7 @@ namespace Caliburn.PresentationFramework.ApplicationModel
     using System.Windows.Input;
     using System.Windows.Controls;
     using System.Windows.Media;
+    using Core.Logging;
     using RoutedMessaging;
     using Views;
 
@@ -19,6 +20,8 @@ namespace Caliburn.PresentationFramework.ApplicationModel
     /// </summary>
     public partial class DefaultInputManager : IInputManager
     {
+        private static readonly ILog Log = LogManager.GetLog(typeof(DefaultInputManager));
+
         private readonly List<IShortcut> _shortcuts = new List<IShortcut>();
 
         /// <summary>
@@ -43,7 +46,11 @@ namespace Caliburn.PresentationFramework.ApplicationModel
         public void Focus(object viewModel, string propertyPath)
         {
             var view = GetView(viewModel) as DependencyObject;
-            if (view == null) return;
+            if (view == null)
+            {
+                Log.Warn("View not found for {0}.", viewModel);
+                return;
+            }
 
             var elements = GetAllElements(view);
 
@@ -60,6 +67,8 @@ namespace Caliburn.PresentationFramework.ApplicationModel
                     return;
                 }
             }
+
+            Log.Warn("Element for {0} not found on {1}.", propertyPath, view);
         }
 
         /// <summary>

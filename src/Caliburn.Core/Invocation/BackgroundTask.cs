@@ -35,6 +35,7 @@ namespace Caliburn.Core.Invocation
                 e.Cancel = _cancellationPending;
 
                 CurrentContext = null;
+                Log.Info("Completed background task.");
             };
 
             _worker.ProgressChanged += (s, e) =>{

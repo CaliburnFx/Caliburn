@@ -2,6 +2,7 @@
 {
     using System;
     using Core.Invocation;
+    using Core.Logging;
     using Filters;
     using Microsoft.Practices.ServiceLocation;
     using RoutedMessaging;
@@ -11,6 +12,8 @@
     /// </summary>
     public class SynchronousAction : ActionBase
     {
+        private static readonly ILog Log = LogManager.GetLog(typeof(SynchronousAction));
+
         private readonly IServiceLocator _serviceLocator;
 
         /// <summary>
@@ -72,7 +75,10 @@
             {
                 TryUpdateTrigger(actionMessage, handlingNode, false);
                 if(!TryApplyRescue(actionMessage, handlingNode, ex))
+                {
+                    Log.Error(ex);
                     throw;
+                }
                 OnCompleted();
             }
         }
@@ -87,7 +93,10 @@
                 if(e.Error != null)
                 {
                     if(!TryApplyRescue(message, handlingNode, e.Error))
+                    {
+                        Log.Error(e.Error);
                         throw e.Error;
+                    }
                 }
 
                 OnCompleted();

@@ -10,6 +10,7 @@ namespace Caliburn.PresentationFramework.ApplicationModel
     using Core;
     using Core.Configuration;
     using Core.IoC;
+    using Core.Logging;
     using Microsoft.Practices.ServiceLocation;
 
     /// <summary>
@@ -17,6 +18,8 @@ namespace Caliburn.PresentationFramework.ApplicationModel
     /// </summary>
     public class CaliburnApplication : Application
     {
+        private static readonly ILog Log = LogManager.GetLog(typeof(CaliburnApplication));
+
         private readonly IServiceLocator _container;
 
         /// <summary>
@@ -59,8 +62,10 @@ namespace Caliburn.PresentationFramework.ApplicationModel
         {
             base.OnStartup(e);
 
+            Log.Info("Preparing to create root model.");
             var rootModel = CreateRootModel();
-            if (rootModel == null) return;
+            if (rootModel == null) 
+                return;
 
             ShowMainWindow(rootModel);
         }
@@ -71,6 +76,7 @@ namespace Caliburn.PresentationFramework.ApplicationModel
         /// <param name="rootModel">The root model.</param>
         protected virtual void ShowMainWindow(object rootModel)
         {
+            Log.Info("Showing main window.");
             Container.GetInstance<IWindowManager>()
                 .Show(rootModel, null, ExecuteShutdownModel);
         }
