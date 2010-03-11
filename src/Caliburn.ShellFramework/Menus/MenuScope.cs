@@ -2,10 +2,13 @@ namespace Caliburn.ShellFramework.Menus
 {
     using System;
     using System.Collections.Generic;
+    using Core.Logging;
     using PresentationFramework.ApplicationModel;
 
     public class MenuScope
     {
+        private static readonly ILog Log = LogManager.GetLog(typeof(MenuScope));
+
         private readonly List<MenuInstruction> _toAdd = new List<MenuInstruction>();
         private readonly List<MenuInstruction> _toRemove = new List<MenuInstruction>();
 
@@ -56,6 +59,8 @@ namespace Caliburn.ShellFramework.Menus
 
         private void NotifierActivated(object sender, EventArgs e)
         {
+            Log.Info("Activating menus for {0}.", sender);
+
             foreach (var instruction in _toAdd)
             {
                 var index = instruction.Index();
@@ -73,6 +78,8 @@ namespace Caliburn.ShellFramework.Menus
 
         private void NotifierDeactivated(object sender, EventArgs e)
         {
+            Log.Info("Deactivating menus for {0}.", sender);
+
             foreach (var instruction in _toAdd)
             {
                 instruction.Parent.Remove(instruction.Child);

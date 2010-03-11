@@ -52,6 +52,7 @@ V2 Alpha
 -Added logging abstraction to core.
 -Added basic logging to Core.
 -Added basic logging to PresentationFramework.
+-Added basic logging to ShellFramework.
 
 V1.1 Release
 -Fixed an issue in the WPF version of InteractionNode.

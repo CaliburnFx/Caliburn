@@ -6,12 +6,15 @@ namespace Caliburn.ShellFramework.Services
     using System.Windows;
     using System.Windows.Markup;
     using Core;
+    using Core.Logging;
     using PresentationFramework;
     using PresentationFramework.ApplicationModel;
     using PresentationFramework.Views;
 
     public class DefaultBusyService : IBusyService
     {
+        private static readonly ILog Log = LogManager.GetLog(typeof(DefaultBusyService));
+
         public static string BusyIndicatorName = "busyIndicator";
 
         private class BusyInfo
@@ -135,8 +138,11 @@ namespace Caliburn.ShellFramework.Services
         private UIElement TryFindBusyIndicator(object viewModel)
         {
             DependencyObject view = GetView(viewModel);
-            if(view == null)
+            if (view == null)
+            {
+                Log.Warn("Could not find view for {0}.", viewModel);
                 return null;
+            }
 
             UIElement busyIndicator = null;
 
