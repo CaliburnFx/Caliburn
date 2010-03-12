@@ -41,6 +41,7 @@
         private IModuleCatalog _moduleCatalog;
         private Type[] _moduleTypes;
         private Action _overrideModuleInit;
+        private Type _modelRegionManager;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="CompositeApplicationLibraryConfiguration"/> class.
@@ -55,6 +56,7 @@
 
             UsingModuleManager<ModuleManager>();
             UsingRegionManager<RegionManager>();
+            UsingModelRegionManager<DefaultModelRegionManager>();
             UsingEventAggregator<EventAggregator>();
             UsingRegionViewRegistry<RegionViewRegistry>();
             UsingRegionBehaviorFactory<RegionBehaviorFactory>();
@@ -118,6 +120,15 @@
             _regionManager = typeof(T);
             return this;
         }
+
+
+        public CompositeApplicationLibraryConfiguration UsingModelRegionManager<T>()
+            where T : IModelRegionManager
+        {
+            _modelRegionManager = typeof(T);
+            return this;
+        }
+
 
         /// <summary>
         /// Customizes the event aggregator.
@@ -241,6 +252,7 @@
             yield return Singleton(typeof(ILoggerFacade), _loggerFacade);
             yield return Singleton(typeof(IModuleInitializer), _moduleInitializer);
             yield return Singleton(typeof(IRegionManager), _regionManager);
+            yield return Singleton(typeof(IModelRegionManager), _modelRegionManager);
             yield return Singleton(typeof(IEventAggregator), _eventAggregator);
             yield return Singleton(typeof(IRegionViewRegistry), _regionViewRegistry);
             yield return Singleton(typeof(IRegionBehaviorFactory), _regionBehaviorFactory);

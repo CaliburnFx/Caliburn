@@ -657,6 +657,7 @@
         <include name="System.dll"/>
         <include name="System.Core.dll"/>
         <include name="Caliburn.Core.dll"/>
+        <include name="Caliburn.PresentationFramework.dll"/>
         <include name="Microsoft.Practices.ServiceLocation.dll"/>
         <include name="Microsoft.Practices.Composite.dll"/>
         <include name="Microsoft.Practices.Composite.Presentation.dll"/>

@@ -54,6 +54,7 @@ V2 Alpha
 -Added basic logging to PresentationFramework.
 -Added basic logging to ShellFramework.
 -Changed the Dispatcher's DefaultPriority to Normal.
+-Enabled Model-First MVVM Development with Prism using IModelRegionManager.
 
 V1.1 Release
 -Fixed an issue in the WPF version of InteractionNode.
