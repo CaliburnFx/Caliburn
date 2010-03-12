@@ -116,6 +116,7 @@
                 );
 
             Bind.Initialize(viewModelBinder);
+            EnumerableResults.Initialize(serviceLocator);
 
             if (!_registerAllScreensWithSubjects)
                 return;
