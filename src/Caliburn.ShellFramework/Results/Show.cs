@@ -62,6 +62,16 @@
             return new OpenDialogResult<TModal>(modal);
         }
 
+        public static PopupResult<TPopup> Popup<TPopup>()
+        {
+            return new PopupResult<TPopup>();
+        }
+
+        public static PopupResult<TPopup> Popup<TPopup>(TPopup popup)
+        {
+            return new PopupResult<TPopup>(popup);
+        }
+
 #if SILVERLIGHT
 
         public static SaveFileDialogResult Dialog(SaveFileDialog dialog)

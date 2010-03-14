@@ -240,27 +240,34 @@ namespace Caliburn.PresentationFramework.Screens
 
                 if (view == null)
                 {
-                    var exception = new NotSupportedException(
+                    var ex1 = new NotSupportedException(
                         "You cannot close an instance without a parent or a default view."
                         );
 
-                    Log.Error(exception);
-                    throw exception;
+                    Log.Error(ex1);
+                    throw ex1;
                 }
 
                 var method = view.GetType().GetMethod("Close");
-
-                if (method == null)
+                if(method != null)
                 {
-                    var exception = new NotSupportedException(
-                        "The default view does not support the Close operation."
-                        );
-
-                    Log.Error(exception);
-                    throw exception;
+                    method.Invoke(view, null);
+                    return;
                 }
 
-                method.Invoke(view, null);
+                var property = view.GetType().GetProperty("IsOpen");
+                if (property != null)
+                {
+                    property.SetValue(view, false, new object[] {});
+                    return;
+                }
+
+                var ex2 = new NotSupportedException(
+                        "The default view does not support the Close method or the IsOpen property."
+                        );
+
+                Log.Error(ex2);
+                throw ex2;
             }
         }
 
