@@ -83,6 +83,7 @@ V1.1 Release
 -Enabled actions to search for handlers by routing through TemplatedParents in WPF.
 -Fixed a bug with expression tree method calls in .NET 4.0.
 -Enabled the dispatcher's default DispatcherPriority to be configured.
+-Applied a patch by varely to fix binding validation against properties with underscores in their name.
 
 V1.1 Release Candidate
 -Added pre-initialization hooks to CaliburnApplication via Marco Amendola's patch.

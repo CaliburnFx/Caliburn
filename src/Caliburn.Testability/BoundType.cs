@@ -179,7 +179,7 @@ namespace Caliburn.Testability
 
 					string propertyName = string.Empty;
 
-					while (i < propertyPath.Length && Char.IsLetterOrDigit(propertyPath[i]))
+					while (i < propertyPath.Length && IsCharValidInPropertyName(propertyPath[i]))
 					{
 						propertyName += propertyPath[i];
 						i++; 
@@ -212,55 +212,9 @@ namespace Caliburn.Testability
 			return currentType;
 		}
 
-		private PropertyInfo GetPropertyInfo(string propertyPath)
+		private static bool IsCharValidInPropertyName(char c)
 		{
-			var currentType = _type;
-			PropertyInfo currentInfo = null;
-
-			for (int i = 0; i < propertyPath.Length; i++)
-			{
-				if (propertyPath[i] == '[')
-				{
-					while (i < propertyPath.Length && propertyPath[i] != ']')
-						i++;
-
-					currentInfo = currentType.GetProperty("Item")
-								  ?? GetInterfaceProperty("Item", currentType);
-
-					if (currentInfo == null || i >= propertyPath.Length)
-						return currentInfo;
-
-					currentType = currentInfo.PropertyType;
-				}
-				else if (propertyPath[i] == '/')
-					currentType = DeriveTypeOfCollection(currentType);
-				else
-				{
-					if (propertyPath[i] == '.') i++;
-
-					string propertyName = string.Empty;
-
-					while (i < propertyPath.Length && Char.IsLetterOrDigit(propertyPath[i]))
-					{
-						propertyName += propertyPath[i];
-						i++;
-					}
-
-					currentInfo = currentType.GetProperty(
-									  propertyName,
-									  BindingFlags.DeclaredOnly | BindingFlags.GetProperty | BindingFlags.Public | BindingFlags.Instance)
-								  ?? GetInterfaceProperty(propertyName, currentType)
-									 ?? currentType.GetProperties().Where(x => x.Name == propertyName).FirstOrDefault();
-
-					if (currentInfo == null || i >= propertyPath.Length)
-						return currentInfo;
-
-					currentType = currentInfo.PropertyType;
-					i--;
-				}
-			}
-
-			return currentInfo;
+			return Char.IsLetterOrDigit(c) || c == '_';
 		}
 
 		/// <summary>

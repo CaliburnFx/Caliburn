@@ -133,5 +133,12 @@ namespace Tests.Caliburn.Testability
 			var type = _boundType.GetPropertyType("Model.TypedSubModel.Parent");
 			Assert.That(type, Is.EqualTo(typeof(MyModel)));
 		}
+
+		[Test]
+		public void can_resolve_typed_paths_with_underscore_in_name()
+		{
+			var type = _boundType.GetPropertyType("TypedModel.MyProperty_HasUnderscore");
+			Assert.That(type, Is.EqualTo(typeof(string)));
+		}
 	}
 }
