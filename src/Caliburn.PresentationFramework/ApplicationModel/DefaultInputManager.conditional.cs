@@ -24,7 +24,8 @@
                 foreach (object child in LogicalTreeHelper.GetChildren(current))
                 {
                     var childDo = child as DependencyObject;
-                    queue.Enqueue(childDo);
+					if (childDo != null) 
+					    queue.Enqueue(childDo);
                 }
             }
         }
