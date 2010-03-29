@@ -36,11 +36,14 @@ namespace Caliburn.PresentationFramework.Conventions
 
             Log.Info("Binding convention matched for {0}.", element.Name);
 
+			var setMethod = boundProperty.GetSetMethod();
+			var canWriteToProperty = boundProperty.CanWrite && setMethod != null && setMethod.IsPublic;
+
             return new ApplicableBinding(
                 element,
                 dependencyProperty,
                 path,
-                boundProperty.CanWrite ? BindingMode.TwoWay : BindingMode.OneWay,
+                canWriteToProperty ? BindingMode.TwoWay : BindingMode.OneWay,
                 ShouldValidate(boundProperty),
                 false,
                 conventionManager.GetValueConverter(dependencyProperty, boundProperty.PropertyType)
