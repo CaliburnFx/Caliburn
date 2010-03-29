@@ -64,9 +64,14 @@
         /// <returns></returns>
         public bool Execute(IRoutedMessage message, IInteractionNode handlingNode, object[] parameters)
         {
-            var result = _method.Invoke(handlingNode.MessageHandler.Unwrap(), parameters);
+            var target = handlingNode.MessageHandler.Unwrap();
+            if (target == null) 
+                return false;
 
-            if (_method.Info.ReturnType == typeof(bool)) return (bool)result;
+            var result = _method.Invoke(target, parameters);
+
+            if (_method.Info.ReturnType == typeof(bool)) 
+                return (bool)result;
             return true;
         }
 
