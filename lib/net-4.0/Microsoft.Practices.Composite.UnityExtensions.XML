@@ -96,6 +96,38 @@
             Initializes the container with this extension's functionality.
             </summary>
         </member>
+        <member name="T:Microsoft.Practices.Composite.UnityExtensions.UnityContainerHelper">
+            <summary>
+            Extensions methods to extend and facilitate the usage of <see cref="T:Microsoft.Practices.Unity.IUnityContainer"/>.
+            </summary>
+        </member>
+        <member name="M:Microsoft.Practices.Composite.UnityExtensions.UnityContainerHelper.IsTypeRegistered(Microsoft.Practices.Unity.IUnityContainer,System.Type)">
+            <summary>
+            Returns whether a specified type has a type mapping registered in the container.
+            </summary>
+            <param name="container">The <see cref="T:Microsoft.Practices.Unity.IUnityContainer"/> to check for the type mapping.</param>
+            <param name="type">The type to check if there is a type mapping for.</param>
+            <returns><see langword="true"/> if there is a type mapping registered for <paramref name="type"/>.</returns>
+            <remarks>In order to use this extension method, you first need to add the
+            <see cref="T:Microsoft.Practices.Unity.IUnityContainer"/> extension to the <see cref="T:Microsoft.Practices.Composite.UnityExtensions.UnityBootstrapperExtension"/>.
+            </remarks>        
+        </member>
+        <member name="M:Microsoft.Practices.Composite.UnityExtensions.UnityContainerHelper.TryResolve``1(Microsoft.Practices.Unity.IUnityContainer)">
+            <summary>
+            Utility method to try to resolve a service from the container avoiding an exception if the container cannot build the type.
+            </summary>
+            <param name="container">The cointainer that will be used to resolve the type.</param>
+            <typeparam name="T">The type to resolve.</typeparam>
+            <returns>The instance of <typeparamref name="T"/> built up by the container.</returns>
+        </member>
+        <member name="M:Microsoft.Practices.Composite.UnityExtensions.UnityContainerHelper.TryResolve(Microsoft.Practices.Unity.IUnityContainer,System.Type)">
+            <summary>
+            Utility method to try to resolve a service from the container avoiding an exception if the container cannot build the type.
+            </summary>
+            <param name="container">The cointainer that will be used to resolve the type.</param>
+            <param name="typeToResolve">The type to resolve.</param>
+            <returns>The instance of <paramref name="typeToResolve"/> built up by the container.</returns>
+        </member>
         <member name="T:Microsoft.Practices.Composite.UnityExtensions.UnityBootstrapper">
             <summary>
             Base class that provides a basic bootstrapping sequence that
@@ -195,38 +227,6 @@
             Gets the default <see cref="T:Microsoft.Practices.Composite.Logging.ILoggerFacade"/> for the application.
             </summary>
             <value>A <see cref="T:Microsoft.Practices.Composite.Logging.ILoggerFacade"/> instance.</value>
-        </member>
-        <member name="T:Microsoft.Practices.Composite.UnityExtensions.UnityContainerHelper">
-            <summary>
-            Extensions methods to extend and facilitate the usage of <see cref="T:Microsoft.Practices.Unity.IUnityContainer"/>.
-            </summary>
-        </member>
-        <member name="M:Microsoft.Practices.Composite.UnityExtensions.UnityContainerHelper.IsTypeRegistered(Microsoft.Practices.Unity.IUnityContainer,System.Type)">
-            <summary>
-            Returns whether a specified type has a type mapping registered in the container.
-            </summary>
-            <param name="container">The <see cref="T:Microsoft.Practices.Unity.IUnityContainer"/> to check for the type mapping.</param>
-            <param name="type">The type to check if there is a type mapping for.</param>
-            <returns><see langword="true"/> if there is a type mapping registered for <paramref name="type"/>.</returns>
-            <remarks>In order to use this extension method, you first need to add the
-            <see cref="T:Microsoft.Practices.Unity.IUnityContainer"/> extension to the <see cref="T:Microsoft.Practices.Composite.UnityExtensions.UnityBootstrapperExtension"/>.
-            </remarks>        
-        </member>
-        <member name="M:Microsoft.Practices.Composite.UnityExtensions.UnityContainerHelper.TryResolve``1(Microsoft.Practices.Unity.IUnityContainer)">
-            <summary>
-            Utility method to try to resolve a service from the container avoiding an exception if the container cannot build the type.
-            </summary>
-            <param name="container">The cointainer that will be used to resolve the type.</param>
-            <typeparam name="T">The type to resolve.</typeparam>
-            <returns>The instance of <typeparamref name="T"/> built up by the container.</returns>
-        </member>
-        <member name="M:Microsoft.Practices.Composite.UnityExtensions.UnityContainerHelper.TryResolve(Microsoft.Practices.Unity.IUnityContainer,System.Type)">
-            <summary>
-            Utility method to try to resolve a service from the container avoiding an exception if the container cannot build the type.
-            </summary>
-            <param name="container">The cointainer that will be used to resolve the type.</param>
-            <param name="typeToResolve">The type to resolve.</param>
-            <returns>The instance of <paramref name="typeToResolve"/> built up by the container.</returns>
         </member>
     </members>
 </doc>
