@@ -78,16 +78,45 @@ namespace Caliburn.PresentationFramework.RoutedMessaging.Parsers
 
             return (RoutedEvent)fieldEventProp.GetValue(null);
         }
+ 
 
-        /// <summary>
-        /// Gets the assemblies that should be inspected for routed events.
-        /// </summary>
-        /// <returns></returns>
-        protected virtual IEnumerable<Assembly> GetSearchableAssemblies()
-        {
-            return AppDomain.CurrentDomain.GetAssemblies()
-                .Where(assembly => !(assembly is AssemblyBuilder));
-        }
+
+		/// <summary>
+		/// Gets the assemblies that should be inspected for routed events.
+		/// </summary>
+		/// <returns></returns>
+		protected virtual IEnumerable<Assembly> GetSearchableAssemblies()
+		{
+			return AppDomain.CurrentDomain.GetAssemblies()
+				.Where(assembly => !IsDynamicAssembly(assembly));
+
+		}
+
+		/// <summary>
+		/// Checks if an assembly is dynamically generated (it doesn't support GetExportedTypes)
+		/// </summary>
+		/// <param name="test">the assembly being test</param>
+		/// <returns></returns>
+		protected virtual bool IsDynamicAssembly(Assembly test)
+		{
+			return IsNet35DynamicAssembly(test) || IsNet40DynamicAssembly(test);
+		}
+
+		private bool IsNet35DynamicAssembly(Assembly test)
+		{
+			return test is AssemblyBuilder;
+		}
+
+		private bool IsNet40DynamicAssembly(Assembly test)
+		{
+			var type = test.GetType();
+			while (!type.Equals(typeof(Assembly)))
+			{
+				if (type.FullName.Equals("System.Reflection.Emit.InternalAssemblyBuilder")) return true;
+				type = type.BaseType;
+			}
+			return false;
+		}
     }
 }
 
