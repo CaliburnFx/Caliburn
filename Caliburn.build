@@ -66,7 +66,7 @@
 	</target>
 
 	<target name="config-build-release">
-		<property name="build.debug" value="false"/>
+		<property name="build.debug" value="PdbOnly"/>
 		<property name="build.optimize" value="true" overwrite="false"/>
 		<property name="global.build.defines" value="TRACE,STRONG"/>
 	</target>
