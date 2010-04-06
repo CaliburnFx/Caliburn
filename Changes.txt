@@ -85,6 +85,7 @@ V1.1 Release
 -Enabled the dispatcher's default DispatcherPriority to be configured.
 -Applied a patch by varely to fix binding validation against properties with underscores in their name.
 -Updated Prism to the October 2009 release.
+-Updated the AutofacAdapter to support AutoFac 2.0.
 
 V1.1 Release Candidate
 -Added pre-initialization hooks to CaliburnApplication via Marco Amendola's patch.

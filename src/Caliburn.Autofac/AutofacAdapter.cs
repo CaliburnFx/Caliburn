@@ -9,16 +9,17 @@
     using Core.IoC;
     using global::Autofac;
     using global::Autofac.Builder;
+    using global::Autofac.Core;
     using Microsoft.Practices.ServiceLocation;
     using IContainer=global::Autofac.IContainer;
 
     /// <summary>
-    /// An adapter allowing an <see cref="IContext"/> to plug into Caliburn via <see cref="IServiceLocator"/> and <see cref="IRegistry"/>.
+    /// An adapter allowing an <see cref="IContainer"/> to plug into Caliburn via <see cref="IServiceLocator"/> and <see cref="IRegistry"/>.
     /// </summary>
     public class AutofacAdapter : ContainerBase
     {
         private readonly IContainer _container;
-        private ContainerBuilder _builder;
+        private ContainerUpdater _updater;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="AutofacAdapter"/> class.
@@ -26,22 +27,19 @@
         /// <param name="container">The container.</param>
         public AutofacAdapter(IContainer container)
         {
-            if(container == null)
-                throw new ArgumentNullException("container");
             _container = container;
-
-            var builder = new ContainerBuilder();
-
-            builder.Register<IServiceLocator>(this);
-            builder.Register<IRegistry>(this);
-            builder.Register<Core.IoC.IContainer>(this);
-            builder.Register<IContainer>(_container);
-
-            builder.Build(_container);
 
             AddRegistrationHandler<Singleton>(HandleSingleton);
             AddRegistrationHandler<PerRequest>(HandlePerRequest);
             AddRegistrationHandler<Instance>(HandleInstance);
+
+            Register(new[]
+            {
+                new Instance{ Service = typeof(IServiceLocator), Implementation = this},
+                new Instance{ Service = typeof(IRegistry), Implementation = this },
+                new Instance{ Service = typeof(Core.IoC.IContainer), Implementation = this },
+                new Instance{ Service = typeof(IContainer), Implementation = _container },
+            });
         }
 
         /// <summary>
@@ -62,7 +60,9 @@
         /// <returns>The requested service instance.</returns>
         protected override object DoGetInstance(Type serviceType, string key)
         {
-            return key != null ? _container.Resolve(key) : _container.Resolve(serviceType);
+            return key != null
+                ? _container.Resolve(key, serviceType ?? typeof(object))
+                : _container.Resolve(serviceType);
         }
 
         /// <summary>
@@ -76,7 +76,9 @@
             var type = typeof(IEnumerable<>).MakeGenericType(serviceType);
 
             object instance;
-            return _container.TryResolve(type, out instance) ? ((IEnumerable)instance).Cast<object>() : Enumerable.Empty<object>();
+            return _container.TryResolve(type, out instance)
+                ? ((IEnumerable)instance).Cast<object>()
+                : Enumerable.Empty<object>();
         }
 
         /// <summary>
@@ -85,12 +87,12 @@
         /// <param name="registrations">The component registrations.</param>
         public override void Register(IEnumerable<Core.IoC.IComponentRegistration> registrations)
         {
-            _builder = new ContainerBuilder();
+            _updater = new ContainerUpdater();
 
             base.Register(registrations);
 
-            _builder.Build(_container);
-            _builder = null;
+            _updater.Update(_container);
+            _updater = null;
         }
 
         /// <summary>
@@ -102,21 +104,14 @@
         /// </returns>
         public override Core.IoC.IContainer WithProxyFactory<T>()
         {
-            var builder = new ContainerBuilder();
-
-            builder.Register<T>()
-                .As<IProxyFactory>()
-                .SingletonScoped();
-
-            builder.Build(Container);
+            Register(new[] { new Singleton { Service = typeof(IProxyFactory), Implementation = typeof(T) } });
 
             var factory = GetInstance<IProxyFactory>();
 
-            Container.ComponentRegistered += (s, e) =>{
-                var implementation = e.ComponentRegistration.Descriptor
-                    .BestKnownImplementationType;
+            Container.ComponentRegistry.Registered += (s, e) =>{
+                var implementation = e.ComponentRegistration.Activator.LimitType;
 
-                if (!implementation.ShouldCreateProxy())
+                if(!implementation.ShouldCreateProxy())
                     return;
 
                 e.ComponentRegistration.Activating += (s2, e2) =>{
@@ -134,28 +129,44 @@
         private void HandleSingleton(Singleton singleton)
         {
             if (!singleton.HasName())
-                _builder.Register(singleton.Implementation).As(singleton.Service).SingletonScoped();
+                _updater.Register(x => x.Register(RegistrationBuilder.ForType(singleton.Implementation).As(singleton.Service).ExternallyOwned().CreateRegistration()));
             else if (!singleton.HasService())
-                _builder.Register(singleton.Implementation).As(typeof(object)).Named(singleton.Name).SingletonScoped();
-            else _builder.Register(singleton.Implementation).As(singleton.Service).Named(singleton.Name).SingletonScoped();
+                _updater.Register(x => x.Register(RegistrationBuilder.ForType(singleton.Implementation).As(typeof(object)).Named(singleton.Name, typeof(object)).ExternallyOwned().CreateRegistration()));
+            else _updater.Register(x => x.Register(RegistrationBuilder.ForType(singleton.Implementation).As(singleton.Service).Named(singleton.Name, singleton.Service).ExternallyOwned().CreateRegistration()));
         }
 
         private void HandlePerRequest(PerRequest perRequest)
         {
             if (!perRequest.HasName())
-                _builder.Register(perRequest.Implementation).As(perRequest.Service).FactoryScoped();
+                _updater.Register(x => x.Register(RegistrationBuilder.ForType(perRequest.Implementation).As(perRequest.Service).InstancePerDependency().CreateRegistration()));
             else if (!perRequest.HasService())
-                _builder.Register(perRequest.Implementation).As(typeof(object)).Named(perRequest.Name).FactoryScoped();
-            else _builder.Register(perRequest.Implementation).As(perRequest.Service).Named(perRequest.Name).FactoryScoped();
+                _updater.Register(x => x.Register(RegistrationBuilder.ForType(perRequest.Implementation).As(typeof(object)).Named(perRequest.Name, typeof(object)).InstancePerDependency().CreateRegistration()));
+            else _updater.Register(x => x.Register(RegistrationBuilder.ForType(perRequest.Implementation).As(perRequest.Service).Named(perRequest.Name, perRequest.Service).InstancePerDependency().CreateRegistration()));
         }
 
         private void HandleInstance(Instance instance)
         {
             if (!instance.HasName())
-                _builder.Register(instance.Implementation).As(instance.Service);
+                _updater.Register(x => x.Register(RegistrationBuilder.ForDelegate(instance.Service, (c, p) => instance.Implementation).CreateRegistration()));
             else if (!instance.HasService())
-                _builder.Register(instance.Implementation).As(typeof(object)).Named(instance.Name);
-            else _builder.Register(instance.Implementation).As(instance.Service).Named(instance.Name);
+                _updater.Register(x => x.Register(RegistrationBuilder.ForDelegate(typeof(object), (c, p) => instance.Implementation).Named(instance.Name, typeof(object)).CreateRegistration()));
+            else _updater.Register(x => x.Register(RegistrationBuilder.ForDelegate(instance.Service, (c, p) => instance.Implementation).Named(instance.Name, instance.Service).CreateRegistration()));
+        }
+
+        class ContainerUpdater
+        {
+            readonly ICollection<Action<IComponentRegistry>> _configurationActions = new List<Action<IComponentRegistry>>();
+
+            public void Register(Action<IComponentRegistry> configurationAction)
+            {
+                _configurationActions.Add(configurationAction);
+            }
+
+            public void Update(IContainer container)
+            {
+                foreach (var action in _configurationActions)
+                    action(container.ComponentRegistry);
+            }
         }
     }
 }

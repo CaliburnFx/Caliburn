@@ -1,6 +1,6 @@
 ﻿namespace Tests.Caliburn.Adapters
 {
-    using Autofac.Builder;
+    using Autofac;
     using Components;
     using global::Caliburn.Autofac;
     using Microsoft.Practices.ServiceLocation;
@@ -11,15 +11,13 @@
     {
         protected override IServiceLocator CreateServiceLocator()
         {
-            var container = new Autofac.Container();
-
             var builder = new ContainerBuilder();
 
-            builder.Register<AdvancedLogger>().As<ILogger>();
-            builder.Register<SimpleLogger>().As<ILogger>().Named(typeof(SimpleLogger).FullName);
-            builder.Register<AdvancedLogger>().As<ILogger>().Named(typeof(AdvancedLogger).FullName);
+            builder.RegisterType<AdvancedLogger>().As<ILogger>();
+            builder.RegisterType<SimpleLogger>().As<ILogger>().Named(typeof(SimpleLogger).FullName, typeof(ILogger));
+            builder.RegisterType<AdvancedLogger>().As<ILogger>().Named(typeof(AdvancedLogger).FullName, typeof(ILogger));
 
-            builder.Build(container);
+            var container = builder.Build();
 
             return new AutofacAdapter(container);
         }

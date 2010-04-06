@@ -111,7 +111,7 @@ namespace Tests.Caliburn.Adapters
         }
 
         [Test]
-        public void can_resolve_IConfigurator()
+        public void can_resolve_IRegistry()
         {
             var sl = locator.GetInstance<IRegistry>();
             Assert.That(sl, Is.EqualTo(locator));
