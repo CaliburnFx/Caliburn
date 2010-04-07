@@ -82,6 +82,7 @@
     <Compile Include="Resources\IResourceManager.cs" />
     <Compile Include="Results\Animation.cs" />
     <Compile Include="Results\FocusResult.cs" />
+    <Compile Include="Results\NotificationResult.silverlight.cs" />
     <Compile Include="Results\PopupConfiguration.cs" />
     <Compile Include="Results\PopupResult.cs" />
     <Compile Include="Results\ResultExtensions.cs" />
