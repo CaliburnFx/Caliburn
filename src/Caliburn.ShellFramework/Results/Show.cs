@@ -93,6 +93,20 @@
 
 #endif
 
+#if SILVERLIGHT_40
+
+        public static NotificationResult<T> Notification<T>(int durationInMilliseconds)
+        {
+            return new NotificationResult<T>(durationInMilliseconds);
+        }
+
+        public static NotificationResult<T> Notification<T>(T viewModel, int durationInMilliseconds)
+        {
+            return new NotificationResult<T>(viewModel, durationInMilliseconds);
+        }
+
+#endif
+
         public static BusyResult Busy()
         {
             return new BusyResult(true, null);

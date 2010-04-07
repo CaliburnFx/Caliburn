@@ -34,7 +34,7 @@ V2 Alpha
 -Applied patch from rauh_ryan to improve the PrismModule configuration to resolve the IModuleManager and have the module catalog injected into it properly.
 -Created a Validate behavior which applies IDataErrorInfo in WPF and SL4 and uses an exception-based mechanism in SL3.
 -Enabled binding conventions to detect validation scenarios and configure the binding appropriately.
--Added Caliburn.ShellFramework with History, Results, MessagBox, Questions, Menu, Resources, etc.
+-Added Caliburn.ShellFramework with History, Results, MessagBox, Questions, Menu, Dialogs, Toast, Popups, Resources, etc.
 -Added IInputManager and DefaultInputManager for managing control focus and shortcut keys.
 -Removed support for Container Custom Lifetimes.  Caliburn itself does not use this and it can now easilty be added by developers who wish to.
 -Added TestResultEnumerator for easier unit testing of methods that return IEnumerable<IResult>
