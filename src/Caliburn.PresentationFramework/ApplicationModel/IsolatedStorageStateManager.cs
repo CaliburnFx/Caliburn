@@ -52,7 +52,7 @@ namespace Caliburn.PresentationFramework.ApplicationModel
             {
                 Log.Info("Loading state.");
 
-                using(var store = IsolatedStorageFile.GetUserStoreForApplication())
+                using(var store = GetStorageFile())
                 using(var stream = new IsolatedStorageFileStream(_stateName, FileMode.Open, store))
                 using(var reader = XmlReader.Create(stream))
                 {
@@ -96,7 +96,7 @@ namespace Caliburn.PresentationFramework.ApplicationModel
             {
                 Log.Info("Committing state.");
 
-                using(var store = IsolatedStorageFile.GetUserStoreForApplication())
+                using(var store = GetStorageFile())
                 using(var stream = new IsolatedStorageFileStream(_stateName, FileMode.OpenOrCreate, store))
                 using(var writer = XmlWriter.Create(stream))
                 {
@@ -121,6 +121,19 @@ namespace Caliburn.PresentationFramework.ApplicationModel
                 Log.Error(ex);
                 return false;
             }
+        }
+
+        /// <summary>
+        /// Gets the storage file.
+        /// </summary>
+        /// <returns></returns>
+        protected IsolatedStorageFile GetStorageFile()
+        {
+#if SILVERLIGHT
+            return IsolatedStorageFile.GetUserStoreForApplication();
+#else
+            return IsolatedStorageFile.GetUserStoreForDomain();
+#endif
         }
 
         /// <summary>

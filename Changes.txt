@@ -86,6 +86,7 @@ V1.1 Release
 -Applied a patch by varely to fix binding validation against properties with underscores in their name.
 -Updated Prism to the October 2009 release.
 -Updated the AutofacAdapter to support AutoFac 2.0.
+-Changed IsolatedStorageStateManager to use GetUserStoreForDomain for WPF and GetUserStoreForApplication for Silverlight. The method which gets the storage file is now overridable as well.
 
 V1.1 Release Candidate
 -Added pre-initialization hooks to CaliburnApplication via Marco Amendola's patch.
