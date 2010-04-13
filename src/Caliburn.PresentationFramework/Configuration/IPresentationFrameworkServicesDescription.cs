@@ -81,6 +81,7 @@ namespace Caliburn.PresentationFramework.Configuration
 
 #if !SILVERLIGHT_20
 
+#if !WP7
         /// <summary>
         /// Customizes the validator used by Caliburn.
         /// </summary>
@@ -92,6 +93,7 @@ namespace Caliburn.PresentationFramework.Configuration
         /// </summary>
         /// <typeparam name="T">The window manager type.</typeparam>
         IConfiguredRegistration<Singleton, T> WindowManager<T>() where T : IWindowManager;
+#endif
 
         /// <summary>
         /// Customizes the input manager used by Caliburn.

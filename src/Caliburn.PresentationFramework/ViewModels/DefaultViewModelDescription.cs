@@ -136,7 +136,7 @@ namespace Caliburn.PresentationFramework.ViewModels
         {
 #if !SILVERLIGHT
             return view is UserControl || view is Window;
-#elif SILVERLIGHT_20
+#elif SILVERLIGHT_20 || WP7
             return view is UserControl;
 #else
             return view is UserControl || view is ChildWindow;

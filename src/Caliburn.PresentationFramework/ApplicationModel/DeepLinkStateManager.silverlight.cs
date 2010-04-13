@@ -1,5 +1,5 @@
 //http://blogs.microsoft.co.il/blogs/alex_golesh/archive/2008/07/15/silverlight-tip-how-to-reflect-scriptobject-content-in-runtime.aspx
-#if SILVERLIGHT
+#if SILVERLIGHT && !WP7
 
 namespace Caliburn.PresentationFramework.ApplicationModel
 {

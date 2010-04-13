@@ -91,9 +91,9 @@
             if (!_validate)
                 return;
 
-#if NET || SILVERLIGHT_40
+#if NET || SILVERLIGHT_40 && !WP7
             binding.ValidatesOnDataErrors = true;
-#elif SILVERLIGHT_30
+#elif SILVERLIGHT_30 || WP7
             binding.ValidatesOnExceptions = true;
 #endif
         }

@@ -27,12 +27,15 @@ namespace Caliburn.ShellFramework.Services
         private readonly Dictionary<object, BusyInfo> _loaders = new Dictionary<object, BusyInfo>();
         private readonly object _lockObject = new object();
         private readonly object _defaultKey = new object();
+
+#if !WP7
         private readonly IWindowManager _windowManager;
 
         public DefaultBusyService(IWindowManager windowManager)
         {
             _windowManager = windowManager;
         }
+#endif
 
         public void MarkAsBusy(object sourceViewModel, object busyViewModel)
         {
@@ -50,6 +53,11 @@ namespace Caliburn.ShellFramework.Services
 
                 if (busyIndicator == null)
                 {
+#if WP7
+                    var ex = new CaliburnException("No busy indicator with name '" + BusyIndicatorName + "' was found in the UI hierarchy.");
+                    Log.Error(ex);
+                    throw ex;
+#else
                     var notifier = busyViewModel as ILifecycleNotifier;
                     if (notifier == null)
                         return;
@@ -61,7 +69,9 @@ namespace Caliburn.ShellFramework.Services
                         UpdateLoader(info);
                     };
 
+                    Log.Warn("No busy indicator with name '" + BusyIndicatorName + "' was found in the UI hierarchy. Using modal.");
                     _windowManager.ShowDialog(busyViewModel, null, null);
+#endif
                 }
                 else
                 {

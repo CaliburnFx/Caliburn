@@ -12,11 +12,14 @@ namespace Caliburn.PresentationFramework.ApplicationModel
     using Core.Logging;
     using Microsoft.Practices.ServiceLocation;
     using System;
-    using System.Windows.Browser;
     using System.Diagnostics;
     using ViewModels;
     using Views;
     using Screens;
+
+#if !WP7
+    using System.Windows.Browser;
+#endif
 
     /// <summary>
     /// A base class for applications based on Caliburn.
@@ -182,15 +185,16 @@ namespace Caliburn.PresentationFramework.ApplicationModel
             if(Debugger.IsAttached) return;
 
             e.Handled = true;
-            Deployment.Current.Dispatcher.BeginInvoke(() => ReportErrorToDOM(e));
+            Deployment.Current.Dispatcher.BeginInvoke(() => ReportError(e));
         }
 
         /// <summary>
         /// Reports the error to the DOM.
         /// </summary>
         /// <param name="e">The <see cref="ApplicationUnhandledExceptionEventArgs"/> instance containing the event data.</param>
-        protected virtual void ReportErrorToDOM(ApplicationUnhandledExceptionEventArgs e)
+        protected virtual void ReportError(ApplicationUnhandledExceptionEventArgs e)
         {
+#if !WP7
             try
             {
                 var errorMsg = e.ExceptionObject.Message + e.ExceptionObject.StackTrace;
@@ -202,6 +206,7 @@ namespace Caliburn.PresentationFramework.ApplicationModel
             {
                 Log.Error(ex);
             }
+#endif
         }
     }
 }

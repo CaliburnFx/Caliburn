@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <project name="Caliburn" default="all">
 
 	<property name="path.base" value="${project::get-base-directory()}"/>
@@ -41,6 +41,7 @@
     <call target="platform-silverlight20"/>
     <call target="platform-silverlight30"/>
     <call target="platform-silverlight40"/>
+    <call target="platform-silverlight40-wp7"/>
     <call target="generate-docs" />
   </target>
 
@@ -148,6 +149,15 @@
     <property name="current.path.bin" value="${path.bin}/Silverlight-4.0/${build.config}"/>
     <property name="current.path.test" value="${path.bin}/Silverlight-4.0/tests" />
     <property name="current.path.lib" value="${path.lib}/Silverlight-4.0" />
+  </target>
+
+  <target name="config-platform-silverlight40-wp7">
+    <property name="nant.settings.currentframework" value="silverlight-4.0-wp7"/>
+    <property name="build.platform" value="silverlight-4.0-wp7"/>
+    <property name="build.defines" value="${global.build.defines},SILVERLIGHT,SILVERLIGHT_40,WP7,NO_WEB,NO_REMOTING,NO_CONVERT,NO_PARTIAL_TRUST,NO_EXCEPTION_SERIALIZATION,NO_SKIP_VISIBILITY,NO_DEBUG_SYMBOLS"/>
+    <property name="current.path.bin" value="${path.bin}/Silverlight-4.0-wp7/${build.config}"/>
+    <property name="current.path.test" value="${path.bin}/Silverlight-4.0-wp7/tests" />
+    <property name="current.path.lib" value="${path.lib}/Silverlight-4.0-wp7" />
   </target>
 
 	<target name="ensure-platform-selected">
@@ -299,7 +309,28 @@
     </if>
   </target>
 
-	<target name="core" depends="config, ensure-platform-selected">
+  <target name="platform-silverlight40-wp7" depends="config">
+    <if test="${framework::exists('silverlight-4.0-wp7')}">
+      <echo message="Building Caliburn ${build.version} for Silverlight v4.0 Windows Phone 7 Profile."/>
+      <call target="config-platform-silverlight40-wp7"/>
+      <copy todir="${current.path.bin}">
+        <fileset basedir="${current.path.lib}">
+          <include name="*.dll"/>
+          <include name="*.xml"/>
+        </fileset>
+      </copy>
+      <call target="core"/>
+      <call target="presentationframework"/>
+      <call target="modelframework"/>
+      <call target="shellframework"/>
+      <call target="package-platform"/>
+    </if>
+    <if test="${not(framework::exists('silverlight-4.0-wp7'))}">
+      <echo message="Silverlight v4.0 Windows Phone 7 is not available. Skipping platform."/>
+    </if>
+  </target>
+
+  <target name="core" depends="config, ensure-platform-selected">
 		<mkdir dir="${current.path.bin}"/>
 		<csc keyfile="${path.src}/Caliburn.snk" noconfig="true" warnaserror="false" target="library" debug="${build.debug}" optimize="${build.optimize}" define="${build.defines}"
          output="${current.path.bin}/Caliburn.Core.dll"

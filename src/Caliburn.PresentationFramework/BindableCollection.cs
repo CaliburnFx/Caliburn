@@ -8,10 +8,6 @@
     using Core;
     using Invocation;
 
-#if SILVERLIGHT
-    using Core;
-#endif
-
     /// <summary>
     /// A base collection class that supports automatic UI thread marshalling.
     /// </summary>

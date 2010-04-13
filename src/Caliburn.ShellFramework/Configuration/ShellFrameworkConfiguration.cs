@@ -11,8 +11,10 @@
     using Results;
 
 #if SILVERLIGHT
-    using PresentationFramework.ApplicationModel;
+#if !WP7
     using ShellFramework.History;
+#endif
+    using PresentationFramework.ApplicationModel;
     using Core.IoC;
 #endif
 
@@ -27,7 +29,7 @@
             return this;
         }
 
-#if SILVERLIGHT
+#if SILVERLIGHT && !WP7
         public ShellFrameworkConfiguration ConfigureDeepLinking<TState, TCoordinator>()
             where TState : IStateManager
             where TCoordinator : IHistoryCoordinator

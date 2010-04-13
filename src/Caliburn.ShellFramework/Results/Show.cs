@@ -44,6 +44,7 @@
             return new OpenChildResult<TChild>(child);
         }
 
+#if !WP7
         public static OpenDialogResult<IScreen<T>> DialogFor<T>(T subject)
         {
             var screen = _viewModelFactory.CreateFor(subject);
@@ -61,6 +62,7 @@
         {
             return new OpenDialogResult<TModal>(modal);
         }
+#endif
 
         public static PopupResult<TPopup> Popup<TPopup>()
         {
@@ -93,7 +95,7 @@
 
 #endif
 
-#if SILVERLIGHT_40
+#if SILVERLIGHT_40 && !WP7
 
         public static NotificationResult<T> Notification<T>(int durationInMilliseconds)
         {
@@ -137,6 +139,7 @@
             return new FocusResult(model, property.GetMemberInfo().Name);
         }
 
+#if !WP7
         public static MessageBoxResult MessageBox(string text)
         {
             return new MessageBoxResult(text);
@@ -156,5 +159,6 @@
         {
             return new MessageBoxResult(text, caption, handleResult, possibleAnswers);
         }
+#endif
     }
 }

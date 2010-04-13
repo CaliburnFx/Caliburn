@@ -1,4 +1,4 @@
-﻿#if !SILVERLIGHT || SILVERLIGHT_40
+﻿#if !SILVERLIGHT || SILVERLIGHT_40 && !WP7
 namespace Caliburn.PresentationFramework.Behaviors
 {
     using System;
@@ -23,7 +23,7 @@ namespace Caliburn.PresentationFramework.Behaviors
         }
     }
 }
-#elif SILVERLIGHT_30
+#elif SILVERLIGHT_30 || WP7
 namespace Caliburn.PresentationFramework.Behaviors
 {
     using System;

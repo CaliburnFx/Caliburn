@@ -1,4 +1,6 @@
-﻿namespace Caliburn.ShellFramework.Results
+﻿#if !WP7
+
+namespace Caliburn.ShellFramework.Results
 {
     using System;
     using PresentationFramework.ApplicationModel;
@@ -88,3 +90,5 @@
         public event EventHandler<ResultCompletionEventArgs> Completed = delegate { };
     }
 }
+
+#endif
