@@ -21,6 +21,7 @@ using System.Windows.Markup;
 [assembly: XmlnsDefinition("http://www.caliburnproject.org", "Caliburn.PresentationFramework.RoutedMessaging")]
 [assembly: XmlnsDefinition("http://www.caliburnproject.org", "Caliburn.PresentationFramework.RoutedMessaging.Triggers")]
 [assembly: XmlnsDefinition("http://www.caliburnproject.org", "Caliburn.PresentationFramework.Converters")]
+[assembly: XmlnsPrefix("http://www.caliburnproject.org", "cal")]
 #endif
 
 #if !NO_PARTIAL_TRUST
