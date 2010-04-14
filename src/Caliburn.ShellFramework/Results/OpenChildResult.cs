@@ -24,9 +24,13 @@
         public OpenChildResult<TChild> In<TParent>()
             where TParent : IScreenCollection
         {
-            _locateParent = 
-                c => c.ServiceLocator.GetInstance<IViewModelFactory>().Create<TParent>();
+            _locateParent = c => c.ServiceLocator.GetInstance<IViewModelFactory>().Create<TParent>();
+            return this;
+        }
 
+        public OpenChildResult<TChild> In(IScreenCollection parent)
+        {
+            _locateParent = c => parent;
             return this;
         }
 
@@ -44,6 +48,8 @@
             parent.OpenScreen(child, success =>{
                 if(success)
                 {
+                    OnOpened(parent, child);
+
                     var notifier = child as ILifecycleNotifier;
                     if (notifier != null && _onShutDown != null)
                     {
@@ -57,5 +63,7 @@
                 else OnCompleted(null, true);
             });
         }
+
+        protected virtual void OnOpened(IScreenCollection parent, IScreen child) { }
     }
 }

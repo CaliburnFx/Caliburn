@@ -20,9 +20,13 @@
         public OpenScreenSubjectResult In<TParent>()
             where TParent : IScreenCollection
         {
-            _locateParent =
-                c => c.ServiceLocator.GetInstance<IViewModelFactory>().Create<TParent>();
+            _locateParent = c => c.ServiceLocator.GetInstance<IViewModelFactory>().Create<TParent>();
+            return this;
+        }
 
+        public OpenScreenSubjectResult In(IScreenCollection parent)
+        {
+            _locateParent = c => parent;
             return this;
         }
 
@@ -41,6 +45,8 @@
                     if (_onConfigure != null)
                         _onConfigure(child);
 
+                    OnOpened(parent, child);
+
                     var notifier = child as ILifecycleNotifier;
                     if(notifier != null)
                     {
@@ -56,5 +62,7 @@
                 else OnCompleted(null, true);
             });
         }
+
+        protected virtual void OnOpened(IScreenCollection parent, IScreen child) {}
     }
 }
