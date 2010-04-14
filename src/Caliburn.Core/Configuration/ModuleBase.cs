@@ -50,19 +50,75 @@ namespace Caliburn.Core.Configuration
         /// <summary>
         /// Creates a singleton registration.
         /// </summary>
+        /// <typeparam name="TService">The type of the service.</typeparam>
+        /// <typeparam name="TImplementation">The type of the implementation.</typeparam>
         /// <returns>The registration.</returns>
         protected Singleton Singleton<TService, TImplementation>()
+            where TImplementation : TService
         {
             return new Singleton(typeof(TService)) {Implementation = typeof(TImplementation)};
         }
 
         /// <summary>
+        /// Creates a singleton registration.
+        /// </summary>
+        /// <typeparam name="TService">The type of the service.</typeparam>
+        /// <typeparam name="TImplementation">The type of the implementation.</typeparam>
+        /// <param name="key">The key.</param>
+        /// <returns>The registration.</returns>
+        protected Singleton Singleton<TService, TImplementation>(string key)
+                where TImplementation : TService
+        {
+            return new Singleton(key, typeof(TService)) { Implementation = typeof(TImplementation) };
+        }
+
+        /// <summary>
+        /// Creates a singleton registration.
+        /// </summary>
+        /// <param name="service">The service.</param>
+        /// <param name="implementation">The implementation.</param>
+        /// <param name="key">The key.</param>
+        /// <returns>The registration.</returns>
+        protected Singleton Singleton(Type service, Type implementation, string key)
+        {
+            return new Singleton(key, service) { Implementation = implementation };
+        } 
+
+        /// <summary>
         /// Creates a per request registration.
         /// </summary>
+        /// <typeparam name="TService">The type of the service.</typeparam>
+        /// <typeparam name="TImplementation">The type of the implementation.</typeparam>
         /// <returns>The registration.</returns>
         protected PerRequest PerRequest<TService, TImplementation>()
+            where TImplementation : TService
         {
             return new PerRequest(typeof(TService)) {Implementation = typeof(TImplementation)};
+        }
+
+        /// <summary>
+        /// Creates a per request registration.
+        /// </summary>
+        /// <typeparam name="TService">The type of the service.</typeparam>
+        /// <typeparam name="TImplementation">The type of the implementation.</typeparam>
+        /// <param name="key">The key.</param>
+        /// <returns>The registration.</returns>
+        protected PerRequest PerRequest<TService, TImplementation>(string key)
+            where TImplementation : TService
+        {
+            return new PerRequest(key, typeof(TService)) { Implementation = typeof(TImplementation) };
+        }
+
+        /// <summary>
+        /// Creates a per request registration.
+        /// </summary>
+        /// <param name="service">The service.</param>
+        /// <param name="implementation">The implementation.</param>
+        /// <param name="key">The key.</param>
+        /// <returns>The registration.</returns>
+        protected PerRequest PerRequest(Type service, Type implementation, string key)
+        {
+            return new PerRequest(key, service) { Implementation = implementation };
         }
     }
 }
