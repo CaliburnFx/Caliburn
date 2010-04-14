@@ -276,12 +276,9 @@ namespace Caliburn.PresentationFramework.Commands
 			{
 				CreateActionMessage();
 
-				if (_action.HasTriggerEffects())
-				{
-					bool isAvailable = _action.ShouldTriggerBeAvailable(_actionMessage, Source);
-                    trigger.UpdateAvailabilty(isAvailable);
-					TryUpdateParentAvailability(isAvailable);
-				}
+				bool isAvailable = _action.ShouldTriggerBeAvailable(_actionMessage, Source);
+                trigger.UpdateAvailabilty(isAvailable);
+				TryUpdateParentAvailability(isAvailable);
 			}
         }
 
@@ -295,12 +292,9 @@ namespace Caliburn.PresentationFramework.Commands
 			
             CreateActionMessage();
 
-            if(_action.HasTriggerEffects())
-            {
-                bool isAvailable = _action.ShouldTriggerBeAvailable(_actionMessage, Source);
-                trigger.UpdateAvailabilty(isAvailable);
-                TryUpdateParentAvailability(isAvailable);
-            }
+            bool isAvailable = _action.ShouldTriggerBeAvailable(_actionMessage, Source);
+            trigger.UpdateAvailabilty(isAvailable);
+            TryUpdateParentAvailability(isAvailable);
 
             _action.Filters.HandlerAware.Apply(x => x.MakeAwareOf(this, trigger));
 

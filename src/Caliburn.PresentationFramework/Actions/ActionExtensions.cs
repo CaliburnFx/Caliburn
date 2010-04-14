@@ -1,6 +1,5 @@
 ﻿namespace Caliburn.PresentationFramework.Actions
 {
-    using System.Linq;
     using Core.Invocation;
     using Filters;
 
@@ -9,18 +8,6 @@
     /// </summary>
     public static class ActionExtensions
     {
-        /// <summary>
-        /// Determines whether the action has trigger effects.
-        /// </summary>
-        /// <param name="action">The action.</param>
-        /// <returns>
-        /// 	<c>true</c> if has trigger effects; otherwise, <c>false</c>.
-        /// </returns>
-        public static bool HasTriggerEffects(this IAction action)
-        {
-            return action.Filters.TriggerEffects.Any();
-        }
-
         /// <summary>
         /// Creates the filter manager for the method based on the context.
         /// </summary>

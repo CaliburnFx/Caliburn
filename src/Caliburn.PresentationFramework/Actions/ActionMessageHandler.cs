@@ -83,7 +83,7 @@
         public bool Handles(IRoutedMessage message)
         {
             var actionMessage = message as ActionMessage;
-            return actionMessage != null && _host.GetAction(actionMessage) != null;
+            return actionMessage != null && FindActionHandler(actionMessage) != null;
         }
 
         /// <summary>
@@ -97,7 +97,7 @@
 
             if (actionMessage != null)
             {
-                _host.GetAction(actionMessage).Execute(actionMessage, _node, context);
+                FindActionHandler(actionMessage).Execute(actionMessage, _node, context);
                 Log.Info("Processed message {0}.", actionMessage);
             }
             else
@@ -125,9 +125,7 @@
             
             Log.Info("Requesting update avaiability for {0}.", actionMessage);
 
-            var action = _host.GetAction(actionMessage);
-            if(!action.HasTriggerEffects()) return;
-
+            var action = FindActionHandler(actionMessage);
             bool isAvailable = action.ShouldTriggerBeAvailable(actionMessage, _node);
             trigger.UpdateAvailabilty(isAvailable);
         }
@@ -141,16 +139,20 @@
             var actionMessage = trigger.Message as ActionMessage;
             if(actionMessage == null) return;
 
-            var action = _host.GetAction(actionMessage);
-
-            if(action.HasTriggerEffects())
-            {
-                bool isAvailable = action.ShouldTriggerBeAvailable(actionMessage, _node);
-                trigger.UpdateAvailabilty(isAvailable);
-            }
+            var handler = FindActionHandler(actionMessage);
+            bool isAvailable = handler.ShouldTriggerBeAvailable(actionMessage, _node);
+            trigger.UpdateAvailabilty(isAvailable);
 
             Log.Info("Making handlers aware of {0}.", trigger);
-            action.Filters.HandlerAware.Apply(x => x.MakeAwareOf(this, trigger));
+
+            var action = handler as IAction;
+            if(action != null)
+                action.Filters.HandlerAware.Apply(x => x.MakeAwareOf(this, trigger));
+        }
+
+        private IActionHandler FindActionHandler(ActionMessage message)
+        {
+            return _host.GetAction(message) ?? _target as IActionHandler;
         }
     }
 }

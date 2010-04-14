@@ -151,6 +151,9 @@ namespace Caliburn.PresentationFramework.Actions
         /// </returns>
         public virtual bool ShouldTriggerBeAvailable(ActionMessage actionMessage, IInteractionNode handlingNode)
         {
+            if (!HasTriggerEffects())
+                return true;
+
             var parameters = _messageBinder.DetermineParameters(
                 actionMessage,
                 _requirements,
@@ -176,6 +179,17 @@ namespace Caliburn.PresentationFramework.Actions
         /// <param name="handlingNode">The node.</param>
         /// <param name="context">The context.</param>
         public abstract void Execute(ActionMessage actionMessage, IInteractionNode handlingNode, object context);
+
+        /// <summary>
+        /// Determines whether this action has trigger effects.
+        /// </summary>
+        /// <returns>
+        /// 	<c>true</c> if has trigger effects; otherwise, <c>false</c>.
+        /// </returns>
+        public virtual bool HasTriggerEffects()
+        {
+            return Filters.TriggerEffects.Any();
+        }
 
         /// <summary>
         /// Applies the rescue or fails.
@@ -230,12 +244,8 @@ namespace Caliburn.PresentationFramework.Actions
                     return;
                 }
 
-                if (this.HasTriggerEffects())
-                {
-                    bool isAvailable = ShouldTriggerBeAvailable(actionMessage, handlingNode);
-                    messageTrigger.UpdateAvailabilty(isAvailable);
-                }
-                else messageTrigger.UpdateAvailabilty(true);
+                bool isAvailable = ShouldTriggerBeAvailable(actionMessage, handlingNode);
+                messageTrigger.UpdateAvailabilty(isAvailable);
 
                 return;
             }

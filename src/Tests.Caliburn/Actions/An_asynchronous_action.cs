@@ -74,7 +74,7 @@ namespace Tests.Caliburn.Actions
                 .Return(parameters);
 
             _filterManager.Stub(x => x.TriggerEffects)
-                .Return(new[] { filter });
+                .Return(new[] { filter }).Repeat.Any();
 
             filter.Expect(x => x.Execute(message, handlingNode, parameters))
                 .IgnoreArguments()
@@ -103,7 +103,7 @@ namespace Tests.Caliburn.Actions
                 .Return(parameters);
 
             _filterManager.Stub(x => x.TriggerEffects)
-                .Return(new[] { filter1, filter2 });
+                .Return(new[] { filter1, filter2 }).Repeat.Any();
 
             filter1.Expect(x => x.Execute(message, handlingNode, parameters))
                 .Return(false);

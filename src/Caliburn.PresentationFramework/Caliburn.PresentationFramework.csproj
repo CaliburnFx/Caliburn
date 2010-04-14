@@ -70,6 +70,7 @@
     <Compile Include="Actions\ActionExtensions.cs" />
     <Compile Include="Actions\IAction.cs" />
     <Compile Include="Actions\IActionFactory.cs" />
+    <Compile Include="Actions\IActionHandler.cs" />
     <Compile Include="Actions\IActionHost.cs" />
     <Compile Include="Actions\IActionLocator.cs" />
     <Compile Include="Actions\OverloadedAction.cs" />
