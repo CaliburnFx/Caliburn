@@ -118,7 +118,7 @@
   <target name="config-platform-net40">
     <property name="nant.settings.currentframework" value="net-4.0"/>
     <property name="build.platform" value="net-4.0"/>
-    <property name="build.defines" value="${global.build.defines},NET,NET_40"/>
+    <property name="build.defines" value="${global.build.defines},NET,NET_40,NO_PARTIAL_TRUST"/>
     <property name="current.path.bin" value="${path.bin}/net-4.0/${build.config}"/>
     <property name="current.path.test" value="${path.bin}/net-4.0/tests" />
     <property name="current.path.lib" value="${path.lib}/net-4.0" />
