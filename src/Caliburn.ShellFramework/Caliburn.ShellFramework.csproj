@@ -67,8 +67,9 @@
     <Compile Include="History\HistoryKeyAttribute.silverlight.cs" />
     <Compile Include="History\IHistoryCoordinator.silverlight.cs" />
     <Compile Include="History\IHistoryKey.silverlight.cs" />
-    <Compile Include="Menus\IMenuItem.cs" />
-    <Compile Include="Menus\MenuItemViewModel.cs" />
+    <Compile Include="Menus\IMenu.cs" />
+    <Compile Include="Menus\MenuExtensions.cs" />
+    <Compile Include="Menus\MenuModel.cs" />
     <Compile Include="Menus\MenuScope.cs" />
     <Compile Include="Menus\MenuStyleSelector.wpf.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

@@ -76,19 +76,19 @@
 
 #if SILVERLIGHT
 
-        public static SaveFileDialogResult Dialog(SaveFileDialog dialog)
+        public static SaveFileDialogResult SaveFileDialog(SaveFileDialog dialog)
         {
             return new SaveFileDialogResult(dialog);
         }
 
-        public static OpenFileDialogResult Dialog(OpenFileDialog dialog)
+        public static OpenFileDialogResult OpenFileDialog(OpenFileDialog dialog)
         {
             return new OpenFileDialogResult(dialog);
         }
 
 #else
 
-        public static ShowCommonDialogResult Dialog(CommonDialog dialog)
+        public static ShowCommonDialogResult CommonDialog(CommonDialog dialog)
         {
             return new ShowCommonDialogResult(dialog);
         }

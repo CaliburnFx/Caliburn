@@ -9,7 +9,7 @@ namespace Caliburn.ShellFramework.Menus
     {
         public override Style SelectStyle(object item, DependencyObject container)
         {
-            if(((MenuItemViewModel)item).IsSeparator)
+            if(((MenuModel)item).IsSeparator)
                 return (Style)((FrameworkElement)container).FindResource("menuSeparatorStyle");
             return (Style)((FrameworkElement)container).FindResource("menuStyle");
         }

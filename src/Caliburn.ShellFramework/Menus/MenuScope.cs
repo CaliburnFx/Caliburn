@@ -18,22 +18,22 @@ namespace Caliburn.ShellFramework.Menus
             scope.Deactivated += NotifierDeactivated;
         }
 
-        public MenuScope Add(IMenuItem parent, IMenuItem child)
+        public MenuScope Add(IMenu parent, IMenu child)
         {
             return AddAt(parent, () => -1, child);
         }
 
-        public MenuScope AddBefore(IMenuItem exisiting, IMenuItem newItem)
+        public MenuScope AddBefore(IMenu exisiting, IMenu newItem)
         {
             return AddAt(exisiting.Parent, () => exisiting.Parent.IndexOf(exisiting), newItem);
         }
 
-        public MenuScope AddAfter(IMenuItem exisiting, IMenuItem newItem)
+        public MenuScope AddAfter(IMenu exisiting, IMenu newItem)
         {
             return AddAt(exisiting.Parent, () => exisiting.Parent.IndexOf(exisiting) + 1, newItem);
         }
 
-        public MenuScope AddAt(IMenuItem parent, Func<int> index, IMenuItem child)
+        public MenuScope AddAt(IMenu parent, Func<int> index, IMenu child)
         {
             _toAdd.Add(new MenuInstruction
             {
@@ -45,7 +45,7 @@ namespace Caliburn.ShellFramework.Menus
             return this;
         }
 
-        public void Remove(IMenuItem child)
+        public void Remove(IMenu child)
         {
             var index = child.Parent.IndexOf(child);
 
@@ -93,9 +93,9 @@ namespace Caliburn.ShellFramework.Menus
 
         private class MenuInstruction
         {
-            public IMenuItem Parent { get; set; }
+            public IMenu Parent { get; set; }
             public Func<int> Index { get; set; }
-            public IMenuItem Child { get; set; }
+            public IMenu Child { get; set; }
         }
     }
 }

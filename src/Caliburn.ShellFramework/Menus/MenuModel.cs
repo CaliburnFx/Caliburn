@@ -14,7 +14,7 @@ namespace Caliburn.ShellFramework.Menus
     using PresentationFramework.RoutedMessaging;
     using Resources;
 
-    public class MenuItemViewModel : PropertyChangedBase, IMenuItem, IShortcut
+    public class MenuModel : PropertyChangedBase, IMenu, IShortcut
     {
         private static IInputManager _inputManager;
 
@@ -27,39 +27,39 @@ namespace Caliburn.ShellFramework.Menus
         private readonly Func<bool> _canExecute = () => true;
         private string _text;
         private Image _icon;
-        private IMenuItem _parent;
+        private IMenu _parent;
         private ModifierKeys _modifiers;
         private Key _key;
 
-        public static MenuItemViewModel Separator
+        public static MenuModel Separator
         {
-            get { return new MenuItemViewModel { IsSeparator = true }; }
+            get { return new MenuModel { IsSeparator = true }; }
         }
 
-        private MenuItemViewModel()
+        public MenuModel()
         {
-            Children = new BindableCollection<IMenuItem>();
+            Children = new BindableCollection<IMenu>();
         }
 
-        public MenuItemViewModel(string text) 
+        public MenuModel(string text) 
             : this()
         {
             Text = text;
         }
 
-        public MenuItemViewModel(string text, Func<IEnumerable<IResult>> execute)
+        public MenuModel(string text, Func<IEnumerable<IResult>> execute)
             : this(text)
         {
             _execute = execute;
         }
 
-        public MenuItemViewModel(string text, Func<IEnumerable<IResult>> execute, Func<bool> canExecute)
+        public MenuModel(string text, Func<IEnumerable<IResult>> execute, Func<bool> canExecute)
             : this(text, execute)
         {
             _canExecute = canExecute;
         }
 
-        public IMenuItem Parent
+        public IMenu Parent
         {
             get { return _parent; }
             set { _parent = value; NotifyOfPropertyChange(() => Parent); }
@@ -216,7 +216,7 @@ namespace Caliburn.ShellFramework.Menus
 
 #endif
 
-        public IObservableCollection<IMenuItem> Children { get; private set; }
+        public IObservableCollection<IMenu> Children { get; private set; }
 
         public bool CanExecute
         {
@@ -233,24 +233,24 @@ namespace Caliburn.ShellFramework.Menus
             return new MenuScope(scope);
         }
 
-        public void Add(params IMenuItem[] menuItems)
+        public void Add(params IMenu[] menuItems)
         {
             menuItems.Apply(x => x.Parent = this);
             menuItems.Apply(Children.Add);
         }
 
-        public int IndexOf(IMenuItem item)
+        public int IndexOf(IMenu item)
         {
             return Children.IndexOf(item);
         }
 
-        public void Insert(int index, IMenuItem menuItem)
+        public void Insert(int index, IMenu menuItem)
         {
             menuItem.Parent = this;
             Children.Insert(index, menuItem);
         }
 
-        public bool Remove(IMenuItem menuItem)
+        public bool Remove(IMenu menuItem)
         {
             return Children.Remove(menuItem);
         }
@@ -267,7 +267,7 @@ namespace Caliburn.ShellFramework.Menus
             set { _key = value; }
         }
 
-        public MenuItemViewModel WithGlobalShortcut(ModifierKeys modifiers, Key key)
+        public MenuModel WithGlobalShortcut(ModifierKeys modifiers, Key key)
         {
             _modifiers = modifiers;
             _key = key;
@@ -277,17 +277,17 @@ namespace Caliburn.ShellFramework.Menus
             return this;
         }
 
-        public MenuItemViewModel WithIcon()
+        public MenuModel WithIcon()
         {
             return WithIcon(Assembly.GetCallingAssembly(), "Resources/Icons/" + DisplayName.Replace(" ", string.Empty) + ".png");
         }
 
-        public MenuItemViewModel WithIcon(string path)
+        public MenuModel WithIcon(string path)
         {
             return WithIcon(Assembly.GetCallingAssembly(), path);
         }
 
-        public MenuItemViewModel WithIcon(Assembly source, string path)
+        public MenuModel WithIcon(Assembly source, string path)
         {
             var manager = ServiceLocator.Current.GetInstance<IResourceManager>();
             var iconSource = manager.GetBitmap(path, source.GetAssemblyName());
@@ -298,7 +298,7 @@ namespace Caliburn.ShellFramework.Menus
             return this;
         }
 
-        public IEnumerator<IMenuItem> GetEnumerator()
+        public IEnumerator<IMenu> GetEnumerator()
         {
             return Children.GetEnumerator();
         }
