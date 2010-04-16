@@ -40,8 +40,29 @@
             _observedPropertyName = GetRootProperty(_propertyPath);
             _subPath = GetSubPath(_propertyPath);
 
+            VerifyObservedPropertyExists();
+
             notifier.PropertyChanged += Notifier_PropertyChanged;
             HookSubpathMonitor();
+        }
+
+        private void VerifyObservedPropertyExists()
+        {
+            if (_observedPropertyName.Equals(ALL_PROPERTIES))
+                return;
+
+            var type = GetTargetOrFail().GetType();
+
+            var property = type.GetProperty(_observedPropertyName);
+
+            if(property == null)
+                throw new CaliburnException(
+                    string.Format("Cannot find property {0} of path {1} in class {2}.",
+                                  _observedPropertyName,
+                                  _propertyPath,
+                                  type.FullName
+                        )
+                    );
         }
 
         private void HookSubpathMonitor()

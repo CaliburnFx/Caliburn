@@ -1,4 +1,6 @@
-﻿namespace Tests.Caliburn.Actions.Filters
+﻿using Caliburn.Core;
+
+namespace Tests.Caliburn.Actions.Filters
 {
     using System;
     using System.Collections.Generic;
@@ -57,6 +59,13 @@
             _notifier.NotifyOfPropertyChange("SomeProperty");
 
             AssertTriggerUpdateExpectations();
+        }
+
+        [Test]
+        [ExpectedException(typeof(CaliburnException))]
+        public void should_throw_exception_if_property_dose_not_exists_on_target()
+        {
+            ConfigureObserver(new[] { "NotExistingProperty" });
         }
 
         [Test]
