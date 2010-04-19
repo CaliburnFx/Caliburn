@@ -21,15 +21,14 @@
             _viewModelFactory = viewModelFactory;
         }
 
-        public static OpenScreenSubjectResult ChildFor(IScreenSubject screenSubject)
+        public static OpenScreenSubjectResult ChildSubject(IScreenSubject screenSubject)
         {
             return new OpenScreenSubjectResult(screenSubject);
         }
 
         public static OpenScreenSubjectResult ChildFor<T>(T subject)
         {
-            var screenSubject = new ScreenSubject<T>(subject);
-            return new OpenScreenSubjectResult(screenSubject);
+            return ChildSubject(new ScreenSubject<T>(subject));
         }
 
         public static OpenChildResult<TChild> Child<TChild>()
