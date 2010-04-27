@@ -211,11 +211,11 @@ namespace Caliburn.PresentationFramework.Screens
         /// </summary>
         protected virtual void RaiseChangeNotifications()
         {
-            NotifyOfPropertyChange("CanGoBack");
-            NotifyOfPropertyChange("CanGoForward");
-            NotifyOfPropertyChange("CanClearHistory");
-            NotifyOfPropertyChange("Count");
-            NotifyOfPropertyChange("CurrentPosition");
+            NotifyOfPropertyChange(() => CanGoBack);
+            NotifyOfPropertyChange(() => CanGoForward);
+            NotifyOfPropertyChange(() => CanClearHistory);
+            NotifyOfPropertyChange(() => Count);
+            NotifyOfPropertyChange(() => CurrentPosition);
         }
     }
 }

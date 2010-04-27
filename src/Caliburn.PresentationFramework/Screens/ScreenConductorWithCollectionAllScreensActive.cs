@@ -68,8 +68,6 @@
                 {
                     if (!IsInitialized)
                     {
-                        OnInitialize();
-
                         if(_openPublicScreens)
                         {
                             var properties = GetType().GetProperties()
@@ -87,6 +85,7 @@
                             screen.Initialize();
                         }
 
+                        OnInitialize();
                         IsInitialized = true;
                     }
                 }
@@ -111,13 +110,12 @@
                 {
                     if (!IsActive)
                     {
-                        OnActivate();
-
                         foreach (var screen in _screens)
                         {
                             screen.Activate();
                         }
 
+                        OnActivate();
                         IsActive = true;
                     }
                 }
@@ -129,13 +127,12 @@
                 {
                     if (IsActive)
                     {
-                        OnDeactivate();
-
                         foreach (var screen in _screens)
                         {
                             screen.Deactivate();
                         }
 
+                        OnDeactivate();
                         IsActive = false;
                     }
                 }
@@ -220,7 +217,8 @@
 
                     foreach (var presenter in _screens)
                     {
-                        if (presenter.CanShutdown()) continue;
+                        if (presenter.CanShutdown()) 
+                            continue;
 
                         var custom = presenter as ISupportCustomShutdown;
 

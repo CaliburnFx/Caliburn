@@ -85,11 +85,10 @@
                 {
                     if (!IsInitialized)
                     {
-                        OnInitialize();
-
                         if (_activeScreen != null)
                             _activeScreen.Initialize();
 
+                        OnInitialize();
                         IsInitialized = true;
                     }
                 }
@@ -114,11 +113,10 @@
                 {
                     if (!IsActive)
                     {
-                        OnActivate();
-
                         if (_activeScreen != null)
                             _activeScreen.Activate();
 
+                        OnActivate();
                         IsActive = true;
                     }
                 }
@@ -130,11 +128,10 @@
                 {
                     if (IsActive)
                     {
-                        OnDeactivate();
-
                         if (_activeScreen != null)
                             _activeScreen.Deactivate();
 
+                        OnDeactivate();
                         IsActive = false;
                     }
                 }

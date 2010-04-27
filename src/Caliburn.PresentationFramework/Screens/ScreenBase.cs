@@ -123,7 +123,7 @@ namespace Caliburn.PresentationFramework.Screens
         /// <summary>
         /// Occurs when [initialized].
         /// </summary>
-        public event EventHandler Initialized = delegate { };
+        public virtual event EventHandler Initialized = delegate { };
 
         /// <summary>
         /// Occurs before attempting to shutdown.
@@ -133,17 +133,17 @@ namespace Caliburn.PresentationFramework.Screens
         /// <summary>
         /// Occurs when [was shutdown].
         /// </summary>
-        public event EventHandler WasShutdown = delegate { };
+        public virtual event EventHandler WasShutdown = delegate { };
 
         /// <summary>
         /// Occurs when [activated].
         /// </summary>
-        public event EventHandler Activated = delegate { };
+        public virtual event EventHandler Activated = delegate { };
 
         /// <summary>
         /// Occurs when [deactivated].
         /// </summary>
-        public event EventHandler Deactivated = delegate { };
+        public virtual event EventHandler Deactivated = delegate { };
 
         /// <summary>
         /// Called when [initialize].
