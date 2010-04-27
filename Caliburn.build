@@ -245,7 +245,6 @@
       <call target="modelframework"/>
       <call target="unity"/>
       <call target="ninject"/>
-      <call target="autofac"/>
 			<call target="package-platform"/>
 		</if>
 		<if test="${not(framework::exists('silverlight-2.0'))}">
