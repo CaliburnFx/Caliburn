@@ -84,10 +84,11 @@
         private static Uri GetUri(string resource)
         {
             var uri = string.Format(
-                "{0}://{1}:{2}/ClientBin/Modules/{3}",
+                "{0}://{1}:{2}{3}/Modules/{4}",
                 HtmlPage.Document.DocumentUri.Scheme,
                 HtmlPage.Document.DocumentUri.Host,
                 HtmlPage.Document.DocumentUri.Port,
+                Application.Current.Host.Source.LocalPath.Substring(0, Application.Current.Host.Source.LocalPath.LastIndexOf("/")),
                 resource
                 );
 

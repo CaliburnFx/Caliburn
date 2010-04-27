@@ -13,7 +13,7 @@
         public IEnumerable<IResult> Save()
         {
             var dialog = new SaveFileDialog();
-            yield return Show.Dialog(dialog);
+            yield return Show.SaveFileDialog(dialog);
 
             yield return Show.MessageBox("You saved " + dialog.SafeFileName + ".", "File");
         }
@@ -21,7 +21,7 @@
         public IEnumerable<IResult> Open()
         {
             var dialog = new OpenFileDialog();
-            yield return Show.Dialog(dialog);
+            yield return Show.OpenFileDialog(dialog);
 
             yield return Show.MessageBox("You opened " + dialog.File.Name + ".", "File");
         }
