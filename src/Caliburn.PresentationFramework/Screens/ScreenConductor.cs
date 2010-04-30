@@ -154,8 +154,11 @@
                     var node = screen as IHierarchicalScreen;
                     if(node != null) node.Parent = this;
 
-                    screen.Initialize();
-                    screen.Activate();
+                    if(IsInitialized)
+                        screen.Initialize();
+
+                    if(IsActive)
+                        screen.Activate();
 
                     ChangeActiveScreenCore(screen);
 

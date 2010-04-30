@@ -159,7 +159,9 @@
                         _activeScreen.Deactivate();
 
                     screen = EnsureScreen(screen);
-                    screen.Activate();
+
+                    if(IsActive)
+                        screen.Activate();
 
                     ChangeActiveScreenCore(screen);
 
@@ -177,7 +179,8 @@
                     var node = screen as IHierarchicalScreen;
                     if (node != null) node.Parent = this;
 
-                    screen.Initialize();
+                    if(IsInitialized)
+                        screen.Initialize();
 
                     return screen;
                 }
@@ -211,7 +214,9 @@
                             if (next != null)
                             {
                                 next = EnsureScreen(next);
-                                next.Activate();
+
+                                if(IsActive)
+                                    next.Activate();
                             }
 
                             ChangeActiveScreenCore(next);

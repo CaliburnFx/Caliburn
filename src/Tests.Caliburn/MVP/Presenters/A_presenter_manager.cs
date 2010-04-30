@@ -171,6 +171,9 @@
         [Test]
         public void can_open_a_presenter()
         {
+            _screenConductor.Initialize();
+            _screenConductor.Activate();
+
             _screenConductor.AssertThatChangeNotificationIsRaisedBy(x => x.ActiveScreen)
                 .When(() =>{
                     bool wasOpened = false;
@@ -183,8 +186,11 @@
         }
 
         [Test]
-        public void opens_a_presenter_when_current_is_set()
+        public void opens_a_presenter_when_active_and_current_is_set()
         {
+            _screenConductor.Initialize();
+            _screenConductor.Activate();
+
             _screenConductor.AssertThatChangeNotificationIsRaisedBy(x => x.ActiveScreen)
                 .When(() => _screenConductor.ActiveScreen = _activeScreen);
 

@@ -151,7 +151,9 @@
                     }
 
                     screen = EnsurePresenter(screen);
-                    screen.Activate();
+
+                    if(IsActive)
+                        screen.Activate();
 
                     completed(true);
                 }
@@ -167,7 +169,8 @@
                     var node = screen as IHierarchicalScreen;
                     if (node != null) node.Parent = this;
 
-                    screen.Initialize();
+                    if(IsInitialized)
+                        screen.Initialize();
 
                     return screen;
                 }
