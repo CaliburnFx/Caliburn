@@ -93,11 +93,16 @@
                 case DependencyMode.AlwaysRecord:
                     lock (_recordLock)
                     {
-                        _getters.Add(propertyName);
-                        invocation.Proceed();
-                        _getters.Remove(propertyName);
-
-                        RecordDependencies(propertyName);
+                        try
+                        {
+                            _getters.Add(propertyName);
+                            invocation.Proceed();                            
+                        }
+                        finally
+                        {
+                            _getters.Remove(propertyName);
+                            RecordDependencies(propertyName);
+                        }
                     }
                     break;
                 case DependencyMode.RecordOnce:
@@ -107,11 +112,16 @@
                         {
                             if(!_recorded.Contains(propertyName))
                             {
-                                _getters.Add(propertyName);
-                                invocation.Proceed();
-                                _getters.Remove(propertyName);
-
-                                RecordDependencies(propertyName);
+                                try
+                                {
+                                    _getters.Add(propertyName);
+                                    invocation.Proceed();
+                                }
+                                finally
+                                {
+                                    _getters.Remove(propertyName);
+                                    RecordDependencies(propertyName);
+                                }
                             }
                             else invocation.Proceed();
                         }
