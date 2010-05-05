@@ -13,6 +13,9 @@
         //Note: The 'Execute' method inherits all the features available to actions.
         public void Execute(string message)
         {
+            //Note: This is for demo purposes only.
+            //Note: It is not a good practice to call MessageBox.Show from a non-View class.
+            //Note: Consider implementing a MessageBoxService.
             MessageBox.Show(message);
         }
 

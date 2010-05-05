@@ -84,6 +84,8 @@
 
         public override bool CanShutdown()
         {
+            //Note: It is not a good practice to call MessageBox.Show from a non-View class.
+            //Note: Consider implementing a MessageBoxService.
             return _wasSaved || MessageBox.Show(
                 "Are you sure you want to cancel?  Changes will be lost.",
                 "Unsaved Changes",

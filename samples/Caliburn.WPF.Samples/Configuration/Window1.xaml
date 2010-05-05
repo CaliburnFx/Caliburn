@@ -6,7 +6,8 @@
         Title="Window1"
         SizeToContent="WidthAndHeight">
     <!--Note: Sets a target for the actions.  -->
-    <!--Note: This can be done with databinding, resources or by using the ResolveExtension to grab an instance.-->
+    <!--Note: This can be done with databinding, resources or by using a string to resolve by key from the container.-->
+    <!--Note: I generally prefer not to have the view control instantiation. This is for demo purposes only.-->
     <cal:Action.Target>
         <local:Calculator />
     </cal:Action.Target>
@@ -38,7 +39,6 @@
 
         <!--Note: Calls the Divide action.  The framework must infer the trigger ande message type.-->
         <!--Note: UI availability will be updated.-->
-        <!--Note: This is the preferred mechanism.-->
         <!--Note: The configuration change will cause this to wire to the MouseEnter event.-->
         <Button Content="Divide (Attachment w/ Default Trigger/Message and Explicit Parameters)"
                 cal:Message.Attach="Divide(left.Text, right.Text) : DivideResult.Text" />

@@ -4,6 +4,7 @@
     using Caliburn.PresentationFramework.Filters;
 
     //Note: You must implement INotifyPropertyChanged to use dependent actions.
+    //Note: Consider using Caliburn's PropertyChangedBase instead of implementing the interface yourself.
     public class Calculator : INotifyPropertyChanged
     {
         private double _left;

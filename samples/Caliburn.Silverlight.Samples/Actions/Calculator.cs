@@ -29,12 +29,18 @@
         //Note: See class level rescue filter.
         public void GeneralRescue(Exception ex)
         {
+            //Note: This is for demo purposes only.
+            //Note: It is not a good practice to call MessageBox.Show from a non-View class.
+            //Note: Consider implementing a MessageBoxService.
             MessageBox.Show(ex.Message);
         }
 
         //Note: See rescue filter on Divide method.
         public void ActionSpecificRescue(Exception ex)
         {
+            //Note: This is for demo purposes only.
+            //Note: It is not a good practice to call MessageBox.Show from a non-View class.
+            //Note: Consider implementing a MessageBoxService.
             MessageBox.Show("Divide Action: " + ex.Message);
         }
     }

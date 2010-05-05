@@ -18,12 +18,15 @@
         [AsyncAction(Callback = "Callback", BlockInteraction = true)]
         public string Execute(string message)
         {
-            Thread.Sleep(2000);
+            Thread.Sleep(2000);//Don't ever call Thread.Sleep....it's just for demo purposes.
             return "Your message: " + message;
         }
 
         public void Callback(string message)
         {
+            //Note: This is for demo purposes only.
+            //Note: It is not a good practice to call MessageBox.Show from a non-View class.
+            //Note: Consider implementing a MessageBoxService.
             MessageBox.Show(message);
         }
     }

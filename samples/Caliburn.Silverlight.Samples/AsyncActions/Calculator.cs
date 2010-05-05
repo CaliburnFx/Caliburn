@@ -20,7 +20,7 @@
         [AsyncAction(Callback = "DivideComplete", BlockInteraction = true)]
         public double Divide(double left, double right)
         {
-            Thread.Sleep(3000);
+            Thread.Sleep(3000); //Don't ever call Thread.Sleep....it's just for demo purposes.
             return left / right;
         }
 

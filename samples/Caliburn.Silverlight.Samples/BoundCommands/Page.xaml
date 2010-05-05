@@ -7,6 +7,7 @@
              Height="300">
     <UserControl.DataContext>
         <!--Note: Makes the presentation model available for binding through the data context.-->
+        <!--Note: I generally prefer not to have the view control instantiation. This is for demo purposes only.-->
         <local:MyModel />
     </UserControl.DataContext>
     

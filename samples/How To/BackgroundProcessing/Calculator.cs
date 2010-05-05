@@ -22,7 +22,7 @@
 		[ActionInfo("Executing division...")]
 		public double Divide(double left, double right)
 		{
-			Thread.Sleep(10000);
+            Thread.Sleep(10000);//Don't ever call Thread.Sleep....it's just for demo purposes.
 			return left / right;
 		}
 

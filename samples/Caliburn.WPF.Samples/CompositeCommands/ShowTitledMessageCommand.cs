@@ -18,12 +18,15 @@ namespace CompositeCommands
         [AsyncAction(Callback = "Callback", BlockInteraction = true)]
         public MessageInfo Execute(string title, string message)
         {
-            Thread.Sleep(4000);
+            Thread.Sleep(4000);//Don't ever call Thread.Sleep....it's just for demo purposes.
             return new MessageInfo {Title = title, Message = message};
         }
 
         public void Callback(MessageInfo message)
         {
+            //Note: This is for demo purposes only.
+            //Note: It is not a good practice to call MessageBox.Show from a non-View class.
+            //Note: Consider implementing a MessageBoxService.
             MessageBox.Show(message.Message, message.Title);
         }
 

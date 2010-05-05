@@ -7,7 +7,8 @@
         Width="250"
         SizeToContent="Height">
     <!--Note: Sets a target for the actions.  -->
-    <!--Note: This can be done with databinding, resources or by using the ResolveExtension to grab an instance.-->
+    <!--Note: This can be done with databinding, resources or by using a string to resolve by key from the container.-->
+    <!--Note: I generally prefer not to have the view control instantiation. This is for demo purposes only.-->
     <cal:Action.Target>
         <local:Calculator />
     </cal:Action.Target>

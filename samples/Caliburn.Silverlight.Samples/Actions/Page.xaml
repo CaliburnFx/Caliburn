@@ -9,6 +9,7 @@
              Height="300">
     <!--Note: Sets a target for the actions.  -->
     <!--Note: This can be done with databinding, resources or by using a string to resolve by key from the container.-->
+    <!--Note: I generally prefer not to have the view control instantiation. This is for demo purposes only.-->
     <ca:Action.Target>
         <local:Calculator />
     </ca:Action.Target>
@@ -45,7 +46,6 @@
 
         <!--Note: Calls the Divide action.  The framework must infer the trigger ande message type.-->
         <!--Note: UI availability will be updated.-->
-        <!--Note: This is the preferred mechanism.-->
         <Button Content="Divide (Attachment w/ Default Trigger/Message and Explicit Parameters)"
                 rm:Message.Attach="Divide(left.Text, right.Text) : DivideResult.Text" />
 
@@ -56,13 +56,12 @@
 
         <!--Note: Calls the Divide action.-->
         <!--Note: UI availability will be updated.-->
-        <!--Note: This is the second most preferred mechanism.-->
         <Button Content="Divide (Attachment w/ Explicit Parameters)"
                 rm:Message.Attach="[Event Click] = [Action Divide(left.Text, right.Text) : DivideResult.Text]" />
 
         <!--Note: Calls the Divide action.  The framework must infer the parameters.-->
         <!--Note: The UI availability cannot be updated when using inferred parameters.-->
-        <!--Note: The triggers collection is only necessary when multiple triggers must be attached to a single element (see MessageTriggers sample).-->
+        <!--Note: This demonstrates the actual object graph created by [Event Click] = [Action Divide]-->
         <Button Content="Divide (Trigger Collection w/ Inferred Parameters)">
             <rm:Message.Triggers>
                 <rm:RoutedMessageTriggerCollection>
@@ -77,7 +76,7 @@
 
         <!--Note: Calls the Divide action.-->
         <!--Note: UI availability will be updated.-->
-        <!--Note: The triggers collection is only necessary when multiple triggers must be attached to a single element (see MessageTriggers sample).-->
+        <!--Note: This demonstates the actual object graph create by [Event Click] = [Action Divide(left.Text, right.Text) : DivideResult.Text]-->
         <Button Content="Divide (Trigger Collection w/ Explicit Parameters)">
             <rm:Message.Triggers>
                 <rm:RoutedMessageTriggerCollection>
