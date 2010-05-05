@@ -55,6 +55,7 @@ V2 Alpha
 -Added basic logging to ShellFramework.
 -Changed the Dispatcher's DefaultPriority to Normal.
 -Enabled Model-First MVVM Development with Prism using IModelRegionManager.
+-Added a new WPF Sample, "Delayed Validation," which shows how to do custom validation using an IPreProcessor.
 
 V1.1 Release
 -Fixed an issue in the WPF version of InteractionNode.

@@ -1,0 +1,9 @@
+<cal:CaliburnApplication x:Class="DelayedValidation.App"
+                         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                         xmlns:cal="http://www.caliburnproject.org">
+	<cal:CaliburnApplication.Resources>
+		<SolidColorBrush x:Key="MyBrush"
+		                 Color="White" />
+	</cal:CaliburnApplication.Resources>
+</cal:CaliburnApplication>
