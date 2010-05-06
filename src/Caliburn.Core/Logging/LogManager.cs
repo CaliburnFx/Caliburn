@@ -34,6 +34,7 @@
             public void Info(string message) {}
             public void Warn(string message) {}
             public void Error(Exception exception) {}
+            public void Error(string message, Exception exception) {}
         }
     }
 }

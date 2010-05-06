@@ -24,5 +24,12 @@ namespace Caliburn.Core.Logging
         /// </summary>
         /// <param name="exception">The exception.</param>
         void Error(Exception exception);
+
+        /// <summary>
+        /// Logs the specified message along with the related exception.
+        /// </summary>
+        /// <param name="message">The message.</param>
+        /// <param name="exception">The exception.</param>
+        void Error(string message, Exception exception);
     }
 }
