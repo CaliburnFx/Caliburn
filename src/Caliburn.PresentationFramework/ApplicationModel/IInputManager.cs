@@ -4,6 +4,7 @@ namespace Caliburn.PresentationFramework.ApplicationModel
 {
     using System.Collections.Generic;
     using System.Windows;
+    using System.Windows.Input;
 
     /// <summary>
     /// Implemented by services that provide focus and key binding functionality.
@@ -52,6 +53,14 @@ namespace Caliburn.PresentationFramework.ApplicationModel
         /// </summary>
         /// <param name="element">The element.</param>
         void UnregisterShortcutSource(UIElement element);
+
+        /// <summary>
+        /// Gets a display string representing this key combination.
+        /// </summary>
+        /// <param name="key">The key.</param>
+        /// <param name="modifierKeys">The modifier keys.</param>
+        /// <returns>The display string.</returns>
+        string GetDisplayString(Key key, ModifierKeys modifierKeys);
     }
 }
 
