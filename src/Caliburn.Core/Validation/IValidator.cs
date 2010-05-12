@@ -1,4 +1,4 @@
-namespace Caliburn.PresentationFramework.ViewModels
+namespace Caliburn.Core.Validation
 {
     using System.Collections.Generic;
     using System.Reflection;

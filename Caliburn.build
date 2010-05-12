@@ -343,6 +343,7 @@
 				<include name="System.dll"/>
 				<include name="System.Core.dll"/>
 				<include name="Microsoft.Practices.ServiceLocation.dll"/>
+        <include name="System.ComponentModel.DataAnnotations.dll" />
 			</references>
 			<nowarn>
 				<warning number="1584"/>

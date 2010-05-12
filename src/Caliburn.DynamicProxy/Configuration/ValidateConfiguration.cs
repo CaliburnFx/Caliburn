@@ -3,10 +3,10 @@
     using System;
     using System.Collections.Generic;
     using Castle.Core.Interceptor;
+    using Core.Validation;
     using Interceptors;
     using Microsoft.Practices.ServiceLocation;
     using PresentationFramework.Behaviors;
-    using PresentationFramework.ViewModels;
 
     /// <summary>
     /// Configures the Validate behavior.

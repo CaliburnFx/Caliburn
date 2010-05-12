@@ -83,12 +83,6 @@ namespace Caliburn.PresentationFramework.Configuration
 
 #if !WP7
         /// <summary>
-        /// Customizes the validator used by Caliburn.
-        /// </summary>
-        /// <typeparam name="T">The validator type.</typeparam>
-        IConfiguredRegistration<Singleton, T> Validator<T>() where T : IValidator;
-
-        /// <summary>
         /// Customizes the window manager used by Caliburn.
         /// </summary>
         /// <typeparam name="T">The window manager type.</typeparam>

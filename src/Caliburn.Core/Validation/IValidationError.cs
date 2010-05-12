@@ -1,4 +1,4 @@
-namespace Caliburn.PresentationFramework.ViewModels
+namespace Caliburn.Core.Validation
 {
     /// <summary>
     /// Represents a validation error.

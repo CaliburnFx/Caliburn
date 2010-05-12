@@ -2,6 +2,7 @@ namespace Caliburn.Core.Configuration
 {
     using Invocation;
     using IoC;
+    using Validation;
 
     /// <summary>
     /// Describes the services required for the core framework to function.
@@ -19,5 +20,13 @@ namespace Caliburn.Core.Configuration
         /// </summary>
         /// <typeparam name="T"></typeparam>
         IConfiguredRegistration<Singleton, T> AssemblySource<T>() where T : IAssemblySource;
+
+#if !SILVERLIGHT_20 && !WP7
+        /// <summary>
+        /// Customizes the validator used by Caliburn.
+        /// </summary>
+        /// <typeparam name="T">The validator type.</typeparam>
+        IConfiguredRegistration<Singleton, T> Validator<T>() where T : IValidator;
+#endif
     }
 }

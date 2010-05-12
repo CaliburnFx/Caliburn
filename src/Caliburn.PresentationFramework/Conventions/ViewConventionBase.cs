@@ -4,6 +4,7 @@
     using System.Linq;
     using System.Reflection;
     using Actions;
+    using Core.Validation;
     using RoutedMessaging;
     using ViewModels;
     using Views;

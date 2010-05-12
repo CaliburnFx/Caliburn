@@ -1,4 +1,4 @@
-namespace Caliburn.PresentationFramework.ViewModels
+namespace Caliburn.Core.Validation
 {
     /// <summary>
     /// The default implementation of <see cref="IValidationError"/>.

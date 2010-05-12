@@ -6,7 +6,7 @@ namespace Caliburn.DynamicProxy.Interceptors
     using System.ComponentModel;
     using System.Linq;
     using Castle.Core.Interceptor;
-    using PresentationFramework.ViewModels;
+    using Core.Validation;
 
     /// <summary>
     /// An interceptor for <see cref="IDataErrorInfo"/>.

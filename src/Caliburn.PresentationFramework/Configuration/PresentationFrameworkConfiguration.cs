@@ -10,6 +10,7 @@
     using Core;
     using Core.Configuration;
     using Core.IoC;
+    using Core.Validation;
     using Invocation;
     using Microsoft.Practices.ServiceLocation;
     using RoutedMessaging;
