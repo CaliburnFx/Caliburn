@@ -112,6 +112,10 @@
         /// </summary>
         public void Dispose()
         {
+        	var propertyChanged = _notifier.Target as INotifyPropertyChanged;
+			if (propertyChanged != null)
+				propertyChanged.PropertyChanged -= Notifier_PropertyChanged;
+
             _notifyOfChange = null;
             _notifier = null;
 
