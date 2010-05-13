@@ -190,6 +190,7 @@
 			<call target="ninject"/>
 			<call target="autofac"/>
 			<call target="prism"/>
+			<call target="fluentvalidation"/>
 			<call target="test" />
 			<call target="package-platform"/>
 		</if>
@@ -222,6 +223,7 @@
       <call target="ninject"/>
       <call target="autofac"/>
       <call target="prism"/>
+      <call target="fluentvalidation"/>
       <!--<call target="test" />-->
       <call target="package-platform"/>
     </if>
@@ -301,6 +303,7 @@
       <call target="mef"/>
       <call target="autofac"/>
       <call target="prism"/>
+      <call target="fluentvalidation"/>
       <call target="package-platform"/>
     </if>
     <if test="${not(framework::exists('silverlight-4.0'))}">
@@ -702,6 +705,30 @@
         <!--Silverlight-->
         <include name="System.Windows.dll" />
         <include name="System.Windows.Controls.dll" />
+      </references>
+      <nowarn>
+        <warning number="1584"/>
+      </nowarn>
+    </csc>
+  </target>
+
+  <target name="fluentvalidation" depends="core">
+    <mkdir dir="${current.path.bin}"/>
+    <csc noconfig="true" warnaserror="false" target="library" debug="${build.debug}" optimize="${build.optimize}" define="${build.defines}"
+         output="${current.path.bin}/Caliburn.FluentValidation.dll"
+         doc="${current.path.bin}/Caliburn.FluentValidation.xml">
+      <sources basedir="${path.src}">
+        <include name="${build.asminfo}"/>
+        <include name="Caliburn.FluentValidation/**/*.cs"/>
+      </sources>
+      <references basedir="${current.path.bin}">
+        <include name="mscorlib.dll"/>
+        <include name="System.dll"/>
+        <include name="System.Core.dll"/>
+        <include name="Caliburn.Core.dll"/>
+        <include name="Microsoft.Practices.ServiceLocation.dll"/>
+        <include name="FluentValidation.dll"/>
+        <include name="FluentValidation.Silverlight.dll"/>
       </references>
       <nowarn>
         <warning number="1584"/>
