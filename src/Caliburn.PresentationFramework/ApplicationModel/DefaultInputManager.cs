@@ -64,12 +64,29 @@ namespace Caliburn.PresentationFramework.ApplicationModel
                     if(string.Compare(path, propertyPath, StringComparison.InvariantCultureIgnoreCase) != 0) 
                         continue;
 
-                    element.Focus();
+                    if (!element.IsEnabled)
+                        element.IsEnabledChanged += ElementToFocusEnabled;
+                    else element.Focus();
+
                     return;
                 }
             }
 
             Log.Warn("Element for {0} not found on {1}.", propertyPath, view);
+        }
+
+        private void ElementToFocusEnabled(object sender, DependencyPropertyChangedEventArgs e)
+        {
+            if(!((bool)e.NewValue))
+                return;
+
+#if NET
+            ((UIElement)sender).Focus();
+            ((UIElement)sender).IsEnabledChanged -= ElementToFocusEnabled;
+#else
+            ((Control)sender).Focus();
+            ((Control)sender).IsEnabledChanged -= ElementToFocusEnabled;
+#endif
         }
 
         /// <summary>
