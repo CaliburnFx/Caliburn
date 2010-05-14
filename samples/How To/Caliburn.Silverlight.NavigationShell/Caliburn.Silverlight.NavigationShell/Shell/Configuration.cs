@@ -1,6 +1,5 @@
 ﻿namespace Caliburn.Silverlight.NavigationShell.Shell
 {
-    using System;
     using System.Collections.Generic;
     using System.Linq;
     using System.Reflection;
@@ -25,16 +24,6 @@
             {
                 yield return Singleton(typeof(ITaskBarItem), type, type.FullName);
             }
-        }
-
-        private static IComponentRegistration Singleton(Type service, Type implementation, string name)
-        {
-            return new Singleton
-            {
-                Service = service,
-                Implementation = implementation,
-                Name = name
-            };
         }
     }
 }

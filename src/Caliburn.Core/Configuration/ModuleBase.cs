@@ -37,17 +37,6 @@ namespace Caliburn.Core.Configuration
         }
 
         /// <summary>
-        /// Creates a per request registration.
-        /// </summary>
-        /// <param name="service">The service.</param>
-        /// <param name="implementation">The implementation.</param>
-        /// <returns>The registration.</returns>
-        protected PerRequest PerRequest(Type service, Type implementation)
-        {
-            return new PerRequest(service) { Implementation = implementation };
-        }
-
-        /// <summary>
         /// Creates a singleton registration.
         /// </summary>
         /// <typeparam name="TService">The type of the service.</typeparam>
@@ -82,7 +71,18 @@ namespace Caliburn.Core.Configuration
         protected Singleton Singleton(Type service, Type implementation, string key)
         {
             return new Singleton(key, service) { Implementation = implementation };
-        } 
+        }
+
+        /// <summary>
+        /// Creates a per request registration.
+        /// </summary>
+        /// <param name="service">The service.</param>
+        /// <param name="implementation">The implementation.</param>
+        /// <returns>The registration.</returns>
+        protected PerRequest PerRequest(Type service, Type implementation)
+        {
+            return new PerRequest(service) { Implementation = implementation };
+        }
 
         /// <summary>
         /// Creates a per request registration.
@@ -119,6 +119,52 @@ namespace Caliburn.Core.Configuration
         protected PerRequest PerRequest(Type service, Type implementation, string key)
         {
             return new PerRequest(key, service) { Implementation = implementation };
+        }
+
+        /// <summary>
+        /// Creates an instance registration.
+        /// </summary>
+        /// <param name="service">The service.</param>
+        /// <param name="instance">The instance.</param>
+        /// <returns></returns>
+        protected Instance Instance(Type service, object instance)
+        {
+            return new Instance { Service = service, Implementation = instance };
+        }
+
+        /// <summary>
+        /// Creates an instance registration.
+        /// </summary>
+        /// <typeparam name="TService">The type of the service.</typeparam>
+        /// <param name="instance">The instance.</param>
+        /// <returns></returns>
+        protected Instance Instance<TService>(TService instance)
+        {
+            return new Instance { Service = typeof(TService), Implementation = instance };
+        }
+
+        /// <summary>
+        /// Creates an instance registration.
+        /// </summary>
+        /// <param name="service">The service.</param>
+        /// <param name="instance">The instance.</param>
+        /// <param name="key">The key.</param>
+        /// <returns></returns>
+        protected Instance Instance(Type service, object instance, string key)
+        {
+            return new Instance { Service = service, Implementation = instance };
+        }
+
+        /// <summary>
+        /// Creates an instance registration.
+        /// </summary>
+        /// <typeparam name="TService">The type of the service.</typeparam>
+        /// <param name="instance">The instance.</param>
+        /// <param name="key">The key.</param>
+        /// <returns></returns>
+        protected Instance Instance<TService>(TService instance, string key)
+        {
+            return new Instance { Service = typeof(TService), Implementation = instance, Name = key };
         }
     }
 }
