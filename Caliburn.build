@@ -742,7 +742,7 @@
 
   <target name="reactive" depends="core">
     <mkdir dir="${current.path.bin}"/>
-    <csc noconfig="true" warnaserror="false" target="library" debug="${build.debug}" optimize="${build.optimize}" define="${build.defines}"
+    <csc keyfile="${path.src}/Caliburn.snk" noconfig="true" warnaserror="false" target="library" debug="${build.debug}" optimize="${build.optimize}" define="${build.defines}"
          output="${current.path.bin}/Caliburn.Reactive.dll"
          doc="${current.path.bin}/Caliburn.Reactive.xml">
       <sources basedir="${path.src}">
