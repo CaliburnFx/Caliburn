@@ -56,6 +56,7 @@ V2 Alpha
 -Changed the Dispatcher's DefaultPriority to Normal.
 -Enabled Model-First MVVM Development with Prism using IModelRegionManager.
 -Added a new WPF Sample, "Delayed Validation," which shows how to do custom validation using an IPreProcessor.
+-Updated default conventions for PasswordBox. For SL3 and SL4 we now support binding to the Password property, which is supported by the underlying framework.
 
 V1.1 Release
 -Fixed an issue in the WPF version of InteractionNode.
@@ -91,6 +92,7 @@ V1.1 Release
 -Changed Presenters to raise lifecycle events after initialization/activation/etc are complete.
 -Ensured that PresenterManagers do not call initialize/activate when CurrentPresenter is set unless they themselves are initialized/activated.
 -Fixed a bug with WPF Parameter instances raising value changes after being removed from the tree.
+-Fixed bugs in PropertyPathMonitor
 
 V1.1 Release Candidate
 -Added pre-initialization hooks to CaliburnApplication via Marco Amendola's patch.

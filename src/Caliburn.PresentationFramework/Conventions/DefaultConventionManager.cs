@@ -274,7 +274,6 @@ namespace Caliburn.PresentationFramework.Conventions
                 yield return ElementConvention<ListBox>("SelectionChanged", ListBox.ItemsSourceProperty, (c, o) => c.ItemsSource = (IEnumerable) o, c => c.SelectedItem);
                 yield return ElementConvention<ComboBox>("SelectionChanged", ComboBox.ItemsSourceProperty, (c, o) => c.ItemsSource = (IEnumerable) o, c => c.SelectedItem);
 #endif
-
                 yield return ElementConvention<Image>("Loaded", Image.SourceProperty, (c, o) => c.Source = (ImageSource)o, c => c.Source);
                 yield return ElementConvention<ButtonBase>("Click", ButtonBase.ContentProperty, (c, o) => c.DataContext = o, c => c.DataContext);
                 yield return ElementConvention<Button>("Click", Button.ContentProperty, (c, o) => c.DataContext = o, c => c.DataContext);
@@ -282,7 +281,6 @@ namespace Caliburn.PresentationFramework.Conventions
                 yield return ElementConvention<RadioButton>("Click", RadioButton.IsCheckedProperty, (c, o) => c.IsChecked = (bool)o, c => c.IsChecked);
                 yield return ElementConvention<CheckBox>("Click", CheckBox.IsCheckedProperty, (c, o) => c.IsChecked = (bool)o, c => c.IsChecked);
                 yield return ElementConvention<TextBox>("TextChanged", TextBox.TextProperty, (c, o) => c.Text = o.SafeToString(), c => c.Text);
-                yield return ElementConvention<PasswordBox>("PasswordChanged", PasswordBox.DataContextProperty, (c, o) => c.Password = o.SafeToString(), c => c.Password);
                 yield return ElementConvention<TextBlock>("DataContextChanged", TextBlock.TextProperty, (c, o) => c.Text = o.SafeToString(), c => c.Text);
                 yield return ElementConvention<StackPanel>("Loaded", StackPanel.VisibilityProperty, (c, o) => c.DataContext = o, c => c.DataContext);
                 yield return ElementConvention<Grid>("Loaded", Grid.VisibilityProperty, (c, o) => c.DataContext = o, c => c.DataContext);
@@ -300,6 +298,12 @@ namespace Caliburn.PresentationFramework.Conventions
                              : property;
 #endif
                     });
+
+#if SILVERLIGHT_30 || SILVERLIGHT_40
+                yield return ElementConvention<PasswordBox>("PasswordChanged", PasswordBox.PasswordProperty, (c, o) => c.Password = o.SafeToString(), c => c.Password);
+#else
+                yield return ElementConvention<PasswordBox>("PasswordChanged", PasswordBox.DataContextProperty, (c, o) => c.Password = o.SafeToString(), c => c.Password);
+#endif
         }
 
         /// <summary>
