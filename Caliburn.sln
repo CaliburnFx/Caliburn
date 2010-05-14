@@ -53,6 +53,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Caliburn.ShellFramework", "
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Caliburn.FluentValidation", "src\Caliburn.FluentValidation\Caliburn.FluentValidation.csproj", "{2B1CC209-6232-45DC-9AB2-8F21CC53336D}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Caliburn.Reactive", "src\Caliburn.Reactive\Caliburn.Reactive.csproj", "{BA05C6A3-E424-4897-A8F5-BE0529595154}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -123,6 +125,10 @@ Global
 		{2B1CC209-6232-45DC-9AB2-8F21CC53336D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{2B1CC209-6232-45DC-9AB2-8F21CC53336D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{2B1CC209-6232-45DC-9AB2-8F21CC53336D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BA05C6A3-E424-4897-A8F5-BE0529595154}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BA05C6A3-E424-4897-A8F5-BE0529595154}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BA05C6A3-E424-4897-A8F5-BE0529595154}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BA05C6A3-E424-4897-A8F5-BE0529595154}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -140,6 +146,7 @@ Global
 		{1E9926A2-E544-44AE-A602-2F9EC3D069A8} = {D8D6CFB8-8ED1-464E-BF31-319E76C6E828}
 		{EC8EA52F-C018-4028-9F2D-5378D1164468} = {29279288-266F-4F8D-BBED-DFF8ACE6E7C1}
 		{2B1CC209-6232-45DC-9AB2-8F21CC53336D} = {29279288-266F-4F8D-BBED-DFF8ACE6E7C1}
+		{BA05C6A3-E424-4897-A8F5-BE0529595154} = {29279288-266F-4F8D-BBED-DFF8ACE6E7C1}
 		{7FF13E8A-FA3B-432B-A79B-78B5B82DEC4F} = {25B5A3E9-5E48-4638-9833-3F75FDF7D99F}
 	EndGlobalSection
 EndGlobal
