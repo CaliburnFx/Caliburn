@@ -117,6 +117,16 @@
                     textBox.GetBindingExpression(TextBox.TextProperty).UpdateSource();
                 };
             }
+            else
+            {
+                var passwordBox = element as PasswordBox;
+                if (passwordBox != null && dependencyProperty == PasswordBox.PasswordProperty)
+                {
+                    passwordBox.PasswordChanged += delegate{
+                        passwordBox.GetBindingExpression(PasswordBox.PasswordProperty).UpdateSource();
+                    };
+                }
+            }
 #endif
         }
 

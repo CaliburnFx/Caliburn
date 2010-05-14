@@ -126,7 +126,7 @@ namespace Caliburn.Core.Configuration
         /// </summary>
         /// <param name="service">The service.</param>
         /// <param name="instance">The instance.</param>
-        /// <returns></returns>
+        /// <returns>The registration.</returns>
         protected Instance Instance(Type service, object instance)
         {
             return new Instance { Service = service, Implementation = instance };
@@ -137,7 +137,7 @@ namespace Caliburn.Core.Configuration
         /// </summary>
         /// <typeparam name="TService">The type of the service.</typeparam>
         /// <param name="instance">The instance.</param>
-        /// <returns></returns>
+        /// <returns>The registration.</returns>
         protected Instance Instance<TService>(TService instance)
         {
             return new Instance { Service = typeof(TService), Implementation = instance };
@@ -149,10 +149,10 @@ namespace Caliburn.Core.Configuration
         /// <param name="service">The service.</param>
         /// <param name="instance">The instance.</param>
         /// <param name="key">The key.</param>
-        /// <returns></returns>
+        /// <returns>The registration.</returns>
         protected Instance Instance(Type service, object instance, string key)
         {
-            return new Instance { Service = service, Implementation = instance };
+            return new Instance { Service = service, Implementation = instance, Name = key };
         }
 
         /// <summary>
@@ -161,7 +161,7 @@ namespace Caliburn.Core.Configuration
         /// <typeparam name="TService">The type of the service.</typeparam>
         /// <param name="instance">The instance.</param>
         /// <param name="key">The key.</param>
-        /// <returns></returns>
+        /// <returns>The registration.</returns>
         protected Instance Instance<TService>(TService instance, string key)
         {
             return new Instance { Service = typeof(TService), Implementation = instance, Name = key };

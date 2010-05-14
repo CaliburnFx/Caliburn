@@ -58,7 +58,7 @@ V2 Alpha
 -Added a new WPF Sample, "Delayed Validation," which shows how to do custom validation using an IPreProcessor.
 -Updated default conventions for PasswordBox. For SL3 and SL4 we now support binding to the Password property, which is supported by the underlying framework.
 -Added support for Fluent Validation!
--Addes support for Reactive Framework! See http://jfromaniello.blogspot.com/2010/04/event-aggregator-with-reactive.html for syntax.
+-Added support for Reactive Framework created by Jose F. Romaniello! See http://jfromaniello.blogspot.com/2010/04/event-aggregator-with-reactive.html for syntax.
 
 V1.1 Release
 -Fixed an issue in the WPF version of InteractionNode.
