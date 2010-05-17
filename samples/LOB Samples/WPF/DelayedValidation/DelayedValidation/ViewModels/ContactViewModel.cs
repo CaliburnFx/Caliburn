@@ -5,8 +5,8 @@ namespace DelayedValidation.ViewModels
     using System.ComponentModel.DataAnnotations;
     using System.Linq;
     using Caliburn.Core.IoC;
+    using Caliburn.Core.Validation;
     using Caliburn.PresentationFramework.Screens;
-    using Caliburn.PresentationFramework.ViewModels;
     using Framework;
     using Model;
 
