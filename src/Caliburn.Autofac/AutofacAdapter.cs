@@ -129,10 +129,10 @@
         private void HandleSingleton(Singleton singleton)
         {
             if (!singleton.HasName())
-                _updater.Register(x => x.Register(RegistrationBuilder.ForType(singleton.Implementation).As(singleton.Service).ExternallyOwned().CreateRegistration()));
+                _updater.Register(x => x.Register(RegistrationBuilder.ForType(singleton.Implementation).As(singleton.Service).SingleInstance().CreateRegistration()));
             else if (!singleton.HasService())
-                _updater.Register(x => x.Register(RegistrationBuilder.ForType(singleton.Implementation).As(typeof(object)).Named(singleton.Name, typeof(object)).ExternallyOwned().CreateRegistration()));
-            else _updater.Register(x => x.Register(RegistrationBuilder.ForType(singleton.Implementation).As(singleton.Service).Named(singleton.Name, singleton.Service).ExternallyOwned().CreateRegistration()));
+                _updater.Register(x => x.Register(RegistrationBuilder.ForType(singleton.Implementation).As(typeof(object)).Named(singleton.Name, typeof(object)).SingleInstance().CreateRegistration()));
+            else _updater.Register(x => x.Register(RegistrationBuilder.ForType(singleton.Implementation).As(singleton.Service).Named(singleton.Name, singleton.Service).SingleInstance().CreateRegistration()));
         }
 
         private void HandlePerRequest(PerRequest perRequest)
