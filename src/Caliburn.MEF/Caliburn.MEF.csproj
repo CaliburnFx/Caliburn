@@ -54,8 +54,10 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ComponentPart.cs" />
+    <Compile Include="CompositionBatchStrategy.cs" />
     <Compile Include="MEFAdapter.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="ProxiedCompositionBatchStrategy.cs" />
     <Compile Include="ProxyCatalog.cs" />
     <Compile Include="ProxyPart.cs" />
     <Compile Include="ProxyPartDefinition.cs" />

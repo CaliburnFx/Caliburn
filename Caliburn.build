@@ -824,6 +824,7 @@
         <include name="Caliburn.Ninject.dll"/>
         <include name="Autofac.dll"/>
         <include name="Caliburn.Autofac.dll"/>
+        <include name="Caliburn.DynamicProxy.dll"/>
 				<!--Test Framework-->
 				<include name="nunit.framework.dll"/>
 				<include name="Rhino.Mocks.dll"/>

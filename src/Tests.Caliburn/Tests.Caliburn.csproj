@@ -257,6 +257,10 @@
       <Project>{AFBDDB74-139F-4C7D-AC94-99C5173F76C7}</Project>
       <Name>Caliburn.Autofac</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Caliburn.DynamicProxy\Caliburn.DynamicProxy.csproj">
+      <Project>{7FF13E8A-FA3B-432B-A79B-78B5B82DEC4F}</Project>
+      <Name>Caliburn.DynamicProxy</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Caliburn.ShellFramework\Caliburn.ShellFramework.csproj">
       <Project>{1A4EFC27-E9C2-41D5-A801-58854CA50F86}</Project>
       <Name>Caliburn.ShellFramework</Name>
