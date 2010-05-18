@@ -45,10 +45,7 @@
         /// </returns>
         public bool ShouldValidate(PropertyInfo property)
         {
-            var validatorType = typeof(IValidator<>)
-                .MakeGenericType(property.DeclaringType);
-
-            var validator = GetValidator(validatorType);
+            var validator = GetValidator(property.DeclaringType);
 
             return validator != null && validator.CreateDescriptor().GetValidatorsForMember(property.Name).Any();
         }
@@ -105,10 +102,7 @@
             if (instance == null)
                 return null;
 
-            var validatorType = typeof(IValidator<>)
-                .MakeGenericType(instance.GetType());
-
-            return GetValidator(validatorType);
+            return GetValidator(instance.GetType());
         }
     }
 }
