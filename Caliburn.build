@@ -220,7 +220,7 @@
       <call target="spring"/>
       <call target="structuremap"/>
       <call target="unity"/>
-      <call target="mef"/>
+      <call target="strongmef"/>
       <call target="ninject"/>
       <call target="autofac"/>
       <call target="prism"/>
@@ -303,7 +303,7 @@
       <call target="dynamicproxy"/>
       <call target="unity"/>
       <call target="ninject"/>
-      <call target="mef"/>
+      <call target="strongmef"/>
       <call target="autofac"/>
       <call target="prism"/>
       <call target="fluentvalidation"/>
@@ -615,6 +615,29 @@
   <target name="mef" depends="core">
     <mkdir dir="${current.path.bin}"/>
     <csc noconfig="true" warnaserror="false" target="library" debug="${build.debug}" optimize="${build.optimize}" define="${build.defines}"
+         output="${current.path.bin}/Caliburn.MEF.dll"
+         doc="${current.path.bin}/Caliburn.MEF.xml">
+      <sources basedir="${path.src}">
+        <include name="${build.asminfo}"/>
+        <include name="Caliburn.MEF/**/*.cs"/>
+      </sources>
+      <references basedir="${current.path.bin}">
+        <include name="mscorlib.dll"/>
+        <include name="System.dll"/>
+        <include name="System.Core.dll"/>
+        <include name="Caliburn.Core.dll"/>
+        <include name="System.ComponentModel.Composition.dll"/>
+        <include name="Microsoft.Practices.ServiceLocation.dll"/>
+      </references>
+      <nowarn>
+        <warning number="1584"/>
+      </nowarn>
+    </csc>
+  </target>
+  
+  <target name="strongmef" depends="core">
+    <mkdir dir="${current.path.bin}"/>
+    <csc keyfile="${path.src}/Caliburn.snk" noconfig="true" warnaserror="false" target="library" debug="${build.debug}" optimize="${build.optimize}" define="${build.defines}"
          output="${current.path.bin}/Caliburn.MEF.dll"
          doc="${current.path.bin}/Caliburn.MEF.xml">
       <sources basedir="${path.src}">
