@@ -92,10 +92,10 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="IoC\SimpleContainer.cs" />
     <Compile Include="TypeDescriptor.silverlight.cs" />
-    <Compile Include="Validation\DefaultValidationError.cs" />
+    <Compile Include="Validation\DefaultError.cs" />
     <Compile Include="Validation\DefaultValidator.silverlight.cs" />
     <Compile Include="Validation\DefaultValidator.wpf.cs" />
-    <Compile Include="Validation\IValidationError.cs" />
+    <Compile Include="Validation\IError.cs" />
     <Compile Include="Validation\IValidator.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

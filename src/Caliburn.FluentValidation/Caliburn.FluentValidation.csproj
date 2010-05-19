@@ -55,7 +55,7 @@
   <ItemGroup>
     <Compile Include="FluentValidationValidator.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="ValidationErrorAdapter.cs" />
+    <Compile Include="ErrorAdapter.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Caliburn.Core\Caliburn.Core.csproj">
