@@ -33,7 +33,9 @@
         /// <returns></returns>
         public override IValidator CreateInstance(Type validatorType)
         {
-            return _serviceLocator.GetInstance(validatorType) as IValidator;
+            return _serviceLocator.GetAllInstances(validatorType)
+                .OfType<IValidator>()
+                .FirstOrDefault();
         }
 
         /// <summary>
