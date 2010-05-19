@@ -3,19 +3,13 @@ namespace Caliburn.Core.Validation
     /// <summary>
     /// Represents a validation error.
     /// </summary>
-    public interface IValidationError
+    public interface IError
     {
-        /// <summary>
-        /// Gets the invalid instance.
-        /// </summary>
-        /// <value>The instance.</value>
-        object Instance { get; }
-
         /// <summary>
         /// Gets the name of the invalid property.
         /// </summary>
         /// <value>The name of the property.</value>
-        string PropertyName { get; }
+        string Key { get; }
 
         /// <summary>
         /// Gets the error message.

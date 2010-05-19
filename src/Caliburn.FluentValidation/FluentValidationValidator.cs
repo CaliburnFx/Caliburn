@@ -57,7 +57,7 @@
         /// </summary>
         /// <param name="instance">The instance.</param>
         /// <returns>The validation errors.</returns>
-        public IEnumerable<IValidationError> Validate(object instance)
+        public IEnumerable<IError> Validate(object instance)
         {
             var validator = CreateValidatorForInstance(instance);
             if (validator == null)
@@ -67,7 +67,7 @@
 
             foreach(var failure in result.Errors)
             {
-                yield return new ValidationErrorAdapter(instance, failure);
+                yield return new ErrorAdapter(instance, failure);
             }
         }
 
@@ -77,7 +77,7 @@
         /// <param name="instance">The instance.</param>
         /// <param name="propertyName">Name of the property.</param>
         /// <returns>The validation errors.</returns>
-        public IEnumerable<IValidationError> Validate(object instance, string propertyName)
+        public IEnumerable<IError> Validate(object instance, string propertyName)
         {
             var instanceValidator = CreateValidatorForInstance(instance);
             if(instanceValidator == null)
@@ -94,17 +94,19 @@
 
                 foreach(var failure in failures)
                 {
-                    yield return new ValidationErrorAdapter(instance, failure);
+                    yield return new ErrorAdapter(instance, failure);
                 }
             }
         }
 
-        private IValidator CreateValidatorForInstance(object instance) 
+        /// <summary>
+        /// Creates the validator for instance.
+        /// </summary>
+        /// <param name="instance">The instance.</param>
+        /// <returns>The validator or null if none is found.</returns>
+        protected IValidator CreateValidatorForInstance(object instance)
         {
-            if (instance == null)
-                return null;
-
-            return GetValidator(instance.GetType());
+            return instance == null ? null : GetValidator(instance.GetType());
         }
     }
 }

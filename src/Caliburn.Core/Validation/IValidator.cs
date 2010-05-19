@@ -20,7 +20,7 @@ namespace Caliburn.Core.Validation
         /// </summary>
         /// <param name="instance">The instance.</param>
         /// <returns>The validation errors.</returns>
-        IEnumerable<IValidationError> Validate(object instance);
+        IEnumerable<IError> Validate(object instance);
 
         /// <summary>
         /// Validates the specified property on the instance.
@@ -28,6 +28,6 @@ namespace Caliburn.Core.Validation
         /// <param name="instance">The instance.</param>
         /// <param name="propertyName">Name of the property.</param>
         /// <returns>The validation errors.</returns>
-        IEnumerable<IValidationError> Validate(object instance, string propertyName);
+        IEnumerable<IError> Validate(object instance, string propertyName);
     }
 }

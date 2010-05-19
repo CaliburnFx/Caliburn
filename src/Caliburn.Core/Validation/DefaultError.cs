@@ -1,9 +1,9 @@
 namespace Caliburn.Core.Validation
 {
     /// <summary>
-    /// The default implementation of <see cref="IValidationError"/>.
+    /// The default implementation of <see cref="IError"/>.
     /// </summary>
-    public class DefaultValidationError : IValidationError
+    public class DefaultError : IError
     {
         /// <summary>
         /// Gets the invalid instance.
@@ -15,7 +15,7 @@ namespace Caliburn.Core.Validation
         /// Gets the name of the invalid property.
         /// </summary>
         /// <value>The name of the property.</value>
-        public string PropertyName { get; private set; }
+        public string Key { get; private set; }
 
         /// <summary>
         /// Gets the error message.
@@ -24,15 +24,15 @@ namespace Caliburn.Core.Validation
         public string Message { get; private set; }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="DefaultValidationError"/> class.
+        /// Initializes a new instance of the <see cref="DefaultError"/> class.
         /// </summary>
         /// <param name="instance">The instance.</param>
         /// <param name="propertyName">Name of the property.</param>
         /// <param name="message">The message.</param>
-        public DefaultValidationError(object instance, string propertyName, string message)
+        public DefaultError(object instance, string propertyName, string message)
         {
             Instance = instance;
-            PropertyName = propertyName;
+            Key = propertyName;
             Message = message;
         }
     }

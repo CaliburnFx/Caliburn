@@ -4,19 +4,19 @@
     using global::FluentValidation.Results;
 
     /// <summary>
-    /// Adapts <see cref="ValidationFailure"/> to <see cref="IValidationError"/>.
+    /// Adapts <see cref="ValidationFailure"/> to <see cref="IError"/>.
     /// </summary>
-    public class ValidationErrorAdapter : IValidationError
+    public class ErrorAdapter : IError
     {
         private readonly ValidationFailure _failure;
         private readonly object _instance;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="ValidationErrorAdapter"/> class.
+        /// Initializes a new instance of the <see cref="ErrorAdapter"/> class.
         /// </summary>
         /// <param name="instance">The instance.</param>
         /// <param name="failure">The failure.</param>
-        public ValidationErrorAdapter(object instance, ValidationFailure failure)
+        public ErrorAdapter(object instance, ValidationFailure failure)
         {
             _failure = failure;
             _instance = instance;
@@ -44,7 +44,7 @@
         /// Gets the name of the invalid property.
         /// </summary>
         /// <value>The name of the property.</value>
-        public string PropertyName
+        public string Key
         {
             get { return _failure.PropertyName; }
         }

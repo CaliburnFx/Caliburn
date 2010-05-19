@@ -41,7 +41,7 @@ namespace Caliburn.Core.Validation
         /// </summary>
         /// <param name="instance">The instance.</param>
         /// <returns>The validation errors.</returns>
-        public IEnumerable<IValidationError> Validate(object instance)
+        public IEnumerable<IError> Validate(object instance)
         {
             return from property in instance.GetType().GetProperties()
                    from error in GetValidationErrors(instance, property)
@@ -54,24 +54,24 @@ namespace Caliburn.Core.Validation
         /// <param name="instance">The instance.</param>
         /// <param name="propertyName">Name of the property.</param>
         /// <returns>The validation errors.</returns>
-        public IEnumerable<IValidationError> Validate(object instance, string propertyName)
+        public IEnumerable<IError> Validate(object instance, string propertyName)
         {
             var property = instance.GetType().GetProperty(propertyName);
             return GetValidationErrors(instance, property);
         }
 
-        private IEnumerable<IValidationError> GetValidationErrors(object instance, PropertyInfo property)
+        private IEnumerable<IError> GetValidationErrors(object instance, PropertyInfo property)
         {
             var context = new ValidationContext(instance, _serviceLocator, null);
             var validators = from attribute in property.GetAttributes<ValidationAttribute>(true)
                              where attribute.GetValidationResult(property.GetValue(instance, null), context) != ValidationResult.Success
-                             select new DefaultValidationError(
+                             select new DefaultError(
                                  instance,
                                  property.Name,
                                  attribute.FormatErrorMessage(property.Name)
                                  );
 
-            return validators.OfType<IValidationError>();
+            return validators.OfType<IError>();
         }
     }
 }
