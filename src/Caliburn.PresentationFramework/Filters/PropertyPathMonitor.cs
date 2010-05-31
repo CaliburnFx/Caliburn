@@ -6,16 +6,24 @@
 	using Core;
 	using Core.Invocation;
 
+	public interface IChangeMonitorNode: IDisposable {
+		IChangeMonitorNode Parent { get; }
+		bool ShouldStopMonitoring();
+		void NotifyChange();
+	}
+
+
 	/// <summary>
 	/// A class used to monitor changes in a property path.
 	/// </summary>
-	public class PropertyPathMonitor : IDisposable
+	/// 
+	public class PropertyPathMonitor : IChangeMonitorNode
 	{
 		private const string ALL_PROPERTIES = "*";
 
 		private readonly IMethodFactory _methodFactory;
 		private WeakReference _notifierRef;
-		private WeakReference _onPathChangedActionRef;
+		private WeakReference _parentMonitorRef;
 
 		private readonly string _propertyPath;
 		private readonly string _observedPropertyName;
@@ -31,11 +39,11 @@
 		/// <param name="notifier">The notifier.</param>
 		/// <param name="propertyPath">The property path.</param>
 		/// <param name="onPathChanged">The on path changed.</param>
-		public PropertyPathMonitor(IMethodFactory methodFactory, INotifyPropertyChanged notifier, string propertyPath, Action onPathChanged)
+		public PropertyPathMonitor(IMethodFactory methodFactory, INotifyPropertyChanged notifier, string propertyPath, IChangeMonitorNode parentMonitor)
 		{
 			_methodFactory = methodFactory;
 			_notifierRef = new WeakReference(notifier);
-			_onPathChangedActionRef = new WeakReference(onPathChanged);
+			_parentMonitorRef = new WeakReference(parentMonitor);
 			_propertyPath = propertyPath;
 
 			_observedPropertyName = GetRootProperty(_propertyPath);
@@ -78,21 +86,20 @@
 
 			var subTarget = getter.Invoke(GetNotifier(true)) as INotifyPropertyChanged;
 			if (subTarget != null)
-				_subPathMonitor = new PropertyPathMonitor(_methodFactory, subTarget, _subPath, Notify);
+				_subPathMonitor = new PropertyPathMonitor(_methodFactory, subTarget, _subPath, this);
 		}
+
+		  
 
 		private void Notifier_PropertyChanged(object sender, PropertyChangedEventArgs e)
 		{
-			if (!_onPathChangedActionRef.IsAlive)
-			{
-				//if a notification is received but the notification delegate was already collected
-				//then the current monitor is unnecessarily kept alive
+			if (this.ShouldStopMonitoring()) {
 				this.Dispose();
-			}
-			else
-			{
+
+			} else {
+
 				if (ShouldNotify(e.PropertyName))
-					Notify();
+					NotifyChange();
 
 				HookSubpathMonitor();
 			}
@@ -118,14 +125,27 @@
 			return _observedPropertyName.Equals(propertyName) || _observedPropertyName == ALL_PROPERTIES;
 		}
 
-		private void Notify()
-		{
-			if (_onPathChangedActionRef.IsAlive)
-			{
-				var notification = _onPathChangedActionRef.Target as Action;
-				if (notification != null)
-					notification.Invoke();
+
+
+		public IChangeMonitorNode Parent {
+			get {
+				if (_parentMonitorRef != null && _parentMonitorRef.IsAlive)
+					return _parentMonitorRef.Target as IChangeMonitorNode;
+				else
+					return null;
 			}
+		}
+		public bool ShouldStopMonitoring() {
+			return Parent == null || Parent.ShouldStopMonitoring();
+		}
+
+
+		public void NotifyChange()
+		{	
+			var parent = this.Parent;
+			if (parent!= null)
+				parent.NotifyChange();
+			
 		}
 
 		/// <summary>

@@ -15,7 +15,7 @@ namespace Caliburn.PresentationFramework.Filters
 		private readonly IRoutedMessageHandler _messageHandler;
 		private readonly IMethodFactory _methodFactory;
 		private readonly INotifyPropertyChanged _notifier;
-		private readonly IDictionary<string, MonitoringInfo> _monitoringInfos;
+		private readonly IDictionary<string, SinglePropertyPathObserver> _singlePathObservers;
 
 		/// <summary>
 		/// Initializes a new instance of the <see cref="DependencyObserver"/> class.
@@ -28,7 +28,7 @@ namespace Caliburn.PresentationFramework.Filters
 			_messageHandler = messageHandler;
 			_methodFactory = methodFactory;
 			_notifier = notifier;
-			_monitoringInfos = new Dictionary<string, MonitoringInfo>();
+			_singlePathObservers = new Dictionary<string, SinglePropertyPathObserver>();
 		}
 
 		/// <summary>
@@ -40,19 +40,19 @@ namespace Caliburn.PresentationFramework.Filters
 		{
 			foreach (var dependency in dependencies)
 			{
-				var info = GetMonitoringInfos(dependency);
-				info.RegisterTrigger(trigger);
+				var observer = GetSinglePathObserver(dependency);
+				observer.RegisterTrigger(trigger);
 			}
 		}
 
-		private MonitoringInfo GetMonitoringInfos(string propertyPath)
+		private SinglePropertyPathObserver GetSinglePathObserver(string propertyPath)
 		{
-			MonitoringInfo info;
+			SinglePropertyPathObserver info;
 
-			if (!_monitoringInfos.TryGetValue(propertyPath, out info))
+			if (!_singlePathObservers.TryGetValue(propertyPath, out info))
 			{
-				info = new MonitoringInfo(_messageHandler, _methodFactory, _notifier, propertyPath);
-				_monitoringInfos[propertyPath] = info;
+				info = new SinglePropertyPathObserver(_messageHandler, _methodFactory, _notifier, propertyPath);
+				_singlePathObservers[propertyPath] = info;
 			}
 
 			return info;
@@ -69,37 +69,53 @@ namespace Caliburn.PresentationFramework.Filters
 		//        }
 		//    }
 		//}
+		
+	}
 
-		private class MonitoringInfo : IDisposable
+
+
+	public class SinglePropertyPathObserver : IChangeMonitorNode
+	{
+		private IRoutedMessageHandler _messageHandler;
+		private IList<IMessageTrigger> _triggersToNotify = new List<IMessageTrigger>();
+		private PropertyPathMonitor _monitor;
+
+		public SinglePropertyPathObserver(IRoutedMessageHandler messageHandler, IMethodFactory methodFactory, INotifyPropertyChanged notifier, string propertyPath)
 		{
-			private IRoutedMessageHandler _messageHandler;
-			private IList<IMessageTrigger> _triggersToNotify = new List<IMessageTrigger>();
-			private PropertyPathMonitor _monitor;
-			public MonitoringInfo(IRoutedMessageHandler messageHandler, IMethodFactory methodFactory, INotifyPropertyChanged notifier, string propertyPath)
-			{
-				_messageHandler = messageHandler;
-				_monitor = new PropertyPathMonitor(methodFactory, notifier, propertyPath, OnPathChanged);
-			}
-
-			public void RegisterTrigger(IMessageTrigger trigger)
-			{
-				if (!_triggersToNotify.Contains(trigger))
-					_triggersToNotify.Add(trigger);
-			}
-
-			private void OnPathChanged()
-			{
-				_triggersToNotify.Apply(x => _messageHandler.UpdateAvailability(x));
-			}
-
-
-			public void Dispose()
-			{
-				if (_monitor != null)
-					_monitor.Dispose();
-			}
-
-
+			_messageHandler = messageHandler;
+			_monitor = new PropertyPathMonitor(methodFactory, notifier, propertyPath, this);
 		}
+
+		public void RegisterTrigger(IMessageTrigger trigger)
+		{
+			if (!_triggersToNotify.Contains(trigger))
+				_triggersToNotify.Add(trigger);
+		}
+
+		public void NotifyChange()
+		{
+			_triggersToNotify.Apply(x => _messageHandler.UpdateAvailability(x));
+		}
+		public IChangeMonitorNode Parent
+		{
+			get { return null; }
+		}
+
+		public bool ShouldStopMonitoring()
+		{
+			return false;
+		}
+
+
+		public void Dispose()
+		{
+			if (_monitor != null)
+				_monitor.Dispose();
+		}
+
+	 
+		
+
+	 
 	}
 }

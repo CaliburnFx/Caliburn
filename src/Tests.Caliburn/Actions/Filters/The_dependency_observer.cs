@@ -218,6 +218,7 @@ namespace Tests.Caliburn.Actions.Filters
 			_notifier.Model = new TheReferencedClass();
 
 			GC.Collect();
+			GC.WaitForFullGCComplete();
 			GC.WaitForPendingFinalizers();
 
 			Assert.That(disconnectedChainRef.IsAlive, Is.False);
@@ -243,15 +244,18 @@ namespace Tests.Caliburn.Actions.Filters
 			_observer = null;
 			_handler = null;
 			GC.Collect();
+			GC.WaitForFullGCComplete();
 			GC.WaitForPendingFinalizers();
+
+
+			Assert.That(handlerRef.IsAlive, Is.False, "message handler has not been released");
+
 
 			//the first time a ppMonitor is notified AFTER the collection of its DependenyObserver,
 			//it unregisters the unnecessary handler
 			parent.NotifyOfPropertyChange("anyProperty");
 
-
-			Assert.That(handlerRef.IsAlive, Is.False);
-			Assert.That(parent.SubscriptionCount, Is.EqualTo(0));
+			Assert.That(parent.SubscriptionCount, Is.EqualTo(0), "subscription to parent model has not been removed");
 
 		}
 
@@ -270,6 +274,7 @@ namespace Tests.Caliburn.Actions.Filters
 			_observer = null;
 			_handler = null;
 			GC.Collect();
+			GC.WaitForFullGCComplete();
 			GC.WaitForPendingFinalizers();
 
 			Assert.That(handlerRef.IsAlive, Is.False);
