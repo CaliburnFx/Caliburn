@@ -307,8 +307,17 @@ namespace Caliburn.PresentationFramework.Views
         /// <returns></returns>
         protected virtual string MakeInterface(string part)
         {
+			string suffix = string.Empty;
+			if (part.Contains("[[")) { 
+				//generic type
+				var genericParStart= part.IndexOf("[[");
+				suffix = part.Substring(genericParStart);
+				part = part.Remove(genericParStart);
+				
+			}
+
             var index = part.LastIndexOf(".");
-            return part.Insert(index + 1, "I");
+            return part.Insert(index + 1, "I") + suffix;
         }
 
         /// <summary>
