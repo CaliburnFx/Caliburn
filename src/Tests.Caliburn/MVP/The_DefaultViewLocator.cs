@@ -33,9 +33,7 @@ namespace Tests.Caliburn.MVP
 			AssertMakeInterface<Tests.Caliburn.Fakes.ViewModel.Address>("Tests.Caliburn.Fakes.ViewModel.IAddress");
 
 			//http://caliburn.codeplex.com/workitem/6275
-			AssertMakeInterface<global::Caliburn.PresentationFramework.Screens.Screen<Tests.Caliburn.Fakes.ViewModel.Address>>(
-				"Caliburn.PresentationFramework.Screens.IScreen`1[[Tests.Caliburn.Fakes.ViewModel.Address, Tests.Caliburn, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null]]");
-
+			
 			var stringAQN = typeof(string).AssemblyQualifiedName;
 			var intAQN = typeof(int).AssemblyQualifiedName;
 
