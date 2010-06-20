@@ -8,8 +8,11 @@
 
     /// <summary>
     /// Handles <see cref="INotifyPropertyChanged"/> on classes that do not implement the interface.
-    /// </summary>
-    public class NotifyPropertyChangedWithInterfaceInterceptor : NotifyPropertyChangedBaseInterceptor
+	/// </summary>
+#if NET
+	[System.Serializable]
+#endif
+	public class NotifyPropertyChangedWithInterfaceInterceptor : NotifyPropertyChangedBaseInterceptor
     {
         private PropertyChangedEventHandler _handler = delegate { };
 

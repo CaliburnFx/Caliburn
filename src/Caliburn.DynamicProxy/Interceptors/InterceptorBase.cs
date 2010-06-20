@@ -4,8 +4,11 @@
 
     /// <summary>
     /// A base class for interceptors.
-    /// </summary>
-    public abstract class InterceptorBase : IInitializableInterceptor
+	/// </summary>
+#if NET
+	[System.Serializable]
+#endif
+	public abstract class InterceptorBase : IInitializableInterceptor
     {
         /// <summary>
         /// Intercepts the specified invocation.

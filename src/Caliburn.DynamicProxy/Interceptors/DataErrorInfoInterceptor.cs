@@ -11,6 +11,9 @@ namespace Caliburn.DynamicProxy.Interceptors
     /// <summary>
     /// An interceptor for <see cref="IDataErrorInfo"/>.
     /// </summary>
+#if NET
+	[System.Serializable]
+#endif
     public class DataErrorInfoInterceptor : InterceptorBase
     {
         private readonly IValidator _validator;

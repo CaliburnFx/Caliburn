@@ -5,8 +5,11 @@
 
     /// <summary>
     /// Implements <see cref="IProxy"/>.
-    /// </summary>
-    public class ProxyInterceptor : InterceptorBase
+	/// </summary>
+#if NET
+	[System.Serializable]
+#endif
+	public class ProxyInterceptor : InterceptorBase
     {
         private static readonly ProxyInterceptor _instance = new ProxyInterceptor();
 

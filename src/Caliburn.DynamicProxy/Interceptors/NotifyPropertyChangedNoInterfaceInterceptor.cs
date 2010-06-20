@@ -7,8 +7,11 @@
 
     /// <summary>
     /// Handles <see cref="INotifyPropertyChanged"/> on classes that already implement the interface.
-    /// </summary>
-    public class NotifyPropertyChangedNoInterfaceInterceptor : NotifyPropertyChangedBaseInterceptor
+	/// </summary>
+#if NET
+	[System.Serializable]
+#endif
+	public class NotifyPropertyChangedNoInterfaceInterceptor : NotifyPropertyChangedBaseInterceptor
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="NotifyPropertyChangedNoInterfaceInterceptor"/> class.

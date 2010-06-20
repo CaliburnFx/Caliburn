@@ -8,8 +8,11 @@
 
     /// <summary>
     /// A base class for interceptors which handle <see cref="INotifyPropertyChanged"/>.
-    /// </summary>
-    public abstract class NotifyPropertyChangedBaseInterceptor : InterceptorBase
+	/// </summary>
+#if NET
+	[System.Serializable]
+#endif
+	public abstract class NotifyPropertyChangedBaseInterceptor : InterceptorBase
     {
         private readonly NotificationProfile _profile;
 

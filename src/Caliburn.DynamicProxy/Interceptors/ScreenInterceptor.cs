@@ -13,8 +13,11 @@ namespace Caliburn.DynamicProxy.Interceptors
 
     /// <summary>
     /// Handles <see cref="IScreen"/> members.
-    /// </summary>
-    public class ScreenInterceptor : InterceptorBase
+	/// </summary>
+#if NET
+	[System.Serializable]
+#endif
+	public class ScreenInterceptor : InterceptorBase
     {
         private readonly ScreenAttribute _attribute;
 

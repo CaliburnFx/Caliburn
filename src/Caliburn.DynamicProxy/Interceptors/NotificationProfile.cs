@@ -10,8 +10,11 @@
 
     /// <summary>
     /// Stores information about how property change notification should work for a particular type.
-    /// </summary>
-    public class NotificationProfile
+	/// </summary>
+#if NET
+	[System.Serializable]
+#endif
+	public class NotificationProfile
     {
         private static readonly Dictionary<Type, NotificationProfile> _profiles =
             new Dictionary<Type, NotificationProfile>();
