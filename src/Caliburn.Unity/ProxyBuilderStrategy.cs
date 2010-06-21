@@ -36,7 +36,11 @@
         /// <param name="context">Context of the build operation.</param>
         public override void PreBuildUp(IBuilderContext context)
         {
+#if SILVERLIGHT_30
             var key = BuildKey.GetType(context.BuildKey);
+#else
+            var key = context.BuildKey.Type;
+#endif
 
             if(!_registry.Contains(key))
                 base.PreBuildUp(context);

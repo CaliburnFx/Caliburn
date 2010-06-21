@@ -602,6 +602,7 @@
 				<include name="Caliburn.Core.dll"/>
 				<include name="Microsoft.Practices.ObjectBuilder2.dll"/>
 				<include name="Microsoft.Practices.Unity.dll"/>
+        <include name="Microsoft.Practices.Unity.Silverlight.dll"/>
 				<include name="Microsoft.Practices.Unity.Configuration.dll"/>
 				<include name="Microsoft.Practices.Unity.StaticFactory.dll"/>
         <include name="Microsoft.Practices.ServiceLocation.dll"/>
