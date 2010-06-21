@@ -9,12 +9,10 @@
         <StackPanel Orientation="Horizontal"
                     DockPanel.Dock="Top">
             <Button Content="Back" 
-                    x:Name="Back"
-                    IsEnabled="{Binding CanGoBack}"
+                    x:Name="GoBack"
                     Style="{StaticResource button}"/>
             <Button Content="Forward" 
-                    x:Name="Forward"
-                    IsEnabled="{Binding CanGoForward}"
+                    x:Name="GoForward"
                     Style="{StaticResource button}"/>
         </StackPanel>
         <Viewbox>
