@@ -61,7 +61,7 @@
                 new ComposablePartCatalogChangeEventArgs(
                     added.Select(x => x.Value),
                     removed,
-                    new AtomicComposition(e.AtomicComposition)
+                    e.AtomicComposition
                     )
                 );
         }
