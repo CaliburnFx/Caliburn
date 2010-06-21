@@ -26,12 +26,12 @@ namespace Caliburn.PresentationFramework.Screens
         /// <summary>
         /// Navigates forward.
         /// </summary>
-        void Forward(Action<bool> completed);
+        void GoForward(Action<bool> completed);
 
         /// <summary>
         /// Navigates back.
         /// </summary>
-        void Back(Action<bool> completed);
+        void GoBack(Action<bool> completed);
 
         /// <summary>
         /// Navigates using the specified action.

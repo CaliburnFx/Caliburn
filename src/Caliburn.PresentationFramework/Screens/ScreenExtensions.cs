@@ -87,22 +87,6 @@ namespace Caliburn.PresentationFramework.Screens
         }
 
         /// <summary>
-        /// Navigates back.
-        /// </summary>
-        public static void Back(this INavigator navigator)
-        {
-            navigator.Back(isSuccess => { });
-        }
-
-        /// <summary>
-        /// Navigates forward.
-        /// </summary>
-        public static void Forward(this INavigator navigator)
-        {
-            navigator.Forward(isSuccess => { });
-        }
-
-        /// <summary>
         /// Navigates using the specified action.
         /// </summary>
         /// <param name="navigator">The navigator.</param>

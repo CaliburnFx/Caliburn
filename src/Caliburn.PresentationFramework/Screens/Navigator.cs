@@ -76,7 +76,7 @@ namespace Caliburn.PresentationFramework.Screens
         /// <summary>
         /// Navigates forward.
         /// </summary>
-        public virtual void Forward(Action<bool> completed)
+        public virtual void GoForward(Action<bool> completed)
         {
             if (!CanGoForward)
             {
@@ -110,7 +110,7 @@ namespace Caliburn.PresentationFramework.Screens
         /// <summary>
         /// Navigates back.
         /// </summary>
-        public virtual void Back(Action<bool> completed)
+        public virtual void GoBack(Action<bool> completed)
         {
             if (!CanGoBack)
             {
@@ -151,7 +151,7 @@ namespace Caliburn.PresentationFramework.Screens
             _next.Clear();
             _next.Push(function);
 
-            Forward(completed);
+            GoForward(completed);
         }
 
         /// <summary>
@@ -168,17 +168,17 @@ namespace Caliburn.PresentationFramework.Screens
         /// <summary>
         /// Navigates forward.
         /// </summary>
-        public virtual void Forward()
+        public virtual void GoForward()
         {
-            Forward(result => { });
+            GoForward(result => { });
         }
 
         /// <summary>
         /// Navigates back.
         /// </summary>
-        public virtual void Back()
+        public virtual void GoBack()
         {
-            Back(result => { });
+            GoBack(result => { });
         }
 
         /// <summary>

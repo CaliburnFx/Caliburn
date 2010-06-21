@@ -71,7 +71,7 @@ namespace Tests.Caliburn.MVP.Presenters
 
             Assert.That(_navigator.CanGoBack);
 
-            _navigator.Back(
+            _navigator.GoBack(
                 isSuccess => { navigateSuccessful = isSuccess; });
 
             Assert.That(navigateSuccessful);
@@ -97,11 +97,11 @@ namespace Tests.Caliburn.MVP.Presenters
             _navigator.Navigate(first);
             _navigator.Navigate(second);
 
-            _navigator.Back();
+            _navigator.GoBack();
 
             Assert.That(_navigator.CanGoForward);
 
-            _navigator.Forward(
+            _navigator.GoForward(
                 isSuccess => { navigateSuccessful = isSuccess; });
 
             Assert.That(navigateSuccessful);
@@ -115,8 +115,8 @@ namespace Tests.Caliburn.MVP.Presenters
             _navigator.Navigate(completed => completed(true));
             _navigator.Navigate(completed => completed(true));
 
-            _navigator.Back();
-            _navigator.Forward();
+            _navigator.GoBack();
+            _navigator.GoForward();
 
             Assert.That(_navigator.Count, Is.EqualTo(3));
         }
@@ -130,12 +130,12 @@ namespace Tests.Caliburn.MVP.Presenters
 
             Assert.That(_navigator.CurrentPosition, Is.EqualTo(3));
 
-            _navigator.Back();
-            _navigator.Back();
+            _navigator.GoBack();
+            _navigator.GoBack();
 
             Assert.That(_navigator.CurrentPosition, Is.EqualTo(1));
 
-            _navigator.Forward();
+            _navigator.GoForward();
 
             Assert.That(_navigator.CurrentPosition, Is.EqualTo(2));
         }
@@ -192,7 +192,7 @@ namespace Tests.Caliburn.MVP.Presenters
                     if(e.PropertyName == "CanGoForward") forwardWasRaised = true;
                 };
 
-            _navigator.Back();
+            _navigator.GoBack();
 
             Assert.That(backWasRaised);
             Assert.That(forwardWasRaised);
@@ -205,7 +205,7 @@ namespace Tests.Caliburn.MVP.Presenters
 
             _navigator.Navigate(nav);
             _navigator.Navigate(nav);
-            _navigator.Back();
+            _navigator.GoBack();
 
             bool backWasRaised = false;
             bool forwardWasRaised = false;
@@ -216,7 +216,7 @@ namespace Tests.Caliburn.MVP.Presenters
                     if(e.PropertyName == "CanGoForward") forwardWasRaised = true;
                 };
 
-            _navigator.Forward();
+            _navigator.GoForward();
 
             Assert.That(backWasRaised);
             Assert.That(forwardWasRaised);
@@ -252,11 +252,11 @@ namespace Tests.Caliburn.MVP.Presenters
             bool backSuccessful = false;
             bool forwardSuccessful = false;
 
-            _navigator.Back(
+            _navigator.GoBack(
                 isSuccess => backSuccessful = isSuccess
                 );
 
-            _navigator.Forward(
+            _navigator.GoForward(
                 isSuccess => forwardSuccessful = isSuccess
                 );
 
