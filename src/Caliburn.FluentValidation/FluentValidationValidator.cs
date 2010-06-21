@@ -9,6 +9,7 @@
     using global::FluentValidation.Validators;
     using Microsoft.Practices.ServiceLocation;
     using IValidator = global::FluentValidation.IValidator;
+	using Caliburn.Core.Behaviors;
 
     /// <summary>
     /// An implementation of <see cref="Core.Validation.IValidator"/> that uses FluentValidation.
@@ -106,7 +107,8 @@
         /// <returns>The validator or null if none is found.</returns>
         protected IValidator CreateValidatorForInstance(object instance)
         {
-            return instance == null ? null : GetValidator(instance.GetType());
+            var proxy = instance as IProxy;
+            return instance == null ? null : GetValidator(proxy == null ? instance.GetType() : proxy.OriginalType);
         }
     }
 }
