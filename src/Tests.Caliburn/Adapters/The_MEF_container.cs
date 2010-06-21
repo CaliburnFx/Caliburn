@@ -92,6 +92,17 @@ namespace Tests.Caliburn.Adapters
 			Assert.AreNotSame(instance1, instance2);
 		}
 
+		[Test]
+		public void ProxyCatalog_NotifyChanging_does_not_throw()
+		{
+			var aggregatecatalog = new AggregateCatalog();
+
+			var proxycatalog = new ProxyCatalog(aggregatecatalog);
+			
+			// we didn't access proxycatalog.Parts, so _parts is null and the following throws
+			aggregatecatalog.Catalogs.Add(new AssemblyCatalog(Assembly.GetExecutingAssembly()));			
+		}
+
 		[NotifyPropertyChanged]
 		public class ClassWithBehaviour
 		{ }

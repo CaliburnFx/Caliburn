@@ -24,6 +24,7 @@
         public ProxyCatalog(ComposablePartCatalog innerCatalog)
         {
             _innerCatalog = innerCatalog;
+			_parts = CreateFrom(_innerCatalog);
 
             var notifyingCatalog = _innerCatalog as INotifyComposablePartCatalogChanged;
             if(notifyingCatalog != null)
@@ -84,10 +85,7 @@
         {
             get
             {
-                if(_parts == null)
-                    _parts = CreateFrom(_innerCatalog);
-
-                return _parts.Values.AsQueryable();
+				return _parts.Values.AsQueryable();
             }
         }
 
