@@ -6,6 +6,7 @@ namespace Caliburn.PresentationFramework.Screens
     using Behaviors;
     using Core.Logging;
     using Views;
+    using System.Linq;
 
     /// <summary>
     /// Implements common functionality used by all implementors of <see cref="IScreen"/>.
@@ -199,10 +200,11 @@ namespace Caliburn.PresentationFramework.Screens
         /// <param name="context">The context.</param>
         public virtual void AttachView(object view, object context)
         {
+            var loadWired = _views.Values.Contains(view);
             _views[context ?? DefaultViewLocator.DefaultContext] = view;
 
             var dependencyObject = view as DependencyObject;
-            if (dependencyObject != null)
+            if (!loadWired && dependencyObject != null)
                 dependencyObject.OnLoad(delegate{
                     OnViewLoaded(view);
                     Log.Info("View {0} loaded for {1}.", view, this);
