@@ -1,9 +1,13 @@
 ﻿<Controls:DialogChrome x:Class="Caliburn.Silverlight.NavigationShell.Shell.Views.BusyView"
                        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-                       xmlns:Controls="clr-namespace:Caliburn.ShellFramework.Controls;assembly=Caliburn.ShellFramework"
+                       xmlns:Controls="clr-namespace:Caliburn.ShellFramework.Controls;assembly=Caliburn.ShellFramework" xmlns:wc="clr-namespace:System.Windows.Controls;assembly=System.Windows.Controls.Toolkit" xmlns:local="clr-namespace:Caliburn.Silverlight.NavigationShell.Shell.Controls" 
                        Style="{StaticResource dialogChrome}">
-    <TextBlock x:Name="Message"
-               FontSize="16"
-               Margin="12"/>
+    <wc:DockPanel>
+        <local:Spinner wc:DockPanel.Dock="Left" />
+        <TextBlock x:Name="Message"
+                   FontSize="16"
+                   Margin="12" />
+    </wc:DockPanel>
+    
 </Controls:DialogChrome>
