@@ -14,6 +14,11 @@
     public static class CoreExtensions
     {
         /// <summary>
+        /// Enables customization of the discoverable types within a given assembly.
+        /// </summary>
+        public static Func<Assembly, IEnumerable<Type>> GetInspectableTypes = assembly => assembly.GetExportedTypes();
+
+        /// <summary>
         /// Configures the core.
         /// </summary>
         /// <param name="hook">The hook.</param>

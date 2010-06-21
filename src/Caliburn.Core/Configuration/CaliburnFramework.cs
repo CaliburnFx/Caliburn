@@ -189,7 +189,7 @@
 
         private static void Inspect(Assembly assembly, ICollection<IComponentRegistration> componentList, ICollection<IModule> modules)
         {
-            var types = assembly.GetExportedTypes();
+            var types = CoreExtensions.GetInspectableTypes(assembly);
 
             foreach (var type in types)
             {

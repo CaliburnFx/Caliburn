@@ -137,7 +137,7 @@
 
         private void RegisterScreens(IRegistry registry, Assembly assembly)
         {
-            var matches = from type in assembly.GetExportedTypes()
+            var matches = from type in CoreExtensions.GetInspectableTypes(assembly)
                           let service = type.FindInterfaceThatCloses(typeof(IScreen<>))
                           where service != null
                           select new PerRequest
