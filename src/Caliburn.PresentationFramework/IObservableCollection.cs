@@ -15,5 +15,11 @@ namespace Caliburn.PresentationFramework
         /// </summary>
         /// <param name="items">The items.</param>
         void AddRange(IEnumerable<T> items);
+
+        /// <summary>
+        /// Removes the range.
+        /// </summary>
+        /// <param name="items">The items.</param>
+        void RemoveRange(IEnumerable<T> items);
     }
 }

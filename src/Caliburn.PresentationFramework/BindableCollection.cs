@@ -92,5 +92,18 @@
 
             OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Reset));
         }
+
+        /// <summary>
+        /// Removes the range.
+        /// </summary>
+        /// <param name="items">The items.</param>
+        public void RemoveRange(IEnumerable<T> items)
+        {
+            _raiseCollectionChanged = false;
+            items.Apply(x => Remove(x));
+            _raiseCollectionChanged = true;
+
+            OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Reset));
+        }
     }
 }
