@@ -16,7 +16,8 @@
     public class ProxyPart : ComposablePart
     {
         private readonly Type _implementation;
-        private readonly ComposablePart _innerPart;
+    	readonly IComponentRegistration _registration;
+    	private readonly ComposablePart _innerPart;
         private object _instance;
 
         /// <summary>
@@ -30,7 +31,30 @@
             _innerPart = innerPart;
         }
 
-        /// <summary>
+    	/// <summary>
+    	/// Initializes a new instance of the <see cref="ProxyPart"/> class.
+    	/// </summary>
+    	/// <param name="registration">The registration</param>
+    	/// <param name="innerPart">The inner part.</param>
+    	public ProxyPart(ComponentRegistrationBase registration, ComposablePart innerPart)
+		{
+			_implementation = GetImplementation(registration);
+			_registration = registration;
+			_innerPart = innerPart;
+		}
+
+		private static Type GetImplementation(IComponentRegistration registration)
+		{
+			var singleton = registration as Singleton;
+			if (singleton != null) return singleton.Implementation;
+
+			var perRequest = registration as PerRequest;
+			if (perRequest != null) return perRequest.Implementation;
+
+			throw new NotSupportedException();
+		}
+
+		/// <summary>
         /// Gets the export definitions that describe the exported values provided by the part.
         /// </summary>
         /// <value>
@@ -134,7 +158,13 @@
                     return _instance;
                 }
             }
-
+			
+			var isSingleton = (_registration as Singleton) != null;
+			if (isSingleton)
+			{
+				_instance = CreateInstance();
+				return _instance;				
+			}
             return CreateInstance();
         }
 

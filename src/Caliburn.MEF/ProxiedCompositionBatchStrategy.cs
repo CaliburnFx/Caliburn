@@ -12,12 +12,12 @@ namespace Caliburn.MEF
 	{
 		public override void HandleSingleton(CompositionBatch batch, PerRequest perRequest)
 		{
-			batch.AddPart(new ProxyPart(perRequest.Implementation, CreatePart(perRequest)));
+			batch.AddPart(new ProxyPart(perRequest, CreatePart(perRequest)));
 		}
 
 		public override void HandleSingleton(CompositionBatch batch, Singleton singleton)
 		{
-			batch.AddPart(new ProxyPart(singleton.Implementation, CreatePart(singleton)));
+			batch.AddPart(new ProxyPart(singleton, CreatePart(singleton)));
 		}
 
 		public override void HandleInstance(CompositionBatch batch, Instance instance)

@@ -54,6 +54,44 @@ namespace Tests.Caliburn.Adapters
 			Assert.That(vm, Is.InstanceOfType(typeof(INotifyPropertyChanged)));
 		}
 
+		[Test]
+		public void register_through_adapter_using_proxyfactory_can_resolve_singletons()
+		{
+			var catalog = new AssemblyCatalog(Assembly.GetAssembly(typeof(ClassWithBehaviour)));
+			var proxycatalog = new ProxyCatalog(catalog);
+			var container = new CompositionContainer(proxycatalog);
+
+			var adapter = new MEFAdapter(container).WithProxyFactory<DynamicProxyFactory>();
+			ServiceLocator.SetLocatorProvider(() => adapter);
+
+			adapter.Register(new[] { new Singleton() { Service = typeof(ClassWithBehaviour), Implementation = typeof(ClassWithBehaviour) } });
+
+			var sl = (IServiceLocator) adapter;
+			var instance1 = sl.GetInstance<ClassWithBehaviour>();
+			var instance2 = sl.GetInstance<ClassWithBehaviour>();
+
+			Assert.AreSame(instance1, instance2);
+		}
+
+		[Test]
+		public void register_through_adapter_using_proxyfactory_can_resolve_perrequest()
+		{
+			var catalog = new AssemblyCatalog(Assembly.GetAssembly(typeof(ClassWithBehaviour)));
+			var proxycatalog = new ProxyCatalog(catalog);
+			var container = new CompositionContainer(proxycatalog);
+
+			var adapter = new MEFAdapter(container).WithProxyFactory<DynamicProxyFactory>();
+			ServiceLocator.SetLocatorProvider(() => adapter);
+
+			adapter.Register(new[] { new PerRequest() { Service = typeof(ClassWithBehaviour), Implementation = typeof(ClassWithBehaviour) } });
+
+			var sl = (IServiceLocator)adapter;
+			var instance1 = sl.GetInstance<ClassWithBehaviour>();
+			var instance2 = sl.GetInstance<ClassWithBehaviour>();
+
+			Assert.AreNotSame(instance1, instance2);
+		}
+
 		[NotifyPropertyChanged]
 		public class ClassWithBehaviour
 		{ }
