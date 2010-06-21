@@ -82,6 +82,7 @@
     <Compile Include="Resources\ResourceExtensions.cs" />
     <Compile Include="Resources\IResourceManager.cs" />
     <Compile Include="Results\Animation.cs" />
+    <Compile Include="Results\DialogScreenSubjectResult.cs" />
     <Compile Include="Results\FocusResult.cs" />
     <Compile Include="Results\NotificationResult.silverlight.cs" />
     <Compile Include="Results\PopupConfiguration.cs" />

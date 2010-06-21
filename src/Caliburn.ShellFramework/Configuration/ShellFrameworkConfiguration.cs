@@ -51,7 +51,6 @@
         {
             base.Initialize(locator);
 
-            Show.Initialize(locator.GetInstance<IViewModelFactory>());
             MenuModel.Initialize(locator.GetInstance<IInputManager>());
 
             if(!string.IsNullOrEmpty(_viewNamespace))

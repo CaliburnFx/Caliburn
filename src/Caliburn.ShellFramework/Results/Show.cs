@@ -5,7 +5,6 @@
     using Core;
     using Microsoft.Win32;
     using PresentationFramework.Screens;
-    using PresentationFramework.ViewModels;
     using Questions;
 
 #if SILVERLIGHT
@@ -14,13 +13,6 @@
 
     public static class Show
     {
-        private static IViewModelFactory _viewModelFactory;
-
-        public static void Initialize(IViewModelFactory viewModelFactory)
-        {
-            _viewModelFactory = viewModelFactory;
-        }
-
         public static OpenScreenSubjectResult ChildSubject(IScreenSubject screenSubject)
         {
             return new OpenScreenSubjectResult(screenSubject);
@@ -44,33 +36,37 @@
         }
 
 #if !WP7
-        public static OpenDialogResult<IScreen<T>> DialogFor<T>(T subject)
+        public static DialogScreenSubjectResult DialogSubject(IScreenSubject screenSubject)
         {
-            var screen = _viewModelFactory.CreateFor(subject);
-            return new OpenDialogResult<IScreen<T>>(screen);
+            return new DialogScreenSubjectResult(screenSubject);
         }
 
-        public static OpenDialogResult<TModal> Dialog<TModal>()
-            where TModal : IScreen
+        public static DialogScreenSubjectResult DialogFor<T>(T subject)
         {
-            return new OpenDialogResult<TModal>();
+            return new DialogScreenSubjectResult(new ScreenSubject<T>(subject));
         }
 
-        public static OpenDialogResult<TModal> Dialog<TModal>(TModal modal)
-            where TModal : IScreen
+        public static OpenDialogResult<TModel> Dialog<TModel>()
+            where TModel : IScreen
         {
-            return new OpenDialogResult<TModal>(modal);
+            return new OpenDialogResult<TModel>();
+        }
+
+        public static OpenDialogResult<TModel> Dialog<TModel>(TModel model)
+            where TModel : IScreen
+        {
+            return new OpenDialogResult<TModel>(model);
         }
 #endif
 
-        public static PopupResult<TPopup> Popup<TPopup>()
+        public static PopupResult<TModel> Popup<TModel>()
         {
-            return new PopupResult<TPopup>();
+            return new PopupResult<TModel>();
         }
 
-        public static PopupResult<TPopup> Popup<TPopup>(TPopup popup)
+        public static PopupResult<TModel> Popup<TModel>(TModel model)
         {
-            return new PopupResult<TPopup>(popup);
+            return new PopupResult<TModel>(model);
         }
 
 #if SILVERLIGHT
