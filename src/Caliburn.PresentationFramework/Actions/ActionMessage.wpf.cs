@@ -70,7 +70,7 @@ namespace Caliburn.PresentationFramework.Actions
         }
 
         /// <summary>
-        /// Gets or sets the name of the method.
+        /// Gets or sets the name of the method to be invoked on the presentation model class.
         /// </summary>
         /// <value>The name of the method.</value>
         public string MethodName
@@ -109,7 +109,7 @@ namespace Caliburn.PresentationFramework.Actions
         }
 
         /// <summary>
-        /// Gets the parameters.
+        /// Gets the parameters to pass as part of the method invocation.
         /// </summary>
         /// <value>The parameters.</value>
         public FreezableCollection<Parameter> Parameters
