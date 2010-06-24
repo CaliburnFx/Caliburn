@@ -13,7 +13,7 @@ namespace Caliburn.PresentationFramework.Converters
     public class BooleanToVisibilityConverter : IValueConverter
     {
         /// <summary>
-        /// Converts a value.
+        /// Converts a boolean value to a <see cref="Visibility"/> value.
         /// </summary>
         /// <param name="value">The value produced by the binding source.</param>
         /// <param name="targetType">The type of the binding target property.</param>
@@ -30,7 +30,7 @@ namespace Caliburn.PresentationFramework.Converters
         }
 
         /// <summary>
-        /// Converts a value.
+        /// Converts a value <see cref="Visibility"/> value to a boolean value.
         /// </summary>
         /// <param name="value">The value that is produced by the binding target.</param>
         /// <param name="targetType">The type to convert to.</param>
