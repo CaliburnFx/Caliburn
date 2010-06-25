@@ -3,7 +3,7 @@ namespace Caliburn.Core.Logging
     using System;
 
     /// <summary>
-    /// A log.
+    /// A logger.
     /// </summary>
     public interface ILog
     {
