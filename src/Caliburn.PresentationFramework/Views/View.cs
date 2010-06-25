@@ -39,8 +39,8 @@
         /// <summary>
         /// Gets the context.
         /// </summary>
-        /// <param name="d">The d.</param>
-        /// <returns></returns>
+        /// <param name="d">The element the context is attached to.</param>
+        /// <returns>The context.</returns>
         public static object GetContext(DependencyObject d)
         {
             return d.GetValue(ContextProperty);
@@ -49,8 +49,8 @@
         /// <summary>
         /// Sets the context.
         /// </summary>
-        /// <param name="d">The d.</param>
-        /// <param name="value">The value.</param>
+        /// <param name="d">The element to attach the context to.</param>
+        /// <param name="value">The context.</param>
         public static void SetContext(DependencyObject d, object value)
         {
             d.SetValue(ContextProperty, value);
@@ -70,8 +70,8 @@
         /// <summary>
         /// Gets the model.
         /// </summary>
-        /// <param name="d">The d.</param>
-        /// <returns></returns>
+        /// <param name="d">The element the model is attached to.</param>
+        /// <returns>The model.</returns>
         public static object GetModel(DependencyObject d)
         {
             return d.GetValue(ModelProperty);
@@ -80,8 +80,8 @@
         /// <summary>
         /// Sets the model.
         /// </summary>
-        /// <param name="d">The d.</param>
-        /// <param name="value">The value.</param>
+        /// <param name="d">The element to attach the model to.</param>
+        /// <param name="value">The model.</param>
         public static void SetModel(DependencyObject d, object value)
         {
             d.SetValue(ModelProperty, value);
@@ -102,7 +102,7 @@
         /// <summary>
         /// Gets the <see cref="IViewLocator"/>.
         /// </summary>
-        /// <param name="d">The d.</param>
+        /// <param name="d">The element the strategy is attached to.</param>
         /// <returns>The strategy.</returns>
         public static IViewLocator GetStrategy(DependencyObject d)
         {
@@ -112,8 +112,8 @@
         /// <summary>
         /// Sets the <see cref="IViewLocator"/>.
         /// </summary>
-        /// <param name="d">The d.</param>
-        /// <param name="value">The value.</param>
+        /// <param name="d">The element to attach the strategy to.</param>
+        /// <param name="value">The strategy.</param>
         public static void SetStrategy(DependencyObject d, IViewLocator value)
         {
             d.SetValue(StrategyProperty, value);
@@ -133,8 +133,8 @@
         /// <summary>
         /// Gets the convention application behavior.
         /// </summary>
-        /// <param name="d">The d.</param>
-        /// <returns>The strategy.</returns>
+        /// <param name="d">The element the property is attached to.</param>
+        /// <returns>Whether or not to apply conventions.</returns>
         public static bool? GetApplyConventions(DependencyObject d)
         {
             return (bool?)d.GetValue(ApplyConventionsProperty);
@@ -143,8 +143,8 @@
         /// <summary>
         /// Sets the convention application behavior.
         /// </summary>
-        /// <param name="d">The d.</param>
-        /// <param name="value">The value.</param>
+        /// <param name="d">The element to attach the property to.</param>
+        /// <param name="value">Whether or not to apply conventions.</param>
         public static void SetApplyConventions(DependencyObject d, bool? value)
         {
             d.SetValue(ApplyConventionsProperty, value);
