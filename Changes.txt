@@ -95,6 +95,13 @@ V1.1 Release
 -Ensured that PresenterManagers do not call initialize/activate when CurrentPresenter is set unless they themselves are initialized/activated.
 -Fixed a bug with WPF Parameter instances raising value changes after being removed from the tree.
 -Fixed bugs in PropertyPathMonitor
+-Fixed a bug in the Autofac adapter related to singleton registration.
+-Enabled strong-named bulds of but only for .NET 4.0 and SL4.
+-Fixed a memory leak related to the DependenciesAttribute.
+-Fixed a bug in DefaultViewLocator.MakeInterface related to generic types.
+-Updated Unity to the latest version.
+-Updated Prism to the latest version.
+-Fixed a bug in the MessageBinder.
 
 V1.1 Release Candidate
 -Added pre-initialization hooks to CaliburnApplication via Marco Amendola's patch.
