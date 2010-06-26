@@ -59,6 +59,11 @@ V2 Alpha
 -Updated default conventions for PasswordBox. For SL3 and SL4 we now support binding to the Password property, which is supported by the underlying framework.
 -Added support for Fluent Validation!
 -Added support for Reactive Framework created by Jose F. Romaniello! See http://jfromaniello.blogspot.com/2010/04/event-aggregator-with-reactive.html for syntax.
+-Changed Navigator.Back() and Navigator.Forward() to Navigator.GoBack() and Navigator.GoForward() to match naming conventions for guard properties. Removed redundant extension methods. 
+-Enabled type inspection code to be customized by using CoreExtensions.GetInspectableTypes.
+-Fixed a bug in ScreenBase related to multiple calls to OnViewLoaded. 
+
+
 
 V1.1 Release
 -Fixed an issue in the WPF version of InteractionNode.
@@ -102,6 +107,7 @@ V1.1 Release
 -Updated Unity to the latest version.
 -Updated Prism to the latest version.
 -Fixed a bug in the MessageBinder.
+-Fixed a bug in the contact manager sample.
 
 V1.1 Release Candidate
 -Added pre-initialization hooks to CaliburnApplication via Marco Amendola's patch.
