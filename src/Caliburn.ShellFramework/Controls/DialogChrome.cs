@@ -1,6 +1,4 @@
-﻿#if !WP7
-
-namespace Caliburn.ShellFramework.Controls
+﻿namespace Caliburn.ShellFramework.Controls
 {
     using System.ComponentModel;
     using System.Windows;
@@ -46,5 +44,3 @@ namespace Caliburn.ShellFramework.Controls
         }
     }
 }
-
-#endif

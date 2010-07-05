@@ -1,5 +1,3 @@
-#if !SILVERLIGHT_20
-
 namespace Caliburn.PresentationFramework.ApplicationModel
 {
     using System;
@@ -316,5 +314,3 @@ namespace Caliburn.PresentationFramework.ApplicationModel
         }
     }
 }
-
-#endif

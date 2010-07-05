@@ -1,6 +1,4 @@
-﻿#if !WP7
-
-namespace Caliburn.ShellFramework.Results
+﻿namespace Caliburn.ShellFramework.Results
 {
     using System;
     using PresentationFramework.ApplicationModel;
@@ -56,5 +54,3 @@ namespace Caliburn.ShellFramework.Results
         }
     }
 }
-
-#endif

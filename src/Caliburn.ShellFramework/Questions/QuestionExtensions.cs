@@ -1,6 +1,4 @@
-﻿#if !WP7
-
-namespace Caliburn.ShellFramework.Questions
+﻿namespace Caliburn.ShellFramework.Questions
 {
     using System;
     using System.Collections.Generic;
@@ -35,5 +33,3 @@ namespace Caliburn.ShellFramework.Questions
         }
     }
 }
-
-#endif

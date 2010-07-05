@@ -157,11 +157,7 @@
         /// <returns></returns>
         protected virtual bool ShouldValidate(PropertyInfo property)
         {
-#if SILVERLIGHT_20
-            return false;   
-#else
             return Validator.ShouldValidate(property);
-#endif
         }
     }
 }

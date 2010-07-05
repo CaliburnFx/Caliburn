@@ -1,4 +1,4 @@
-﻿#if SILVERLIGHT_40 && !WP7
+﻿#if SILVERLIGHT_40
 
 namespace Caliburn.ShellFramework.Results
 {

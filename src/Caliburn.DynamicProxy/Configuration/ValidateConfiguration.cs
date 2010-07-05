@@ -23,7 +23,7 @@
         {
 #if SILVERLIGHT_40 || NET
             yield return new DataErrorInfoInterceptor(ServiceLocator.Current.GetInstance<IValidator>());          
-#elif SILVERLIGHT_30
+#else
             yield return new ExceptionValidatorInterceptor(ServiceLocator.Current.GetInstance<IValidator>());
 #endif
             yield return ProxyInterceptor.Instance;

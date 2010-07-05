@@ -1,4 +1,4 @@
-﻿#if SILVERLIGHT_30 || SILVERLIGHT_40 && !WP7
+﻿#if SILVERLIGHT
 
 namespace Caliburn.Core.Validation
 {

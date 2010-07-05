@@ -10,7 +10,6 @@
     /// </summary>
     public static class ApplicationModelExtensions
     {
-#if !SILVERLIGHT_20
         /// <summary>
         /// Focuses the control bound to the property on the view model.
         /// </summary>
@@ -21,7 +20,6 @@
         {
             inputManager.Focus(viewModel, property.GetMemberInfo().Name);
         }
-#endif
 
         /// <summary>
         /// Inserts or updates a value in the state.

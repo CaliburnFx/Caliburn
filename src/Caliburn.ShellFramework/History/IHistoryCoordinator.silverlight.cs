@@ -1,4 +1,4 @@
-﻿#if SILVERLIGHT && !WP7
+﻿#if SILVERLIGHT
 
 namespace Caliburn.ShellFramework.History
 {

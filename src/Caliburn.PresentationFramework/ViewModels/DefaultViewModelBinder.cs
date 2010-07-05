@@ -49,11 +49,7 @@ namespace Caliburn.PresentationFramework.ViewModels
         {
             BindCore(viewModel, view, context);
 
-#if SILVERLIGHT_20 || WP7
-            var significantView = view;
-#else
             var significantView = DefaultWindowManager.GetSignificantView(view);
-#endif
 
             if (ShouldApplyConventions(viewModel, significantView, context))
                 ApplyConventions(viewModel, significantView);

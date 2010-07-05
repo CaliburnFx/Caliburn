@@ -30,7 +30,7 @@
             }
         }
     }
-#elif SILVERLIGHT_30 || SILVERLIGHT_40
+#else
     public partial class DefaultInputManager
     {
         private static IEnumerable<Control> GetAllElements(DependencyObject root)

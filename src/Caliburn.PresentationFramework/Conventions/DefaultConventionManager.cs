@@ -299,7 +299,7 @@ namespace Caliburn.PresentationFramework.Conventions
 #endif
                     });
 
-#if SILVERLIGHT_30 || SILVERLIGHT_40
+#if SILVERLIGHT
                 yield return ElementConvention<PasswordBox>("PasswordChanged", PasswordBox.PasswordProperty, (c, o) => c.Password = o.SafeToString(), c => c.Password);
 #else
                 yield return ElementConvention<PasswordBox>("PasswordChanged", PasswordBox.DataContextProperty, (c, o) => c.Password = o.SafeToString(), c => c.Password);

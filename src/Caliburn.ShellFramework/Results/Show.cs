@@ -35,7 +35,6 @@
             return new OpenChildResult<TChild>(child);
         }
 
-#if !WP7
         public static DialogScreenSubjectResult DialogSubject(IScreenSubject screenSubject)
         {
             return new DialogScreenSubjectResult(screenSubject);
@@ -57,7 +56,6 @@
         {
             return new OpenDialogResult<TModel>(model);
         }
-#endif
 
         public static PopupResult<TModel> Popup<TModel>()
         {
@@ -90,7 +88,7 @@
 
 #endif
 
-#if SILVERLIGHT_40 && !WP7
+#if SILVERLIGHT_40
 
         public static NotificationResult<T> Notification<T>(int durationInMilliseconds)
         {
@@ -134,7 +132,6 @@
             return new FocusResult(model, property.GetMemberInfo().Name);
         }
 
-#if !WP7
         public static MessageBoxResult MessageBox(string text)
         {
             return new MessageBoxResult(text);
@@ -154,6 +151,5 @@
         {
             return new MessageBoxResult(text, caption, handleResult, possibleAnswers);
         }
-#endif
     }
 }

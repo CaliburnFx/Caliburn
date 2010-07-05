@@ -79,15 +79,11 @@ namespace Caliburn.PresentationFramework.Configuration
         /// <returns></returns>
         IConfiguredRegistration<Singleton, T> ConventionManager<T>() where T : IConventionManager;
 
-#if !SILVERLIGHT_20
-
-#if !WP7
         /// <summary>
         /// Customizes the window manager used by Caliburn.
         /// </summary>
         /// <typeparam name="T">The window manager type.</typeparam>
         IConfiguredRegistration<Singleton, T> WindowManager<T>() where T : IWindowManager;
-#endif
 
         /// <summary>
         /// Customizes the input manager used by Caliburn.
@@ -95,6 +91,5 @@ namespace Caliburn.PresentationFramework.Configuration
         /// <typeparam name="T"></typeparam>
         /// <returns></returns>
         IConfiguredRegistration<Singleton, T> InputManager<T>() where T : IInputManager;
-#endif
     }
 }

@@ -125,13 +125,7 @@
         /// <param name="binding">The binding.</param>
         public static void SetBinding(this DependencyObject dependencyObject, DependencyProperty dependencyProperty, Binding binding)
         {
-#if SILVERLIGHT_20
-            var fe = dependencyObject as FrameworkElement;
-            if (fe != null)
-                fe.SetBinding(dependencyProperty, binding);
-#else
             BindingOperations.SetBinding(dependencyObject, dependencyProperty, binding);
-#endif
         }
 
         /// <summary>

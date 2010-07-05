@@ -91,9 +91,9 @@
             if (!_validate)
                 return;
 
-#if NET || SILVERLIGHT_40 && !WP7
+#if NET || SILVERLIGHT_40
             binding.ValidatesOnDataErrors = true;
-#elif SILVERLIGHT_30 || WP7
+#else
             binding.ValidatesOnExceptions = true;
 #endif
         }
@@ -106,10 +106,10 @@
         /// <param name="dependencyProperty">The dependency property.</param>
         protected virtual void CheckTextBox(DependencyObject element, Binding binding, DependencyProperty dependencyProperty)
         {
-#if NET
+#if !SILVERLIGHT
             if(element is TextBox && dependencyProperty == TextBox.TextProperty)
                 binding.UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged;
-#elif SILVERLIGHT_40 || SILVERLIGHT_30
+#else
             var textBox = element as TextBox;
             if(textBox != null && dependencyProperty == TextBox.TextProperty)
             {

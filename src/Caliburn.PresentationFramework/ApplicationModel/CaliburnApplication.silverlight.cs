@@ -16,10 +16,7 @@ namespace Caliburn.PresentationFramework.ApplicationModel
     using ViewModels;
     using Views;
     using Screens;
-
-#if !WP7
     using System.Windows.Browser;
-#endif
 
     /// <summary>
     /// A base class for applications based on Caliburn.
@@ -194,7 +191,6 @@ namespace Caliburn.PresentationFramework.ApplicationModel
         /// <param name="e">The <see cref="ApplicationUnhandledExceptionEventArgs"/> instance containing the event data.</param>
         protected virtual void ReportError(ApplicationUnhandledExceptionEventArgs e)
         {
-#if !WP7
             try
             {
                 var errorMsg = e.ExceptionObject.Message + e.ExceptionObject.StackTrace;
@@ -206,7 +202,6 @@ namespace Caliburn.PresentationFramework.ApplicationModel
             {
                 Log.Error(ex);
             }
-#endif
         }
     }
 }

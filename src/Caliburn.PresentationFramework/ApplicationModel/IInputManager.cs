@@ -1,5 +1,3 @@
-#if !SILVERLIGHT_20
-
 namespace Caliburn.PresentationFramework.ApplicationModel
 {
     using System.Collections.Generic;
@@ -63,5 +61,3 @@ namespace Caliburn.PresentationFramework.ApplicationModel
         string GetDisplayString(Key key, ModifierKeys modifierKeys);
     }
 }
-
-#endif
