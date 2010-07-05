@@ -139,12 +139,10 @@
         {
 #if !SILVERLIGHT
             return BindingOperations.GetBindingExpression(element, _dependencyProperty) == null;
-#elif SILVERIGHT_30 || SILVERLIGHT_40
+#else
             var fe = element as FrameworkElement;
             if (fe != null)
                 return fe.GetBindingExpression(_dependencyProperty) == null;
-            return true;
-#else 
             return true;
 #endif
         }
