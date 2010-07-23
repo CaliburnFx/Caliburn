@@ -78,17 +78,7 @@ namespace Caliburn.PresentationFramework.ApplicationModel
         {
             Log.Info("Showing main window.");
             Container.GetInstance<IWindowManager>()
-                .Show(rootModel, null, ExecuteShutdownModel);
-        }
-
-        /// <summary>
-        /// Executes the shutdown model.
-        /// </summary>
-        /// <param name="subordinate">The subordinate.</param>
-        /// <param name="completed">The completed.</param>
-        protected virtual void ExecuteShutdownModel(ISubordinate subordinate, Action completed)
-        {
-            completed();
+                .Show(rootModel, null);
         }
 
         /// <summary>

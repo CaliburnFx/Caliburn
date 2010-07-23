@@ -66,7 +66,7 @@
         /// <param name="rootModel">The root model.</param>
         public static void Show(this IWindowManager manager, object rootModel)
         {
-            manager.Show(rootModel, null, null);
+            manager.Show(rootModel, null);
         }
 
         /// <summary>
@@ -77,30 +77,7 @@
         /// <returns>The dialog result</returns>
         public static bool? ShowDialog(this IWindowManager manager, object rootModel)
         {
-            return manager.ShowDialog(rootModel, null, null);
-        }
-
-        /// <summary>
-        /// Shows the windwo for the model.
-        /// </summary>
-        /// <param name="manager">The manager.</param>
-        /// <param name="rootModel">The root model.</param>
-        /// <param name="context">The context.</param>
-        public static void Show(this IWindowManager manager, object rootModel, object context)
-        {
-            manager.Show(rootModel, context, null);
-        }
-
-        /// <summary>
-        /// Shows the dialog for the model.
-        /// </summary>
-        /// <param name="manager">The manager.</param>
-        /// <param name="rootModel">The root model.</param>
-        /// <param name="context">The context.</param>
-        /// <returns>The dialog result</returns>
-        public static bool? ShowDialog(this IWindowManager manager, object rootModel, object context)
-        {
-            return manager.ShowDialog(rootModel, context, null);
+            return manager.ShowDialog(rootModel, null);
         }
 
 #endif

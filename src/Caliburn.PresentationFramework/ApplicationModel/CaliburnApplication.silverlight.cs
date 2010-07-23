@@ -150,12 +150,9 @@ namespace Caliburn.PresentationFramework.ApplicationModel
             var binder = Container.GetInstance<IViewModelBinder>();
             binder.Bind(model, view, null);
 
-            var screen = model as IScreen;
-            if(screen != null)
-            {
-                screen.Initialize();
-                screen.Activate();
-            }
+            var activatable = model as IActivate;
+            if(activatable != null)
+                activatable.Activate();
 
             Log.Info("Setting root visual.");
             RootVisual = (UIElement)view;

@@ -15,11 +15,11 @@ namespace Caliburn.PresentationFramework.ViewModels
         T Create<T>();
 
         /// <summary>
-        /// Creates a screen for the given subject.
+        /// Creates an item to host the given subject.
         /// </summary>
         /// <typeparam name="T">The subject's type.</typeparam>
         /// <param name="subject">The subject.</param>
-        /// <returns>The screen.</returns>
-        IScreen<T> CreateFor<T>(T subject);
+        /// <returns>The item which hosts the subject.</returns>
+        IHaveSubject<T> CreateFor<T>(T subject);
     }
 }

@@ -1,7 +1,6 @@
-﻿using System;
-
-namespace Caliburn.PresentationFramework.Screens
+﻿namespace Caliburn.PresentationFramework.Screens
 {
+    using System;
     using System.Linq;
     using ViewModels;
 
@@ -10,7 +9,7 @@ namespace Caliburn.PresentationFramework.Screens
     /// </summary>
     public static class ScreenExtensions
     {
-        private static IViewModelFactory _viewModelFactory;
+        static IViewModelFactory viewModelFactory;
 
         /// <summary>
         /// Initializes the extensions with the specified view model factory.
@@ -18,82 +17,32 @@ namespace Caliburn.PresentationFramework.Screens
         /// <param name="viewModelFactory">The view model factory.</param>
         public static void Initialize(IViewModelFactory viewModelFactory)
         {
-            _viewModelFactory = viewModelFactory;
+            ScreenExtensions.viewModelFactory = viewModelFactory;
         }
 
         /// <summary>
         /// Opens the specified screen.
         /// </summary>
-        /// <param name="collection">The screen collection.</param>
-        /// <param name="subject">The subject.</param>
-        public static void OpenScreen(this IScreenCollection collection, IScreenSubject subject)
+        /// <param name="conductor">The conductor.</param>
+        /// <param name="subjectSpecification">The subject.</param>
+        /// <param name="callback">Is called with true if the screen is activated.</param>
+        public static void ActivateSubject(this IConductor conductor, ISubjectSpecification subjectSpecification, Action<bool> callback)
         {
-            collection.OpenScreen(subject, delegate { });
-        }
+            var found = conductor.GetConductedItems()
+                .OfType<IHaveSubject>()
+                .FirstOrDefault(subjectSpecification.Matches);
 
-        /// <summary>
-        /// Opens the specified screen.
-        /// </summary>
-        /// <param name="collection">The screen collection.</param>
-        /// <param name="subject">The subject.</param>
-        /// <param name="completed">Completion callback.</param>
-        public static void OpenScreen(this IScreenCollection collection, IScreenSubject subject, Action<bool> completed)
-        {
-            var found = collection.Screens.FirstOrDefault(subject.Matches);
+            EventHandler<ActivationProcessedEventArgs> processed = null;
+            processed = (s, e) =>{
+                conductor.ActivationProcessed -= processed;
+                callback(e.Success);
+            };
+
+            conductor.ActivationProcessed += processed;
 
             if(found != null)
-                collection.OpenScreen(found, completed);
-            else subject.CreateScreen(_viewModelFactory, screen => collection.OpenScreen(screen, completed));
-        }
-
-        /// <summary>
-        /// Opens the specified screen.
-        /// </summary>
-        /// <param name="collection">The screen collection.</param>
-        /// <param name="screen">The screen.</param>
-        public static void OpenScreen<T>(this IScreenCollection<T> collection, T screen)
-            where T : class, IScreen
-        {
-            collection.OpenScreen(screen, isSuccess => { });
-        }
-
-        /// <summary>
-        /// Shuts down the specified screen.
-        /// </summary>
-        /// <param name="collection">The screen collection owning the screen to shutdown.</param>
-        /// <param name="screen">The screen.</param>
-        public static void ShutdownScreen<T>(this IScreenCollection<T> collection, T screen)
-            where T : class, IScreen
-        {
-            collection.ShutdownScreen(screen, isSuccess => { });
-        }
-
-        /// <summary>
-        /// Shuts down the specified screen.
-        /// </summary>
-        /// <param name="collection">The screen collection owning the screen to shutdown.</param>
-        /// <param name="screen">The screen.</param>
-        public static void ShutdownScreen(this IScreenCollection collection, IScreen screen)
-        {
-            collection.ShutdownScreen(screen, isSuccess => { });
-        }
-
-        /// <summary>
-        /// Shuts down the active screen.
-        /// </summary>
-        public static void ShutdownActiveScreen(this IScreenConductor screenConductor)
-        {
-            screenConductor.ShutdownActiveScreen(isSuccess => { });
-        }
-
-        /// <summary>
-        /// Navigates using the specified action.
-        /// </summary>
-        /// <param name="navigator">The navigator.</param>
-        /// <param name="function">The function.</param>
-        public static void Navigate(this INavigator navigator, Action<Action<bool>> function)
-        {
-            navigator.Navigate(function, isSuccess => { });
+                conductor.ActivateItem(found);
+            else subjectSpecification.CreateSubjectHost(viewModelFactory, conductor.ActivateItem);
         }
     }
 }

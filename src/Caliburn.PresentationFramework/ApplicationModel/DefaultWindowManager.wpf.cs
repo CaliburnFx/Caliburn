@@ -2,7 +2,6 @@
 
 namespace Caliburn.PresentationFramework.ApplicationModel
 {
-    using System;
     using System.ComponentModel;
     using System.Windows;
     using System.Windows.Controls;
@@ -58,11 +57,10 @@ namespace Caliburn.PresentationFramework.ApplicationModel
         /// </summary>
         /// <param name="rootModel">The root model.</param>
         /// <param name="context">The context.</param>
-        /// <param name="handleShutdownModel">The handle shutdown model.</param>
         /// <returns></returns>
-        public virtual bool? ShowDialog(object rootModel, object context, Action<ISubordinate, Action> handleShutdownModel)
+        public virtual bool? ShowDialog(object rootModel, object context)
         {
-            var window = CreateWindow(rootModel, true, context, handleShutdownModel);
+            var window = CreateWindow(rootModel, true, context);
             return window.ShowDialog();
         }
 
@@ -71,19 +69,18 @@ namespace Caliburn.PresentationFramework.ApplicationModel
         /// </summary>
         /// <param name="rootModel">The root model.</param>
         /// <param name="context">The context.</param>
-        /// <param name="handleShutdownModel">The handle shutdown model.</param>
-        public virtual void Show(object rootModel, object context, Action<ISubordinate, Action> handleShutdownModel)
+        public virtual void Show(object rootModel, object context)
         {
             var navWindow = Application.Current.MainWindow as NavigationWindow;
 
             if (navWindow != null)
             {
-                var window = CreatePage(rootModel, context, handleShutdownModel);
+                var window = CreatePage(rootModel, context);
                 navWindow.Navigate(window);
             }
             else
             {
-                var window = CreateWindow(rootModel, false, context, handleShutdownModel);
+                var window = CreateWindow(rootModel, false, context);
                 window.Show();
             }
         }
@@ -96,26 +93,29 @@ namespace Caliburn.PresentationFramework.ApplicationModel
         /// <param name="context">The context.</param>
         /// <param name="handleShutdownModel">The handle shutdown model.</param>
         /// <returns></returns>
-        protected virtual Window CreateWindow(object rootModel, bool isDialog, object context, Action<ISubordinate, Action> handleShutdownModel)
+        protected virtual Window CreateWindow(object rootModel, bool isDialog, object context)
         {
             var view = EnsureWindow(rootModel, _viewLocator.Locate(rootModel, null, context), isDialog);
-
             _viewModelBinder.Bind(rootModel, view, context);
 
-            var screen = rootModel as IScreen;
-            if (screen != null)
+            var haveDisplayName = rootModel as IHaveDisplayName;
+            if (haveDisplayName != null)
             {
-                screen.Initialize();
-                screen.Activate();
-
-                view.Closing += (s, e) => OnShutdownAttempted(screen, view, handleShutdownModel, e);
-
-                view.Closed += delegate
-                {
-                    screen.Deactivate();
-                    screen.Shutdown();
-                };
+                var binding = new Binding("DisplayName") { Mode = BindingMode.TwoWay };
+                view.SetBinding(Window.TitleProperty, binding);
             }
+
+            var activatable = rootModel as IActivate;
+            if (activatable != null)
+                activatable.Activate();
+
+            var deactivatable = rootModel as IDeactivate;
+            if (deactivatable != null)
+                view.Closed += (s, e) => deactivatable.Deactivate(true);
+
+            var guard = rootModel as IGuardClose;
+            if (guard != null)
+                view.Closing += (s, e) => OnShutdownAttempted(guard, view, e);
 
             return view;
         }
@@ -149,13 +149,6 @@ namespace Caliburn.PresentationFramework.ApplicationModel
                     window.Owner = Application.Current.MainWindow;
                 }
                 else window.WindowStartupLocation = WindowStartupLocation.CenterScreen;
-
-                var screen = model as IScreen;
-                if (screen != null)
-                {
-                    var binding = new Binding("DisplayName") { Mode = BindingMode.TwoWay };
-                    window.SetBinding(Window.TitleProperty, binding);
-                }
             }
             else if (Application.Current != null
                    && Application.Current.MainWindow != null)
@@ -172,23 +165,26 @@ namespace Caliburn.PresentationFramework.ApplicationModel
         /// </summary>
         /// <param name="rootModel">The root model.</param>
         /// <param name="context">The context.</param>
-        /// <param name="handleShutdownModel">The handle shutdown model.</param>
         /// <returns></returns>
-        public Page CreatePage(object rootModel, object context, Action<ISubordinate, Action> handleShutdownModel)
+        public Page CreatePage(object rootModel, object context)
         {
             var view = EnsurePage(rootModel, _viewLocator.Locate(rootModel, null, context));
-
             _viewModelBinder.Bind(rootModel, view, context);
 
-            var screen = rootModel as IScreen;
-            if (screen != null)
+            var haveDisplayName = rootModel as IHaveDisplayName;
+            if (haveDisplayName != null)
             {
-                view.Unloaded += delegate
-                {
-                    screen.Deactivate();
-                    screen.Shutdown();
-                };
+                var binding = new Binding("DisplayName") { Mode = BindingMode.TwoWay };
+                view.SetBinding(Page.TitleProperty, binding);
             }
+
+            var activatable = rootModel as IActivate;
+            if (activatable != null)
+                activatable.Activate();
+
+            var deactivatable = rootModel as IDeactivate;
+            if (deactivatable != null)
+                view.Unloaded += (s, e) => deactivatable.Deactivate(true);
 
             return view;
         }
@@ -219,44 +215,32 @@ namespace Caliburn.PresentationFramework.ApplicationModel
         /// <summary>
         /// Called when shutdown attempted.
         /// </summary>
-        /// <param name="rootModel">The root model.</param>
+        /// <param name="guard">The guard.</param>
         /// <param name="view">The view.</param>
-        /// <param name="handleShutdownModel">The handler for the shutdown model.</param>
-        /// <param name="e">The <see cref="System.ComponentModel.CancelEventArgs"/> instance containing the event data.</param>
-        protected virtual void OnShutdownAttempted(IScreen rootModel, Window view, Action<ISubordinate, Action> handleShutdownModel, CancelEventArgs e)
+        /// <param name="e">The <see cref="CancelEventArgs"/> instance containing the event data.</param>
+        void OnShutdownAttempted(IGuardClose guard, Window view, CancelEventArgs e)
         {
-            if (_actuallyClosing || rootModel.CanShutdown())
+            if (_actuallyClosing)
             {
                 _actuallyClosing = false;
                 return;
             }
 
-            bool runningAsync = false;
+            bool runningAsync = false, shouldEnd = false;
 
-            var custom = rootModel as ISupportCustomShutdown;
-            if (custom != null && handleShutdownModel != null)
-            {
-                var shutdownModel = custom.CreateShutdownModel();
-                var shouldEnd = false;
+            guard.CanClose(canClose =>{
+                if(runningAsync && canClose)
+                {
+                    _actuallyClosing = true;
+                    view.Close();
+                }
+                else e.Cancel = !canClose;
 
-                handleShutdownModel(
-                    shutdownModel,
-                    () =>
-                    {
-                        var canShutdown = custom.CanShutdown(shutdownModel);
-                        if (runningAsync && canShutdown)
-                        {
-                            _actuallyClosing = true;
-                            view.Close();
-                        }
-                        else e.Cancel = !canShutdown;
+                shouldEnd = true;
+            });
 
-                        shouldEnd = true;
-                    });
-
-                if (shouldEnd)
-                    return;
-            }
+            if (shouldEnd)
+                return;
 
             runningAsync = e.Cancel = true;
         }

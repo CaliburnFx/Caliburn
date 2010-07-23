@@ -7,24 +7,15 @@
     using PresentationFramework.ViewModels;
 
     public class OpenDialogResult<TDialog> : OpenResultBase<TDialog>
-        where TDialog : IScreen
     {
         private readonly Func<ResultExecutionContext, TDialog> _locateModal = 
             c => c.ServiceLocator.GetInstance<IViewModelFactory>().Create<TDialog>();
-
-        private Action<ISubordinate, Action> _handleShutdown;
 
         public OpenDialogResult() {}
 
         public OpenDialogResult(TDialog child)
         {
             _locateModal = c => child;
-        }
-
-        public OpenDialogResult<TDialog> HandleShutdownWith(Action<ISubordinate, Action> handler)
-        {
-            _handleShutdown = handler;
-            return this;
         }
 
         public override void Execute(ResultExecutionContext context)
@@ -35,21 +26,23 @@
             if(_onConfigure != null)
                 _onConfigure(child);
 
-            var notifier = child as ILifecycleNotifier;
-            if (notifier != null)
+            var deactivator = child as IDeactivate;
+            if (deactivator != null)
             {
-                notifier.WasShutdown +=
-                    (s, e) =>{
-                        if(_onShutDown != null)
-                            _onShutDown(child);
+                deactivator.Deactivated += (s, e) =>{
+                    if(!e.WasClosed)
+                        return;
 
-                        OnCompleted(null, false);
-                    };
+                    if (_onClose != null)
+                        _onClose(child);
+
+                    OnCompleted(null, false);
+                };
             }
 
-            dialogManager.ShowDialog(child, null, _handleShutdown);
+            dialogManager.ShowDialog(child, null);
 
-            if(notifier == null)
+            if(deactivator == null)
                 OnCompleted(null, false);
         }
     }

@@ -3,9 +3,9 @@ namespace Caliburn.ShellFramework.Results
     using System;
     using PresentationFramework.RoutedMessaging;
 
-    public interface IOpenResult<TChild> : IResult
+    public interface IOpenResult<TTarget> : IResult
     {
-        Action<TChild> OnConfigure { get; set; }
-        Action<TChild> OnShutDown { get; set; }
+        Action<TTarget> OnConfigure { get; set; }
+        Action<TTarget> OnClose { get; set; }
     }
 }

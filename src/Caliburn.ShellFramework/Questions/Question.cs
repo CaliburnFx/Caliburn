@@ -3,26 +3,22 @@
     using System.Collections.Generic;
     using System.Linq;
     using PresentationFramework;
-    using PresentationFramework.ApplicationModel;
-    using PresentationFramework.Screens;
     using PresentationFramework.ViewModels;
 
-    public class Question : PropertyChangedBase, ISubordinate
+    public class Question : PropertyChangedBase
     {
         private Answer _answer = Answer.No;
 
-        public Question(IScreen master, string text)
-            : this(master, text, Answer.No, Answer.Yes, Answer.Cancel) {}
+        public Question(string text)
+            : this(text, Answer.No, Answer.Yes, Answer.Cancel) {}
 
-        public Question(IScreen master, string text, params Answer[] possibleAnswers)
+        public Question(string text, params Answer[] possibleAnswers)
         {
-            Master = master;
             Text = text;
             PossibleAnswers = new BindableEnumCollection<Answer>(possibleAnswers);
             Buttons = ConvertToButtons(possibleAnswers);
         }
 
-        public IScreen Master { get; private set; }
         public string Text { get; private set; }
         public BindableEnumCollection<Answer> PossibleAnswers { get; set; }
         public IObservableCollection<ButtonModel> Buttons { get; set; }

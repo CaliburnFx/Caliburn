@@ -13,14 +13,14 @@
 
     public static class Show
     {
-        public static OpenScreenSubjectResult ChildSubject(IScreenSubject screenSubject)
+        public static OpenScreenSubjectResult ChildSubject(ISubjectSpecification subjectSpecification)
         {
-            return new OpenScreenSubjectResult(screenSubject);
+            return new OpenScreenSubjectResult(subjectSpecification);
         }
 
         public static OpenScreenSubjectResult ChildFor<T>(T subject)
         {
-            return ChildSubject(new ScreenSubject<T>(subject));
+            return ChildSubject(new SubjectSpecification<T>(subject));
         }
 
         public static OpenChildResult<TChild> Child<TChild>()
@@ -35,14 +35,14 @@
             return new OpenChildResult<TChild>(child);
         }
 
-        public static DialogScreenSubjectResult DialogSubject(IScreenSubject screenSubject)
+        public static DialogScreenSubjectResult DialogSubject(ISubjectSpecification subjectSpecification)
         {
-            return new DialogScreenSubjectResult(screenSubject);
+            return new DialogScreenSubjectResult(subjectSpecification);
         }
 
         public static DialogScreenSubjectResult DialogFor<T>(T subject)
         {
-            return new DialogScreenSubjectResult(new ScreenSubject<T>(subject));
+            return new DialogScreenSubjectResult(new SubjectSpecification<T>(subject));
         }
 
         public static OpenDialogResult<TModel> Dialog<TModel>()

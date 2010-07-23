@@ -30,13 +30,13 @@
     public class PresentationFrameworkConfiguration :
         ConventionalModule<PresentationFrameworkConfiguration, IPresentationFrameworkServicesDescription>
     {
-        private bool _registerAllScreensWithSubjects;
-        private bool _nameInstances;
+        private bool registerItemsWithSubjects;
+        private bool nameInstances;
 
 #if !SILVERLIGHT
-        private static readonly bool _isInDesignMode = DesignerProperties.GetIsInDesignMode(new DependencyObject());
+        private static readonly bool isInDesignMode = DesignerProperties.GetIsInDesignMode(new DependencyObject());
 #else
-        private static readonly bool _isInDesignMode = DesignerProperties.GetIsInDesignMode(new UserControl());
+        private static readonly bool isInDesignMode = DesignerProperties.GetIsInDesignMode(new UserControl());
 #endif
 
         /// <summary>
@@ -47,24 +47,24 @@
         /// </value>
         public static bool IsInDesignMode
         {
-            get { return _isInDesignMode; }
+            get { return isInDesignMode; }
         }
 
         /// <summary>
         /// Searches the <see cref="IAssemblySource"/> and registers all screens which concretely implement <see cref="IScreen{T}"/> using their closed interface type.
         /// </summary>
-        public PresentationFrameworkConfiguration RegisterAllScreensWithSubjects()
+        public PresentationFrameworkConfiguration RegisterAllItemsWithSubjects()
         {
-            return RegisterAllScreensWithSubjects(false);
+            return RegisterAllItemsWithSubjects(false);
         }
 
         /// <summary>
         /// Searches the <see cref="IAssemblySource"/> and registers all screens which concretely implement <see cref="IScreen{T}"/> using their closed interface type.
         /// </summary>
-        public PresentationFrameworkConfiguration RegisterAllScreensWithSubjects(bool nameInstances)
+        public PresentationFrameworkConfiguration RegisterAllItemsWithSubjects(bool nameInstances)
         {
-            _registerAllScreensWithSubjects = true;
-            _nameInstances = nameInstances;
+            registerItemsWithSubjects = true;
+            this.nameInstances = nameInstances;
             return this;
         }
 
@@ -119,7 +119,7 @@
             Bind.Initialize(viewModelBinder);
             EnumerableResults.Initialize(serviceLocator);
 
-            if (!_registerAllScreensWithSubjects)
+            if (!registerItemsWithSubjects)
                 return;
 
             try
@@ -127,24 +127,24 @@
                 var registry = serviceLocator.GetInstance<IRegistry>();
                 var assemblySource = serviceLocator.GetInstance<IAssemblySource>();
 
-                assemblySource.Apply(x => RegisterScreens(registry, x));
-                assemblySource.AssemblyAdded += assembly => RegisterScreens(registry, assembly);
+                assemblySource.Apply(x => RegisterItemsWithSubjects(registry, x));
+                assemblySource.AssemblyAdded += assembly => RegisterItemsWithSubjects(registry, assembly);
             }
             catch(ActivationException)
             {
             }
         }
 
-        private void RegisterScreens(IRegistry registry, Assembly assembly)
+        private void RegisterItemsWithSubjects(IRegistry registry, Assembly assembly)
         {
             var matches = from type in CoreExtensions.GetInspectableTypes(assembly)
-                          let service = type.FindInterfaceThatCloses(typeof(IScreen<>))
+                          let service = type.FindInterfaceThatCloses(typeof(IHaveSubject<>))
                           where service != null
                           select new PerRequest
                           {
                               Service = service,
                               Implementation = type,
-                              Name = _nameInstances ? type.AssemblyQualifiedName : null
+                              Name = nameInstances ? type.AssemblyQualifiedName : null
                           };
 
             registry.Register(matches.OfType<IComponentRegistration>());

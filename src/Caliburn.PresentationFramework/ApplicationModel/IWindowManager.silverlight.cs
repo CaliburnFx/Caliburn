@@ -14,8 +14,7 @@ namespace Caliburn.PresentationFramework.ApplicationModel
         /// </summary>
         /// <param name="rootModel">The root model.</param>
         /// <param name="context">The context.</param>
-        /// <param name="handleShutdownModel">The handle shutdown model.</param>
-        void ShowDialog(object rootModel, object context, Action<ISubordinate, Action> handleShutdownModel);
+        void ShowDialog(object rootModel, object context);
     }
 }
 

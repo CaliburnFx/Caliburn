@@ -1,64 +1,280 @@
 ﻿namespace Caliburn.PresentationFramework.Screens
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Windows;
     using Behaviors;
+    using Core.Logging;
+    using Views;
 
     /// <summary>
-    /// A base implementation of <see cref="IScreen"/> and <see cref="IScreenEx"/>.
+    /// A base implementation of <see cref="IScreen"/>.
     /// </summary>
-    public class Screen : ScreenBase
+    public class Screen : PropertyChangedBase, IScreen, IChild<IConductor>, IViewAware
     {
+        protected static readonly ILog Log = LogManager.GetLog(typeof(Screen));
+
+        bool isActive;
+        bool isInitialized;
+        IConductor parent;
+        string displayName;
+        readonly Dictionary<object, object> views = new Dictionary<object, object>();
+
         /// <summary>
-        /// Initializes this instance.
+        /// Creates an instance of the screen.
         /// </summary>
-        public override void Initialize()
+        public Screen()
         {
-            if(!IsInitialized)
+            DisplayName = GetType().FullName;
+        }
+
+        /// <summary>
+        /// Gets or Sets the Parent <see cref="IConductor"/>
+        /// </summary>
+        [DoNotNotify]
+        public IConductor Parent
+        {
+            get { return parent; }
+            set
             {
-                OnInitialize();
-                IsInitialized = true;
+                parent = value;
+                NotifyOfPropertyChange("Parent");
             }
         }
 
         /// <summary>
-        /// Shutdowns this instance.
+        /// Gets or Sets the Display Name
         /// </summary>
-        public override void Shutdown()
+        [DoNotNotify]
+        public string DisplayName
         {
-            OnShutdown();
-        }
-
-        /// <summary>
-        /// Activates this instance.
-        /// </summary>
-        public override void Activate()
-        {
-            if(!IsActive)
+            get { return displayName; }
+            set
             {
-                OnActivate();
-                IsActive = true;
+                displayName = value;
+                NotifyOfPropertyChange("DisplayName");
             }
         }
 
         /// <summary>
-        /// Deactivates this instance.
+        /// Indicates whether or not this instance is currently active.
         /// </summary>
-        public override void Deactivate()
+        [DoNotNotify]
+        public bool IsActive
+        {
+            get { return isActive; }
+            private set
+            {
+                isActive = value;
+                NotifyOfPropertyChange("IsActive");
+            }
+        }
+
+        /// <summary>
+        /// Indicates whether or not this instance is currently initialized.
+        /// </summary>
+        [DoNotNotify]
+        public bool IsInitialized
+        {
+            get { return isInitialized; }
+            private set
+            {
+                isInitialized = value;
+                NotifyOfPropertyChange("IsInitialized");
+            }
+        }
+
+        /// <summary>
+        /// Raised after activation occurs.
+        /// </summary>
+        public event EventHandler<ActivationEventArgs> Activated = delegate { };
+
+        /// <summary>
+        /// Raised after deactivation.
+        /// </summary>
+        public event EventHandler<DeactivationEventArgs> AttemptingDeactivation = delegate { };
+
+        /// <summary>
+        /// Raised after deactivation.
+        /// </summary>
+        public event EventHandler<DeactivationEventArgs> Deactivated = delegate { };
+
+        void IActivate.Activate()
         {
             if(IsActive)
+                return;
+
+            var initialized = false;
+
+            if(!IsInitialized)
             {
-                OnDeactivate();
-                IsActive = false;
+                IsInitialized = initialized = true;
+                OnInitialize();
+            }
+
+            IsActive = true;
+            Log.Info("Activating {0}.", this);
+            OnActivate();
+
+            Activated(this, new ActivationEventArgs {
+                WasInitialized = initialized
+            });
+        }
+
+        /// <summary>
+        /// Called when initializing.
+        /// </summary>
+        protected virtual void OnInitialize() {}
+
+        /// <summary>
+        /// Called when activating.
+        /// </summary>
+        protected virtual void OnActivate() {}
+
+        void IDeactivate.Deactivate(bool close)
+        {
+            if(!IsActive && !IsInitialized)
+                return;
+
+            AttemptingDeactivation(this, new DeactivationEventArgs {
+                WasClosed = close
+            });
+
+            IsActive = false;
+            Log.Info("Deactivating {0}.", this);
+            OnDeactivate(close);
+
+            if(close)
+                Log.Info("Closed {0}.", this);
+
+            Deactivated(this, new DeactivationEventArgs {
+                WasClosed = close
+            });
+        }
+
+        /// <summary>
+        /// Called when deactivating.
+        /// </summary>
+        /// <param name="close">Inidicates whether this instance will be closed.</param>
+        protected virtual void OnDeactivate(bool close) {}
+
+        /// <summary>
+        /// Called to check whether or not this instance can close.
+        /// </summary>
+        /// <param name="callback">The implementor calls this action with the result of the close check.</param>
+        public virtual void CanClose(Action<bool> callback)
+        {
+            callback(true);
+        }
+
+        /// <summary>
+        /// Attaches a view to this instance.
+        /// </summary>
+        /// <param name="view">The view.</param>
+        /// <param name="context">The context in which the view appears.</param>
+        public virtual void AttachView(object view, object context)
+        {
+            var loadWired = views.Values.Contains(view);
+            views[context ?? DefaultViewLocator.DefaultContext] = view;
+
+            var element = view as FrameworkElement;
+            if(!loadWired && element != null)
+                element.Loaded += delegate { OnViewLoaded(view); };
+        }
+
+        /// <summary>
+        /// Called when an attached view's Loaded event fires.
+        /// </summary>
+        /// <param name="view"></param>
+        protected virtual void OnViewLoaded(object view) {}
+
+        /// <summary>
+        /// Gets a view previously attached to this instance.
+        /// </summary>
+        /// <param name="context">The context denoting which view to retrieve.</param>
+        /// <returns>The view.</returns>
+        public virtual object GetView(object context)
+        {
+            object view;
+            views.TryGetValue(context ?? DefaultViewLocator.DefaultContext, out view);
+            return view;
+        }
+
+        /// <summary>
+        /// Tries to close this instance by asking its Parent to initiate shutdown or by asking it's corresponding default view to close.
+        /// </summary>
+        public void TryClose()
+        {
+            if(Parent != null)
+                Parent.CloseItem(this);
+            else
+            {
+                var view = GetView(null);
+
+                if(view == null)
+                {
+                    var ex = new NotSupportedException("A Parent or default view is required.");
+                    Log.Error(ex);
+                    throw ex;
+                }
+
+                var method = view.GetType().GetMethod("Close");
+                if(method != null)
+                {
+                    method.Invoke(view, null);
+                    return;
+                }
+
+                var property = view.GetType().GetProperty("IsOpen");
+                if(property != null)
+                {
+                    property.SetValue(view, false, new object[] {});
+                    return;
+                }
+
+                var ex2 = new NotSupportedException("The default view does not support Close/IsOpen.");
+                Log.Error(ex2);
+                throw ex2;
             }
         }
+
+#if !SILVERLIGHT
+
+        /// <summary>
+        /// Closes this instance by asking its Parent to initiate shutdown or by asking it's corresponding default view to close.
+        /// This overload also provides an opportunity to pass a dialog result to it's corresponding default view.
+        /// </summary>
+        /// <param name="dialogResult">The dialog result.</param>
+        public virtual void TryClose(bool? dialogResult)
+        {
+            var view = GetView(null);
+
+            if(view != null)
+            {
+                var property = view.GetType().GetProperty("DialogResult");
+                if(property != null)
+                    property.SetValue(view, dialogResult, null);
+            }
+
+            TryClose();
+        }
+
+#endif
     }
 
     /// <summary>
     /// A basic implementation of <see cref="IScreen{T}"/>
     /// </summary>
     /// <typeparam name="T">The screen's type.</typeparam>
-    public class Screen<T> : Screen, IScreen<T>
+    public class Screen<T> : Screen, IHaveSubject<T>
     {
-        private T _subject;
+        T subject;
+
+        object IHaveSubject.Subject
+        {
+            get { return Subject; }
+        }
 
         /// <summary>
         /// Gets the subject.
@@ -67,7 +283,12 @@
         [DoNotNotify]
         public virtual T Subject
         {
-            get { return _subject; }
+            get { return subject; }
+        }
+
+        IHaveSubject IHaveSubject.WithSubject(object subject)
+        {
+            return WithSubject((T)subject);
         }
 
         /// <summary>
@@ -75,9 +296,9 @@
         /// </summary>
         /// <param name="subject">The subject.</param>
         /// <returns>Self</returns>
-        public virtual IScreen<T> WithSubject(T subject)
+        public virtual IHaveSubject<T> WithSubject(T subject)
         {
-            _subject = subject;
+            this.subject = subject;
             NotifyOfPropertyChange(() => Subject);
             return this;
         }

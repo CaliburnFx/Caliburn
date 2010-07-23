@@ -45,8 +45,7 @@ namespace Caliburn.ShellFramework.Results
 
             if (_waitForClose)
             {
-                window.Closed += delegate
-                {
+                window.Closed += delegate{
                     Completed(this, new ResultCompletionEventArgs());
                 };
             }

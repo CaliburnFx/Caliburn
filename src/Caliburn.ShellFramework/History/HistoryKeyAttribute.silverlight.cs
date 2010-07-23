@@ -4,7 +4,6 @@ namespace Caliburn.ShellFramework.History
 {
     using System;
     using Microsoft.Practices.ServiceLocation;
-    using PresentationFramework.Screens;
 
     public class HistoryKeyAttribute : Attribute, IHistoryKey
     {
@@ -22,9 +21,9 @@ namespace Caliburn.ShellFramework.History
             get { return _value; }
         }
 
-        public IScreen GetInstance()
+        public object GetInstance()
         {
-            return (IScreen)ServiceLocator.Current.GetInstance(_type);
+            return ServiceLocator.Current.GetInstance(_type);
         }
     }
 }

@@ -21,7 +21,7 @@ namespace Caliburn.ShellFramework.History
         private readonly IAssemblySource _assemblySource;
 
         private HistoryConfiguration _config;
-        private IScreen _previousScreen;
+        private object _previousScreen;
         private IList<IHistoryKey> _historyKeys;
 
         public DefaultHistoryCoordinator(IStateManager stateManager, IAssemblySource assemblySource)
@@ -35,56 +35,60 @@ namespace Caliburn.ShellFramework.History
             _historyKeys = _assemblySource.SelectMany(assembly => FindKeys(assembly)).ToList();
             _assemblySource.AssemblyAdded += assembly => FindKeys(assembly).Apply(x => _historyKeys.Add(x));
 
-            _config = new HistoryConfiguration
-            {
-                DetermineScreen = value =>{
+            _config = new HistoryConfiguration {
+                DetermineItem = value =>{
                     var key = _historyKeys.FirstOrDefault(x => x.Value == value);
                     return key != null
-                               ? key.GetInstance()
-                               : null;
+                        ? key.GetInstance()
+                        : null;
                 }
             };
 
             configurator(_config);
 
-            _config.Host.PropertyChanged += Host_PropertyChanged;
+            _config.Conductor.PropertyChanged += Host_PropertyChanged;
+            _config.Conductor.ActivationProcessed += Host_ActivationProcessed;
             _stateManager.AfterStateLoad += OnAfterStateLoad;
             _stateManager.Initialize(_config.StateName);
 
-            Log.Info("History coordinator started for host {0} with state {1}.", _config.Host, _config.StateName);
+            Log.Info("History coordinator started for conductor {0} with state {1}.", _config.Conductor, _config.StateName);
         }
 
         public void Refresh()
         {
-            Log.Info("Refreshing {0} from history.", _config.Host);
+            Log.Info("Refreshing {0} from history.", _config.Conductor);
 
             var historyValue = _stateManager.Get(_config.HistoryKey);
-            var screen = _config.DetermineScreen(historyValue);
+            var screen = _config.DetermineItem(historyValue);
 
             if(screen == null)
-                _config.ScreenNotFound(historyValue);
-            else if(_config.Host.ActiveScreen == screen) 
+                _config.ItemNotFound(historyValue);
+            else if(_config.Conductor.ActiveItem == screen) 
                 return;
-            else
-            {
-                _config.Host.OpenScreen(screen, wasSuccess =>{
-                    if(wasSuccess)
-                        UpdateTitle(screen);
-                    else if(_previousScreen != null)
-                    {
-                        Log.Info("Updating history key {0}.", _config.HistoryKey);
-                        _stateManager.InsertOrUpdate(_config.HistoryKey, _previousScreen.GetHistoryValue());
-                        _stateManager.CommitChanges(_previousScreen.DisplayName);
-                        UpdateTitle(_previousScreen);
-                    }
-                });
-            }
+            else _config.Conductor.ActivateItem(screen);
         }
 
-        private void UpdateTitle(IScreen screen)
+        void Host_ActivationProcessed(object sender, ActivationProcessedEventArgs e)
+        {
+            if(e.Success)
+            {
+                UpdateTitle(sender);
+                return;
+            }
+
+            if(_previousScreen == null)
+                return;
+
+            Log.Info("Updating history key {0}.", _config.HistoryKey);
+            _stateManager.InsertOrUpdate(_config.HistoryKey, _previousScreen.GetHistoryValue());
+            _stateManager.CommitChanges(_previousScreen.DetermineDisplayName());
+            UpdateTitle(_previousScreen);
+        }
+
+        private void UpdateTitle(object item)
         {
             var oldTitle = HtmlPage.Document.GetProperty("title");
-            var newTitle = _config.AlterTitle(oldTitle.ToString(), screen);
+            var newTitle = _config.AlterTitle(oldTitle.ToString(), item);
 
             if (!string.IsNullOrEmpty(newTitle))
                 HtmlPage.Document.SetProperty("title", newTitle);
@@ -100,13 +104,13 @@ namespace Caliburn.ShellFramework.History
 
         private void Host_PropertyChanged(object sender, PropertyChangedEventArgs e)
         {
-            if (e.PropertyName != "ActiveScreen") 
+            if (e.PropertyName != "ActiveItem") 
                 return;
 
-            if (_config.Host.ActiveScreen == _previousScreen)
+            if (_config.Conductor.ActiveItem == _previousScreen)
                 return;
 
-            _previousScreen = _config.Host.ActiveScreen;
+            _previousScreen = _config.Conductor.ActiveItem;
 
             if (_previousScreen == null)
             {
@@ -118,7 +122,7 @@ namespace Caliburn.ShellFramework.History
                 Log.Info("Updating history key {0}.", _config.HistoryKey);
 
                 _stateManager.InsertOrUpdate(_config.HistoryKey, _previousScreen.GetHistoryValue());
-                _stateManager.CommitChanges(_previousScreen.DisplayName);
+                _stateManager.CommitChanges(_previousScreen.DetermineDisplayName());
 
                 UpdateTitle(_previousScreen);
             }

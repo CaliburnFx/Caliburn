@@ -12,9 +12,9 @@ namespace Caliburn.ShellFramework.Results
 
         private static Popup DefaultFindOrCreatePopupFor(UIElement target)
         {
-            var tartetName = target.GetName();
+            var targetName = target.GetName();
 
-            if (string.IsNullOrEmpty(tartetName))
+            if (string.IsNullOrEmpty(targetName))
             {
                 var popup = new Popup();
 
@@ -25,7 +25,7 @@ namespace Caliburn.ShellFramework.Results
                 return popup;
             }
 
-            var popupName = DeterminePopupName(tartetName);
+            var popupName = DeterminePopupName(targetName);
             return target.FindName(popupName) as Popup;
         }
 

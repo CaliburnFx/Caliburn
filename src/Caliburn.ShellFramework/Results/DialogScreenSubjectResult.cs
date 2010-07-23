@@ -1,49 +1,44 @@
 ﻿namespace Caliburn.ShellFramework.Results
 {
-    using System;
     using PresentationFramework.ApplicationModel;
     using PresentationFramework.RoutedMessaging;
     using PresentationFramework.Screens;
     using PresentationFramework.ViewModels;
 
-    public class DialogScreenSubjectResult : OpenResultBase<IScreen>
+    public class DialogScreenSubjectResult : OpenResultBase<object>
     {
-        private readonly IScreenSubject _screenSubject;
-        private Action<ISubordinate, Action> _handleShutdown;
+        readonly ISubjectSpecification subjectSpecification;
 
-        public DialogScreenSubjectResult(IScreenSubject screenSubject)
+        public DialogScreenSubjectResult(ISubjectSpecification subjectSpecification)
         {
-            _screenSubject = screenSubject;
-        }
-
-        public DialogScreenSubjectResult HandleShutdownWith(Action<ISubordinate, Action> handler)
-        {
-            _handleShutdown = handler;
-            return this;
+            this.subjectSpecification = subjectSpecification;
         }
 
         public override void Execute(ResultExecutionContext context)
         {
-            _screenSubject.CreateScreen(context.ServiceLocator.GetInstance<IViewModelFactory>(), screen =>{
+            subjectSpecification.CreateSubjectHost(context.ServiceLocator.GetInstance<IViewModelFactory>(), host =>{
                 if(_onConfigure != null)
-                    _onConfigure(screen);
+                    _onConfigure(host);
 
-                var notifier = screen as ILifecycleNotifier;
-                if(notifier != null)
+                var deactivator = host as IDeactivate;
+                if(deactivator != null)
                 {
-                    notifier.WasShutdown +=
+                    deactivator.Deactivated +=
                         (s, e) =>{
-                            if(_onShutDown != null)
-                                _onShutDown(screen);
+                            if(!e.WasClosed)
+                                return;
+
+                            if (_onClose != null)
+                                _onClose(host);
 
                             OnCompleted(null, false);
                         };
                 }
 
                 context.ServiceLocator.GetInstance<IWindowManager>()
-                    .ShowDialog(screen, null, _handleShutdown);
+                    .ShowDialog(host, null);
 
-                if(notifier == null)
+                if(deactivator == null)
                     OnCompleted(null, false);
             });
         }

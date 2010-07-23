@@ -10,16 +10,16 @@ namespace Caliburn.ShellFramework.History
         public HistoryConfiguration()
         {
             StateName = "Default";
-            AlterTitle = (oldTitle, screen) => screen.DisplayName;
-            ScreenNotFound = delegate { };
+            ItemNotFound = delegate { };
+            AlterTitle = (oldTitle, item) => item.DetermineDisplayName();
         }
 
         public string StateName { get; set; }
-        public IScreenConductor Host { get; set; }
+        public IConductor Conductor { get; set; }
         public string HistoryKey { get; set; }
-        public Func<string, IScreen> DetermineScreen { get; set; }
-        public Func<string, IScreen, string> AlterTitle { get; set; }
-        public Action<string> ScreenNotFound { get; set; }
+        public Func<string, object> DetermineItem { get; set; }
+        public Func<string, object, string> AlterTitle { get; set; }
+        public Action<string> ItemNotFound { get; set; }
     }
 }
 

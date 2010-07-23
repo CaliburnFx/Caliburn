@@ -60,7 +60,6 @@
             var windowManager = context.ServiceLocator.GetInstance<IWindowManager>();
 
             var question = new Question(
-                null,
                 Text,
                 _possibleAnswers
                 );
@@ -70,7 +69,10 @@
                 new[] {question}
                 );
 
-            questionDialog.WasShutdown += delegate{
+            questionDialog.Deactivated += (s,e) => {
+                if (!e.WasClosed)
+                    return;
+
                 if(_handleResult != null)
                     _handleResult(question.Answer);
                 else if(question.Answer == Answer.No || question.Answer == Answer.Cancel)
@@ -82,7 +84,7 @@
                 Completed(this, new ResultCompletionEventArgs());
             };
 
-            windowManager.ShowDialog(questionDialog, null, null);
+            windowManager.ShowDialog(questionDialog, null);
         }
 
         public event EventHandler<ResultCompletionEventArgs> Completed = delegate { };

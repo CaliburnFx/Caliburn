@@ -10,8 +10,8 @@
     /// </summary>
     public class DefaultViewModelFactory : IViewModelFactory
     {
-        private static readonly ILog Log = LogManager.GetLog(typeof(DefaultViewModelFactory));
-        private readonly IServiceLocator _serviceLocator;
+        static readonly ILog Log = LogManager.GetLog(typeof(DefaultViewModelFactory));
+        readonly IServiceLocator serviceLocator;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="DefaultViewModelFactory"/> class.
@@ -19,7 +19,7 @@
         /// <param name="serviceLocator">The service locator.</param>
         public DefaultViewModelFactory(IServiceLocator serviceLocator)
         {
-            _serviceLocator = serviceLocator;
+            this.serviceLocator = serviceLocator;
         }
 
         /// <summary>
@@ -29,7 +29,7 @@
         /// <returns>The view model.</returns>
         public T Create<T>()
         {
-            return _serviceLocator.GetInstance<T>();
+            return serviceLocator.GetInstance<T>();
         }
 
         /// <summary>
@@ -38,18 +38,18 @@
         /// <typeparam name="T">The subject's type.</typeparam>
         /// <param name="subject">The subject.</param>
         /// <returns>The screen.</returns>
-        public IScreen<T> CreateFor<T>(T subject)
+        public IHaveSubject<T> CreateFor<T>(T subject)
         {
-            var screen = _serviceLocator.GetAllInstances<IScreen<T>>()
-                             .FirstOrDefault();
+            var subjectHost = serviceLocator.GetAllInstances<IHaveSubject<T>>()
+                .FirstOrDefault();
 
-            if(screen == null)
+            if(subjectHost == null)
             {
-                screen = new Screen<T>();
+                subjectHost = new Screen<T>();
                 Log.Warn("Screen not found for subject {0}.  Created default Screen<T>.", subject);
             }
 
-            return screen.WithSubject(subject);
+            return subjectHost.WithSubject(subject);
         }
     }
 }

@@ -3,18 +3,13 @@ namespace Caliburn.PresentationFramework.ApplicationModel
     using System.Collections.Generic;
     using System.Windows.Input;
     using RoutedMessaging;
+    using Screens;
 
     /// <summary>
     /// Represents a shortcut.
     /// </summary>
-    public interface IShortcut
+    public interface IShortcut : IHaveDisplayName
     {
-        /// <summary>
-        /// Gets the display name.
-        /// </summary>
-        /// <value>The display name.</value>
-        string DisplayName { get; }
-
         /// <summary>
         /// Gets or sets the modifers.
         /// </summary>

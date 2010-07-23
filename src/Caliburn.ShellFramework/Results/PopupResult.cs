@@ -3,8 +3,8 @@
     using System;
     using System.Windows;
     using System.Windows.Controls.Primitives;
-    using PresentationFramework.ApplicationModel;
     using PresentationFramework.RoutedMessaging;
+    using PresentationFramework.Screens;
     using PresentationFramework.ViewModels;
     using PresentationFramework.Views;
 
@@ -27,13 +27,16 @@
             if (_onConfigure != null)
                 _onConfigure(child);
 
-            var notifier = child as ILifecycleNotifier;
-            if (notifier != null)
+            var deactivator = child as IDeactivate;
+            if (deactivator != null)
             {
-                notifier.WasShutdown +=
+                deactivator.Deactivated +=
                     (s, e) =>{
-                        if(_onShutDown != null)
-                            _onShutDown(child);
+                        if(!e.WasClosed)
+                            return;
+
+                        if (_onClose != null)
+                            _onClose(child);
 
                         OnCompleted(null, false);
                     };
@@ -59,7 +62,7 @@
             popup.IsOpen = true;
             popup.CaptureMouse();
 
-            if (notifier == null)
+            if (deactivator == null)
                 OnCompleted(null, false);
         }
     }

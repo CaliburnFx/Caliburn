@@ -2,57 +2,62 @@
 {
     using System;
     using System.Linq;
-    using PresentationFramework.ApplicationModel;
     using PresentationFramework.RoutedMessaging;
     using PresentationFramework.Screens;
     using PresentationFramework.ViewModels;
 
-    public class OpenScreenSubjectResult : OpenResultBase<IScreen>
+    public class OpenScreenSubjectResult : OpenResultBase<object>
     {
-        private readonly IScreenSubject _screenSubject;
-        private Func<ResultExecutionContext, IScreenCollection> _locateParent;
+        private readonly ISubjectSpecification subjectSpecification;
+        private Func<ResultExecutionContext, IConductor> locateParent;
 
-        public OpenScreenSubjectResult(IScreenSubject screenSubject)
+        public OpenScreenSubjectResult(ISubjectSpecification subjectSpecification)
         {
-            _screenSubject = screenSubject;
+            this.subjectSpecification = subjectSpecification;
         }
 
         public OpenScreenSubjectResult In<TParent>()
-            where TParent : IScreenCollection
+            where TParent : IConductor
         {
-            _locateParent = c => c.ServiceLocator.GetInstance<IViewModelFactory>().Create<TParent>();
+            locateParent = c => c.ServiceLocator.GetInstance<IViewModelFactory>().Create<TParent>();
             return this;
         }
 
-        public OpenScreenSubjectResult In(IScreenCollection parent)
+        public OpenScreenSubjectResult In(IConductor parent)
         {
-            _locateParent = c => parent;
+            locateParent = c => parent;
             return this;
         }
 
         public override void Execute(ResultExecutionContext context)
         {
-            if (_locateParent == null)
-                _locateParent = c => (IScreenCollection)c.HandlingNode.MessageHandler.Unwrap();
+            if (locateParent == null)
+                locateParent = c => (IConductor)c.HandlingNode.MessageHandler.Unwrap();
 
-            var parent = _locateParent(context);
+            var parent = locateParent(context);
 
-            parent.OpenScreen(_screenSubject, success =>{
+            parent.ActivateSubject(subjectSpecification, success =>{
                 if(success)
                 {
-                    var child = parent.Screens.FirstOrDefault(_screenSubject.Matches);
+                    var child = parent
+                        .GetConductedItems()
+                        .OfType<IHaveSubject>()
+                        .FirstOrDefault(subjectSpecification.Matches);
 
                     if (_onConfigure != null)
                         _onConfigure(child);
 
                     OnOpened(parent, child);
 
-                    var notifier = child as ILifecycleNotifier;
-                    if(notifier != null)
+                    var deactivator = child as IDeactivate;
+                    if(deactivator != null)
                     {
-                        notifier.WasShutdown += delegate{
-                            if(_onShutDown != null)
-                                _onShutDown(child);
+                        deactivator.Deactivated += (s, e) =>{
+                            if (!e.WasClosed)
+                                return;
+
+                            if (_onClose != null)
+                                _onClose(child);
 
                             OnCompleted(null, false);
                         };
@@ -63,6 +68,6 @@
             });
         }
 
-        protected virtual void OnOpened(IScreenCollection parent, IScreen child) {}
+        protected virtual void OnOpened(IConductor parent, object child) { }
     }
 }

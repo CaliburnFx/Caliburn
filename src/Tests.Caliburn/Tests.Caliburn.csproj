@@ -147,7 +147,6 @@
     <Compile Include="Core\A_bindable_collection.cs" />
     <Compile Include="Core\The_resolve_markup_extension.cs" />
     <Compile Include="Fakes\FakeScreen.cs" />
-    <Compile Include="Fakes\FakeShutdownModel.cs" />
     <Compile Include="Fakes\Model\Address.cs" />
     <Compile Include="Fakes\Model\Customer.cs" />
     <Compile Include="Fakes\DependentService.cs" />
@@ -157,10 +156,6 @@
     <Compile Include="Fakes\Model\StopModel.cs" />
     <Compile Include="Fakes\UI\UIBoundToCustomerIndexer.cs" />
     <Compile Include="Fakes\UI\UIWithHierarchicalPath.cs" />
-    <Compile Include="Fakes\ViewModel\Address.cs" />
-    <Compile Include="Fakes\ViewModel\Contact.cs" />
-    <Compile Include="Fakes\ViewModel\PhoneNumber.cs" />
-    <Compile Include="Fakes\ViewModel\PhoneNumberType.cs" />
     <Compile Include="Fakes\UI\ControlHost.cs" />
     <Compile Include="Fakes\IDependentService.cs" />
     <Compile Include="Fakes\MethodInvokeTarget.cs" />
@@ -194,17 +189,8 @@
     <Compile Include="Fakes\UI\UIWithMultibindingToStyle.cs" />
     <Compile Include="Fakes\UI\UIWithPrioritybindingStyleAndTriggers.cs" />
     <Compile Include="Fakes\UI\UIWithPrioritybindingToStyle.cs" />
-    <Compile Include="MVP\Models\An_undo_redo_handle.cs" />
-    <Compile Include="MVP\Models\A_property_being_set.cs" />
-    <Compile Include="MVP\Models\Raises_notifications_when.cs" />
-    <Compile Include="MVP\Models\The_undo_redo_manager.cs" />
-    <Compile Include="MVP\Models\When_building_up_a_new_model.cs" />
-    <Compile Include="MVP\Models\When_cancelling_changes_on_a_model.cs" />
-    <Compile Include="MVP\Models\When_commiting_changes_on_a_model.cs" />
-    <Compile Include="MVP\Models\When_editing_a_model.cs" />
     <Compile Include="MVP\Presenters\A_screen_conductor_with_collection_all_screens_active.cs" />
     <Compile Include="MVP\Presenters\A_multi_presenter_manager.cs" />
-    <Compile Include="MVP\Presenters\A_navigator.cs" />
     <Compile Include="MVP\Presenters\A_screen.cs" />
     <Compile Include="MVP\Presenters\A_presenter_manager.cs" />
     <Compile Include="MVP\The_DefaultViewLocator.cs" />
@@ -277,10 +263,6 @@
     <ProjectReference Include="..\Caliburn.MEF\Caliburn.MEF.csproj">
       <Project>{F350C4CB-48AE-4A1F-9BAE-C836D6C7C0E4}</Project>
       <Name>Caliburn.MEF</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Caliburn.ModelFramework\Caliburn.ModelFramework.csproj">
-      <Project>{79504818-6612-414D-BBF4-F8F0BB7ABBDC}</Project>
-      <Name>Caliburn.ModelFramework</Name>
     </ProjectReference>
     <ProjectReference Include="..\Caliburn.Ninject\Caliburn.Ninject.csproj">
       <Project>{05109A0A-D27D-472A-9FE3-9896DEF1FD4C}</Project>

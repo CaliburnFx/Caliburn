@@ -1,20 +1,18 @@
 namespace Caliburn.ShellFramework.Menus
 {
     using System;
-    using System.Collections;
     using System.Collections.Generic;
-    using System.Globalization;
+    using System.ComponentModel;
     using System.Reflection;
     using System.Windows.Controls;
     using System.Windows.Input;
-    using Core;
     using Microsoft.Practices.ServiceLocation;
     using PresentationFramework;
     using PresentationFramework.ApplicationModel;
     using PresentationFramework.RoutedMessaging;
     using Resources;
 
-    public class MenuModel : PropertyChangedBase, IMenu, IShortcut
+    public class MenuModel : BindableCollection<IMenu>, IMenu, IShortcut
     {
         private static IInputManager _inputManager;
 
@@ -26,20 +24,17 @@ namespace Caliburn.ShellFramework.Menus
         private readonly Func<IEnumerable<IResult>> _execute;
         private readonly Func<bool> _canExecute = () => true;
         private string _text;
-        private Image _icon;
         private IMenu _parent;
         private ModifierKeys _modifiers;
         private Key _key;
+        private string displayName;
 
         public static MenuModel Separator
         {
             get { return new MenuModel { IsSeparator = true }; }
         }
 
-        public MenuModel()
-        {
-            Children = new BindableCollection<IMenu>();
-        }
+        public MenuModel() {}
 
         public MenuModel(string text) 
             : this()
@@ -62,25 +57,35 @@ namespace Caliburn.ShellFramework.Menus
         public IMenu Parent
         {
             get { return _parent; }
-            set { _parent = value; NotifyOfPropertyChange(() => Parent); }
+            set
+            {
+                _parent = value; 
+                OnPropertyChanged(new PropertyChangedEventArgs("Parent"));
+            }
         }
 
         public string DisplayName
         {
-            get { return string.IsNullOrEmpty(Text) ? null : Text.Replace("_", string.Empty); }
+            get { return displayName; }
+            set
+            {
+                displayName = value;
+                OnPropertyChanged(new PropertyChangedEventArgs("DisplayName"));
+            }
         }
 
         public string Text
         {
             get { return _text; }
-            set { _text = value; NotifyOfPropertyChange(() => Text); }
+            set
+            {
+                _text = value;
+                OnPropertyChanged(new PropertyChangedEventArgs("Text"));
+                DisplayName = string.IsNullOrEmpty(Text) ? null : Text.Replace("_", string.Empty);
+            }
         }
 
-        public Image Icon
-        {
-            get { return _icon; }
-        }
-
+        public Image Icon { get; private set; }
         public bool IsSeparator { get; private set; }
 
         public string ActionText
@@ -93,7 +98,10 @@ namespace Caliburn.ShellFramework.Menus
             get { return _inputManager.GetDisplayString(_key, _modifiers); }
         }
 
-        public IObservableCollection<IMenu> Children { get; private set; }
+        public IObservableCollection<IMenu> Children
+        {
+            get { return this; }
+        }
 
         public bool CanExecute
         {
@@ -105,31 +113,16 @@ namespace Caliburn.ShellFramework.Menus
             return _execute != null ? _execute() : new IResult[] {};
         }
 
-        public MenuScope CreateScope(ILifecycleNotifier scope)
+        protected override void SetItem(int index, IMenu item)
         {
-            return new MenuScope(scope);
+            base.SetItem(index, item);
+            item.Parent = this;
         }
 
-        public void Add(params IMenu[] menuItems)
+        protected override void InsertItem(int index, IMenu item)
         {
-            menuItems.Apply(x => x.Parent = this);
-            menuItems.Apply(Children.Add);
-        }
-
-        public int IndexOf(IMenu item)
-        {
-            return Children.IndexOf(item);
-        }
-
-        public void Insert(int index, IMenu menuItem)
-        {
-            menuItem.Parent = this;
-            Children.Insert(index, menuItem);
-        }
-
-        public bool Remove(IMenu menuItem)
-        {
-            return Children.Remove(menuItem);
+            base.InsertItem(index, item);
+            item.Parent = this;
         }
 
         ModifierKeys IShortcut.Modifers
@@ -148,9 +141,7 @@ namespace Caliburn.ShellFramework.Menus
         {
             _modifiers = modifiers;
             _key = key;
-
             _inputManager.AddShortcut(this);
-
             return this;
         }
 
@@ -170,19 +161,9 @@ namespace Caliburn.ShellFramework.Menus
             var iconSource = manager.GetBitmap(path, source.GetAssemblyName());
 
             if (source != null)
-                _icon = new Image { Source = iconSource };
+                Icon = new Image { Source = iconSource };
 
             return this;
-        }
-
-        public IEnumerator<IMenu> GetEnumerator()
-        {
-            return Children.GetEnumerator();
-        }
-
-        IEnumerator IEnumerable.GetEnumerator()
-        {
-            return GetEnumerator();
         }
     }
 }

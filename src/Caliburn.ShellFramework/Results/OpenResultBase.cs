@@ -6,7 +6,7 @@
     public abstract class OpenResultBase<TTarget> : IOpenResult<TTarget>
     {
         protected Action<TTarget> _onConfigure;
-        protected Action<TTarget> _onShutDown;
+        protected Action<TTarget> _onClose;
 
         Action<TTarget> IOpenResult<TTarget>.OnConfigure
         {
@@ -14,10 +14,10 @@
             set { _onConfigure = value; }
         }
 
-        Action<TTarget> IOpenResult<TTarget>.OnShutDown
+        Action<TTarget> IOpenResult<TTarget>.OnClose
         {
-            get { return _onShutDown; }
-            set { _onShutDown = value; }
+            get { return _onClose; }
+            set { _onClose = value; }
         }
 
         public abstract void Execute(ResultExecutionContext context);

@@ -24,13 +24,11 @@ namespace Tests.Caliburn.MVP
 				);
 		}
 
-
 		[Test]
-
 		public void should_make_an_interface_name_from_a_name_part()
 		{
 			AssertMakeInterface("A.Simple.Full.Name", "A.Simple.Full.IName");
-			AssertMakeInterface<Tests.Caliburn.Fakes.ViewModel.Address>("Tests.Caliburn.Fakes.ViewModel.IAddress");
+			AssertMakeInterface<Fakes.Model.Address>("Tests.Caliburn.Fakes.Model.IAddress");
 
 			//http://caliburn.codeplex.com/workitem/6275
 			

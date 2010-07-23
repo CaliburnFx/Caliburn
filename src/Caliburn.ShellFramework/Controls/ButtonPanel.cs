@@ -40,8 +40,8 @@
                 list.Apply(x => panel.Items.Add(x));
 
             panel.Visibility = panel.Items.Count < 1
-                                   ? Visibility.Collapsed
-                                   : Visibility.Visible;
+                ? Visibility.Collapsed
+                : Visibility.Visible;
         }
     }
 }

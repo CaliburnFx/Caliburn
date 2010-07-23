@@ -9,6 +9,7 @@ namespace Caliburn.ShellFramework.Services
     using Core.Logging;
     using PresentationFramework;
     using PresentationFramework.ApplicationModel;
+    using PresentationFramework.Screens;
     using PresentationFramework.Views;
 
     public class DefaultBusyService : IBusyService
@@ -51,19 +52,21 @@ namespace Caliburn.ShellFramework.Services
 
                 if (busyIndicator == null)
                 {
-                    var notifier = busyViewModel as ILifecycleNotifier;
-                    if (notifier == null)
+                    var activator = busyViewModel as IActivate;
+                    if (activator == null)
                         return;
 
-                    notifier.Initialized += delegate
-                    {
+                    activator.Activated += (s,e) =>{
+                        if (!e.WasInitialized)
+                            return;
+
                         var info = new BusyInfo { BusyViewModel = busyViewModel };
                         _loaders[sourceViewModel] = info;
                         UpdateLoader(info);
                     };
 
                     Log.Warn("No busy indicator with name '" + BusyIndicatorName + "' was found in the UI hierarchy. Using modal.");
-                    _windowManager.ShowDialog(busyViewModel, null, null);
+                    _windowManager.ShowDialog(busyViewModel, null);
                 }
                 else
                 {

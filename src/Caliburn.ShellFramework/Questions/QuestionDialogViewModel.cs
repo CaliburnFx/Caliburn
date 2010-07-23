@@ -74,7 +74,7 @@
         private void SelectAnswer(Answer answer)
         {
             FirstQuestion.Answer = answer;
-            Close();
+            TryClose();
         }
     }
 }
