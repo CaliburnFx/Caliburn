@@ -7,6 +7,11 @@ namespace Caliburn.PresentationFramework.Screens
     /// </summary>
     public interface IActivate
     {
+        ///<summary>
+        /// Indicates whether or not this instace is active.
+        ///</summary>
+        bool IsActive { get; }
+
         /// <summary>
         /// Activates this instance.
         /// </summary>

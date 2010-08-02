@@ -214,14 +214,23 @@
             SetContentProperty(d, view);
         }
 
-        private static void SetContentProperty(DependencyObject d, object view)
+        private static void SetContentProperty(object targetLocation, object view)
         {
-            var type = d.GetType();
+            var fe = view as FrameworkElement;
+            if (fe != null && fe.Parent != null)
+                SetContentPropertyCore(fe.Parent, null);
+
+            SetContentPropertyCore(targetLocation, view);
+        }
+
+        private static void SetContentPropertyCore(object targetLocation, object view)
+        {
+            var type = targetLocation.GetType();
             var contentProperty = type.GetAttributes<ContentPropertyAttribute>(true)
                 .FirstOrDefault() ?? new ContentPropertyAttribute("Content");
 
             type.GetProperty(contentProperty.Name)
-                .SetValue(d, view, null);
+                .SetValue(targetLocation, view, null);
         }
     }
 }
