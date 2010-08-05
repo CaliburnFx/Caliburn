@@ -10,6 +10,9 @@ namespace Caliburn.MEF
 
 	public class ProxiedCompositionBatchStrategy : CompositionBatchStrategy
 	{
+		public ProxiedCompositionBatchStrategy(bool useSetterInjection)
+			: base(useSetterInjection) { }
+
 		public override void HandleSingleton(CompositionBatch batch, PerRequest perRequest)
 		{
 			batch.AddPart(new ProxyPart(perRequest, CreatePart(perRequest)));

@@ -12,17 +12,18 @@
         private readonly ComposablePartDefinition _innerDefinition;
         private ProxyPart _part;
         private readonly Type _implementation;
-
+		
         /// <summary>
         /// Initializes a new instance of the <see cref="ProxyPartDefinition"/> class.
         /// </summary>
         /// <param name="implementation">The implementation.</param>
         /// <param name="innerDefinition">The inner definition.</param>
+		/// <param name="useSetterInjection">Use Setter Injection on parts.</param>
         public ProxyPartDefinition(Type implementation, ComposablePartDefinition innerDefinition)
         {
             _innerDefinition = innerDefinition;
             _implementation = implementation;
-        }
+		}
 
         /// <summary>
         /// Creates a new instance of a part that the definition describes.

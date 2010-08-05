@@ -17,15 +17,28 @@
 	{
 		private CompositionContainer _container;
 		private CompositionBatch _batch;
-		private CompositionBatchStrategy _batchStrategy = new CompositionBatchStrategy();
+		private bool _useSetterInjection;
+		private CompositionBatchStrategy _batchStrategy;
 
+		
 		/// <summary>
 		/// Initializes a new instance of the <see cref="MEFAdapter"/> class.
 		/// </summary>
 		/// <param name="container">The container.</param>
 		public MEFAdapter(CompositionContainer container)
+			: this(container, false) { }
+
+
+		/// <summary>
+		/// Initializes a new instance of the <see cref="MEFAdapter"/> class.
+		/// </summary>
+		/// <param name="container">The container.</param>
+		/// <param name="useSetterInjection">Specifies if setter injection is used on public properties</param>
+		public MEFAdapter(CompositionContainer container, bool useSetterInjection) 
 		{
 			_container = container;
+			_useSetterInjection = useSetterInjection;
+			_batchStrategy = new CompositionBatchStrategy(_useSetterInjection);
 
 		    IoCExtensions.SelectEligibleConstructorImplementation = type =>{
 		        return (from c in type.GetConstructors()
@@ -82,7 +95,7 @@
 		{
 			string contract = string.IsNullOrEmpty(key) ? AttributedModelServices.GetContractName(serviceType) : key;
 			var exports = _container.GetExportedValues<object>(contract);
-
+			
             if(exports.Count() > 0)
 				return exports.First();
 
@@ -132,7 +145,7 @@
 		        }
 		    });
 
-			BatchStrategy = new ProxiedCompositionBatchStrategy();
+			BatchStrategy = new ProxiedCompositionBatchStrategy(_useSetterInjection);
 
 			return this;
 		}

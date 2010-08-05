@@ -16,7 +16,6 @@
     {
         private readonly ComposablePartCatalog _innerCatalog;
         private Dictionary<ComposablePartDefinition, ComposablePartDefinition> _parts;
-
         /// <summary>
         /// Initializes a new instance of the <see cref="ProxyCatalog"/> class.
         /// </summary>
@@ -25,7 +24,7 @@
         {
             _innerCatalog = innerCatalog;
 			_parts = CreateFrom(_innerCatalog);
-
+			
             var notifyingCatalog = _innerCatalog as INotifyComposablePartCatalogChanged;
             if(notifyingCatalog != null)
                 notifyingCatalog.Changing += NotifyingCatalog_Changing;
@@ -102,7 +101,7 @@
             var type = ReflectionModelServices.GetPartType(original).Value;
 
             return type.ShouldCreateProxy()
-                       ? new ProxyPartDefinition(type, original)
+				? new ProxyPartDefinition(type, original)
                        : original;
         }
     }
