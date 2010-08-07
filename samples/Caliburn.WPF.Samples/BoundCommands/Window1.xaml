@@ -18,5 +18,8 @@
         <!--Note: Executes the command located through data binding.  The framework infers the trigger type.-->
         <Button Content="Click Me!"
                 cal:Message.Attach="BoundCommand TheCommand(message.Text)" />
-    </StackPanel>
+
+		<Button Content="Click Me! (I'll execute a Wpf ICommand)"
+				cal:Message.Attach="BoundCommand TheWpfCommand(message.Text)" />
+	</StackPanel>
 </Window>

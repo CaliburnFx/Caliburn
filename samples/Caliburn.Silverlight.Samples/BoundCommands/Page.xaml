@@ -18,5 +18,8 @@
         <!--Note: Executes the command located through data binding.  The framework infers the trigger type.-->
         <Button Content="Click Me!"
                 rm:Message.Attach="BoundCommand TheCommand(message.Text)" />
+		
+		<Button Content="Click Me! (I'll execute a Wpf ICommand)"
+				rm:Message.Attach="BoundCommand TheWpfCommand(message.Text)" />
     </StackPanel>
 </UserControl>

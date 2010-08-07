@@ -77,6 +77,7 @@
     </Compile>
     <Compile Include="MyCommand.cs" />
     <Compile Include="MyModel.cs" />
+    <Compile Include="MyWpfCommand.cs" />
     <Compile Include="Page.xaml.cs">
       <DependentUpon>Page.xaml</DependentUpon>
     </Compile>

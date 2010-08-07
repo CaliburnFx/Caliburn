@@ -80,6 +80,7 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="MyWpfCommand.cs" />
     <Compile Include="MyCommand.cs" />
     <Compile Include="MyModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
