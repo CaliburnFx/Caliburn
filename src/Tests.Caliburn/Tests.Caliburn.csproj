@@ -168,6 +168,12 @@
     <Compile Include="Fakes\Model\Order.cs" />
     <Compile Include="Fakes\Model\PresenterModelChain.cs" />
     <Compile Include="Fakes\Model\StopModel.cs" />
+    <Compile Include="Fakes\UI\UIWithMarkupExtensionsBuiltWithXaml.xaml.cs">
+      <DependentUpon>UIWithMarkupExtensionsBuiltWithXaml.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Fakes\UI\SimpleUIBuiltWithXaml.xaml.cs">
+      <DependentUpon>SimpleUIBuiltWithXaml.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Fakes\UI\UIBoundToCustomerIndexer.cs" />
     <Compile Include="Fakes\UI\UIWithHierarchicalPath.cs" />
     <Compile Include="Fakes\UI\ControlHost.cs" />
@@ -239,6 +245,7 @@
     <Compile Include="Testability\ChangeNotificationSamples\NotificationWithWrongName.cs" />
     <Compile Include="Testability\ChangeNotificationSamples\PartialNotification.cs" />
     <Compile Include="Testability\ChangeNotificationSamples\PropertyWithReferenceType.cs" />
+    <Compile Include="Testability\When_testing_Xaml_element.cs" />
     <Compile Include="Testability\The_BoundType.cs" />
     <Compile Include="Testability\When_leveraging_enumerator_settings.cs" />
     <Compile Include="Testability\When_looking_for_ambiguities.cs" />
@@ -308,6 +315,16 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="Tests.Caliburn.nunit" />
+  </ItemGroup>
+  <ItemGroup>
+    <Page Include="Fakes\UI\UIWithMarkupExtensionsBuiltWithXaml.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Fakes\UI\SimpleUIBuiltWithXaml.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Commands\" />
