@@ -14,13 +14,22 @@
 #endif
     public abstract class PropertyChangedBase : INotifyPropertyChangedEx
     {
-        /// <summary>
+
+#if !SILVERLIGHT
+		[System.Runtime.Serialization.OnDeserialized]
+		private void __OnDeserialized(System.Runtime.Serialization.StreamingContext context)
+		{
+			PropertyChanged = delegate { };
+		}
+#endif
+
+		/// <summary>
         /// Occurs when a property value changes.
         /// </summary>
 #if !SILVERLIGHT
-        [field: NonSerialized]
+		[field: NonSerialized]
 #endif
-        public virtual event PropertyChangedEventHandler PropertyChanged = delegate { };
+		public virtual event PropertyChangedEventHandler PropertyChanged = delegate { };
 
         /// <summary>
         /// Notifies subscribers of the property change.
