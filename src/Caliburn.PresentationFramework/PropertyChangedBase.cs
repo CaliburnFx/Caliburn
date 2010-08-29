@@ -15,14 +15,6 @@
     public abstract class PropertyChangedBase : INotifyPropertyChangedEx
     {
 
-#if !SILVERLIGHT
-		[System.Runtime.Serialization.OnDeserialized]
-		private void __OnDeserialized(System.Runtime.Serialization.StreamingContext context)
-		{
-			PropertyChanged = delegate { };
-		}
-#endif
-
 		/// <summary>
         /// Occurs when a property value changes.
         /// </summary>
@@ -56,7 +48,9 @@
         /// <param name="propertyName">Name of the property.</param>
         public virtual void RaisePropertyChangedEventImmediately(string propertyName)
         {
-            PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+			var handler = PropertyChanged;
+			if (handler != null)
+				handler.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
     }
 }

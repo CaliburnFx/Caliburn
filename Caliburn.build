@@ -751,6 +751,10 @@
         <include name="Autofac.dll"/>
         <include name="Caliburn.Autofac.dll"/>
         <include name="Caliburn.DynamicProxy.dll"/>
+				
+				<include name="System.Runtime.Serialization.dll"/>
+				<include name="System.Xml.dll"/>
+				
 				<!--Test Framework-->
 				<include name="nunit.framework.dll"/>
 				<include name="Rhino.Mocks.dll"/>
