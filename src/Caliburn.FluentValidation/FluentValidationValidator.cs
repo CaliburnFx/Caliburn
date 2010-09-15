@@ -9,14 +9,14 @@
     using global::FluentValidation.Validators;
     using Microsoft.Practices.ServiceLocation;
     using IValidator = global::FluentValidation.IValidator;
-	using Caliburn.Core.Behaviors;
+	using Core.Behaviors;
 
     /// <summary>
     /// An implementation of <see cref="Core.Validation.IValidator"/> that uses FluentValidation.
     /// </summary>
     public class FluentValidationValidator : ValidatorFactoryBase, Core.Validation.IValidator
     {
-        private readonly IServiceLocator _serviceLocator;
+        private readonly IServiceLocator serviceLocator;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="FluentValidationValidator"/> class.
@@ -24,7 +24,7 @@
         /// <param name="serviceLocator">The service locator.</param>
         public FluentValidationValidator(IServiceLocator serviceLocator)
         {
-            _serviceLocator = serviceLocator;
+            this.serviceLocator = serviceLocator;
         }
 
         /// <summary>
@@ -34,7 +34,7 @@
         /// <returns></returns>
         public override IValidator CreateInstance(Type validatorType)
         {
-            return _serviceLocator.GetAllInstances(validatorType)
+            return serviceLocator.GetAllInstances(validatorType)
                 .OfType<IValidator>()
                 .FirstOrDefault();
         }
@@ -48,9 +48,10 @@
         /// </returns>
         public bool ShouldValidate(PropertyInfo property)
         {
-            var validator = GetValidator(property.DeclaringType);
+            var validator = GetValidator(GetUnproxiedType(property.DeclaringType));
 
-            return validator != null && validator.CreateDescriptor().GetValidatorsForMember(property.Name).Any();
+            return validator != null && validator.CreateDescriptor()
+                .GetValidatorsForMember(property.Name).Any();
         }
 
         /// <summary>
@@ -109,6 +110,17 @@
         {
             var proxy = instance as IProxy;
             return instance == null ? null : GetValidator(proxy == null ? instance.GetType() : proxy.OriginalType);
+        }
+
+        static Type GetUnproxiedType(Type type)
+        {
+            if(typeof(IProxy).IsAssignableFrom(type))
+            {
+                if (type.BaseType != null)
+                    return type.BaseType;
+            }
+
+            return type;
         }
     }
 }
