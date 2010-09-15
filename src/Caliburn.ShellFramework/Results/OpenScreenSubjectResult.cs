@@ -44,8 +44,8 @@
                         .OfType<IHaveSubject>()
                         .FirstOrDefault(subjectSpecification.Matches);
 
-                    if (_onConfigure != null)
-                        _onConfigure(child);
+                    if(onConfigure != null)
+                        onConfigure(child);
 
                     OnOpened(parent, child);
 
@@ -53,11 +53,11 @@
                     if(deactivator != null)
                     {
                         deactivator.Deactivated += (s, e) =>{
-                            if (!e.WasClosed)
+                            if(!e.WasClosed)
                                 return;
 
-                            if (_onClose != null)
-                                _onClose(child);
+                            if(onClose != null)
+                                onClose(child);
 
                             OnCompleted(null, false);
                         };

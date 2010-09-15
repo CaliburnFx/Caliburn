@@ -10,22 +10,22 @@
 
     public class PopupResult<TPopup> : OpenResultBase<TPopup>
     {
-        private readonly Func<ResultExecutionContext, TPopup> _locateModal = 
+        private readonly Func<ResultExecutionContext, TPopup> locateModal = 
             c => c.ServiceLocator.GetInstance<IViewModelFactory>().Create<TPopup>();
 
         public PopupResult() {}
 
         public PopupResult(TPopup child)
         {
-            _locateModal = c => child;
+            locateModal = c => child;
         }
 
         public override void Execute(ResultExecutionContext context)
         {
-            var child = _locateModal(context);
+            var child = locateModal(context);
 
-            if (_onConfigure != null)
-                _onConfigure(child);
+            if (onConfigure != null)
+                onConfigure(child);
 
             var deactivator = child as IDeactivate;
             if (deactivator != null)
@@ -35,8 +35,8 @@
                         if(!e.WasClosed)
                             return;
 
-                        if (_onClose != null)
-                            _onClose(child);
+                        if (onClose != null)
+                            onClose(child);
 
                         OnCompleted(null, false);
                     };

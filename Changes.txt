@@ -63,6 +63,7 @@ V2 Alpha
 -Enabled type inspection code to be customized by using CoreExtensions.GetInspectableTypes.
 -Fixed a bug in ScreenBase related to multiple calls to OnViewLoaded. 
 -Removed support for Silverlight 2.0 and WP7. WP7 is now supported by Caliburn.Micro.
+-Complete re-write of Screens/Conductors mechanism.
 
 V1.1 Release
 -Fixed an issue in the WPF version of InteractionNode.

@@ -8,23 +8,27 @@
 
     public class OpenDialogResult<TDialog> : OpenResultBase<TDialog>
     {
-        private readonly Func<ResultExecutionContext, TDialog> _locateModal = 
+        private readonly Func<ResultExecutionContext, TDialog> locateModal = 
             c => c.ServiceLocator.GetInstance<IViewModelFactory>().Create<TDialog>();
+
+#if !SILVERLIGHT
+        public bool? DialogResult { get; set; }
+#endif
 
         public OpenDialogResult() {}
 
         public OpenDialogResult(TDialog child)
         {
-            _locateModal = c => child;
+            locateModal = c => child;
         }
 
         public override void Execute(ResultExecutionContext context)
         {
             var dialogManager = context.ServiceLocator.GetInstance<IWindowManager>();
-            var child = _locateModal(context);
+            var child = locateModal(context);
 
-            if(_onConfigure != null)
-                _onConfigure(child);
+            if(onConfigure != null)
+                onConfigure(child);
 
             var deactivator = child as IDeactivate;
             if (deactivator != null)
@@ -33,16 +37,20 @@
                     if(!e.WasClosed)
                         return;
 
-                    if (_onClose != null)
-                        _onClose(child);
+                    if (onClose != null)
+                        onClose(child);
 
                     OnCompleted(null, false);
                 };
             }
 
+#if !SILVERLIGHT
+            DialogResult = dialogManager.ShowDialog(child, null);
+#else
             dialogManager.ShowDialog(child, null);
+#endif
 
-            if(deactivator == null)
+            if (deactivator == null)
                 OnCompleted(null, false);
         }
     }

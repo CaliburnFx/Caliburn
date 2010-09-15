@@ -9,6 +9,10 @@
     {
         readonly ISubjectSpecification subjectSpecification;
 
+#if !SILVERLIGHT
+        public bool? DialogResult { get; set; }
+#endif
+
         public DialogScreenSubjectResult(ISubjectSpecification subjectSpecification)
         {
             this.subjectSpecification = subjectSpecification;
@@ -17,8 +21,8 @@
         public override void Execute(ResultExecutionContext context)
         {
             subjectSpecification.CreateSubjectHost(context.ServiceLocator.GetInstance<IViewModelFactory>(), host =>{
-                if(_onConfigure != null)
-                    _onConfigure(host);
+                if(onConfigure != null)
+                    onConfigure(host);
 
                 var deactivator = host as IDeactivate;
                 if(deactivator != null)
@@ -28,17 +32,22 @@
                             if(!e.WasClosed)
                                 return;
 
-                            if (_onClose != null)
-                                _onClose(host);
+                            if (onClose != null)
+                                onClose(host);
 
                             OnCompleted(null, false);
                         };
                 }
 
+#if !SILVERLIGHT
+                DialogResult = context.ServiceLocator.GetInstance<IWindowManager>()
+                    .ShowDialog(host, null);
+#else
                 context.ServiceLocator.GetInstance<IWindowManager>()
                     .ShowDialog(host, null);
+#endif
 
-                if(deactivator == null)
+                if (deactivator == null)
                     OnCompleted(null, false);
             });
         }

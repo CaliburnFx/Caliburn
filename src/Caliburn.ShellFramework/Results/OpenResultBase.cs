@@ -5,19 +5,19 @@
 
     public abstract class OpenResultBase<TTarget> : IOpenResult<TTarget>
     {
-        protected Action<TTarget> _onConfigure;
-        protected Action<TTarget> _onClose;
+        protected Action<TTarget> onConfigure;
+        protected Action<TTarget> onClose;
 
         Action<TTarget> IOpenResult<TTarget>.OnConfigure
         {
-            get { return _onConfigure; }
-            set { _onConfigure = value; }
+            get { return onConfigure; }
+            set { onConfigure = value; }
         }
 
         Action<TTarget> IOpenResult<TTarget>.OnClose
         {
-            get { return _onClose; }
-            set { _onClose = value; }
+            get { return onClose; }
+            set { onClose = value; }
         }
 
         public abstract void Execute(ResultExecutionContext context);
