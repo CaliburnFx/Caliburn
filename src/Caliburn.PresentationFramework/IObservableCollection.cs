@@ -2,13 +2,12 @@ namespace Caliburn.PresentationFramework
 {
     using System.Collections.Generic;
     using System.Collections.Specialized;
-    using System.ComponentModel;
 
     /// <summary>
     /// Represents a collection that is observable.
     /// </summary>
     /// <typeparam name="T"></typeparam>
-    public interface IObservableCollection<T> : IList<T>, INotifyPropertyChanged, INotifyCollectionChanged
+    public interface IObservableCollection<T> : IList<T>, INotifyPropertyChangedEx, INotifyCollectionChanged
     {
         /// <summary>
         /// Adds the range.

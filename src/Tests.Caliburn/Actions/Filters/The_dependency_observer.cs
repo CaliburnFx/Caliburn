@@ -325,11 +325,11 @@ namespace Tests.Caliburn.Actions.Filters
 		{
 			public int SubscriptionCount = 0;
 
-			public override event System.ComponentModel.PropertyChangedEventHandler PropertyChanged
-			{
-				add { base.PropertyChanged += value; SubscriptionCount++; }
-				remove { SubscriptionCount--; base.PropertyChanged -= value; }
-			}
+            //public override event System.ComponentModel.PropertyChangedEventHandler PropertyChanged
+            //{
+            //    add { base.PropertyChanged += value; SubscriptionCount++; }
+            //    remove { SubscriptionCount--; base.PropertyChanged -= value; }
+            //}
 
 
 			public int SomeModelProperty

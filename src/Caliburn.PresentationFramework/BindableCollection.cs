@@ -4,6 +4,7 @@
     using System.Collections.Generic;
     using System.Collections.ObjectModel;
     using System.Collections.Specialized;
+    using System.ComponentModel;
     using Core;
     using Invocation;
 
@@ -16,12 +17,13 @@
 #endif
     public class BindableCollection<T> : ObservableCollection<T>, IObservableCollection<T>
     {
-        private bool raiseCollectionChanged = true;
-
         /// <summary>
         /// Initializes a new instance of the <see cref="BindableCollection&lt;T&gt;"/> class.
         /// </summary>
-        public BindableCollection() { }
+        public BindableCollection()
+        {
+            IsNotifying = true;
+        }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="BindableCollection&lt;T&gt;"/> class.
@@ -32,7 +34,35 @@
         /// </exception>
         public BindableCollection(IEnumerable<T> collection)
         {
+            IsNotifying = true;
             AddRange(collection);
+        }
+
+        /// <summary>
+        /// Enables/Disables property change notification.
+        /// </summary>
+        public bool IsNotifying { get; set; }
+
+        /// <summary>
+        /// Notifies subscribers of the property change.
+        /// </summary>
+        /// <param name="propertyName">Name of the property.</param>
+        public void NotifyOfPropertyChange(string propertyName)
+        {
+            if (IsNotifying)
+                Execute.OnUIThread(() => RaisePropertyChangedEventImmediately(new PropertyChangedEventArgs(propertyName)));
+        }
+
+        /// <summary>
+        /// Raises a change notification indicating that all bindings should be refreshed.
+        /// </summary>
+        public void Refresh()
+        {
+            Execute.OnUIThread(() =>
+            {
+                OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Reset));
+                OnPropertyChanged(new PropertyChangedEventArgs(string.Empty));
+            });
         }
 
         /// <summary>
@@ -46,12 +76,12 @@
         }
 
         /// <summary>
-        /// Exposes the base implementation fo the <see cref="InsertItem"/> function.
+        /// Exposes the base implementation of the <see cref="InsertItem"/> function.
         /// </summary>
         /// <param name="index">The index.</param>
         /// <param name="item">The item.</param>
-        /// <remarks>Used to avoid compiler warning regarding unverificable code.</remarks>
-        private void InsertItemBase(int index, T item)
+        /// <remarks>Used to avoid compiler warning regarding unverifiable code.</remarks>
+        void InsertItemBase(int index, T item)
         {
             base.InsertItem(index, item);
         }
@@ -62,8 +92,7 @@
         /// </summary>
         /// <param name="oldIndex">The old position of the item.</param>
         /// <param name="newIndex">The new position of the item.</param>
-        protected override void MoveItem(int oldIndex, int newIndex)
-        {
+        protected override void MoveItem(int oldIndex, int newIndex) {
             Execute.OnUIThread(() => MoveItemBase(oldIndex, newIndex));
         }
 
@@ -73,8 +102,7 @@
         /// <param name="oldIndex">The old index.</param>
         /// <param name="newIndex">The new index.</param>
         /// <remarks>Used to avoid compiler warning regarding unverificable code.</remarks>
-        private void MoveItemBase(int oldIndex, int newIndex)
-        {
+        private void MoveItemBase(int oldIndex, int newIndex) {
             base.MoveItem(oldIndex, newIndex);
         }
 #endif
@@ -90,12 +118,12 @@
         }
 
         /// <summary>
-        /// Exposes the base implementation fo the <see cref="SetItem"/> function.
+        /// Exposes the base implementation of the <see cref="SetItem"/> function.
         /// </summary>
         /// <param name="index">The index.</param>
         /// <param name="item">The item.</param>
-        /// <remarks>Used to avoid compiler warning regarding unverificable code.</remarks>
-        private void SetItemBase(int index, T item)
+        /// <remarks>Used to avoid compiler warning regarding unverifiable code.</remarks>
+        void SetItemBase(int index, T item)
         {
             base.SetItem(index, item);
         }
@@ -110,11 +138,11 @@
         }
 
         /// <summary>
-        /// Exposes the base implementation fo the <see cref="RemoveItem"/> function.
+        /// Exposes the base implementation of the <see cref="RemoveItem"/> function.
         /// </summary>
         /// <param name="index">The index.</param>
-        /// <remarks>Used to avoid compiler warning regarding unverificable code.</remarks>
-        private void RemoveItemBase(int index)
+        /// <remarks>Used to avoid compiler warning regarding unverifiable code.</remarks>
+        void RemoveItemBase(int index)
         {
             base.RemoveItem(index);
         }
@@ -130,8 +158,8 @@
         /// <summary>
         /// Exposes the base implementation of the <see cref="ClearItems"/> function.
         /// </summary>
-        /// <remarks>Used to avoid compiler warning regarding unverificable code.</remarks>
-        private void ClearItemsBase()
+        /// <remarks>Used to avoid compiler warning regarding unverifiable code.</remarks>
+        void ClearItemsBase()
         {
             base.ClearItems();
         }
@@ -142,8 +170,23 @@
         /// <param name="e">Arguments of the event being raised.</param>
         protected override void OnCollectionChanged(NotifyCollectionChangedEventArgs e)
         {
-            if (raiseCollectionChanged)
+            if (IsNotifying)
                 base.OnCollectionChanged(e);
+        }
+
+        /// <summary>
+        /// Raises the PropertyChanged event with the provided arguments.
+        /// </summary>
+        /// <param name="e">The event data to report in the event.</param>
+        protected override void OnPropertyChanged(PropertyChangedEventArgs e)
+        {
+            if (IsNotifying)
+                base.OnPropertyChanged(e);
+        }
+
+        void RaisePropertyChangedEventImmediately(PropertyChangedEventArgs e)
+        {
+            OnPropertyChanged(e);
         }
 
         /// <summary>
@@ -152,11 +195,11 @@
         /// <param name="items">The items.</param>
         public void AddRange(IEnumerable<T> items)
         {
-            raiseCollectionChanged = false;
+            IsNotifying = false;
             items.Apply(Add);
-            raiseCollectionChanged = true;
+            IsNotifying = true;
 
-            OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Reset));
+            Refresh();
         }
 
         /// <summary>
@@ -165,11 +208,11 @@
         /// <param name="items">The items.</param>
         public void RemoveRange(IEnumerable<T> items)
         {
-            raiseCollectionChanged = false;
+            IsNotifying = false;
             items.Apply(x => Remove(x));
-            raiseCollectionChanged = true;
+            IsNotifying = true;
 
-            OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Reset));
+            Refresh();
         }
     }
 }
