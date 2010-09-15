@@ -87,7 +87,6 @@
     <Compile Include="Behaviors\DependencyMode.cs" />
     <Compile Include="Behaviors\DoNotNotifyAttribute.cs" />
     <Compile Include="Behaviors\NotifyPropertyChangedAttribute.cs" />
-    <Compile Include="Behaviors\ScreenAttribute.cs" />
     <Compile Include="Behaviors\ValidateAttribute.cs" />
     <Compile Include="Conventions\DefaultViewConventionCategory.cs" />
     <Compile Include="Conventions\IViewConvention.cs" />

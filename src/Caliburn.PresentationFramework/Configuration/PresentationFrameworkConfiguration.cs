@@ -1,6 +1,5 @@
 ﻿namespace Caliburn.PresentationFramework.Configuration
 {
-    using System.ComponentModel;
     using System.Linq;
     using System.Reflection;
     using System.Windows;
@@ -33,11 +32,7 @@
         private bool registerItemsWithSubjects;
         private bool nameInstances;
 
-#if !SILVERLIGHT
-        private static readonly bool isInDesignMode = DesignerProperties.GetIsInDesignMode(new DependencyObject());
-#else
-        private static readonly bool isInDesignMode = DesignerProperties.GetIsInDesignMode(new UserControl());
-#endif
+        private static bool? isInDesignMode;
 
         /// <summary>
         /// Gets a value indicating whether the framework is in design mode.
@@ -47,7 +42,24 @@
         /// </value>
         public static bool IsInDesignMode
         {
-            get { return isInDesignMode; }
+            get
+            {
+                if (isInDesignMode == null)
+                {
+                    if (Application.Current != null)
+                    {
+                        var app = Application.Current.ToString();
+
+                        if(app == "System.Windows.Application" || app == "Microsoft.Expression.Blend.BlendApplication")
+                            isInDesignMode = true;
+                        else isInDesignMode = false;
+                    }
+                    else isInDesignMode = true;
+                }
+
+                return isInDesignMode.GetValueOrDefault(false);
+            }
+            set { isInDesignMode = value; }
         }
 
         /// <summary>

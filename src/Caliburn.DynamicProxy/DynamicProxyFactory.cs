@@ -29,7 +29,6 @@
         public DynamicProxyFactory()
         {
             AddConfiguration<NotifyPropertyChangedAttribute, NotifyPropertyChangedConfiguration>();
-            AddConfiguration<ScreenAttribute, ScreenConfiguration>();
             AddConfiguration<ValidateAttribute, ValidateConfiguration>();
 
             //var savePhysicalAssembly = true; 
