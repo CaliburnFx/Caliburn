@@ -6,8 +6,6 @@
 
     public class QuestionDialogViewModel : Screen, IQuestionDialog
     {
-        private string _caption = "Shell";
-
         public bool HasOneQuestion
         {
             get { return Questions.Count == 1; }
@@ -23,16 +21,6 @@
             get { return Questions[0]; }
         }
 
-        public string Caption
-        {
-            get { return _caption; }
-            set
-            {
-                _caption = value;
-                NotifyOfPropertyChange("Caption");
-            }
-        }
-
         public IObservableCollection<Question> Questions { get; private set; }
 
         public IObservableCollection<ButtonModel> Buttons
@@ -45,9 +33,9 @@
             }
         }
 
-        public void Setup(string caption, IEnumerable<Question> questions)
+        public void Setup(string title, IEnumerable<Question> questions)
         {
-            Caption = caption;
+            DisplayName = title;
             Questions = new BindableCollection<Question>(questions);
         }
 

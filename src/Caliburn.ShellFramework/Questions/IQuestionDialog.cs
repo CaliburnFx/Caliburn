@@ -5,6 +5,6 @@
 
     public interface IQuestionDialog : IScreen
     {
-        void Setup(string caption, IEnumerable<Question> questions);
+        void Setup(string title, IEnumerable<Question> questions);
     }
 }

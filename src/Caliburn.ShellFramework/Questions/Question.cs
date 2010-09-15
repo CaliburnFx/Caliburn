@@ -7,7 +7,7 @@
 
     public class Question : PropertyChangedBase
     {
-        private Answer _answer = Answer.No;
+        private Answer answer = Answer.No;
 
         public Question(string text)
             : this(text, Answer.No, Answer.Yes, Answer.Cancel) {}
@@ -25,10 +25,10 @@
 
         public Answer Answer
         {
-            get { return _answer; }
+            get { return answer; }
             set
             {
-                _answer = value;
+                answer = value;
                 NotifyOfPropertyChange("Answer");
             }
         }
