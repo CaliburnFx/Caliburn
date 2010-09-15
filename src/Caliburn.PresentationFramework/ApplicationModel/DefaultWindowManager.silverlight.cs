@@ -11,6 +11,7 @@ namespace Caliburn.PresentationFramework.ApplicationModel
     using Screens;
     using ViewModels;
     using Views;
+    using Conventions;
 
     /// <summary>
     /// An implementation of <see cref="IWindowManager"/>.
@@ -38,9 +39,9 @@ namespace Caliburn.PresentationFramework.ApplicationModel
             return view;
         }
 
-        private readonly IViewLocator _viewLocator;
-        private readonly IViewModelBinder _binder;
-        private bool _actuallyClosing;
+        private readonly IViewLocator viewLocator;
+        private readonly IViewModelBinder binder;
+        private bool actuallyClosing;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="DefaultWindowManager"/> class.
@@ -49,8 +50,8 @@ namespace Caliburn.PresentationFramework.ApplicationModel
         /// <param name="binder">The binder.</param>
         public DefaultWindowManager(IViewLocator viewLocator, IViewModelBinder binder)
         {
-            _viewLocator = viewLocator;
-            _binder = binder;
+            this.viewLocator = viewLocator;
+            this.binder = binder;
         }
 
         /// <summary>
@@ -73,11 +74,11 @@ namespace Caliburn.PresentationFramework.ApplicationModel
         /// <returns></returns>
         protected virtual ChildWindow CreateWindow(object rootModel, object context)
         {
-            var view = EnsureWindow(rootModel, _viewLocator.Locate(rootModel, null, context));
-            _binder.Bind(rootModel, view, context);
+            var view = EnsureWindow(rootModel, viewLocator.Locate(rootModel, null, context));
+            binder.Bind(rootModel, view, context);
 
             var haveDisplayName = rootModel as IHaveDisplayName;
-            if (haveDisplayName != null)
+            if (haveDisplayName != null && !view.HasBinding(ChildWindow.TitleProperty))
             {
                 var binding = new Binding("DisplayName") { Mode = BindingMode.TwoWay };
                 view.SetBinding(ChildWindow.TitleProperty, binding);
@@ -89,7 +90,29 @@ namespace Caliburn.PresentationFramework.ApplicationModel
 
             var deactivatable = rootModel as IDeactivate;
             if (deactivatable != null)
-                view.Closed += (s, e) => deactivatable.Deactivate(true);
+            {
+                bool deactivatingFromView = false;
+                bool deactivateFromVM = false;
+
+                view.Closed += (s, e) => {
+                    if(deactivateFromVM)
+                        return;
+
+                    deactivatingFromView = true;
+                    deactivatable.Deactivate(true);
+                    deactivatingFromView = false;
+                };
+
+                deactivatable.Deactivated += (s, e) => {
+                    if(e.WasClosed && !deactivatingFromView) {
+                        deactivateFromVM = true;
+                        actuallyClosing = true;
+                        view.Close();
+                        actuallyClosing = false;
+                        deactivateFromVM = false;
+                    }
+                };
+            }
 
             var guard = rootModel as IGuardClose;
             if (guard != null)
@@ -125,9 +148,9 @@ namespace Caliburn.PresentationFramework.ApplicationModel
         /// <param name="e">The <see cref="System.ComponentModel.CancelEventArgs"/> instance containing the event data.</param>
         protected virtual void OnShutdownAttempted(IGuardClose guard, ChildWindow view, CancelEventArgs e)
         {
-            if (_actuallyClosing)
+            if (actuallyClosing)
             {
-                _actuallyClosing = false;
+                actuallyClosing = false;
                 return;
             }
 
@@ -136,7 +159,7 @@ namespace Caliburn.PresentationFramework.ApplicationModel
             guard.CanClose(canClose =>{
                 if(runningAsync && canClose)
                 {
-                    _actuallyClosing = true;
+                    actuallyClosing = true;
                     view.Close();
                 }
                 else e.Cancel = !canClose;
