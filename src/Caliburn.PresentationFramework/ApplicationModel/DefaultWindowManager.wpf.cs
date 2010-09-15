@@ -7,6 +7,7 @@ namespace Caliburn.PresentationFramework.ApplicationModel
     using System.Windows.Controls;
     using System.Windows.Data;
     using System.Windows.Navigation;
+    using Conventions;
     using Screens;
     using ViewModels;
     using Views;
@@ -37,9 +38,9 @@ namespace Caliburn.PresentationFramework.ApplicationModel
             return view;
         }
 
-        private readonly IViewLocator _viewLocator;
-        private readonly IViewModelBinder _viewModelBinder;
-        private bool _actuallyClosing;
+        private readonly IViewLocator viewLocator;
+        private readonly IViewModelBinder viewModelBinder;
+        private bool actuallyClosing;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="DefaultWindowManager"/> class.
@@ -48,8 +49,8 @@ namespace Caliburn.PresentationFramework.ApplicationModel
         /// <param name="viewModelBinder">The view model binder.</param>
         public DefaultWindowManager(IViewLocator viewLocator, IViewModelBinder viewModelBinder)
         {
-            _viewLocator = viewLocator;
-            _viewModelBinder = viewModelBinder;
+            this.viewLocator = viewLocator;
+            this.viewModelBinder = viewModelBinder;
         }
 
         /// <summary>
@@ -91,15 +92,14 @@ namespace Caliburn.PresentationFramework.ApplicationModel
         /// <param name="rootModel">The root model.</param>
         /// <param name="isDialog">Indicates it is a dialog window.</param>
         /// <param name="context">The context.</param>
-        /// <param name="handleShutdownModel">The handle shutdown model.</param>
-        /// <returns></returns>
+        /// <returns>The window.</returns>
         protected virtual Window CreateWindow(object rootModel, bool isDialog, object context)
         {
-            var view = EnsureWindow(rootModel, _viewLocator.Locate(rootModel, null, context), isDialog);
-            _viewModelBinder.Bind(rootModel, view, context);
+            var view = EnsureWindow(rootModel, viewLocator.Locate(rootModel, null, context), isDialog);
+            viewModelBinder.Bind(rootModel, view, context);
 
             var haveDisplayName = rootModel as IHaveDisplayName;
-            if (haveDisplayName != null)
+            if (haveDisplayName != null && !view.HasBinding(Window.TitleProperty))
             {
                 var binding = new Binding("DisplayName") { Mode = BindingMode.TwoWay };
                 view.SetBinding(Window.TitleProperty, binding);
@@ -168,8 +168,8 @@ namespace Caliburn.PresentationFramework.ApplicationModel
         /// <returns></returns>
         public Page CreatePage(object rootModel, object context)
         {
-            var view = EnsurePage(rootModel, _viewLocator.Locate(rootModel, null, context));
-            _viewModelBinder.Bind(rootModel, view, context);
+            var view = EnsurePage(rootModel, viewLocator.Locate(rootModel, null, context));
+            viewModelBinder.Bind(rootModel, view, context);
 
             var haveDisplayName = rootModel as IHaveDisplayName;
             if (haveDisplayName != null)
@@ -220,9 +220,9 @@ namespace Caliburn.PresentationFramework.ApplicationModel
         /// <param name="e">The <see cref="CancelEventArgs"/> instance containing the event data.</param>
         void OnShutdownAttempted(IGuardClose guard, Window view, CancelEventArgs e)
         {
-            if (_actuallyClosing)
+            if (actuallyClosing)
             {
-                _actuallyClosing = false;
+                actuallyClosing = false;
                 return;
             }
 
@@ -231,7 +231,7 @@ namespace Caliburn.PresentationFramework.ApplicationModel
             guard.CanClose(canClose =>{
                 if(runningAsync && canClose)
                 {
-                    _actuallyClosing = true;
+                    actuallyClosing = true;
                     view.Close();
                 }
                 else e.Cancel = !canClose;

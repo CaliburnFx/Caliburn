@@ -4,6 +4,7 @@
     using System.Collections.Generic;
     using System.Windows;
     using System.Windows.Controls;
+    using System.Windows.Data;
     using Core;
     using ViewModels;
     using Views;
@@ -21,6 +22,18 @@
         /// The overridable implemenation of GetNamedElements.
         /// </summary>
         public static Func<IConventionManager, DependencyObject, IEnumerable<IElementDescription>> SelectElementsToInspect = DefaultSelectElementsToInspectImplementation;
+
+        public static bool HasBinding(this DependencyObject dependencyObject, DependencyProperty dependencyProperty)
+        {
+#if !SILVERLIGHT
+            return BindingOperations.GetBindingExpression(dependencyObject, dependencyProperty) != null;
+#else
+            var fe = dependencyObject as FrameworkElement;
+            if (fe != null)
+                return fe.GetBindingExpression(dependencyProperty) != null;
+            return true;
+#endif
+        }
 
         /// <summary>
         /// Determines the conventions for the specified view and view model description.

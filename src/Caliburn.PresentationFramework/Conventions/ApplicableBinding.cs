@@ -1,6 +1,5 @@
 ﻿namespace Caliburn.PresentationFramework.Conventions
 {
-    using System;
     using System.Windows;
     using System.Windows.Controls;
     using System.Windows.Data;
@@ -15,13 +14,13 @@
     {
         private static readonly ILog Log = LogManager.GetLog(typeof(ApplicableBinding));
 
-        private readonly IElementDescription _elementDescription;
-        private readonly DependencyProperty _dependencyProperty;
-        private readonly string _path;
-        private readonly BindingMode _mode;
-        private readonly bool _validate;
-        private readonly bool _checkTemplate;
-        private readonly IValueConverter _converter;
+        private readonly IElementDescription elementDescription;
+        private readonly DependencyProperty dependencyProperty;
+        private readonly string path;
+        private readonly BindingMode mode;
+        private readonly bool validate;
+        private readonly bool checkTemplate;
+        private readonly IValueConverter converter;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ApplicableBinding"/> class.
@@ -36,13 +35,13 @@
         public ApplicableBinding(IElementDescription elementDescription, DependencyProperty dependencyProperty, string path, 
             BindingMode mode, bool validate, bool checkTemplate, IValueConverter converter)
         {
-            _elementDescription = elementDescription;
-            _dependencyProperty = dependencyProperty;
-            _path = path;
-            _mode = mode;
-            _validate = validate;
-            _checkTemplate = checkTemplate;
-            _converter = converter;
+            this.elementDescription = elementDescription;
+            this.dependencyProperty = dependencyProperty;
+            this.path = path;
+            this.mode = mode;
+            this.validate = validate;
+            this.checkTemplate = checkTemplate;
+            this.converter = converter;
         }
 
         /// <summary>
@@ -51,27 +50,27 @@
         /// <param name="view">The view.</param>
         public void ApplyTo(DependencyObject view)
         {
-            var element = view.FindName(_elementDescription.Name);
+            var element = view.FindName(elementDescription.Name);
 
-            if (_dependencyProperty != null && ValueNotSet(element))
+            if (dependencyProperty != null && !element.HasBinding(dependencyProperty))
             {
-                var binding = new Binding(_path)
+                var binding = new Binding(path)
                 {
-                    Mode = _mode,
-                    Converter = _converter
+                    Mode = mode,
+                    Converter = converter
                 };
 
-                var dependencyProperty = _elementDescription.Convention
-                    .EnsureBindableProperty(element, _dependencyProperty);
+                var bindableProperty = elementDescription.Convention
+                    .EnsureBindableProperty(element, dependencyProperty);
 
-                TryAddValidation(element, binding, dependencyProperty);
-                CheckTextBox(element, binding, dependencyProperty);
-                element.SetBinding(dependencyProperty, binding);
+                TryAddValidation(element, binding, bindableProperty);
+                CheckTextBox(element, binding, bindableProperty);
+                element.SetBinding(bindableProperty, binding);
 
                 Log.Info("Applied data binding {0} to {1}.", binding, view);
             }
 
-            if(!_checkTemplate) 
+            if(!checkTemplate) 
                 return;
 
             var itemsControl = (ItemsControl)element;
@@ -88,7 +87,7 @@
         /// </summary>
         protected virtual void TryAddValidation(DependencyObject element, Binding binding, DependencyProperty dependencyProperty)
         {
-            if (!_validate)
+            if (!validate)
                 return;
 
 #if NET || SILVERLIGHT_40
@@ -127,23 +126,6 @@
                     };
                 }
             }
-#endif
-        }
-
-        /// <summary>
-        /// Values the not set.
-        /// </summary>
-        /// <param name="element">The element.</param>
-        /// <returns></returns>
-        protected virtual bool ValueNotSet(DependencyObject element)
-        {
-#if !SILVERLIGHT
-            return BindingOperations.GetBindingExpression(element, _dependencyProperty) == null;
-#else
-            var fe = element as FrameworkElement;
-            if (fe != null)
-                return fe.GetBindingExpression(_dependencyProperty) == null;
-            return true;
 #endif
         }
 
