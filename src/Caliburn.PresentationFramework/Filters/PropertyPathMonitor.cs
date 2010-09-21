@@ -55,6 +55,7 @@
 			HookSubpathMonitor();
 		}
 
+
 		private void VerifyObservedPropertyExists()
 		{
 			if (_observedPropertyName.Equals(ALL_PROPERTIES))

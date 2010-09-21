@@ -41,21 +41,22 @@ namespace Caliburn.PresentationFramework.Filters
 			foreach (var dependency in dependencies)
 			{
 				var observer = GetSinglePathObserver(dependency);
-				observer.RegisterTrigger(trigger);
+				if (observer!= null)
+					observer.RegisterTrigger(trigger);
 			}
 		}
 
 		private SinglePropertyPathObserver GetSinglePathObserver(string propertyPath)
 		{
-			SinglePropertyPathObserver info;
+			SinglePropertyPathObserver pathObserver;
 
-			if (!_singlePathObservers.TryGetValue(propertyPath, out info))
+			if (!_singlePathObservers.TryGetValue(propertyPath, out pathObserver))
 			{
-				info = new SinglePropertyPathObserver(_messageHandler, _methodFactory, _notifier, propertyPath);
-				_singlePathObservers[propertyPath] = info;
+				pathObserver = new SinglePropertyPathObserver(_messageHandler, _methodFactory, _notifier, propertyPath);
+				_singlePathObservers[propertyPath] = pathObserver;
 			}
 
-			return info;
+			return pathObserver;
 		}
 
 		//SEE: Tests.Caliburn.Actions.Filters.The_dependency_observer.backreferences_should_not_leak_the_observer_strict

@@ -83,11 +83,13 @@
 		{
 			if (!AffectsTriggers) return;
 
-			HookDependencyObserver(messageHandler);
-			HookEventMonitor(messageHandler);
+			//deals with INPC classes
+			TryHookDependencyObserver(messageHandler);
+			//deals with XXXChanged events
+			TryHookEventMonitor(messageHandler);
 		}
 
-		private void HookDependencyObserver(IRoutedMessageHandler messageHandler)
+		private void TryHookDependencyObserver(IRoutedMessageHandler messageHandler)
 		{
 			if (!IsGetter) return;
 
@@ -101,7 +103,7 @@
 			messageHandler.Metadata.Add(helper);
 		}
 
-		private void HookEventMonitor(IRoutedMessageHandler messageHandler) {
+		private void TryHookEventMonitor(IRoutedMessageHandler messageHandler) {
 			var helper = messageHandler.Metadata.FirstOrDefaultOfType<EventMonitor>();
 			if (helper != null) return;
 
@@ -123,7 +125,7 @@
 
 			
 			var depObserver = messageHandler.Metadata.FirstOrDefaultOfType<DependencyObserver>();
-			if (depObserver != null)
+			if (IsGetter && depObserver != null)
 				depObserver.MakeAwareOf(trigger, new[] { MethodName });
 			
 			var evtMonitor = messageHandler.Metadata.FirstOrDefaultOfType<EventMonitor>();
