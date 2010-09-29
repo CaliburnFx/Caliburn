@@ -14,9 +14,9 @@
     {
         private static readonly ILog Log = LogManager.GetLog(typeof(ApplicableAction));
 
-        private readonly string _elementName;
-        private readonly string _message;
-        private readonly string _actionTargetPath;
+        private readonly string elementName;
+        private readonly string message;
+        private readonly string actionTargetPath;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ApplicableAction"/> class.
@@ -26,9 +26,9 @@
         /// <param name="message">The message.</param>
         public ApplicableAction(string elementName, string actionTargetPath, string message)
         {
-            _elementName = elementName;
-            _actionTargetPath = actionTargetPath;
-            _message = message;
+            this.elementName = elementName;
+            this.actionTargetPath = actionTargetPath;
+            this.message = message;
         }
 
         /// <summary>
@@ -37,16 +37,16 @@
         /// <param name="view">The view.</param>
         public void ApplyTo(DependencyObject view)
         {
-            var element = view.FindName(_elementName);
+            var element = view.FindName(elementName);
 
-            if(!string.IsNullOrEmpty(_actionTargetPath))
+            if(!string.IsNullOrEmpty(actionTargetPath))
             {
-                var binding = new Binding(_actionTargetPath);
+                var binding = new Binding(actionTargetPath);
                 element.SetBinding(Action.TargetProperty, binding);
             }
 
-            Message.SetAttach(element, _message);
-            Log.Info("Attached message {0} to {1}.", _message, view);
+            Message.SetAttach(element, message);
+            Log.Info("Attached message {0} to {1}.", message, view);
         }
     }
 }

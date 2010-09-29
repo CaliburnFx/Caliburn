@@ -11,6 +11,7 @@
 
 #if SILVERLIGHT
     using System.Windows.Media;
+    using System.Linq;
 #endif
 
     /// <summary>
@@ -120,6 +121,16 @@
                             && contentControl.Content is DependencyObject
                             && !(contentControl.Content is UserControl))
                             queue.Enqueue(contentControl.Content as DependencyObject);
+                    }
+                    else
+                    {
+                        var itemsControl = current as ItemsControl;
+                        if(itemsControl != null)
+                        {
+                            itemsControl.Items.OfType<DependencyObject>()
+                                .Where(item => !(item is UserControl))
+                                .Apply(queue.Enqueue);
+                        }
                     }
                 }
             }

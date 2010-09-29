@@ -145,7 +145,7 @@
 #endif
         }
 
-        private const string _templateCore =
+        private const string TemplateCore =
             "<DataTemplate xmlns='http://schemas.microsoft.com/winfx/2006/xaml/presentation' " +
                           "xmlns:x='http://schemas.microsoft.com/winfx/2006/xaml' " +
                           "xmlns:v='clr-namespace:Caliburn.PresentationFramework.Views;assembly=Caliburn.PresentationFramework'> " +
@@ -159,7 +159,7 @@
         protected virtual DataTemplate CreateTemplate(Control control)
         {
             var context = View.GetContext(control);
-            var template = _templateCore;
+            var template = TemplateCore;
 
             if (context != null)
                 template += "v:View.Context=\"" + context + "\"";

@@ -11,8 +11,8 @@
     /// </summary>
     public static class View
     {
-        private static IViewLocator _viewLocator;
-        private static IViewModelBinder _viewModelBinder;
+        private static IViewLocator viewLocator;
+        private static IViewModelBinder viewModelBinder;
 
         /// <summary>
         /// Initializes the framework with the specified view locator and view model binder.
@@ -21,8 +21,8 @@
         /// <param name="viewModelBinder">The view model binder.</param>
         public static void Initialize(IViewLocator viewLocator, IViewModelBinder viewModelBinder)
         {
-            _viewLocator = viewLocator;
-            _viewModelBinder = viewModelBinder;
+            View.viewLocator = viewLocator;
+            View.viewModelBinder = viewModelBinder;
         }
 
         /// <summary>
@@ -152,7 +152,7 @@
 
         private static void OnModelChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
-            var locator = GetStrategy(d) ?? _viewLocator;
+            var locator = GetStrategy(d) ?? viewLocator;
 
             if (locator == null)
                 return;
@@ -165,7 +165,7 @@
                 var context = GetContext(d);
                 var view = locator.Locate(e.NewValue, d, context);
 
-                _viewModelBinder.Bind(e.NewValue, view, context);
+                viewModelBinder.Bind(e.NewValue, view, context);
 
                 SetContentProperty(d, view);
             }
@@ -174,7 +174,7 @@
 
         private static void OnContextChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
-            var locator = GetStrategy(d) ?? _viewLocator;
+            var locator = GetStrategy(d) ?? viewLocator;
 
             if (locator == null)
                 return;
@@ -188,7 +188,7 @@
 
             var view = locator.Locate(model, d, e.NewValue);
 
-            _viewModelBinder.Bind(model, view, e.NewValue);
+            viewModelBinder.Bind(model, view, e.NewValue);
 
             SetContentProperty(d, view);
         }
@@ -198,7 +198,7 @@
             if (e.NewValue == e.OldValue)
                 return;
 
-            var locator = e.NewValue as IViewLocator ?? _viewLocator;
+            var locator = e.NewValue as IViewLocator ?? viewLocator;
 
             if (locator == null)
                 return;
@@ -210,7 +210,7 @@
             var context = GetContext(d);
             var view = locator.Locate(model, d, context);
 
-            _viewModelBinder.Bind(model, view, context);
+            viewModelBinder.Bind(model, view, context);
             SetContentProperty(d, view);
         }
 
