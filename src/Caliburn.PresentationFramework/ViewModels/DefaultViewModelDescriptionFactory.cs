@@ -17,10 +17,10 @@ namespace Caliburn.PresentationFramework.ViewModels
     {
         private static readonly ILog Log = LogManager.GetLog(typeof(DefaultViewModelDescriptionFactory));
 
-        private readonly IServiceLocator _serviceLocator;
-        private readonly IActionLocator _actionLocator;
-        private readonly IConventionManager _conventionManager;
-        private readonly Dictionary<Type, IViewModelDescription> _cache = new Dictionary<Type, IViewModelDescription>();
+        private readonly IServiceLocator serviceLocator;
+        private readonly IActionLocator actionLocator;
+        private readonly IConventionManager conventionManager;
+        private readonly Dictionary<Type, IViewModelDescription> cache = new Dictionary<Type, IViewModelDescription>();
 
         /// <summary>
         /// Initializes a new instance of the <see cref="DefaultViewModelDescriptionFactory"/> class.
@@ -30,9 +30,9 @@ namespace Caliburn.PresentationFramework.ViewModels
         /// <param name="conventionManager">The convention manager.</param>
         public DefaultViewModelDescriptionFactory(IServiceLocator serviceLocator, IActionLocator actionLocator, IConventionManager conventionManager)
         {
-            _serviceLocator = serviceLocator;
-            _actionLocator = actionLocator;
-            _conventionManager = conventionManager;
+            this.serviceLocator = serviceLocator;
+            this.actionLocator = actionLocator;
+            this.conventionManager = conventionManager;
         }
 
         /// <summary>
@@ -44,10 +44,10 @@ namespace Caliburn.PresentationFramework.ViewModels
         {
             IViewModelDescription description;
 
-            if(!_cache.TryGetValue(targetType, out description))
+            if(!cache.TryGetValue(targetType, out description))
             {
                 description = CreateCore(targetType);
-                _cache[targetType] = description;
+                cache[targetType] = description;
                 Log.Info("Created and cached view model description for {0}", targetType);
             }
 
@@ -68,9 +68,9 @@ namespace Caliburn.PresentationFramework.ViewModels
             if (customFactory != null)
                 return customFactory.Create(targetType);
 
-            var description = new DefaultViewModelDescription(_conventionManager, targetType);
-            var filters = new FilterManager(targetType, description.TargetType, _serviceLocator);
-            var actions = _actionLocator.Locate(new ActionLocationContext(_serviceLocator, targetType, filters));
+            var description = new DefaultViewModelDescription(conventionManager, targetType);
+            var filters = new FilterManager(targetType, description.TargetType, serviceLocator);
+            var actions = actionLocator.Locate(new ActionLocationContext(serviceLocator, targetType, filters));
 
             description.Filters = filters;
             actions.Apply(description.AddAction);

@@ -34,11 +34,11 @@ namespace Caliburn.PresentationFramework.Conventions
             public IValueConverter Converter;
         }
 
-        private readonly IMethodFactory _methodFactory;
+        private readonly IMethodFactory methodFactory;
 
-        private readonly Dictionary<Type, IElementConvention> _elementConventions = new Dictionary<Type, IElementConvention>();
-        private readonly List<IViewConventionCategory> _viewConventions = new List<IViewConventionCategory>();
-        private readonly List<ConverterConvention> _converters = new List<ConverterConvention>();
+        private readonly Dictionary<Type, IElementConvention> elementConventions = new Dictionary<Type, IElementConvention>();
+        private readonly List<IViewConventionCategory> viewConventions = new List<IViewConventionCategory>();
+        private readonly List<ConverterConvention> converters = new List<ConverterConvention>();
         
         /// <summary>
         /// Initializes a new instance of the <see cref="DefaultConventionManager"/> class.
@@ -46,7 +46,7 @@ namespace Caliburn.PresentationFramework.Conventions
         /// <param name="methodFactory">The method factory.</param>
         public DefaultConventionManager(IMethodFactory methodFactory)
         {
-            _methodFactory = methodFactory;
+            this.methodFactory = methodFactory;
 
             GetDefaultElementConventions()
                 .Apply(AddElementConvention);
@@ -62,7 +62,7 @@ namespace Caliburn.PresentationFramework.Conventions
         /// <param name="convention">The convention.</param>
         public void AddElementConvention(IElementConvention convention)
         {
-            _elementConventions[convention.Type] = convention;
+            elementConventions[convention.Type] = convention;
         }
 
         /// <summary>
@@ -71,7 +71,7 @@ namespace Caliburn.PresentationFramework.Conventions
         /// <param name="conventionCategory">The convention set.</param>
         public void AddViewConventions(IViewConventionCategory conventionCategory)
         {
-            _viewConventions.Add(conventionCategory);
+            viewConventions.Add(conventionCategory);
         }
 
         /// <summary>
@@ -85,13 +85,8 @@ namespace Caliburn.PresentationFramework.Conventions
                 return null;
 
             IElementConvention convention;
-
-            _elementConventions.TryGetValue(elementType, out convention);
-
-            if (convention == null)
-                convention = GetElementConvention(elementType.BaseType);
-
-            return convention;
+            elementConventions.TryGetValue(elementType, out convention);
+            return convention ?? GetElementConvention(elementType.BaseType);
         }
 
         /// <summary>
@@ -104,7 +99,7 @@ namespace Caliburn.PresentationFramework.Conventions
         /// </returns>
         public IValueConverter GetValueConverter(DependencyProperty target, Type source)
         {
-            return (from convention in _converters
+            return (from convention in converters
             where convention.Target == target
                 && convention.Source.IsAssignableFrom(source)
             select convention.Converter).FirstOrDefault();
@@ -118,7 +113,7 @@ namespace Caliburn.PresentationFramework.Conventions
         /// <param name="converter">The converter.</param>
         public void AddConverterConvention(DependencyProperty target, Type source, IValueConverter converter)
         {
-            _converters.Add(new ConverterConvention
+            converters.Add(new ConverterConvention
             {
                 Target = target, 
                 Source = source, 
@@ -132,13 +127,13 @@ namespace Caliburn.PresentationFramework.Conventions
         /// <param name="viewModelDescription">The view model description.</param>
         /// <param name="elementDescriptions">The element descriptions.</param>
         /// <returns>The applicable conventions.</returns>
-        public virtual IEnumerable<IViewApplicable> DetermineConventions(IViewModelDescription viewModelDescription, IEnumerable<IElementDescription> elementDescriptions)
+        public virtual IEnumerable<IViewApplicable> DetermineConventions(IViewModelDescription viewModelDescription, IEnumerable<ElementDescription> elementDescriptions)
         {
             foreach (var elementDescription in elementDescriptions)
             {
                 bool found = false;
 
-                foreach(var set in _viewConventions)
+                foreach(var set in viewConventions)
                 {
                     var applications = set.GetApplications(this, viewModelDescription, elementDescription);
 
@@ -181,7 +176,7 @@ namespace Caliburn.PresentationFramework.Conventions
 
             if (canExecute != null)
             {
-                action.Filters.Add(new PreviewAttribute(_methodFactory.CreateFrom(canExecute)));
+                action.Filters.Add(new PreviewAttribute(methodFactory.CreateFrom(canExecute)));
                 Log.Info("Action preview convention added for {0} on {1}.", targetMethod.Info.Name, canExecute.Name);
             }
         }
@@ -201,16 +196,16 @@ namespace Caliburn.PresentationFramework.Conventions
         /// </summary>
         protected virtual void SetupDefaultViewConventions()
         {
-            var actionSet = new DefaultViewConventionCategory<IAction>(x => x.Actions);
+            var actionSet = new ViewConventionCategory<IAction>(x => x.Actions);
             actionSet.AddConvention(new DefaultActionConvention());
             AddViewConventions(actionSet);
 
-            var bindingSet = new DefaultViewConventionCategory<PropertyInfo>(x => x.Properties);
+            var bindingSet = new ViewConventionCategory<PropertyInfo>(x => x.Properties);
             bindingSet.AddConvention(new DefaultBindingConvention());
             bindingSet.AddConvention(new ItemsControlBindingConvention());
             AddViewConventions(bindingSet);
 
-            var subActions = new DefaultViewConventionCategory<PropertyInfo>(x => x.Properties);
+            var subActions = new ViewConventionCategory<PropertyInfo>(x => x.Properties);
             subActions.AddConvention(new SubActionConvention());
             AddViewConventions(subActions);
         }
@@ -288,14 +283,14 @@ namespace Caliburn.PresentationFramework.Conventions
                 yield return ElementConvention<ItemsControl>("Loaded", ItemsControl.ItemsSourceProperty, (c, o) => c.DataContext = o, c => c.DataContext);
                 yield return new DefaultElementConvention<ContentControl>("Loaded", ContentControl.ContentProperty, (c, o) => c.DataContext = o, c => c.DataContext,
                     (element, property) =>{
-#if !SILVERLIGHT
-                        return element.ContentTemplate == null && element.ContentTemplateSelector == null
+#if SILVERLIGHT
+                        return element.ContentTemplate == null && !(element.Content is DependencyObject)
                             ? View.ModelProperty
                             : property;
 #else
-                        return element.ContentTemplate == null
-                             ? View.ModelProperty
-                             : property;
+                        return element.ContentTemplate == null && element.ContentTemplateSelector == null && !(element.Content is DependencyObject)
+                            ? View.ModelProperty
+                            : property;
 #endif
                     });
 

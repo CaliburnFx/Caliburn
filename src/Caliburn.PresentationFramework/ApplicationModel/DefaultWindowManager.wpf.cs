@@ -95,7 +95,7 @@ namespace Caliburn.PresentationFramework.ApplicationModel
         /// <returns>The window.</returns>
         protected virtual Window CreateWindow(object rootModel, bool isDialog, object context)
         {
-            var view = EnsureWindow(rootModel, viewLocator.Locate(rootModel, null, context), isDialog);
+            var view = EnsureWindow(rootModel, viewLocator.LocateForModel(rootModel, null, context), isDialog);
             viewModelBinder.Bind(rootModel, view, context);
 
             var haveDisplayName = rootModel as IHaveDisplayName;
@@ -191,7 +191,7 @@ namespace Caliburn.PresentationFramework.ApplicationModel
         /// <returns></returns>
         public Page CreatePage(object rootModel, object context)
         {
-            var view = EnsurePage(rootModel, viewLocator.Locate(rootModel, null, context));
+            var view = EnsurePage(rootModel, viewLocator.LocateForModel(rootModel, null, context));
             viewModelBinder.Bind(rootModel, view, context);
 
             var haveDisplayName = rootModel as IHaveDisplayName;

@@ -15,7 +15,7 @@ namespace Caliburn.PresentationFramework.Views
         /// <param name="displayLocation">The display location.</param>
         /// <param name="context">The context.</param>
         /// <returns></returns>
-        DependencyObject Locate(object model, DependencyObject displayLocation, object context);
+        DependencyObject LocateForModel(object model, DependencyObject displayLocation, object context);
 
         /// <summary>
         /// Locates the View for the specified model type.
@@ -24,6 +24,6 @@ namespace Caliburn.PresentationFramework.Views
         /// <param name="displayLocation">The display location.</param>
         /// <param name="context">The context.</param>
         /// <returns>The view.</returns>
-        DependencyObject Locate(Type modelType, DependencyObject displayLocation, object context);
+        DependencyObject LocateForModelType(Type modelType, DependencyObject displayLocation, object context);
     }
 }

@@ -17,6 +17,6 @@ namespace Caliburn.PresentationFramework.Conventions
         /// <param name="element">The element.</param>
         /// <param name="target">The target.</param>
         /// <returns>The application or null if not applicable.</returns>
-        IViewApplicable TryCreateApplication(IConventionManager conventionManager, IViewModelDescription description, IElementDescription element, T target);
+        IViewApplicable TryCreateApplication(IConventionManager conventionManager, IViewModelDescription description, ElementDescription element, T target);
     }
 }

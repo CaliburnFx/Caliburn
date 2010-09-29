@@ -24,36 +24,34 @@
         /// <returns>
         /// The convention application, or null if not applicable
         /// </returns>
-        public override IViewApplicable TryCreateApplication(IConventionManager conventionManager, IViewModelDescription description, IElementDescription element, PropertyInfo target)
+        public override IViewApplicable TryCreateApplication(IConventionManager conventionManager, IViewModelDescription description, ElementDescription element, PropertyInfo target)
         {
-            var path = DeterminePropertyPath(element.Name);
-            var index = path.LastIndexOf(".");
+            var exptectedPath = DeterminePropertyPath(element.Name);
+            var index = exptectedPath.LastIndexOf(".");
 
             if (index == -1)
                 return null;
 
-            var subPath = path.Substring(0, index);
-
-            var actualTarget = GetBoundProperty(target, subPath);
+            var propertyPath = exptectedPath.Substring(0, index);
+            string correctedPath;
+            var actualTarget = GetBoundProperty(target, propertyPath, out correctedPath);
             if (actualTarget == null)
                 return null;
 
-            var actionName = path.Substring(index + 1);
-
+            var actionName = exptectedPath.Substring(index + 1);
             var subDescription = ViewModelDescriptionFactory.Create(actualTarget.PropertyType);
-            var action = subDescription.Actions
-                .FirstOrDefault(x => string.Compare(x.Name, actionName, StringComparison.CurrentCultureIgnoreCase) == 0);
+            var action = subDescription.Actions.FirstOrDefault(x => string.Compare(x.Name, actionName, StringComparison.CurrentCultureIgnoreCase) == 0);
 
             if (action == null)
                 return null;
 
             var message = CreateActionMessage(action);
 
-            Log.Info("Sub action convention matched for {0} on {1}.", element.Name, subPath);
+            Log.Info("Sub action convention matched for {0} on {1}.", element.Name, correctedPath);
 
             return new ApplicableAction(
                 element.Name,
-                subPath,
+                correctedPath,
                 message
                 );
         }

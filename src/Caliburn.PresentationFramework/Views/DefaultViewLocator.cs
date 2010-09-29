@@ -21,10 +21,10 @@ namespace Caliburn.PresentationFramework.Views
         /// </summary>
         public static readonly object DefaultContext = new object();
 
-        private readonly IAssemblySource _assemblySource;
-        private readonly IServiceLocator _serviceLocator;
-        private readonly Dictionary<string, Type> _cache = new Dictionary<string, Type>();
-        private readonly Dictionary<string, string> _namespaceAliases = new Dictionary<string, string>();
+        private readonly IAssemblySource assemblySource;
+        private readonly IServiceLocator serviceLocator;
+        private readonly Dictionary<string, Type> cache = new Dictionary<string, Type>();
+        private readonly Dictionary<string, string> namespaceAliases = new Dictionary<string, string>();
 
         /// <summary>
         /// Initializes a new instance of the <see cref="DefaultViewLocator"/> class.
@@ -33,8 +33,8 @@ namespace Caliburn.PresentationFramework.Views
         /// <param name="serviceLocator">The service locator.</param>
         public DefaultViewLocator(IAssemblySource assemblySource, IServiceLocator serviceLocator)
         {
-            _assemblySource = assemblySource;
-            _serviceLocator = serviceLocator;
+            this.assemblySource = assemblySource;
+            this.serviceLocator = serviceLocator;
         }
 
         /// <summary>
@@ -44,7 +44,7 @@ namespace Caliburn.PresentationFramework.Views
         /// <param name="viewNamespace">the namespace that the view resides in.</param>
         public void AddNamespaceAlias(string modelNamespace, string viewNamespace)
         {
-            _namespaceAliases[modelNamespace] = viewNamespace;
+            namespaceAliases[modelNamespace] = viewNamespace;
         }
 
         /// <summary>
@@ -54,7 +54,7 @@ namespace Caliburn.PresentationFramework.Views
         /// <param name="displayLocation">The display location.</param>
         /// <param name="context">The context.</param>
         /// <returns>The view.</returns>
-        public virtual DependencyObject Locate(object model, DependencyObject displayLocation, object context)
+        public virtual DependencyObject LocateForModel(object model, DependencyObject displayLocation, object context)
         {
             if (model == null)
                 return null;
@@ -79,7 +79,7 @@ namespace Caliburn.PresentationFramework.Views
                 }
             }
 
-            return Locate(model.GetModelType(), displayLocation, context);
+            return LocateForModelType(model.GetModelType(), displayLocation, context);
         }
 
         /// <summary>
@@ -89,7 +89,7 @@ namespace Caliburn.PresentationFramework.Views
         /// <param name="displayLocation">The display location.</param>
         /// <param name="context">The context.</param>
         /// <returns>The view.</returns>
-        public virtual DependencyObject Locate(Type modelType, DependencyObject displayLocation, object context)
+        public virtual DependencyObject LocateForModelType(Type modelType, DependencyObject displayLocation, object context)
         {
             var customStrategy = modelType.GetAttributes<IViewStrategy>(true)
                 .Where(x => x.Matches(context)).FirstOrDefault();
@@ -100,14 +100,14 @@ namespace Caliburn.PresentationFramework.Views
             var stringContext = context.SafeToString();
             var cacheKey = DetermineCacheKey(modelType, stringContext);
 
-            if (_cache.ContainsKey(cacheKey))
-                return GetOrCreateViewFromType(_cache[cacheKey]);
+            if (cache.ContainsKey(cacheKey))
+                return GetOrCreateViewFromType(cache[cacheKey]);
 
             var namesToCheck = GetTypeNamesToCheck(modelType, stringContext).Distinct();
 
             foreach (var name in namesToCheck)
             {
-                foreach (var assembly in new[] { modelType.Assembly }.Union(_assemblySource))
+                foreach (var assembly in new[] { modelType.Assembly }.Union(assemblySource))
                 {
                     var type = assembly.GetType(name, false);
                     if (type == null) continue;
@@ -115,7 +115,7 @@ namespace Caliburn.PresentationFramework.Views
                     var view = GetOrCreateViewFromType(type);
                     if (view == null) continue;
 
-                    _cache[cacheKey] = type;
+                    cache[cacheKey] = type;
 
                     Log.Info("Located view {0} for {1}.", view, modelType);
                     return view;
@@ -151,7 +151,7 @@ namespace Caliburn.PresentationFramework.Views
         /// <returns>An instance of a view or null.</returns>
         protected DependencyObject GetOrCreateViewFromType(Type type)
         {
-            var view = _serviceLocator.GetAllInstances(type)
+            var view = serviceLocator.GetAllInstances(type)
                 .FirstOrDefault() as DependencyObject;
 
             if (view != null)
@@ -272,7 +272,7 @@ namespace Caliburn.PresentationFramework.Views
         /// <returns></returns>
         protected virtual IEnumerable<string> ReplaceWithView(string part, string toReplace)
         {
-            foreach (var pair in _namespaceAliases)
+            foreach (var pair in namespaceAliases)
             {
                 if (part.StartsWith(pair.Key))
                 {

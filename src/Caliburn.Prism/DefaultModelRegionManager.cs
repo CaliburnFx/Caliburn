@@ -40,7 +40,7 @@ namespace Caliburn.Prism
         {
             _regionManager.RegisterViewWithRegion(regionName, () =>{
                 var screen = _viewModelFactory.CreateFor(subject);
-                var view = _viewLocator.Locate(screen, null, null);
+                var view = _viewLocator.LocateForModel(screen, null, null);
                 _viewModelBinder.Bind(screen, view, null);
                 return view;
             });
@@ -58,7 +58,7 @@ namespace Caliburn.Prism
         {
             _regionManager.RegisterViewWithRegion(regionName, () =>{
                 var viewModel = _viewModelFactory.Create<TViewModel>();
-                var view = _viewLocator.Locate(viewModel, null, null);
+                var view = _viewLocator.LocateForModel(viewModel, null, null);
                 _viewModelBinder.Bind(viewModel, view, null);
                 return view;
             });
@@ -75,7 +75,7 @@ namespace Caliburn.Prism
         public IModelRegionManager RegisterModelWithRegion(string regionName, object viewModel)
         {
             _regionManager.RegisterViewWithRegion(regionName, () =>{
-                var view = _viewLocator.Locate(viewModel, null, null);
+                var view = _viewLocator.LocateForModel(viewModel, null, null);
                 _viewModelBinder.Bind(viewModel, view, null);
                 return view;
             });

@@ -1,9 +1,11 @@
 ﻿namespace Caliburn.PresentationFramework.Conventions
 {
     using System;
+    using System.Collections.Generic;
     using System.Linq;
     using System.Reflection;
     using Actions;
+    using Core;
     using Core.Validation;
     using RoutedMessaging;
     using ViewModels;
@@ -44,7 +46,7 @@
         /// <returns>
         /// The convention application, or null if not applicable
         /// </returns>
-        public abstract IViewApplicable TryCreateApplication(IConventionManager conventionManager, IViewModelDescription description, IElementDescription element, T target);
+        public abstract IViewApplicable TryCreateApplication(IConventionManager conventionManager, IViewModelDescription description, ElementDescription element, T target);
 
         /// <summary>
         /// Determines the property path.
@@ -60,21 +62,44 @@
         /// Gets the boud property.
         /// </summary>
         /// <param name="info">The info.</param>
-        /// <param name="path">The path.</param>
+        /// <param name="expectedPath">The expected path.</param>
+        /// <param name="correctedPath">The path with case correction applied.</param>
         /// <returns></returns>
-        protected static PropertyInfo GetBoundProperty(PropertyInfo info, string path)
+        protected static PropertyInfo GetBoundProperty(PropertyInfo info, string expectedPath, out string correctedPath)
         {
-            var parts = path.Split(new[] {"."}, StringSplitOptions.RemoveEmptyEntries);
+            var parts = expectedPath.Split(new[] { "." }, StringSplitOptions.RemoveEmptyEntries);
 
             if(parts.Length == 1)
-                return string.Compare(path, info.Name, StringComparison.CurrentCultureIgnoreCase) == 0 ? info : null;
-
-            for(int i = 1; i < parts.Length; i++)
             {
-                info = info.PropertyType.GetProperty(parts[i]);
-                if(info == null) break;
+                if(string.Compare(parts[0], info.Name, StringComparison.CurrentCultureIgnoreCase) == 0)
+                {
+                    correctedPath = info.Name;
+                    return info;
+                }
+
+                correctedPath = null;
+                return null;
             }
 
+            var pathParts = new List<string>();
+            if(string.Compare(parts[0], info.Name, StringComparison.CurrentCultureIgnoreCase) != 0)
+            {
+                correctedPath = null;
+                return null;
+            }
+
+            pathParts.Add(info.Name);
+
+            for (int i = 1; i < parts.Length; i++)
+            {
+                info = info.PropertyType.GetPropertyCaseInsensitive(parts[i]);
+
+                if(info == null)
+                    break;
+                pathParts.Add(info.Name);
+            }
+
+            correctedPath = info != null ? String.Join(".", pathParts.ToArray()) : null;
             return info;
         }
 
@@ -92,13 +117,14 @@
         {
             var index = originalPropertyPath.LastIndexOf(".");
             var subPath = index == -1
-                              ? originalPropertyPath
-                              : originalPropertyPath.Substring(0, index);
+                ? originalPropertyPath
+                : originalPropertyPath.Substring(0, index);
 
-            var subProperty = GetBoundProperty(originalProperty, subPath);
+            string correctedSubPath;
+            var subProperty = GetBoundProperty(originalProperty, subPath, out correctedSubPath);
             var singularName = index == -1
-                                   ? deriveBaseName(originalPropertyPath)
-                                   : deriveBaseName(originalPropertyPath.Substring(index + 1));
+                ? deriveBaseName(originalPropertyPath)
+                : deriveBaseName(originalPropertyPath.Substring(index + 1));
 
             var found = (index == -1 ? originalProperty.ReflectedType : subProperty.PropertyType).GetProperties()
                 .FirstOrDefault(x => predicate(x, singularName));
@@ -113,7 +139,7 @@
 
             if (index == -1)
                 newPropertyPath = newProperty.Name;
-            else newPropertyPath = subPath + "." + newProperty.Name;
+            else newPropertyPath = correctedSubPath + "." + newProperty.Name;
 
             return true;
         }

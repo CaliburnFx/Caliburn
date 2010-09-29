@@ -12,11 +12,11 @@ namespace Caliburn.PresentationFramework.Conventions
     public class DefaultElementConvention<T> : IElementConvention
         where T : DependencyObject
     {
-        private readonly string _defaultEventName;
-        private readonly Action<T, object> _setter;
-        private readonly Func<T, object> _getter;
-        private readonly DependencyProperty _bindableProperty;
-        private readonly Func<T, DependencyProperty, DependencyProperty> _ensureBindableProperty;
+        private readonly string defaultEventName;
+        private readonly Action<T, object> setter;
+        private readonly Func<T, object> getter;
+        private readonly DependencyProperty bindableProperty;
+        private readonly Func<T, DependencyProperty, DependencyProperty> ensureBindableProperty;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="DefaultElementConvention&lt;T&gt;"/> class.
@@ -28,11 +28,11 @@ namespace Caliburn.PresentationFramework.Conventions
         /// <param name="ensureBindableProperty">Custom logic for determining whether the bindable property should be replaced by another.</param>
         public DefaultElementConvention(string defaultEventName, DependencyProperty bindableProperty, Action<T, object> setter, Func<T, object> getter, Func<T, DependencyProperty, DependencyProperty> ensureBindableProperty)
         {
-            _defaultEventName = defaultEventName;
-            _bindableProperty = bindableProperty;
-            _setter = setter;
-            _getter = getter;
-            _ensureBindableProperty = ensureBindableProperty;
+            this.defaultEventName = defaultEventName;
+            this.bindableProperty = bindableProperty;
+            this.setter = setter;
+            this.getter = getter;
+            this.ensureBindableProperty = ensureBindableProperty;
         }
 
         /// <summary>
@@ -60,7 +60,7 @@ namespace Caliburn.PresentationFramework.Conventions
         /// <value>The bindable property.</value>
         public DependencyProperty BindableProperty
         {
-            get { return _bindableProperty; }
+            get { return bindableProperty; }
         }
 
         /// <summary>
@@ -69,7 +69,7 @@ namespace Caliburn.PresentationFramework.Conventions
         /// <value>The name of the event.</value>
         public string EventName
         {
-            get { return _defaultEventName; }
+            get { return defaultEventName; }
         }
 
         /// <summary>
@@ -79,7 +79,7 @@ namespace Caliburn.PresentationFramework.Conventions
         /// <value>The default trigger.</value>
         public IMessageTrigger CreateTrigger()
         {
-            return new EventMessageTrigger {EventName = _defaultEventName};
+            return new EventMessageTrigger {EventName = defaultEventName};
         }
 
         /// <summary>
@@ -90,8 +90,8 @@ namespace Caliburn.PresentationFramework.Conventions
         /// <returns></returns>
         public DependencyProperty EnsureBindableProperty(DependencyObject element, DependencyProperty property)
         {
-            return _ensureBindableProperty != null
-                ? _ensureBindableProperty((T)element, property)
+            return ensureBindableProperty != null
+                ? ensureBindableProperty((T)element, property)
                 : property;
         }
 
@@ -102,7 +102,7 @@ namespace Caliburn.PresentationFramework.Conventions
         /// <returns>The value.</returns>
         public object GetValue(DependencyObject target)
         {
-            return _getter((T)target);
+            return getter((T)target);
         }
 
         /// <summary>
@@ -112,7 +112,7 @@ namespace Caliburn.PresentationFramework.Conventions
         /// <param name="value">The value.</param>
         public void SetValue(DependencyObject target, object value)
         {
-            _setter((T)target, value);
+            setter((T)target, value);
         }
     }
 }

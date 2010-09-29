@@ -163,7 +163,7 @@
             if(e.NewValue != null)
             {
                 var context = GetContext(d);
-                var view = locator.Locate(e.NewValue, d, context);
+                var view = locator.LocateForModel(e.NewValue, d, context);
 
                 viewModelBinder.Bind(e.NewValue, view, context);
 
@@ -186,7 +186,7 @@
             if(model == null)
                 return;
 
-            var view = locator.Locate(model, d, e.NewValue);
+            var view = locator.LocateForModel(model, d, e.NewValue);
 
             viewModelBinder.Bind(model, view, e.NewValue);
 
@@ -208,7 +208,7 @@
                 return;
 
             var context = GetContext(d);
-            var view = locator.Locate(model, d, context);
+            var view = locator.LocateForModel(model, d, context);
 
             viewModelBinder.Bind(model, view, context);
             SetContentProperty(d, view);

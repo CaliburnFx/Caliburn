@@ -10,18 +10,18 @@ namespace Caliburn.PresentationFramework.Conventions
     /// The default implemenation of <see cref="IViewConventionCategory"/>.
     /// </summary>
     /// <typeparam name="T"></typeparam>
-    public class DefaultViewConventionCategory<T> : IViewConventionCategory
+    public class ViewConventionCategory<T> : IViewConventionCategory
     {
-        private readonly Func<IViewModelDescription, IEnumerable<T>> _getTargets;
-        private readonly List<IViewConvention<T>> _conventions = new List<IViewConvention<T>>();
+        private readonly Func<IViewModelDescription, IEnumerable<T>> getTargets;
+        private readonly List<IViewConvention<T>> conventions = new List<IViewConvention<T>>();
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="DefaultViewConventionCategory{T}"/> class.
+        /// Initializes a new instance of the <see cref="ViewConventionCategory{T}"/> class.
         /// </summary>
         /// <param name="getTargets">The get targets.</param>
-        public DefaultViewConventionCategory(Func<IViewModelDescription, IEnumerable<T>> getTargets)
+        public ViewConventionCategory(Func<IViewModelDescription, IEnumerable<T>> getTargets)
         {
-            _getTargets = getTargets;
+            this.getTargets = getTargets;
         }
 
         /// <summary>
@@ -31,10 +31,10 @@ namespace Caliburn.PresentationFramework.Conventions
         /// <param name="viewModelDescription">The view model description.</param>
         /// <param name="elementDescription">The element description.</param>
         /// <returns>The applications.</returns>
-        public IEnumerable<IViewApplicable> GetApplications(IConventionManager conventionManager, IViewModelDescription viewModelDescription, IElementDescription elementDescription)
+        public IEnumerable<IViewApplicable> GetApplications(IConventionManager conventionManager, IViewModelDescription viewModelDescription, ElementDescription elementDescription)
         {
-            return from convention in _conventions
-                   from target in _getTargets(viewModelDescription)
+            return from convention in conventions
+                   from target in getTargets(viewModelDescription)
                    let application = convention.TryCreateApplication(conventionManager, viewModelDescription, elementDescription, target)
                    where application != null
                    select application;
@@ -46,7 +46,7 @@ namespace Caliburn.PresentationFramework.Conventions
         /// <param name="convention">The convention.</param>
         public void AddConvention(IViewConvention<T> convention)
         {
-            _conventions.Add(convention);
+            conventions.Add(convention);
         }
     }
 }

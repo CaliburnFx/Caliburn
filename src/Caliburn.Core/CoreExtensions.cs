@@ -84,5 +84,23 @@
 
             return memberExpression.Member;
         }
+
+        /// <summary>
+        /// Gets a property by name, ignoring case and searching all interfaces.
+        /// </summary>
+        /// <param name="type">The type to inspect.</param>
+        /// <param name="propertyName">The property to search for.</param>
+        /// <returns>The property or null if not found.</returns>
+        public static PropertyInfo GetPropertyCaseInsensitive(this Type type, string propertyName)
+        {
+            var typeList = new List<Type> { type };
+
+            if (type.IsInterface)
+                typeList.AddRange(type.GetInterfaces());
+
+            return typeList
+                .Select(interfaceType => interfaceType.GetProperty(propertyName, BindingFlags.IgnoreCase | BindingFlags.Public | BindingFlags.Instance))
+                .FirstOrDefault(property => property != null);
+        }
     }
 }

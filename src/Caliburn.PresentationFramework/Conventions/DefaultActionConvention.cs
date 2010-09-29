@@ -21,7 +21,7 @@ namespace Caliburn.PresentationFramework.Conventions
         /// <param name="element">The element.</param>
         /// <param name="action">The action.</param>
         /// <returns></returns>
-        public override IViewApplicable TryCreateApplication(IConventionManager conventionManager, IViewModelDescription description, IElementDescription element, IAction action)
+        public override IViewApplicable TryCreateApplication(IConventionManager conventionManager, IViewModelDescription description, ElementDescription element, IAction action)
         {
             if (string.Compare(element.Name, action.Name, StringComparison.CurrentCultureIgnoreCase) != 0)
                 return null;

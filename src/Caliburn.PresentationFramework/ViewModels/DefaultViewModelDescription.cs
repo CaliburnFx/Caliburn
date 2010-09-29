@@ -19,11 +19,11 @@ namespace Caliburn.PresentationFramework.ViewModels
     {
         private static readonly ILog Log = LogManager.GetLog(typeof(DefaultViewModelDescription));
 
-        private readonly IConventionManager _conventionManager;
-        private readonly Type _targetType;
-        private readonly Dictionary<string, IAction> _actions = new Dictionary<string, IAction>();
-        private readonly Dictionary<Type, IViewApplicable[]> _viewConventions = new Dictionary<Type, IViewApplicable[]>();
-        private readonly PropertyInfo[] _properties;
+        private readonly IConventionManager conventionManager;
+        private readonly Type targetType;
+        private readonly Dictionary<string, IAction> actions = new Dictionary<string, IAction>();
+        private readonly Dictionary<Type, IViewApplicable[]> viewConventions = new Dictionary<Type, IViewApplicable[]>();
+        private readonly PropertyInfo[] properties;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="DefaultViewModelDescription"/> class.
@@ -32,9 +32,9 @@ namespace Caliburn.PresentationFramework.ViewModels
         /// <param name="targetType">Type of the target.</param>
         public DefaultViewModelDescription(IConventionManager conventionManager, Type targetType)
         {
-            _conventionManager = conventionManager;
-            _targetType = targetType;
-            _properties = targetType.GetProperties();
+            this.conventionManager = conventionManager;
+            this.targetType = targetType;
+            properties = targetType.GetProperties();
         }
 
         /// <summary>
@@ -43,7 +43,7 @@ namespace Caliburn.PresentationFramework.ViewModels
         /// <value>The type of the View Model.</value>
         public Type TargetType
         {
-            get { return _targetType; }
+            get { return targetType; }
         }
 
         /// <summary>
@@ -58,7 +58,7 @@ namespace Caliburn.PresentationFramework.ViewModels
         /// <value>The actions.</value>
         public IEnumerable<IAction> Actions
         {
-            get { return _actions.Values; }
+            get { return actions.Values; }
         }
 
         /// <summary>
@@ -67,7 +67,7 @@ namespace Caliburn.PresentationFramework.ViewModels
         /// <value>The properties.</value>
         public IEnumerable<PropertyInfo> Properties
         {
-            get { return _properties; }
+            get { return properties; }
         }
 
         /// <summary>
@@ -78,7 +78,7 @@ namespace Caliburn.PresentationFramework.ViewModels
         public IAction GetAction(ActionMessage message)
         {
             IAction found;
-            _actions.TryGetValue(message.MethodName, out found);
+            actions.TryGetValue(message.MethodName, out found);
             return found;
         }
 
@@ -88,7 +88,7 @@ namespace Caliburn.PresentationFramework.ViewModels
         /// <param name="action">The action.</param>
         public void AddAction(IAction action)
         {
-            _actions[action.Name] = action;
+            actions[action.Name] = action;
         }
 
         /// <summary>
@@ -98,7 +98,7 @@ namespace Caliburn.PresentationFramework.ViewModels
         /// <param name="applicableConventions">The applicable conventions.</param>
         public void SetConventionsFor(Type viewType, IEnumerable<IViewApplicable> applicableConventions)
         {
-            _viewConventions[viewType] = applicableConventions.ToArray();
+            viewConventions[viewType] = applicableConventions.ToArray();
         }
 
         /// <summary>
@@ -115,17 +115,17 @@ namespace Caliburn.PresentationFramework.ViewModels
 
             if (useConventionCache)
             {
-                if(!_viewConventions.TryGetValue(viewType, out conventions))
+                if(!viewConventions.TryGetValue(viewType, out conventions))
                 {
-                    conventions = _conventionManager.DetermineConventions(this, view).ToArray();
-                    _viewConventions[viewType] = conventions;
+                    conventions = conventionManager.DetermineConventions(this, view).ToArray();
+                    viewConventions[viewType] = conventions;
                     Log.Info("Cached conventions for {0}.", view);
                 }
                 else Log.Info("Using convention cache for {0}.", view);
             }
             else
             {
-                conventions = _conventionManager.DetermineConventions(this, view).ToArray();
+                conventions = conventionManager.DetermineConventions(this, view).ToArray();
                 Log.Info("Ignoring convention cache for {0}.", view);
             }
 

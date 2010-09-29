@@ -55,7 +55,7 @@ namespace Caliburn.PresentationFramework.Conventions
         /// <param name="viewModelDescription">The view model description.</param>
         /// <param name="elementDescriptions">The element descriptions.</param>
         /// <returns>The applicable conventions.</returns>
-        IEnumerable<IViewApplicable> DetermineConventions(IViewModelDescription viewModelDescription, IEnumerable<IElementDescription> elementDescriptions);
+        IEnumerable<IViewApplicable> DetermineConventions(IViewModelDescription viewModelDescription, IEnumerable<ElementDescription> elementDescriptions);
 
         /// <summary>
         /// Applies the action creation conventions to the specified action.

@@ -14,7 +14,7 @@
     {
         private static readonly ILog Log = LogManager.GetLog(typeof(ApplicableBinding));
 
-        private readonly IElementDescription elementDescription;
+        private readonly ElementDescription elementDescription;
         private readonly DependencyProperty dependencyProperty;
         private readonly string path;
         private readonly BindingMode mode;
@@ -32,7 +32,7 @@
         /// <param name="validate">Inidicates whether or not to turn on validation for the binding.</param>
         /// <param name="checkTemplate">if set to <c>true</c> [check item template].</param>
         /// <param name="converter">The value converter to apply.</param>
-        public ApplicableBinding(IElementDescription elementDescription, DependencyProperty dependencyProperty, string path, 
+        public ApplicableBinding(ElementDescription elementDescription, DependencyProperty dependencyProperty, string path, 
             BindingMode mode, bool validate, bool checkTemplate, IValueConverter converter)
         {
             this.elementDescription = elementDescription;

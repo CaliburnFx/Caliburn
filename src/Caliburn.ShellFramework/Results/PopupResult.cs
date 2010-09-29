@@ -43,7 +43,7 @@
             }
 
             var target = (UIElement)context.Message.Source.UIElement;
-            var view = context.ServiceLocator.GetInstance<IViewLocator>().Locate(child, null, null);
+            var view = context.ServiceLocator.GetInstance<IViewLocator>().LocateForModel(child, null, null);
             var popup = view as Popup;
             
             if(popup == null)

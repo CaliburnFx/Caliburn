@@ -38,7 +38,7 @@ namespace Caliburn.ShellFramework.Results
 
             var window = new NotificationWindow();
             var viewModel = _viewModelLocator();
-            var view = context.ServiceLocator.GetInstance<IViewLocator>().Locate(viewModel, window, null);
+            var view = context.ServiceLocator.GetInstance<IViewLocator>().LocateForModel(viewModel, window, null);
 
             context.ServiceLocator.GetInstance<IViewModelBinder>().Bind(viewModel, view, null);
             window.Content = (FrameworkElement)view;

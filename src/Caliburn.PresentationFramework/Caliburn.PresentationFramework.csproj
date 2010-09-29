@@ -88,9 +88,10 @@
     <Compile Include="Behaviors\DoNotNotifyAttribute.cs" />
     <Compile Include="Behaviors\NotifyPropertyChangedAttribute.cs" />
     <Compile Include="Behaviors\ValidateAttribute.cs" />
-    <Compile Include="Conventions\DefaultViewConventionCategory.cs" />
-    <Compile Include="Conventions\IViewConvention.cs" />
     <Compile Include="Conventions\IViewConventionCategory.cs" />
+    <Compile Include="Conventions\ViewConventionCategory.cs" />
+    <Compile Include="Conventions\IElementConvention.cs" />
+    <Compile Include="Conventions\IViewConvention.cs" />
     <Compile Include="Conventions\SubActionConvention.cs" />
     <Compile Include="Conventions\ViewConventionBase.cs" />
     <Compile Include="Converters\BooleanToVisibilityConverter.silverlight.cs" />
@@ -161,11 +162,9 @@
     <Compile Include="Conventions\DefaultBindingConvention.cs" />
     <Compile Include="Conventions\DefaultConventionManager.cs" />
     <Compile Include="Conventions\DefaultElementConvention.cs" />
-    <Compile Include="Conventions\DefaultElementDescription.cs" />
+    <Compile Include="Conventions\ElementDescription.cs" />
     <Compile Include="Conventions\ConventionExtensions.cs" />
     <Compile Include="Conventions\IConventionManager.cs" />
-    <Compile Include="Conventions\IElementConvention.cs" />
-    <Compile Include="Conventions\IElementDescription.cs" />
     <Compile Include="Views\IViewApplicable.cs" />
     <Compile Include="Conventions\ItemsControlBindingConvention.cs" />
     <Compile Include="RoutedMessaging\EnumerableResults.cs" />

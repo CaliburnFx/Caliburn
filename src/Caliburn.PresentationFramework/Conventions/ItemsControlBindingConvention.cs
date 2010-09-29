@@ -19,11 +19,11 @@ namespace Caliburn.PresentationFramework.Conventions
     {
         private static readonly ILog Log = LogManager.GetLog(typeof(ItemsControlBindingConvention));
 
-        private static readonly Type _itemsControlType = typeof(ItemsControl);
-        private static readonly Type _selectorControlType = typeof(Selector);
+        private static readonly Type ItemsControlType = typeof(ItemsControl);
+        private static readonly Type SelectorControlType = typeof(Selector);
 
 #if !SILVERLIGHT
-        private static readonly Type _headeredItemsControlType = typeof(HeaderedItemsControl);
+        private static readonly Type HeaderedItemsControlType = typeof(HeaderedItemsControl);
 #endif
         /// <summary>
         /// Creates the application of the convention.
@@ -33,12 +33,13 @@ namespace Caliburn.PresentationFramework.Conventions
         /// <param name="element">The element.</param>
         /// <param name="property">The property.</param>
         /// <returns>The convention application.</returns>
-        public override IViewApplicable TryCreateApplication(IConventionManager conventionManager, IViewModelDescription description, IElementDescription element, PropertyInfo property)
+        public override IViewApplicable TryCreateApplication(IConventionManager conventionManager, IViewModelDescription description, ElementDescription element, PropertyInfo property)
         {
-            var originalPath = DeterminePropertyPath(element.Name);
-            var boundProperty = GetBoundProperty(property, originalPath);
+            var expectedPath = DeterminePropertyPath(element.Name);
+            string correctedPath;
+            var boundProperty = GetBoundProperty(property, expectedPath, out correctedPath);
 
-            if (boundProperty == null || !_itemsControlType.IsAssignableFrom(element.Type))
+            if (boundProperty == null || !ItemsControlType.IsAssignableFrom(element.Type))
                 return null;
 
             string path = null;
@@ -47,18 +48,18 @@ namespace Caliburn.PresentationFramework.Conventions
             bool checkTemplate = true;
             IValueConverter converter = null;
 
-            if (_selectorControlType.IsAssignableFrom(element.Type))
+            if (SelectorControlType.IsAssignableFrom(element.Type))
             {
                 string selectionPath;
                 PropertyInfo selectionProperty;
 
-                if (TryGetByPattern(property, originalPath, out selectionPath, out selectionProperty,
+                if (TryGetByPattern(property, correctedPath, out selectionPath, out selectionProperty,
                     originalName => originalName.MakeSingular(),
                     (info, baseName) =>
-                        info.Name == "Current" + baseName ||
-                        info.Name == "Active" + baseName ||
-                        info.Name == "Selected" + baseName)
-                    )
+                        string.Compare(info.Name, "Current" + baseName, StringComparison.CurrentCultureIgnoreCase) == 0 ||
+                            string.Compare(info.Name, "Active" + baseName, StringComparison.CurrentCultureIgnoreCase) == 0 ||
+                                string.Compare(info.Name, "Selected" + baseName, StringComparison.CurrentCultureIgnoreCase) == 0
+                    ))
                 {
                     path = selectionPath;
                     bindableProperty = Selector.SelectedItemProperty;
@@ -71,16 +72,16 @@ namespace Caliburn.PresentationFramework.Conventions
                 else return null;
             }
 #if !SILVERLIGHT
-            else if (_headeredItemsControlType.IsAssignableFrom(element.Type))
+            else if (HeaderedItemsControlType.IsAssignableFrom(element.Type))
             {
                 string headerPath;
                 PropertyInfo headerProperty;
 
-                if (TryGetByPattern(property, originalPath, out headerPath, out headerProperty,
+                if (TryGetByPattern(property, correctedPath, out headerPath, out headerProperty,
                     originalName => originalName,
                     (info, baseName) =>
-                        info.Name == baseName + "Header")
-                    )
+                        string.Compare(info.Name, baseName + "Header", StringComparison.CurrentCultureIgnoreCase) == 0
+                    ))
                 {
                     path = headerPath;
                     bindableProperty = HeaderedItemsControl.HeaderProperty;
@@ -107,8 +108,7 @@ namespace Caliburn.PresentationFramework.Conventions
 
         private static bool ShouldCheckTemplate(PropertyInfo property)
         {
-            return !property.PropertyType.IsEnum &&
-                !property.PropertyType.IsPrimitive &&
+            return !property.PropertyType.IsValueType &&
                 !typeof(string).IsAssignableFrom(property.PropertyType);
         }
     }

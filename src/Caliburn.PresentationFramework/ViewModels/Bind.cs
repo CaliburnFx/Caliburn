@@ -7,7 +7,7 @@
     /// </summary>
     public static class Bind
     {
-        private static IViewModelBinder _binder;
+        private static IViewModelBinder binder;
 
         /// <summary>
         /// Initializes the binder attached properties.
@@ -15,7 +15,7 @@
         /// <param name="binder">The binder.</param>
         public static void Initialize(IViewModelBinder binder)
         {
-            _binder = binder;
+            Bind.binder = binder;
         }
 
         /// <summary>
@@ -54,7 +54,7 @@
             if(e.NewValue == null || e.NewValue == e.OldValue)
                 return;
 
-            _binder.Bind(e.NewValue, d, null);
+            binder.Bind(e.NewValue, d, null);
         }
     }
 }

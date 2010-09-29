@@ -210,7 +210,7 @@
         }
 
         /// <summary>
-        /// Gets the resource by searching the hierarchy of of elements.
+        /// Gets the resource by searching the hierarchy of elements.
         /// </summary>
         /// <typeparam name="T">The type of resource.</typeparam>
         /// <param name="element">The element.</param>

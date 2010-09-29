@@ -13,7 +13,7 @@ namespace Caliburn.PresentationFramework.Views
     public class ViewAttribute : Attribute, IViewStrategy
     {
         private static readonly ILog Log = LogManager.GetLog(typeof(ViewAttribute));
-        private readonly Type _key;
+        private readonly Type key;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ViewAttribute"/> class.
@@ -21,7 +21,7 @@ namespace Caliburn.PresentationFramework.Views
         /// <param name="key">The key.</param>
         public ViewAttribute(Type key)
         {
-            _key = key;
+            this.key = key;
         }
 
         /// <summary>
@@ -30,7 +30,7 @@ namespace Caliburn.PresentationFramework.Views
         /// <value>The key.</value>
         public Type Key
         {
-            get { return _key; }
+            get { return key; }
         }
 
         /// <summary>
@@ -64,11 +64,11 @@ namespace Caliburn.PresentationFramework.Views
         /// <returns>The view.</returns>
         public DependencyObject Locate(Type modelType, DependencyObject displayLocation, object context)
         {
-            var instances = ServiceLocator.Current.GetAllInstances(_key);
+            var instances = ServiceLocator.Current.GetAllInstances(key);
 
             var view = instances.Count() > 0
                 ? instances.First()
-                : Activator.CreateInstance(_key);
+                : Activator.CreateInstance(key);
 
             Log.Info("Custom view {0} located for {1}.", view, modelType);
             return (DependencyObject)view;

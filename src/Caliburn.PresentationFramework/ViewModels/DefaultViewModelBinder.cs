@@ -15,8 +15,8 @@ namespace Caliburn.PresentationFramework.ViewModels
     {
         private static readonly ILog Log = LogManager.GetLog(typeof(DefaultViewModelBinder));
 
-        private readonly IViewModelDescriptionFactory _viewModelDescriptionFactory;
-        private bool _applyConventionsByDefault = true;
+        private readonly IViewModelDescriptionFactory viewModelDescriptionFactory;
+        private bool applyConventionsByDefault = true;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="DefaultViewModelBinder"/> class.
@@ -24,7 +24,7 @@ namespace Caliburn.PresentationFramework.ViewModels
         /// <param name="viewModelDescriptionFactory"></param>
         public DefaultViewModelBinder(IViewModelDescriptionFactory viewModelDescriptionFactory)
         {
-            _viewModelDescriptionFactory = viewModelDescriptionFactory;
+            this.viewModelDescriptionFactory = viewModelDescriptionFactory;
         }
 
         /// <summary>
@@ -35,8 +35,8 @@ namespace Caliburn.PresentationFramework.ViewModels
         /// </value>
         public bool ApplyConventionsByDefault
         {
-            get { return _applyConventionsByDefault; }
-            set { _applyConventionsByDefault = value; }
+            get { return applyConventionsByDefault; }
+            set { applyConventionsByDefault = value; }
         }
 
         /// <summary>
@@ -84,7 +84,7 @@ namespace Caliburn.PresentationFramework.ViewModels
         protected virtual bool ShouldApplyConventions(object viewModel, DependencyObject view, object context)
         {
             var overriden = View.GetApplyConventions(view);
-            return overriden.GetValueOrDefault(_applyConventionsByDefault);
+            return overriden.GetValueOrDefault(applyConventionsByDefault);
         }
 
         /// <summary>
@@ -95,7 +95,7 @@ namespace Caliburn.PresentationFramework.ViewModels
         protected virtual void ApplyConventions(object viewModel, DependencyObject view)
         {
             var modelType = GetModelType(viewModel);
-            var description = _viewModelDescriptionFactory.Create(modelType);
+            var description = viewModelDescriptionFactory.Create(modelType);
 
             description.GetConventionsFor(view)
                 .Apply(x => x.ApplyTo(view));

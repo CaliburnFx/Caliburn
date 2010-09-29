@@ -16,6 +16,6 @@ namespace Caliburn.PresentationFramework.Conventions
         /// <param name="viewModelDescription">The view model description.</param>
         /// <param name="elementDescription">The element description.</param>
         /// <returns>The applications.</returns>
-        IEnumerable<IViewApplicable> GetApplications(IConventionManager conventionManager, IViewModelDescription viewModelDescription, IElementDescription elementDescription);
+        IEnumerable<IViewApplicable> GetApplications(IConventionManager conventionManager, IViewModelDescription viewModelDescription, ElementDescription elementDescription);
     }
 }

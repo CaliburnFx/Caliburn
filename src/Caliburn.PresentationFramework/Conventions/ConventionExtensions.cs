@@ -22,7 +22,7 @@
         /// <summary>
         /// The overridable implemenation of GetNamedElements.
         /// </summary>
-        public static Func<IConventionManager, DependencyObject, IEnumerable<IElementDescription>> SelectElementsToInspect = DefaultSelectElementsToInspectImplementation;
+        public static Func<IConventionManager, DependencyObject, IEnumerable<ElementDescription>> SelectElementsToInspect = DefaultSelectElementsToInspectImplementation;
 
         public static bool HasBinding(this DependencyObject dependencyObject, DependencyProperty dependencyProperty)
         {
@@ -49,7 +49,7 @@
         }
 
 #if !SILVERLIGHT
-        private static IEnumerable<IElementDescription> DefaultSelectElementsToInspectImplementation(IConventionManager conventionManager, DependencyObject root)
+        private static IEnumerable<ElementDescription> DefaultSelectElementsToInspectImplementation(IConventionManager conventionManager, DependencyObject root)
         {
             var queue = new Queue<DependencyObject>();
             queue.Enqueue(root);
@@ -65,7 +65,7 @@
                     var currentConvention = conventionManager.GetElementConvention(currentType);
 
                     if (currentConvention != null)
-                        yield return new DefaultElementDescription(currentType, currentName, currentConvention);
+                        yield return new ElementDescription { Type = currentType, Name = currentName, Convention = currentConvention };
                 }
 
                 foreach (object child in LogicalTreeHelper.GetChildren(current))
@@ -80,7 +80,7 @@
             }
         }
 #else
-        private static IEnumerable<IElementDescription> DefaultSelectElementsToInspectImplementation(IConventionManager conventionManager, DependencyObject root)
+        private static IEnumerable<ElementDescription> DefaultSelectElementsToInspectImplementation(IConventionManager conventionManager, DependencyObject root)
         {
             var queue = new Queue<DependencyObject>();
             queue.Enqueue(root);
@@ -96,7 +96,7 @@
                     var currentConvention = conventionManager.GetElementConvention(currentType);
 
                     if (currentConvention != null)
-                        yield return new DefaultElementDescription(currentType, currentName, currentConvention);
+                        yield return new ElementDescription { Type = currentType, Name = currentName, Convention = currentConvention };
                 }
 
                 var childCount = VisualTreeHelper.GetChildrenCount(current);

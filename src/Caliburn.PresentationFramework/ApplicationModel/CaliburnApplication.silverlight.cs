@@ -145,7 +145,7 @@ namespace Caliburn.PresentationFramework.ApplicationModel
         protected virtual void SetRootVisual(object model)
         {
             var locator = Container.GetInstance<IViewLocator>();
-            var view = locator.Locate(model, null, null);
+            var view = locator.LocateForModel(model, null, null);
 
             var binder = Container.GetInstance<IViewModelBinder>();
             binder.Bind(model, view, null);

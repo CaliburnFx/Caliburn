@@ -74,7 +74,7 @@ namespace Caliburn.PresentationFramework.ApplicationModel
         /// <returns></returns>
         protected virtual ChildWindow CreateWindow(object rootModel, object context)
         {
-            var view = EnsureWindow(rootModel, viewLocator.Locate(rootModel, null, context));
+            var view = EnsureWindow(rootModel, viewLocator.LocateForModel(rootModel, null, context));
             binder.Bind(rootModel, view, context);
 
             var haveDisplayName = rootModel as IHaveDisplayName;

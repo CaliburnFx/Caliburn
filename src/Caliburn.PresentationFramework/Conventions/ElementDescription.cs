@@ -3,26 +3,26 @@ namespace Caliburn.PresentationFramework.Conventions
     using System;
 
     /// <summary>
-    /// Describes an element in the Logical or Visual Treen.
+    /// Describes and element that is available for convention application.
     /// </summary>
-    public interface IElementDescription
+    public class ElementDescription
     {
         /// <summary>
-        /// Gets the type.
+        /// Gets or sets the type.
         /// </summary>
         /// <value>The type.</value>
-        Type Type { get; }
+        public Type Type;
 
         /// <summary>
-        /// Gets the name.
+        /// Gets or sets the name.
         /// </summary>
         /// <value>The name.</value>
-        string Name { get; }
+        public string Name;
 
         /// <summary>
-        /// Gets the conventions associated with the element.
+        /// Gets or sets the conventions associated with the element.
         /// </summary>
         /// <value>The convention.</value>
-        IElementConvention Convention { get; }
+        public IElementConvention Convention;
     }
 }
