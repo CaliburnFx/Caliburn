@@ -1,6 +1,6 @@
 namespace Caliburn.DynamicProxy.Interceptors
 {
-    using Castle.Core.Interceptor;
+	using Castle.DynamicProxy;
 
     /// <summary>
     /// An custom interceptor which is made aware of its proxy once immediately following proxy creation.

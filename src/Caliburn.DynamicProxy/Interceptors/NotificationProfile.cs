@@ -3,8 +3,8 @@
     using System;
     using System.Collections.Generic;
     using System.Linq;
-    using Castle.Core.Interceptor;
-    using Core;
+	using Castle.DynamicProxy;
+	using Core;
     using PresentationFramework.Behaviors;
     using PresentationFramework.Filters;
 

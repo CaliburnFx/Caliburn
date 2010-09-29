@@ -5,8 +5,8 @@ namespace Caliburn.DynamicProxy.Interceptors
     using System;
     using System.ComponentModel.DataAnnotations;
     using System.Linq;
-    using Castle.Core.Interceptor;
-    using Core.Validation;
+	using Castle.DynamicProxy;
+	using Core.Validation;
 
 #if NET
 	[System.Serializable]

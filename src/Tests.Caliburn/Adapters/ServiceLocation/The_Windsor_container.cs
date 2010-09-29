@@ -15,9 +15,7 @@ namespace Tests.Caliburn.Adapters.ServiceLocation
         {
             IWindsorContainer container = new WindsorContainer()
                 .Register(
-                AllTypes.Of<ILogger>()
-                    .FromAssembly(typeof(ILogger).Assembly)
-                    .WithService.FirstInterface()
+                AllTypes.FromThisAssembly().BasedOn<ILogger>().WithService.FirstInterface()
                 );
 
             return new WindsorAdapter(container);

@@ -1,9 +1,8 @@
 ﻿namespace Caliburn.Windsor
 {
     using System;
-    using System.Collections.Generic;
+	using System.Collections.Generic;
     using Core.IoC;
-    using Castle.Core;
     using Castle.MicroKernel.Registration;
     using Castle.Windsor;
     using Microsoft.Practices.ServiceLocation;
@@ -13,7 +12,8 @@
     /// </summary>
     public class WindsorAdapter : ContainerBase, IContainerAccessor
     {
-        private readonly IWindsorContainer _container;
+        private readonly IWindsorContainer container;
+    	private readonly ComponentInstaller installer = new ComponentInstaller();
 
         /// <summary>
         /// Initializes a new instance of the <see cref="WindsorAdapter"/> class.
@@ -21,18 +21,26 @@
         /// <param name="container">The _container.</param>
         public WindsorAdapter(IWindsorContainer container)
         {
-            _container = container;
-
-            _container.Kernel.AddComponentInstance<IServiceLocator>(this);
-            _container.Kernel.AddComponentInstance<IRegistry>(this);
-            _container.Kernel.AddComponentInstance<IContainer>(this);
-            _container.Kernel.AddComponentInstance<IContainerAccessor>(this);
-            _container.Kernel.AddComponentInstance<IWindsorContainer>(_container);
+            this.container = container;
+        	this.container.Register(
+				Component.For(typeof(IServiceLocator), typeof(IRegistry), typeof(IContainer), typeof(IContainerAccessor)).Instance(this),
+				Component.For<IWindsorContainer>().Instance(this.container)
+				);
 
             AddRegistrationHandler<Singleton>(HandleSingleton);
             AddRegistrationHandler<PerRequest>(HandlePerRequest);
             AddRegistrationHandler<Instance>(HandleInstance);
         }
+
+    	/// <summary>
+    	/// Configures the container using the provided component registrations.
+    	/// </summary>
+    	/// <param name="registrations">The component registrations.</param>
+    	public override void Register(IEnumerable<IComponentRegistration> registrations)
+		{
+			base.Register(registrations);
+    		container.Install(installer);
+		}
 
         /// <summary>
         /// Gets the container.
@@ -40,7 +48,7 @@
         /// <value>The container.</value>
         public IWindsorContainer Container
         {
-            get { return _container; }
+            get { return container; }
         }
 
         /// <summary>
@@ -56,11 +64,11 @@
         {
             if(key != null)
             {
-                if(serviceType != null) return _container.Resolve(key, serviceType);
-                return _container.Resolve(key);
+                if(serviceType != null) return container.Resolve(key, serviceType);
+                return container.Resolve(key, new Dictionary<string, object>());
             }
 
-            return _container.Resolve(serviceType);
+            return container.Resolve(serviceType);
         }
 
         /// <summary>
@@ -73,7 +81,7 @@
         /// </returns>
         protected override IEnumerable<object> DoGetAllInstances(Type serviceType)
         {
-            return (object[])_container.ResolveAll(serviceType);
+            return (object[])container.ResolveAll(serviceType);
         }
 
         /// <summary>
@@ -90,31 +98,40 @@
             return this;
         }
 
+		/// <summary>
+		/// Adds an <see cref="IRegistration" /> to the adapter's internal installer.
+		/// </summary>
+		/// <param name="registration">The registration to be added to the installer.</param>
+		protected virtual void AddRegistration(IRegistration registration)
+		{
+			installer.AddRegistration(registration);
+		}
+
         private void HandleSingleton(Singleton singleton)
         {
             if (!singleton.HasName())
-                _container.Register(Component.For(singleton.Service).ImplementedBy(singleton.Implementation).LifeStyle.Singleton);
+                AddRegistration(Component.For(singleton.Service).ImplementedBy(singleton.Implementation).LifeStyle.Singleton);
             else if (!singleton.HasService())
-                _container.AddComponentLifeStyle(singleton.Name, singleton.Implementation, LifestyleType.Singleton);
-            else _container.AddComponentLifeStyle(singleton.Name, singleton.Service, singleton.Implementation, LifestyleType.Singleton);
+                AddRegistration(Component.For(singleton.Implementation).Named(singleton.Name).LifeStyle.Singleton);
+            else AddRegistration(Component.For(singleton.Service).ImplementedBy(singleton.Implementation).Named(singleton.Name).LifeStyle.Singleton);
         }
 
         private void HandlePerRequest(PerRequest perRequest)
         {
             if (!perRequest.HasName())
-                _container.Register(Component.For(perRequest.Service).ImplementedBy(perRequest.Implementation).LifeStyle.Transient);
+                AddRegistration(Component.For(perRequest.Service).ImplementedBy(perRequest.Implementation).LifeStyle.Transient);
             else if (!perRequest.HasService())
-                _container.AddComponentLifeStyle(perRequest.Name, perRequest.Implementation, LifestyleType.Transient);
-            else _container.AddComponentLifeStyle(perRequest.Name, perRequest.Service, perRequest.Implementation, LifestyleType.Transient);
-        }
+				AddRegistration(Component.For(perRequest.Implementation).Named(perRequest.Name).LifeStyle.Transient);
+			else AddRegistration(Component.For(perRequest.Service).ImplementedBy(perRequest.Implementation).Named(perRequest.Name).LifeStyle.Transient);
+		}
 
         private void HandleInstance(Instance instance)
         {
             if (!instance.HasName())
-                _container.Register(Component.For(instance.Service).Instance(instance.Implementation));
+                AddRegistration(Component.For(instance.Service).Instance(instance.Implementation));
             else if (!instance.HasService())
-                _container.Kernel.AddComponentInstance(instance.Name, instance.Implementation);
-            else _container.Register(Component.For(instance.Service).Named(instance.Name).Instance(instance.Implementation));
-        }
+				AddRegistration(Component.For(instance.Implementation.GetType()).Instance(instance.Implementation).Named(instance.Name));
+			else AddRegistration(Component.For(instance.Service).Instance(instance.Implementation).Named(instance.Name));
+		}
     }
 }

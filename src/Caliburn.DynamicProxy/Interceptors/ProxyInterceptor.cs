@@ -1,7 +1,7 @@
 ﻿namespace Caliburn.DynamicProxy.Interceptors
 {
-    using Castle.Core.Interceptor;
-    using Core.Behaviors;
+	using Castle.DynamicProxy;
+	using Core.Behaviors;
 
     /// <summary>
     /// Implements <see cref="IProxy"/>.

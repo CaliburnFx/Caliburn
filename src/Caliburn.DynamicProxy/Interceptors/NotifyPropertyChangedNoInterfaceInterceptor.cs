@@ -1,7 +1,6 @@
 ﻿namespace Caliburn.DynamicProxy.Interceptors
 {
     using System;
-    using System.ComponentModel;
     using PresentationFramework;
     using PresentationFramework.Behaviors;
 

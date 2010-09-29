@@ -405,9 +405,7 @@
 				<include name="System.Core.dll"/>
 				<include name="Caliburn.Core.dll"/>
 				<include name="Castle.Core.dll"/>
-				<include name="Castle.MicroKernel.dll"/>
 				<include name="Castle.Windsor.dll"/>
-				<include name="Castle.DynamicProxy2.dll"/>
         <include name="Microsoft.Practices.ServiceLocation.dll"/>
 			</references>
 			<nowarn>
@@ -435,7 +433,6 @@
         <include name="System.ComponentModel.DataAnnotations.dll" />
         <include name="Caliburn.PresentationFramework.dll"/>
         <include name="Castle.Core.dll"/>
-        <include name="Castle.DynamicProxy2.dll"/>
       </references>
       <nowarn>
         <warning number="1584"/>
@@ -733,7 +730,6 @@
 				<include name="Caliburn.Windsor.dll"/>
 				<include name="Castle.Core.dll"/>
 				<include name="Castle.Windsor.dll"/>
-				<include name="Castle.MicroKernel.dll"/>
 				<include name="Caliburn.Spring.dll"/>
 				<include name="Spring.Core.dll"/>
 				<include name="Common.Logging.dll"/>

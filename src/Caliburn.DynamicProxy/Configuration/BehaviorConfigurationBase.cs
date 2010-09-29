@@ -2,8 +2,8 @@
 {
     using System;
     using System.Collections.Generic;
-    using Castle.Core.Interceptor;
-    using Core.Behaviors;
+	using Castle.DynamicProxy;
+	using Core.Behaviors;
 
     /// <summary>
     /// A base class for <see cref="IBehaviorConfiguration{T}"/>

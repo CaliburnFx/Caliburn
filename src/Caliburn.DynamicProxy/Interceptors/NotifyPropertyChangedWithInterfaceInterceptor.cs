@@ -2,8 +2,8 @@
 {
     using System;
     using System.ComponentModel;
-    using Castle.Core.Interceptor;
-    using PresentationFramework.Behaviors;
+	using Castle.DynamicProxy;
+	using PresentationFramework.Behaviors;
     using PresentationFramework.Invocation;
 
     /// <summary>

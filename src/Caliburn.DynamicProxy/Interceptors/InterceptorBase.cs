@@ -1,6 +1,6 @@
 ﻿namespace Caliburn.DynamicProxy.Interceptors
 {
-    using Castle.Core.Interceptor;
+	using Castle.DynamicProxy;
 
     /// <summary>
     /// A base class for interceptors.

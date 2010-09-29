@@ -1,9 +1,8 @@
 ﻿namespace Caliburn.DynamicProxy.Interceptors
 {
     using System;
-    using System.ComponentModel;
-    using Castle.Core.Interceptor;
-    using Core;
+	using Castle.DynamicProxy;
+	using Core;
     using PresentationFramework.Behaviors;
 
     /// <summary>

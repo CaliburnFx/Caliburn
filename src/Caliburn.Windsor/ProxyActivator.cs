@@ -5,7 +5,8 @@
     using Castle.Core;
     using Castle.MicroKernel;
     using Castle.MicroKernel.ComponentActivator;
-    using Core;
+	using Castle.MicroKernel.Context;
+	using Core;
     using Core.Behaviors;
 
     /// <summary>
@@ -30,9 +31,9 @@
 
             return Kernel.Resolve<Core.Behaviors.IProxyFactory>()
                 .CreateProxy(
-                Model.Implementation,
-                Model.Implementation.GetAttributes<IBehavior>(true).ToArray(),
-                arguments
+                    Model.Implementation,
+                    Model.Implementation.GetAttributes<IBehavior>(true).ToArray(),
+                    arguments
                 );
         }
     }

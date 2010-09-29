@@ -2,8 +2,8 @@ namespace Caliburn.DynamicProxy.Configuration
 {
     using System;
     using System.Collections.Generic;
-    using Castle.Core.Interceptor;
-    using Core.Behaviors;
+	using Castle.DynamicProxy;
+	using Core.Behaviors;
 
     /// <summary>
     /// Used to provide interceptors for a type based on a behavior.

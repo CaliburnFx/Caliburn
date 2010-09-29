@@ -2,8 +2,8 @@
 {
     using System;
     using System.Collections.Generic;
-    using Castle.Core.Interceptor;
-    using Core.Validation;
+	using Castle.DynamicProxy;
+	using Core.Validation;
     using Interceptors;
     using Microsoft.Practices.ServiceLocation;
     using PresentationFramework.Behaviors;
