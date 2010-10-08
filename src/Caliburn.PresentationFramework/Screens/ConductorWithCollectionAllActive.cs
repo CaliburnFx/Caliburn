@@ -57,7 +57,7 @@
                 /// <value>The close strategy.</value>
                 public ICloseStrategy<T> CloseStrategy
                 {
-                    get { return closeStrategy ?? (closeStrategy = new DefaultCloseStrategy<T>()); }
+                    get { return closeStrategy ?? (closeStrategy = new DefaultCloseStrategy<T>(true)); }
                     set { closeStrategy = value; }
                 }
 
@@ -134,7 +134,10 @@
                 /// <param name="callback">The implementor calls this action with the result of the close check.</param>
                 public override void CanClose(Action<bool> callback)
                 {
-                    CloseStrategy.Execute(items, (canClose, closable) => callback(canClose));
+                    CloseStrategy.Execute(items, (canClose, closable) =>{
+                        closable.Apply(CloseItemCore);
+                        callback(canClose);
+                    });
                 }
 
                 /// <summary>
