@@ -25,24 +25,24 @@ namespace Caliburn.ShellFramework.Services
             public int Depth { get; set; }
         }
 
-        private readonly Dictionary<object, BusyInfo> _loaders = new Dictionary<object, BusyInfo>();
-        private readonly object _lockObject = new object();
-        private readonly object _defaultKey = new object();
+        private readonly Dictionary<object, BusyInfo> loaders = new Dictionary<object, BusyInfo>();
+        private readonly object lockObject = new object();
+        private readonly object defaultKey = new object();
 
-        private readonly IWindowManager _windowManager;
+        private readonly IWindowManager windowManager;
 
         public DefaultBusyService(IWindowManager windowManager)
         {
-            _windowManager = windowManager;
+            this.windowManager = windowManager;
         }
 
         public void MarkAsBusy(object sourceViewModel, object busyViewModel)
         {
-            sourceViewModel = sourceViewModel ?? _defaultKey;
+            sourceViewModel = sourceViewModel ?? defaultKey;
 
-            if (_loaders.ContainsKey(sourceViewModel))
+            if (loaders.ContainsKey(sourceViewModel))
             {
-                var info = _loaders[sourceViewModel];
+                var info = loaders[sourceViewModel];
                 info.BusyViewModel = busyViewModel;
                 UpdateLoader(info);
             }
@@ -61,17 +61,17 @@ namespace Caliburn.ShellFramework.Services
                             return;
 
                         var info = new BusyInfo { BusyViewModel = busyViewModel };
-                        _loaders[sourceViewModel] = info;
+                        loaders[sourceViewModel] = info;
                         UpdateLoader(info);
                     };
 
                     Log.Warn("No busy indicator with name '" + BusyIndicatorName + "' was found in the UI hierarchy. Using modal.");
-                    _windowManager.ShowDialog(busyViewModel, null);
+                    windowManager.ShowDialog(busyViewModel, null);
                 }
                 else
                 {
                     var info = new BusyInfo { BusyIndicator = busyIndicator, BusyViewModel = busyViewModel };
-                    _loaders[sourceViewModel] = info;
+                    loaders[sourceViewModel] = info;
                     ToggleBusyIndicator(info, true);
                     UpdateLoader(info);
                 }
@@ -80,17 +80,17 @@ namespace Caliburn.ShellFramework.Services
 
         public void MarkAsNotBusy(object sourceViewModel)
         {
-            sourceViewModel = sourceViewModel ?? _defaultKey;
+            sourceViewModel = sourceViewModel ?? defaultKey;
 
-            var info = _loaders[sourceViewModel];
+            var info = loaders[sourceViewModel];
 
-            lock (_lockObject)
+            lock (lockObject)
             {
                 info.Depth--;
 
                 if(info.Depth == 0)
                 {
-                    _loaders.Remove(sourceViewModel);
+                    loaders.Remove(sourceViewModel);
                     ToggleBusyIndicator(info, false);
                 }
             }
@@ -98,7 +98,7 @@ namespace Caliburn.ShellFramework.Services
 
         private void UpdateLoader(BusyInfo info)
         {
-            lock(_lockObject)
+            lock(lockObject)
             {
                 info.Depth++;
             }
@@ -150,6 +150,7 @@ namespace Caliburn.ShellFramework.Services
             }
 
             UIElement busyIndicator = null;
+            view = DefaultWindowManager.GetSignificantView(view);
 
             while (view != null && busyIndicator == null)
             {
