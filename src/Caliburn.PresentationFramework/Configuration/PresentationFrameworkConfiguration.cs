@@ -8,10 +8,9 @@
     using Conventions;
     using Core;
     using Core.Configuration;
-    using Core.IoC;
+    using Core.InversionOfControl;
     using Core.Validation;
     using Invocation;
-    using Microsoft.Practices.ServiceLocation;
     using RoutedMessaging;
     using RoutedMessaging.Parsers;
     using Screens;
@@ -134,17 +133,11 @@
             if (!registerItemsWithSubjects)
                 return;
 
-            try
-            {
-                var registry = serviceLocator.GetInstance<IRegistry>();
-                var assemblySource = serviceLocator.GetInstance<IAssemblySource>();
+            var registry = serviceLocator.GetInstance<IRegistry>();
+            var assemblySource = serviceLocator.GetInstance<IAssemblySource>();
 
-                assemblySource.Apply(x => RegisterItemsWithSubjects(registry, x));
-                assemblySource.AssemblyAdded += assembly => RegisterItemsWithSubjects(registry, assembly);
-            }
-            catch(ActivationException)
-            {
-            }
+            assemblySource.Apply(x => RegisterItemsWithSubjects(registry, x));
+            assemblySource.AssemblyAdded += assembly => RegisterItemsWithSubjects(registry, assembly);
         }
 
         private void RegisterItemsWithSubjects(IRegistry registry, Assembly assembly)

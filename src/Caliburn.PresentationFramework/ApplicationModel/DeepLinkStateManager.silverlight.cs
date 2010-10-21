@@ -17,9 +17,9 @@ namespace Caliburn.PresentationFramework.ApplicationModel
     {
         private static readonly ILog Log = LogManager.GetLog(typeof(DeepLinkStateManager));
 
-        private readonly Dictionary<string, string> _state = new Dictionary<string, string>();
-        private string _stateName;
-        private bool _isLoadingState, _isSavingState, _isInitialized;
+        private readonly Dictionary<string, string> state = new Dictionary<string, string>();
+        private string stateName;
+        private bool isLoadingState, isSavingState, isInitialized;
 
         /// <summary>
         /// Occurs after the state was loaded from the backing store.
@@ -38,8 +38,8 @@ namespace Caliburn.PresentationFramework.ApplicationModel
         /// <returns></returns>
         public virtual bool Initialize(string stateName)
         {
-            if(_isInitialized)
-                return _isInitialized;
+            if(isInitialized)
+                return isInitialized;
 
             try
             {
@@ -50,7 +50,7 @@ namespace Caliburn.PresentationFramework.ApplicationModel
                 if(string.IsNullOrEmpty(hostID))
                     return false;
 
-                _stateName = stateName ?? string.Empty;
+                this.stateName = stateName ?? string.Empty;
 
                 HtmlPage.RegisterScriptableObject("DeepLinker", this);
 
@@ -93,14 +93,14 @@ namespace Caliburn.PresentationFramework.ApplicationModel
                 Log.Info("Injecting javascript.");
                 HtmlPage.Window.Eval(initScript);
 
-                _isInitialized = true;
+                isInitialized = true;
             }
             catch(Exception ex)
             {
                 Log.Error(ex);
             }
 
-            return _isInitialized;
+            return isInitialized;
         }
 
         /// <summary>
@@ -110,8 +110,8 @@ namespace Caliburn.PresentationFramework.ApplicationModel
         /// <param name="value">The value.</param>
         public virtual void InsertOrUpdate(string key, string value)
         {
-            if(_isLoadingState) return;
-            _state[key] = value;
+            if(isLoadingState) return;
+            state[key] = value;
         }
 
         /// <summary>
@@ -122,7 +122,7 @@ namespace Caliburn.PresentationFramework.ApplicationModel
         public virtual string Get(string key)
         {
             string value;
-            _state.TryGetValue(key, out value);
+            state.TryGetValue(key, out value);
             return value;
         }
 
@@ -133,8 +133,8 @@ namespace Caliburn.PresentationFramework.ApplicationModel
         /// <returns></returns>
         public virtual bool Remove(string key)
         {
-            if(_isLoadingState) return false;
-            return _state.Remove(key);
+            if(isLoadingState) return false;
+            return state.Remove(key);
         }
 
         /// <summary>
@@ -144,9 +144,9 @@ namespace Caliburn.PresentationFramework.ApplicationModel
         /// <returns></returns>
         public virtual bool CommitChanges(string stateName)
         {
-            if(_isLoadingState || _isSavingState) return false;
+            if(isLoadingState || isSavingState) return false;
 
-            _isSavingState = true;
+            isSavingState = true;
 
             BeforeStateCommit(this, EventArgs.Empty);
 
@@ -154,7 +154,7 @@ namespace Caliburn.PresentationFramework.ApplicationModel
             {
                 string script = "Sys.Application.addHistoryPoint({";
 
-                foreach(var pair in _state)
+                foreach(var pair in state)
                 {
                     if(pair.Value == null)
                     {
@@ -167,7 +167,7 @@ namespace Caliburn.PresentationFramework.ApplicationModel
                 }
 
                 script = script.Remove(script.Length - 2);
-                script += string.Format("}}, '{0}');", stateName ?? _stateName);
+                script += string.Format("}}, '{0}');", stateName ?? this.stateName);
 
                 HtmlPage.Window.Eval(script);
 
@@ -180,7 +180,7 @@ namespace Caliburn.PresentationFramework.ApplicationModel
             }
             finally
             {
-                _isSavingState = false;
+                isSavingState = false;
             }
         }
 
@@ -193,12 +193,12 @@ namespace Caliburn.PresentationFramework.ApplicationModel
         {
             Log.Info("Browser navigate occurred.");
 
-            if(_isLoadingState || _isSavingState) 
+            if(isLoadingState || isSavingState) 
                 return;
 
-            _isLoadingState = true;
+            isLoadingState = true;
 
-            _state.Clear();
+            state.Clear();
 
             var props = ReflectProperties<string[]>(newState);
 
@@ -206,13 +206,13 @@ namespace Caliburn.PresentationFramework.ApplicationModel
             {
                 foreach (string prop in props)
                 {
-                    _state.Add(prop, newState.GetProperty(prop).ToString());
+                    state.Add(prop, newState.GetProperty(prop).ToString());
                 }
             }
 
             AfterStateLoad(this, EventArgs.Empty);
 
-            _isLoadingState = false;
+            isLoadingState = false;
         }
 
         /// <summary>

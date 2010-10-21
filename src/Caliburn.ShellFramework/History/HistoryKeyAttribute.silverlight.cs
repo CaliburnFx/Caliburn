@@ -3,27 +3,27 @@
 namespace Caliburn.ShellFramework.History
 {
     using System;
-    using Microsoft.Practices.ServiceLocation;
+    using Core.InversionOfControl;
 
     public class HistoryKeyAttribute : Attribute, IHistoryKey
     {
-        private readonly Type _type;
-        private readonly string _value;
+        private readonly Type type;
+        private readonly string value;
 
         public HistoryKeyAttribute(string value, Type type)
         {
-            _value = value;
-            _type = type;
+            this.value = value;
+            this.type = type;
         }
 
         public string Value
         {
-            get { return _value; }
+            get { return value; }
         }
 
         public object GetInstance()
         {
-            return ServiceLocator.Current.GetInstance(_type);
+            return IoC.GetInstance(type, null);
         }
     }
 }

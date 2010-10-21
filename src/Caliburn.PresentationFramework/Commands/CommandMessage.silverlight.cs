@@ -13,8 +13,8 @@ namespace Caliburn.PresentationFramework.Commands
     using Actions;
     using Configuration;
     using Core;
+    using Core.InversionOfControl;
     using Core.Logging;
-    using Microsoft.Practices.ServiceLocation;
     using ViewModels;
     using RoutedMessaging;
     using RoutedMessaging.Triggers;
@@ -79,24 +79,24 @@ namespace Caliburn.PresentationFramework.Commands
 
                 if(e.NewValue is string)
                 {
-                    message._isSetting = true;
-                    d.SetValue(CommandProperty, ServiceLocator.Current.GetInstance(null, e.NewValue as string));
-                    message._isSetting = false;
+                    message.isSetting = true;
+                    d.SetValue(CommandProperty, IoC.GetInstance(null, e.NewValue as string));
+                    message.isSetting = false;
                 }
                 
-                if(!message._isSetting)
+                if(!message.isSetting)
                     message.CreateAction(true);
             }
         }
 
-        private bool _isSetting;
-        private IInteractionNode _source;
-        private readonly IViewModelDescriptionFactory _factory;
+        private bool isSetting;
+        private IInteractionNode source;
+        private readonly IViewModelDescriptionFactory factory;
 
-        private ActionMessage _actionMessage;
-        private IAction _action;
-        private readonly List<Parameter> _parameters = new List<Parameter>();
-        private IList<object> _metadata;
+        private ActionMessage actionMessage;
+        private IAction action;
+        private readonly List<Parameter> parameters = new List<Parameter>();
+        private IList<object> metadata;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="CommandMessage"/> class.
@@ -104,7 +104,7 @@ namespace Caliburn.PresentationFramework.Commands
         public CommandMessage()
         {
             if(!PresentationFrameworkConfiguration.IsInDesignMode)
-                _factory = ServiceLocator.Current.GetInstance<IViewModelDescriptionFactory>();
+                factory = IoC.Get<IViewModelDescriptionFactory>();
         }
 
         /// <summary>
@@ -115,10 +115,10 @@ namespace Caliburn.PresentationFramework.Commands
         {
             get
             {
-                if(_metadata == null)
-                    _metadata = new List<object>();
+                if(metadata == null)
+                    metadata = new List<object>();
 
-                return _metadata;
+                return metadata;
             }
         }
 
@@ -168,7 +168,7 @@ namespace Caliburn.PresentationFramework.Commands
         /// <value>The default element.</value>
         public string DefaultOutcomeElement
         {
-            get { return _actionMessage.DefaultOutcomeElement; }
+            get { return actionMessage.DefaultOutcomeElement; }
         }
 
         /// <summary>
@@ -187,7 +187,7 @@ namespace Caliburn.PresentationFramework.Commands
         /// <value>The parameters.</value>
         public List<Parameter> Parameters
         {
-            get { return _parameters; }
+            get { return parameters; }
         }
 
         /// <summary>
@@ -196,7 +196,7 @@ namespace Caliburn.PresentationFramework.Commands
         /// <value>The source.</value>
         public IInteractionNode Source
         {
-            get { return _source; }
+            get { return source; }
         }
 
         /// <summary>
@@ -205,7 +205,7 @@ namespace Caliburn.PresentationFramework.Commands
         /// <param name="node">The node.</param>
         public void Initialize(IInteractionNode node) 
         {
-            _source = node;
+            source = node;
 
             foreach (var parameter in Parameters)
             {
@@ -254,9 +254,9 @@ namespace Caliburn.PresentationFramework.Commands
 
             CreateActionMessage();
 
-            _action.Execute(_actionMessage, Source, context);
+            action.Execute(actionMessage, Source, context);
 
-            Log.Info("Processed {0} on command {1}.", _actionMessage, Command);
+            Log.Info("Processed {0} on command {1}.", actionMessage, Command);
         }
 
         /// <summary>
@@ -276,7 +276,7 @@ namespace Caliburn.PresentationFramework.Commands
 			{
 				CreateActionMessage();
 
-				bool isAvailable = _action.ShouldTriggerBeAvailable(_actionMessage, Source);
+				bool isAvailable = action.ShouldTriggerBeAvailable(actionMessage, Source);
                 trigger.UpdateAvailabilty(isAvailable);
 				TryUpdateParentAvailability(isAvailable);
 			}
@@ -292,11 +292,11 @@ namespace Caliburn.PresentationFramework.Commands
 			
             CreateActionMessage();
 
-            bool isAvailable = _action.ShouldTriggerBeAvailable(_actionMessage, Source);
+            bool isAvailable = action.ShouldTriggerBeAvailable(actionMessage, Source);
             trigger.UpdateAvailabilty(isAvailable);
             TryUpdateParentAvailability(isAvailable);
 
-            _action.Filters.HandlerAware.Apply(x => x.MakeAwareOf(this, trigger));
+            action.Filters.HandlerAware.Apply(x => x.MakeAwareOf(this, trigger));
 
             Log.Info("Made handler aware of filters for {0}.", Command);
         }
@@ -308,7 +308,7 @@ namespace Caliburn.PresentationFramework.Commands
         /// <returns></returns>
         public bool RelatesTo(object potentialTarget)
         {
-            return _actionMessage.RelatesTo(potentialTarget);
+            return actionMessage.RelatesTo(potentialTarget);
         }
 
         /// <summary>
@@ -321,7 +321,7 @@ namespace Caliburn.PresentationFramework.Commands
         public bool Equals(IRoutedMessage other)
         {
             if (other is ActionMessage)
-                return ReferenceEquals(_actionMessage, other);
+                return ReferenceEquals(actionMessage, other);
             return ReferenceEquals(this, other);
         }
 
@@ -346,27 +346,27 @@ namespace Caliburn.PresentationFramework.Commands
             if(att != null)
                 methodName = att.ExecuteMethod;
 
-            _actionMessage = new ActionMessage
+            actionMessage = new ActionMessage
             {
                 MethodName = methodName,
                 AvailabilityEffect = AvailabilityEffect,
                 OutcomePath = OutcomePath
             };
 
-            _actionMessage.Initialize(Source);
+            actionMessage.Initialize(Source);
 
             foreach(var parameter in Parameters)
             {
-                _actionMessage.Parameters.Add(new Parameter(parameter.Value));
+                actionMessage.Parameters.Add(new Parameter(parameter.Value));
             }
         }
 
         private void CreateAction(bool forceRecreate)
         {
-            if(_action != null && !forceRecreate)
+            if(action != null && !forceRecreate)
                 return;
 
-            var host = _factory.Create(Command.GetType());
+            var host = factory.Create(Command.GetType());
 
             host.Actions.SelectMany(x => x.Filters.HandlerAware)
                 .Union(host.Filters.HandlerAware)
@@ -374,8 +374,8 @@ namespace Caliburn.PresentationFramework.Commands
 
             CreateActionMessage();
 
-            _action = host.GetAction(_actionMessage);
-            _action.Completed += delegate { OnCompleted(); };
+            action = host.GetAction(actionMessage);
+            action.Completed += delegate { OnCompleted(); };
         }
 
         /// <summary>
@@ -396,7 +396,7 @@ namespace Caliburn.PresentationFramework.Commands
         /// <returns></returns>
         public IEnumerable<IRoutedMessageHandler> GetDefaultHandlers(IInteractionNode node)
         {
-            return _actionMessage.GetDefaultHandlers(node);
+            return actionMessage.GetDefaultHandlers(node);
         }
     }
 }

@@ -5,7 +5,7 @@
     using System.Linq;
     using Core;
     using Core.Behaviors;
-    using Core.IoC;
+    using Core.InversionOfControl;
     using Microsoft.Practices.ObjectBuilder2;
     using Microsoft.Practices.Unity;
 
@@ -14,8 +14,8 @@
     /// </summary>
     public class ProxyBuilderStrategy : BuilderStrategy
     {
-        private readonly IUnityContainer _container;
-        private readonly IEnumerable<Type> _registry;
+        private readonly IUnityContainer container;
+        private readonly IEnumerable<Type> registry;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ProxyBuilderStrategy"/> class.
@@ -24,8 +24,8 @@
         /// <param name="registry">The registry.</param>
         public ProxyBuilderStrategy(IUnityContainer container, IEnumerable<Type> registry)
         {
-            _container = container;
-            _registry = registry;
+            this.container = container;
+            this.registry = registry;
         }
 
         /// <summary>
@@ -42,11 +42,11 @@
             var key = context.BuildKey.Type;
 #endif
 
-            if(!_registry.Contains(key))
+            if(!registry.Contains(key))
                 base.PreBuildUp(context);
             else
             {
-                var proxyFactory = _container.Resolve<IProxyFactory>();
+                var proxyFactory = container.Resolve<IProxyFactory>();
 
                 context.Existing = proxyFactory.CreateProxy(
                     key,
@@ -65,7 +65,7 @@
             {
                 foreach(var info in greedyConstructor.GetParameters())
                 {
-                    var arg = _container.Resolve(info.ParameterType);
+                    var arg = container.Resolve(info.ParameterType);
                     args.Add(arg);
                 }
             }

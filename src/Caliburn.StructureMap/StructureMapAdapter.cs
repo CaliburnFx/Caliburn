@@ -5,20 +5,19 @@
     using System.Linq;
     using Core;
     using Core.Behaviors;
-    using Core.IoC;
+    using Core.InversionOfControl;
     using global::StructureMap;
-    using Microsoft.Practices.ServiceLocation;
-    using IContainer=Core.IoC.IContainer;
-    using Instance=Core.IoC.Instance;
-    using IRegistry=Core.IoC.IRegistry;
+    using IContainer=Core.InversionOfControl.IContainer;
+    using Instance=Core.InversionOfControl.Instance;
+    using IRegistry=Core.InversionOfControl.IRegistry;
 
     /// <summary>
-    /// An adapter allowing an <see cref="IContainer"/> to plug into Caliburn via <see cref="IServiceLocator"/> and <see cref="Core.IoC.IRegistry"/>.
+    /// An adapter allowing an <see cref="IContainer"/> to plug into Caliburn via <see cref="IServiceLocator"/> and <see cref="Caliburn.Core.InversionOfControl.IRegistry"/>.
     /// </summary>
     public class StructureMapAdapter : ContainerBase
     {
-        private readonly global::StructureMap.IContainer _container;
-        private ConfigurationExpression _exp;
+        private readonly global::StructureMap.IContainer container;
+        private ConfigurationExpression exp;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="StructureMapAdapter"/> class.
@@ -26,12 +25,12 @@
         /// <param name="container">The container.</param>
         public StructureMapAdapter(global::StructureMap.IContainer container)
         {
-            _container = container;
+            this.container = container;
 
-            _container.Configure(reg => reg.For<IServiceLocator>().Add(this));
-            _container.Configure(reg => reg.For<IRegistry>().Add(this));
-            _container.Configure(reg => reg.For<IContainer>().Add(this));
-            _container.Configure(reg => reg.For<global::StructureMap.IContainer>().Add(_container));
+            this.container.Configure(reg => reg.For<IServiceLocator>().Add(this));
+            this.container.Configure(reg => reg.For<IRegistry>().Add(this));
+            this.container.Configure(reg => reg.For<IContainer>().Add(this));
+            this.container.Configure(reg => reg.For<global::StructureMap.IContainer>().Add(this.container));
 
             AddRegistrationHandler<Singleton>(HandleSingleton);
             AddRegistrationHandler<PerRequest>(HandlePerRequest);
@@ -45,7 +44,7 @@
         [CLSCompliant(false)]
         public global::StructureMap.IContainer Container
         {
-            get { return _container; }
+            get { return container; }
         }
 
         /// <summary>
@@ -57,11 +56,18 @@
         /// <returns>
         /// The requested service instance.
         /// </returns>
-        protected override object DoGetInstance(Type serviceType, string key)
+        public override object GetInstance(Type serviceType, string key)
         {
-            return string.IsNullOrEmpty(key)
-                       ? _container.GetInstance(serviceType)
-                       : _container.GetInstance(serviceType ?? typeof(object), key);
+            try
+            {
+                return string.IsNullOrEmpty(key)
+                    ? container.GetInstance(serviceType)
+                    : container.GetInstance(serviceType ?? typeof(object), key);
+            }
+            catch(Exception)
+            {
+                return null;
+            }
         }
 
         /// <summary>
@@ -72,12 +78,21 @@
         /// <returns>
         /// Sequence of service instance objects.
         /// </returns>
-        protected override IEnumerable<object> DoGetAllInstances(Type serviceType)
+        public override IEnumerable<object> GetAllInstances(Type serviceType)
         {
-            foreach(var obj in _container.GetAllInstances(serviceType))
+            foreach(var obj in container.GetAllInstances(serviceType))
             {
                 yield return obj;
             }
+        }
+
+        /// <summary>
+        /// Injects dependencies into the object.
+        /// </summary>
+        /// <param name="instance">The instance to build up.</param>
+        public override void BuildUp(object instance)
+        {
+            container.BuildUp(instance);
         }
 
         /// <summary>
@@ -86,11 +101,11 @@
         /// <param name="registrations">The component registrations.</param>
         public override void Register(IEnumerable<IComponentRegistration> registrations)
         {
-            _container.Configure(
+            container.Configure(
                 exp =>{
-                    _exp = exp;
+                    this.exp = exp;
                     base.Register(registrations);
-                    _exp = null;
+                    this.exp = null;
                 });
         }
 
@@ -128,16 +143,16 @@
         private void HandleSingleton(Singleton singleton)
         {
             if(!singleton.HasName())
-                _exp.For(singleton.Service)
+                exp.For(singleton.Service)
                     .Singleton()
                     .Use(singleton.Implementation);
             else if(!singleton.HasService())
-                _exp.For(typeof(object))
+                exp.For(typeof(object))
                     .Singleton()
                     .Use(singleton.Implementation)
                     .Named(singleton.Name);
             else
-                _exp.For(singleton.Service)
+                exp.For(singleton.Service)
                     .Singleton()
                     .Use(singleton.Implementation)
                     .Named(singleton.Name);
@@ -146,16 +161,16 @@
         private void HandlePerRequest(PerRequest perRequest)
         {
             if (!perRequest.HasName())
-                _exp.For(perRequest.Service)
+                exp.For(perRequest.Service)
                     .LifecycleIs(InstanceScope.PerRequest)
                     .Use(perRequest.Implementation);
             else if (!perRequest.HasService())
-                _exp.For(typeof(object))
+                exp.For(typeof(object))
                     .LifecycleIs(InstanceScope.PerRequest)
                     .Use(perRequest.Implementation)
                     .Named(perRequest.Name);
             else
-                _exp.For(perRequest.Service)
+                exp.For(perRequest.Service)
                     .LifecycleIs(InstanceScope.PerRequest)
                     .Use(perRequest.Implementation)
                     .Named(perRequest.Name);
@@ -164,14 +179,14 @@
         private void HandleInstance(Instance instance)
         {
             if(!instance.HasName())
-                _exp.For(instance.Service)
+                exp.For(instance.Service)
                     .Use(instance.Implementation);
             else if(!instance.HasService())
-                _exp.For(typeof(object))
+                exp.For(typeof(object))
                     .Use(instance.Implementation)
                     .Named(instance.Name);
             else
-                _exp.For(instance.Service)
+                exp.For(instance.Service)
                     .Use(instance.Implementation)
                     .Named(instance.Name);
         }

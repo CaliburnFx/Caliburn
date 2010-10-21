@@ -1,6 +1,6 @@
 namespace Caliburn.Core.Configuration
 {
-    using IoC;
+    using InversionOfControl;
 
     /// <summary>
     /// Represents a modules configuration for a service.

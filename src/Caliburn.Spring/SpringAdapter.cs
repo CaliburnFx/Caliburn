@@ -3,20 +3,19 @@
     using System;
     using System.Collections.Generic;
     using Core.Behaviors;
-    using Core.IoC;
+    using Core.InversionOfControl;
     using global::Spring.Context.Support;
     using global::Spring.Objects.Factory;
     using global::Spring.Objects.Factory.Config;
     using global::Spring.Objects.Factory.Support;
-    using Microsoft.Practices.ServiceLocation;
 
     /// <summary>
     /// An adapter allowing an <see cref="GenericApplicationContext"/> to plug into Caliburn via <see cref="IServiceLocator"/> and <see cref="IRegistry"/>.
     /// </summary>
     public class SpringAdapter : ContainerBase
     {
-        private readonly GenericApplicationContext _context;
-        private readonly AutoWiringMode _autoWiringMode;
+        private readonly GenericApplicationContext context;
+        private readonly AutoWiringMode autoWiringMode;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="SpringAdapter"/> class.
@@ -32,17 +31,17 @@
         /// <param name="autoWiringMode">The auto wiring mode for component instantiation.</param>
         public SpringAdapter(GenericApplicationContext context, AutoWiringMode autoWiringMode)
         {
-            _context = context;
-            _autoWiringMode = autoWiringMode;
+            this.context = context;
+            this.autoWiringMode = autoWiringMode;
 
-            _context.ObjectFactory.RegisterSingleton(
+            this.context.ObjectFactory.RegisterSingleton(
                 typeof(IContainer).FullName,
                 this
                 );
 
-            _context.ObjectFactory.RegisterSingleton(
+            this.context.ObjectFactory.RegisterSingleton(
                 typeof(GenericApplicationContext).FullName,
-                _context
+                this.context
                 );
 
             AddRegistrationHandler<Singleton>(HandleSingleton);
@@ -56,7 +55,7 @@
         /// <value>The context.</value>
         public GenericApplicationContext Context
         {
-            get { return _context; }
+            get { return context; }
         }
 
         /// <summary>
@@ -67,24 +66,31 @@
         /// <returns>
         /// The requested service instance or null, if <paramref name="key"/> is not found.
         /// </returns>
-        protected override object DoGetInstance(Type serviceType, string key)
+        public override object GetInstance(Type serviceType, string key)
         {
-            if (key == null)
+            try
             {
-                var it = DoGetAllInstances(serviceType)
-                    .GetEnumerator();
+                if (key == null)
+                {
+                    var it = GetAllInstances(serviceType)
+                        .GetEnumerator();
 
-                if (it.MoveNext())
-                    return it.Current;
+                    if (it.MoveNext())
+                        return it.Current;
 
-                throw new ObjectCreationException(
-                    string.Format("No services of type '{0}' are defined.", serviceType.FullName)
-                    );
+                    throw new ObjectCreationException(
+                        string.Format("No services of type '{0}' are defined.", serviceType.FullName)
+                        );
+                }
+
+                return serviceType == null
+                           ? context.GetObject(key)
+                           : context.GetObject(key, serviceType);
             }
-
-            return serviceType == null
-                       ? _context.GetObject(key)
-                       : _context.GetObject(key, serviceType);
+            catch(Exception)
+            {
+                return null;
+            }
         }
 
         /// <summary>
@@ -94,9 +100,19 @@
         /// <returns>
         /// Sequence of service instance objects matching the <paramref name="serviceType"/>.
         /// </returns>
-        protected override IEnumerable<object> DoGetAllInstances(Type serviceType)
+        public override IEnumerable<object> GetAllInstances(Type serviceType)
         {
-            return _context.GetObjectsOfTypeRecursive(serviceType);
+            return context.GetObjectsOfTypeRecursive(serviceType);
+        }
+
+        /// <summary>
+        /// Injects dependencies into the object.
+        /// </summary>
+        /// <param name="instance">The instance to build up.</param>
+        public override void BuildUp(object instance)
+        {
+            if (context.ContainsObjectDefinition(instance.GetType().FullName))
+                context.ConfigureObject(instance, instance.GetType().FullName);
         }
 
         /// <summary>
@@ -122,29 +138,29 @@
 
         private void HandleSingleton(Singleton singleton)
         {
-            _context.RegisterObjectDefinition(
+            context.RegisterObjectDefinition(
                 GetName(singleton),
                 new RootObjectDefinition(
                     singleton.Implementation,
                     true
-                    ) {AutowireMode = _autoWiringMode}
+                    ) {AutowireMode = autoWiringMode}
                 );
         }
 
         private void HandlePerRequest(PerRequest perRequest)
         {
-            _context.RegisterObjectDefinition(
+            context.RegisterObjectDefinition(
                 GetName(perRequest),
                 new RootObjectDefinition(
                     perRequest.Implementation,
                     false
-                    ) {AutowireMode = _autoWiringMode}
+                    ) {AutowireMode = autoWiringMode}
                 );
         }
 
         private void HandleInstance(Instance instance)
         {
-            _context.ObjectFactory.RegisterSingleton(GetName(instance), instance.Implementation);
+            context.ObjectFactory.RegisterSingleton(GetName(instance), instance.Implementation);
         }
 
         private static string GetName(ComponentRegistrationBase registration)

@@ -1,7 +1,7 @@
 ﻿namespace Caliburn.PresentationFramework.Actions
 {
     using System.Windows;
-    using Microsoft.Practices.ServiceLocation;
+    using Core.InversionOfControl;
     using RoutedMessaging;
     using ViewModels;
 
@@ -10,9 +10,9 @@
     /// </summary>
     public static class Action
     {
-        private static IRoutedMessageController _controller;
-        private static IViewModelDescriptionFactory _viewModelDescriptionFactory;
-        private static IServiceLocator _serviceLocator;
+        private static IRoutedMessageController controller;
+        private static IViewModelDescriptionFactory viewModelDescriptionFactory;
+        private static IServiceLocator serviceLocator;
 
         /// <summary>
         /// A property definition representing the target of an <see cref="ActionMessage"/>.  
@@ -47,9 +47,9 @@
         public static void Initialize(IRoutedMessageController controller, IViewModelDescriptionFactory viewModelDescriptionFactory,
                                       IServiceLocator serviceLocator)
         {
-            _controller = controller;
-            _viewModelDescriptionFactory = viewModelDescriptionFactory;
-            _serviceLocator = serviceLocator;
+            Action.controller = controller;
+            Action.viewModelDescriptionFactory = viewModelDescriptionFactory;
+            Action.serviceLocator = serviceLocator;
         }
 
         /// <summary>
@@ -105,7 +105,7 @@
 
         private static void SetTargetCore(DependencyPropertyChangedEventArgs e, DependencyObject d, bool setContext)
         {
-            if(_controller == null) return;
+            if(controller == null) return;
 
             if(e.NewValue != e.OldValue && e.NewValue != null)
             {
@@ -115,15 +115,15 @@
                 var containerKey = e.NewValue as string;
 
                 if(containerKey != null)
-                    target = _serviceLocator.GetInstance(null, containerKey);
+                    target = serviceLocator.GetInstance(null, containerKey);
 #endif
 
                 var handler = new ActionMessageHandler(
-                    _viewModelDescriptionFactory.Create(target.GetType()),
+                    viewModelDescriptionFactory.Create(target.GetType()),
                     target
                     );
 
-                _controller.AddHandler(d, handler, setContext);
+                controller.AddHandler(d, handler, setContext);
             }
         }
     }

@@ -10,8 +10,8 @@ namespace Caliburn.PresentationFramework.Actions
     using System.Windows.Controls;
     using System.Collections.Generic;
     using Core.Invocation;
+    using Core.InversionOfControl;
     using Core.Logging;
-    using Microsoft.Practices.ServiceLocation;
     using ViewModels;
     using RoutedMessaging;
 
@@ -23,8 +23,8 @@ namespace Caliburn.PresentationFramework.Actions
     {
         private static readonly ILog Log = LogManager.GetLog(typeof(ActionMessage));
 
-        private IInteractionNode _source;
-        private List<Parameter> _parameters = new List<Parameter>();
+        private IInteractionNode source;
+        private readonly List<Parameter> parameters = new List<Parameter>();
 
         /// <summary>
         /// Gets or sets the availability effect.
@@ -38,7 +38,7 @@ namespace Caliburn.PresentationFramework.Actions
         /// <value>The source.</value>
         public IInteractionNode Source
         {
-            get { return _source; }
+            get { return source; }
         }
 
         /// <summary>
@@ -68,7 +68,7 @@ namespace Caliburn.PresentationFramework.Actions
         /// <value>The parameters.</value>
         public List<Parameter> Parameters
         {
-            get { return _parameters; }
+            get { return parameters; }
         }
 
         /// <summary>
@@ -77,7 +77,7 @@ namespace Caliburn.PresentationFramework.Actions
         /// <param name="node">The node.</param>
         public void Initialize(IInteractionNode node) 
         {
-            _source = node;
+            source = node;
 
             foreach (var parameter in Parameters)
             {
@@ -141,7 +141,7 @@ namespace Caliburn.PresentationFramework.Actions
                 yield break;
 
             yield return new ActionMessageHandler(
-                ServiceLocator.Current.GetInstance<IViewModelDescriptionFactory>()
+                IoC.Get<IViewModelDescriptionFactory>()
                     .Create(context.GetType()),
                 context
                 );

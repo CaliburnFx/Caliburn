@@ -11,7 +11,7 @@ namespace Tests.Caliburn.Adapters.Integration
 	[TestFixture]
 	public class The_Autofac_container : ContainerIntegrationTestBase
 	{
-		protected override global::Caliburn.Core.IoC.IContainer CreateContainerAdapter()
+		protected override global::Caliburn.Core.InversionOfControl.IContainer CreateContainerAdapter()
 		{
 			var builder = new ContainerBuilder();
 			var container = builder.Build();

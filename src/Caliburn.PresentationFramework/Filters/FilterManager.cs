@@ -5,22 +5,22 @@
     using System.Linq;
     using System.Reflection;
     using Core;
-    using Microsoft.Practices.ServiceLocation;
+    using Core.InversionOfControl;
 
     /// <summary>
     /// An implementation of <see cref="IFilterManager"/>.
     /// </summary>
     public class FilterManager : IFilterManager
     {
-        private readonly Type _targetType;
-        private readonly MemberInfo _memberInfo;
-        private readonly IServiceLocator _serviceLocator;
+        private readonly Type targetType;
+        private readonly MemberInfo memberInfo;
+        private readonly IServiceLocator serviceLocator;
 
-        private IPreProcessor[] _preExecute;
-        private IPreProcessor[] _triggerEffects;
-        private IPostProcessor[] _postExecute;
-        private IHandlerAware[] _handlerAware;
-        private IRescue[] _rescues;
+        private IPreProcessor[] preExecute;
+        private IPreProcessor[] triggerEffects;
+        private IPostProcessor[] postExecute;
+        private IHandlerAware[] handlerAware;
+        private IRescue[] rescues;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="FilterManager"/> class.
@@ -30,9 +30,9 @@
         /// <param name="serviceLocator">The serviceLocator.</param>
         public FilterManager(Type targetType, MemberInfo member, IServiceLocator serviceLocator)
         {
-            _targetType = targetType;
-            _memberInfo = member;
-            _serviceLocator = serviceLocator;
+            this.targetType = targetType;
+            memberInfo = member;
+            this.serviceLocator = serviceLocator;
 
             var filters = member.GetAttributes<IFilter>(true)
                 .OrderByDescending(x => x.Priority);
@@ -40,18 +40,18 @@
             filters.OfType<IInitializable>()
                 .Apply(x => x.Initialize(targetType, member, serviceLocator));
 
-            _handlerAware = filters.OfType<IHandlerAware>().ToArray();
+            handlerAware = filters.OfType<IHandlerAware>().ToArray();
 
-            _preExecute = filters.OfType<IPreProcessor>().ToArray();
+            preExecute = filters.OfType<IPreProcessor>().ToArray();
 
-            _triggerEffects =
-                (from filter in _preExecute
+            triggerEffects =
+                (from filter in preExecute
                  where filter.AffectsTriggers
                  select filter).ToArray();
 
-            _postExecute = filters.OfType<IPostProcessor>().ToArray();
+            postExecute = filters.OfType<IPostProcessor>().ToArray();
 
-            _rescues = filters.OfType<IRescue>().ToArray();
+            rescues = filters.OfType<IRescue>().ToArray();
         }
 
         /// <summary>
@@ -69,15 +69,15 @@
             IEnumerable<IPreProcessor> preExecute, IEnumerable<IPreProcessor> triggerEffects,
             IEnumerable<IPostProcessor> postExecute, IEnumerable<IHandlerAware> instanceAwareFilters, IEnumerable<IRescue> rescues)
         {
-            _targetType = targetType;
-            _memberInfo = member;
-            _serviceLocator = serviceLocator;
+            this.targetType = targetType;
+            memberInfo = member;
+            this.serviceLocator = serviceLocator;
 
-            _preExecute = preExecute.ToArray();
-            _triggerEffects = triggerEffects.ToArray();
-            _postExecute = postExecute.ToArray();
-            _handlerAware = instanceAwareFilters.ToArray();
-            _rescues = rescues.ToArray();
+            this.preExecute = preExecute.ToArray();
+            this.triggerEffects = triggerEffects.ToArray();
+            this.postExecute = postExecute.ToArray();
+            handlerAware = instanceAwareFilters.ToArray();
+            this.rescues = rescues.ToArray();
         }
 
         /// <summary>
@@ -86,7 +86,7 @@
         /// <value>The pre execute.</value>
         public IEnumerable<IPreProcessor> PreProcessors
         {
-            get { return _preExecute; }
+            get { return preExecute; }
         }
 
         /// <summary>
@@ -95,7 +95,7 @@
         /// <value>The trigger effects.</value>
         public IEnumerable<IPreProcessor> TriggerEffects
         {
-            get { return _triggerEffects; }
+            get { return triggerEffects; }
         }
 
         /// <summary>
@@ -104,7 +104,7 @@
         /// <value>The post execute.</value>
         public IEnumerable<IPostProcessor> PostProcessors
         {
-            get { return _postExecute; }
+            get { return postExecute; }
         }
 
         /// <summary>
@@ -113,7 +113,7 @@
         /// <value>The instance aware filters.</value>
         public IEnumerable<IHandlerAware> HandlerAware
         {
-            get { return _handlerAware; }
+            get { return handlerAware; }
         }
 
         /// <summary>
@@ -122,7 +122,7 @@
         /// <value>The rescue.</value>
         public IEnumerable<IRescue> Rescues
         {
-            get { return _rescues; }
+            get { return rescues; }
         }
 
         /// <summary>
@@ -133,18 +133,18 @@
         {
             var initializable = filter as IInitializable;
             if (initializable != null)
-                initializable.Initialize(_targetType, _memberInfo, _serviceLocator);
+                initializable.Initialize(targetType, memberInfo, serviceLocator);
 
-            TryAdd(ref _preExecute, filter);
-            TryAdd(ref _postExecute, filter);
-            TryAdd(ref _handlerAware, filter);
-            TryAdd(ref _rescues, filter);
+            TryAdd(ref this.preExecute, filter);
+            TryAdd(ref postExecute, filter);
+            TryAdd(ref handlerAware, filter);
+            TryAdd(ref rescues, filter);
 
             var preExecute = filter as IPreProcessor;
             if(preExecute == null) return;
 
             if(preExecute.AffectsTriggers)
-                TryAdd(ref _triggerEffects, filter);
+                TryAdd(ref triggerEffects, filter);
         }
 
         private static void TryAdd<T>(ref T[] array, IFilter filter)
@@ -165,14 +165,14 @@
             if(filterManager == null) return this;
 
             var newManager = new FilterManager(
-                _targetType,
-                _memberInfo,
-                _serviceLocator,
-                _preExecute.Union(filterManager.PreProcessors),
-                _triggerEffects.Union(filterManager.TriggerEffects),
-                _postExecute.Union(filterManager.PostProcessors),
-                _handlerAware.Union(filterManager.HandlerAware),
-                _rescues.Union(filterManager.Rescues)
+                targetType,
+                memberInfo,
+                serviceLocator,
+                preExecute.Union(filterManager.PreProcessors),
+                triggerEffects.Union(filterManager.TriggerEffects),
+                postExecute.Union(filterManager.PostProcessors),
+                handlerAware.Union(filterManager.HandlerAware),
+                rescues.Union(filterManager.Rescues)
                 );
 
             return newManager;

@@ -28,9 +28,9 @@
         /// </returns>
         public bool Handle(IRoutedMessage message, IInteractionNode handlingNode, Exception exception)
         {
-            var result = _method.Invoke(handlingNode.MessageHandler.Unwrap(), exception);
+            var result = Method.Invoke(handlingNode.MessageHandler.Unwrap(), exception);
 
-            if(_method.Info.ReturnType == typeof(bool))
+            if(Method.Info.ReturnType == typeof(bool))
                 return (bool)result;
             return true;
         }

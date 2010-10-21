@@ -3,8 +3,7 @@
     using System;
     using System.Collections.Generic;
     using Core.Behaviors;
-    using Core.IoC;
-    using Microsoft.Practices.ServiceLocation;
+    using Core.InversionOfControl;
     using Microsoft.Practices.Unity;
 
     /// <summary>
@@ -12,7 +11,7 @@
     /// </summary>
     public class UnityAdapter : ContainerBase
     {
-        private readonly IUnityContainer _container;
+        private readonly IUnityContainer container;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="UnityAdapter"/> class.
@@ -20,12 +19,12 @@
         /// <param name="container">The container.</param>
         public UnityAdapter(IUnityContainer container)
         {
-            _container = container;
+            this.container = container;
 
-            _container.RegisterInstance<IServiceLocator>(this);
-            _container.RegisterInstance<IRegistry>(this);
-            _container.RegisterInstance<IContainer>(this);
-            _container.RegisterInstance(_container);
+            this.container.RegisterInstance<IServiceLocator>(this);
+            this.container.RegisterInstance<IRegistry>(this);
+            this.container.RegisterInstance<IContainer>(this);
+            this.container.RegisterInstance(this.container);
 
             AddRegistrationHandler<Singleton>(HandleSingleton);
             AddRegistrationHandler<PerRequest>(HandlePerRequest);
@@ -38,7 +37,7 @@
         /// <value>The container.</value>
         public IUnityContainer Container
         {
-            get { return _container; }
+            get { return container; }
         }
 
         /// <summary>
@@ -50,12 +49,19 @@
         /// <returns>
         /// The requested service instance.
         /// </returns>
-        protected override object DoGetInstance(Type serviceType, string key)
+        public override object GetInstance(Type serviceType, string key)
         {
             //HACK: Unity doesn't support component registration with string key only
             //		Named service are registered as object, so a null serviceType has to
             //		be adapted accordingly
-            return _container.Resolve(serviceType ?? typeof(object), key);
+            try
+            {
+                return container.Resolve(serviceType ?? typeof(object), key);                
+            }
+            catch(Exception)
+            {
+                return null;
+            }
         }
 
         /// <summary>
@@ -66,9 +72,18 @@
         /// <returns>
         /// Sequence of service instance objects.
         /// </returns>
-        protected override IEnumerable<object> DoGetAllInstances(Type serviceType)
+        public override IEnumerable<object> GetAllInstances(Type serviceType)
         {
-            return _container.ResolveAll(serviceType);
+            return container.ResolveAll(serviceType);
+        }
+
+        /// <summary>
+        /// Injects dependencies into the object.
+        /// </summary>
+        /// <param name="instance">The instance to build up.</param>
+        public override void BuildUp(object instance)
+        {
+            container.BuildUp(instance);
         }
 
         /// <summary>
@@ -89,28 +104,28 @@
         private void HandleSingleton(Singleton singleton)
         {
             if (!singleton.HasName())
-                _container.RegisterType(singleton.Service, singleton.Implementation, new ContainerControlledLifetimeManager());
+                container.RegisterType(singleton.Service, singleton.Implementation, new ContainerControlledLifetimeManager());
             else if (!singleton.HasService())
-                _container.RegisterType(typeof(object), singleton.Implementation, singleton.Name, new ContainerControlledLifetimeManager());
-            else _container.RegisterType(singleton.Service, singleton.Implementation, singleton.Name, new ContainerControlledLifetimeManager());
+                container.RegisterType(typeof(object), singleton.Implementation, singleton.Name, new ContainerControlledLifetimeManager());
+            else container.RegisterType(singleton.Service, singleton.Implementation, singleton.Name, new ContainerControlledLifetimeManager());
         }
 
         private void HandlePerRequest(PerRequest perRequest)
         {
             if (!perRequest.HasName())
-                _container.RegisterType(perRequest.Service, perRequest.Implementation);
+                container.RegisterType(perRequest.Service, perRequest.Implementation);
             else if (!perRequest.HasService())
-                _container.RegisterType(typeof(object), perRequest.Implementation, perRequest.Name);
-            else _container.RegisterType(perRequest.Service, perRequest.Implementation, perRequest.Name);
+                container.RegisterType(typeof(object), perRequest.Implementation, perRequest.Name);
+            else container.RegisterType(perRequest.Service, perRequest.Implementation, perRequest.Name);
         }
 
         private void HandleInstance(Instance instance)
         {
             if(!instance.HasName())
-                _container.RegisterInstance(instance.Service, instance.Implementation);
+                container.RegisterInstance(instance.Service, instance.Implementation);
             else if(!instance.HasService())
-                _container.RegisterInstance(typeof(object), instance.Name, instance.Implementation);
-            else _container.RegisterInstance(instance.Service, instance.Name, instance.Implementation);
+                container.RegisterInstance(typeof(object), instance.Name, instance.Implementation);
+            else container.RegisterInstance(instance.Service, instance.Name, instance.Implementation);
         }
     }
 }

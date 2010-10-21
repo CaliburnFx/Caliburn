@@ -1,7 +1,7 @@
 ﻿namespace Caliburn.PresentationFramework.Commands
 {
     using System;
-    using Core.IoC;
+    using Core.InversionOfControl;
 
     /// <summary>
     /// Specifies a command which should be registered with the container and optionally allows customization of the executiion method.

@@ -2,7 +2,7 @@ namespace Caliburn.PresentationFramework.Filters
 {
     using System;
     using System.Reflection;
-    using Microsoft.Practices.ServiceLocation;
+    using Core.InversionOfControl;
 
     /// <summary>
     /// An <see cref="IFilter"/> that requires initialization.

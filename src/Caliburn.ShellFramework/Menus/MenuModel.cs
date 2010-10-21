@@ -6,7 +6,6 @@ namespace Caliburn.ShellFramework.Menus
     using System.Reflection;
     using System.Windows.Controls;
     using System.Windows.Input;
-    using Microsoft.Practices.ServiceLocation;
     using PresentationFramework;
     using PresentationFramework.ApplicationModel;
     using PresentationFramework.RoutedMessaging;
@@ -14,19 +13,21 @@ namespace Caliburn.ShellFramework.Menus
 
     public class MenuModel : BindableCollection<IMenu>, IMenu, IShortcut
     {
-        private static IInputManager _inputManager;
+        private static IInputManager inputManager;
+        static IResourceManager resourceManager;
 
-        public static void Initialize(IInputManager inputManager)
+        public static void Initialize(IInputManager inputManager, IResourceManager resourceManager)
         {
-            _inputManager = inputManager;
+            MenuModel.inputManager = inputManager;
+            MenuModel.resourceManager = resourceManager;
         }
 
-        private readonly Func<IEnumerable<IResult>> _execute;
-        private readonly Func<bool> _canExecute = () => true;
-        private string _text;
-        private IMenu _parent;
-        private ModifierKeys _modifiers;
-        private Key _key;
+        private readonly Func<IEnumerable<IResult>> execute;
+        private readonly Func<bool> canExecute = () => true;
+        private string text;
+        private IMenu parent;
+        private ModifierKeys modifiers;
+        private Key key;
         private string displayName;
 
         public static MenuModel Separator
@@ -45,21 +46,21 @@ namespace Caliburn.ShellFramework.Menus
         public MenuModel(string text, Func<IEnumerable<IResult>> execute)
             : this(text)
         {
-            _execute = execute;
+            this.execute = execute;
         }
 
         public MenuModel(string text, Func<IEnumerable<IResult>> execute, Func<bool> canExecute)
             : this(text, execute)
         {
-            _canExecute = canExecute;
+            this.canExecute = canExecute;
         }
 
         public IMenu Parent
         {
-            get { return _parent; }
+            get { return parent; }
             set
             {
-                _parent = value; 
+                parent = value; 
                 OnPropertyChanged(new PropertyChangedEventArgs("Parent"));
             }
         }
@@ -76,10 +77,10 @@ namespace Caliburn.ShellFramework.Menus
 
         public string Text
         {
-            get { return _text; }
+            get { return text; }
             set
             {
-                _text = value;
+                text = value;
                 OnPropertyChanged(new PropertyChangedEventArgs("Text"));
                 DisplayName = string.IsNullOrEmpty(Text) ? null : Text.Replace("_", string.Empty);
             }
@@ -95,7 +96,7 @@ namespace Caliburn.ShellFramework.Menus
 
         public string InputGestureText
         {
-            get { return _inputManager.GetDisplayString(_key, _modifiers); }
+            get { return inputManager.GetDisplayString(key, modifiers); }
         }
 
         public IObservableCollection<IMenu> Children
@@ -105,12 +106,12 @@ namespace Caliburn.ShellFramework.Menus
 
         public bool CanExecute
         {
-            get { return _canExecute(); }
+            get { return canExecute(); }
         }
 
         public IEnumerable<IResult> Execute()
         {
-            return _execute != null ? _execute() : new IResult[] {};
+            return execute != null ? execute() : new IResult[] {};
         }
 
         protected override void SetItem(int index, IMenu item)
@@ -127,21 +128,21 @@ namespace Caliburn.ShellFramework.Menus
 
         ModifierKeys IShortcut.Modifers
         {
-            get { return _modifiers; }
-            set { _modifiers = value; }
+            get { return modifiers; }
+            set { modifiers = value; }
         }
 
         Key IShortcut.Key
         {
-            get { return _key; }
-            set { _key = value; }
+            get { return key; }
+            set { key = value; }
         }
 
         public MenuModel WithGlobalShortcut(ModifierKeys modifiers, Key key)
         {
-            _modifiers = modifiers;
-            _key = key;
-            _inputManager.AddShortcut(this);
+            this.modifiers = modifiers;
+            this.key = key;
+            inputManager.AddShortcut(this);
             return this;
         }
 
@@ -157,8 +158,7 @@ namespace Caliburn.ShellFramework.Menus
 
         public MenuModel WithIcon(Assembly source, string path)
         {
-            var manager = ServiceLocator.Current.GetInstance<IResourceManager>();
-            var iconSource = manager.GetBitmap(path, source.GetAssemblyName());
+            var iconSource = resourceManager.GetBitmap(path, source.GetAssemblyName());
 
             if (source != null)
                 Icon = new Image { Source = iconSource };

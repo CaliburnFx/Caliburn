@@ -5,7 +5,7 @@
     using System.Linq;
     using System.Windows;
     using global::Caliburn.Core.Configuration;
-    using global::Caliburn.Core.IoC;
+    using global::Caliburn.Core.InversionOfControl;
     using global::Caliburn.PresentationFramework.Actions;
     using global::Caliburn.PresentationFramework.ApplicationModel;
     using global::Caliburn.PresentationFramework.Configuration;

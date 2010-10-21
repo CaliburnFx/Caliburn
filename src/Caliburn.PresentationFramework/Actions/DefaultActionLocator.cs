@@ -7,8 +7,8 @@
     using Conventions;
     using Core;
     using Core.Invocation;
+    using Core.InversionOfControl;
     using Filters;
-    using Microsoft.Practices.ServiceLocation;
     using RoutedMessaging;
 
     /// <summary>
@@ -16,10 +16,10 @@
     /// </summary>
     public class DefaultActionLocator : IActionLocator
     {
-        private readonly IServiceLocator _serviceLocator;
-        private readonly IMethodFactory _methodFactory;
-        private readonly IMessageBinder _messageBinder;
-        private readonly IConventionManager _conventionManager;
+        private readonly IServiceLocator serviceLocator;
+        private readonly IMethodFactory methodFactory;
+        private readonly IMessageBinder messageBinder;
+        private readonly IConventionManager conventionManager;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="DefaultActionLocator"/> class.
@@ -30,10 +30,10 @@
         /// <param name="conventionManager">The convention manager.</param>
         public DefaultActionLocator(IServiceLocator serviceLocator, IMethodFactory methodFactory, IMessageBinder messageBinder, IConventionManager conventionManager)
         {
-            _serviceLocator = serviceLocator;
-            _methodFactory = methodFactory;
-            _messageBinder = messageBinder;
-            _conventionManager = conventionManager;
+            this.serviceLocator = serviceLocator;
+            this.methodFactory = methodFactory;
+            this.messageBinder = messageBinder;
+            this.conventionManager = conventionManager;
         }
 
         /// <summary>
@@ -103,10 +103,10 @@
 
             return builder.Create(
                 new ActionCreationContext(
-                    _serviceLocator,
-                    _methodFactory,
-                    _messageBinder,
-                    _conventionManager,
+                    serviceLocator,
+                    methodFactory,
+                    messageBinder,
+                    conventionManager,
                     targetType,
                     targetFilters,
                     methodInfo

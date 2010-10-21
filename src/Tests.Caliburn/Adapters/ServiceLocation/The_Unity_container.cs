@@ -1,17 +1,17 @@
-﻿using Caliburn.Unity;
-using Microsoft.Practices.ServiceLocation;
-using Microsoft.Practices.Unity;
-using NUnit.Framework;
-using Tests.Caliburn.Adapters.Components;
-
-namespace Tests.Caliburn.Adapters.ServiceLocation
+﻿namespace Tests.Caliburn.Adapters.ServiceLocation
 {
+    using Components;
+    using global::Caliburn.Core.InversionOfControl;
+    using global::Caliburn.Unity;
+    using Microsoft.Practices.Unity;
+    using NUnit.Framework;
+
     [TestFixture]
     public class The_Unity_container : ServiceLocatorTests
     {
         protected override IServiceLocator CreateServiceLocator()
         {
-            IUnityContainer container = new UnityContainer()
+            var container = new UnityContainer()
                 .RegisterType<ILogger, AdvancedLogger>()
                 .RegisterType<ILogger, SimpleLogger>(typeof(SimpleLogger).FullName)
                 .RegisterType<ILogger, AdvancedLogger>(typeof(AdvancedLogger).FullName);
@@ -23,8 +23,8 @@ namespace Tests.Caliburn.Adapters.ServiceLocation
         public void UnityAdapter_Get_WithZeroLenName_ReturnsDefaultInstance()
         {
             Assert.AreSame(
-                locator.GetInstance<ILogger>().GetType(),
-                locator.GetInstance<ILogger>("").GetType()
+                Locator.GetInstance<ILogger>().GetType(),
+                Locator.GetInstance<ILogger>("").GetType()
                 );
         }
     }

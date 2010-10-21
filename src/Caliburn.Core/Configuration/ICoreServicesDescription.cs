@@ -1,7 +1,7 @@
 namespace Caliburn.Core.Configuration
 {
     using Invocation;
-    using IoC;
+    using InversionOfControl;
     using Validation;
 
     /// <summary>

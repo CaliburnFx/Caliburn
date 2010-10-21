@@ -2,10 +2,10 @@
 {
     using System;
 	using System.Collections.Generic;
-    using Core.IoC;
+    using System.Linq;
+    using Core.InversionOfControl;
     using Castle.MicroKernel.Registration;
     using Castle.Windsor;
-    using Microsoft.Practices.ServiceLocation;
 
     /// <summary>
     /// An adapter allowing an <see cref="IWindsorContainer"/> to plug into Caliburn via <see cref="IServiceLocator"/> and <see cref="IRegistry"/>.
@@ -60,15 +60,22 @@
         /// <returns>
         /// The requested service instance.
         /// </returns>
-        protected override object DoGetInstance(Type serviceType, string key)
+        public override object GetInstance(Type serviceType, string key)
         {
-            if(key != null)
+            try
             {
-                if(serviceType != null) return container.Resolve(key, serviceType);
-                return container.Resolve(key, new Dictionary<string, object>());
-            }
+                if (key != null)
+                {
+                    if (serviceType != null) return container.Resolve(key, serviceType);
+                    return container.Resolve(key, new Dictionary<string, object>());
+                }
 
-            return container.Resolve(serviceType);
+                return container.Resolve(serviceType);
+            }
+            catch(Exception)
+            {
+                return null;
+            }
         }
 
         /// <summary>
@@ -79,9 +86,26 @@
         /// <returns>
         /// Sequence of service instance objects.
         /// </returns>
-        protected override IEnumerable<object> DoGetAllInstances(Type serviceType)
+        public override IEnumerable<object> GetAllInstances(Type serviceType)
         {
             return (object[])container.ResolveAll(serviceType);
+        }
+
+        /// <summary>
+        /// Injects dependencies into the object.
+        /// </summary>
+        /// <param name="instance">The instance to build up.</param>
+        public override void BuildUp(object instance)
+        {
+            var properties = instance.GetType()
+                .GetProperties()
+                .Where(p => p.CanWrite && p.PropertyType.IsPublic);
+
+            foreach(var propertyInfo in properties)
+            {
+                if(container.Kernel.HasComponent(propertyInfo.PropertyType))
+                    propertyInfo.SetValue(instance, container.Resolve(propertyInfo.PropertyType), null);
+            }
         }
 
         /// <summary>

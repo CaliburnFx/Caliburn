@@ -1,17 +1,16 @@
-﻿using Microsoft.Practices.ServiceLocation;
-using NUnit.Framework;
-using Rhino.Mocks;
-using Tests.Caliburn.Fakes;
-
-namespace Tests.Caliburn.Core
+﻿namespace Tests.Caliburn.Core
 {
+    using Fakes;
+    using global::Caliburn.Core.InversionOfControl;
     using global::Caliburn.PresentationFramework;
     using global::Caliburn.PresentationFramework.Configuration;
+    using NUnit.Framework;
+    using Rhino.Mocks;
 
     [TestFixture]
     public class The_resolve_markup_extension : TestBase
     {
-        private IServiceLocator _container;
+        IServiceLocator container;
 
         [TestFixtureSetUp]
         public void SetUpFixture()
@@ -27,42 +26,45 @@ namespace Tests.Caliburn.Core
 
         protected override void given_the_context_of()
         {
-            _container = Mock<IServiceLocator>();
-            ServiceLocator.SetLocatorProvider(() => _container);
-        }
-
-        [Test]
-        public void can_resolve_by_type()
-        {
-            var extension = new ResolveExtension {Type = typeof(ITestService)};
-
-            extension.ProvideValue(null);
-
-            _container.AssertWasCalled(x => x.GetInstance(typeof(ITestService)));
+            container = Mock<IServiceLocator>();
+            IoC.Initialize(container);
         }
 
         [Test]
         public void can_resolve_by_key()
         {
-            var extension = new ResolveExtension { Key = "theKey" };
+            var extension = new ResolveExtension {
+                Key = "theKey"
+            };
 
             extension.ProvideValue(null);
 
-            _container.AssertWasCalled(x => x.GetInstance(null, "theKey"));
+            container.AssertWasCalled(x => x.GetInstance(null, "theKey"));
+        }
+
+        [Test]
+        public void can_resolve_by_type()
+        {
+            var extension = new ResolveExtension {
+                Type = typeof(ITestService)
+            };
+
+            extension.ProvideValue(null);
+
+            container.AssertWasCalled(x => x.GetInstance(typeof(ITestService)));
         }
 
         [Test]
         public void can_resolve_by_type_and_key()
         {
-            var extension = new ResolveExtension
-                            {
-                                Type = typeof(ITestService),
-                                Key = "theKey"
-                            };
+            var extension = new ResolveExtension {
+                Type = typeof(ITestService),
+                Key = "theKey"
+            };
 
             extension.ProvideValue(null);
 
-            _container.AssertWasCalled(x => x.GetInstance(typeof(ITestService), "theKey"));
+            container.AssertWasCalled(x => x.GetInstance(typeof(ITestService), "theKey"));
         }
     }
 }

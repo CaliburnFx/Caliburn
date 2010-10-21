@@ -1,7 +1,7 @@
 ﻿namespace Caliburn.Reactive
 {
     using Core.Configuration;
-    using Core.IoC;
+    using Core.InversionOfControl;
 
     /// <summary>
     /// Describes the services required for Caliburn's Reactive Framework module.

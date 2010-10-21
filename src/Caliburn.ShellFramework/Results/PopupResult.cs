@@ -3,6 +3,7 @@
     using System;
     using System.Windows;
     using System.Windows.Controls.Primitives;
+    using Core.InversionOfControl;
     using PresentationFramework.RoutedMessaging;
     using PresentationFramework.Screens;
     using PresentationFramework.ViewModels;

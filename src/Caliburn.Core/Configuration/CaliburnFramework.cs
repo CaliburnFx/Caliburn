@@ -4,9 +4,8 @@
     using System.Collections.Generic;
     using System.Linq;
     using System.Reflection;
-    using IoC;
+    using InversionOfControl;
     using Logging;
-    using Microsoft.Practices.ServiceLocation;
 
     /// <summary>
     /// A gateway for configuring Caliburn.
@@ -56,25 +55,25 @@
             return new CaliburnFramework(serviceLocator, register);
         }
 
-        private static readonly Type _moduleType = typeof(IModule);
+        private static readonly Type ModuleType = typeof(IModule);
 
         internal static ICaliburnFramework Instance { get; private set; }
         internal static IModuleHook ModuleHook { get; private set; }
 
-        private readonly IServiceLocator _serviceLocator;
-        private readonly Action<IEnumerable<IComponentRegistration>> _register;
-        private readonly List<IModule> _modules = new List<IModule>();
-        private IEnumerable<Assembly> _assembliesToInspect = new List<Assembly>();
-        private bool _isStarted;
+        private readonly IServiceLocator serviceLocator;
+        private readonly Action<IEnumerable<IComponentRegistration>> register;
+        private readonly List<IModule> modules = new List<IModule>();
+        private IEnumerable<Assembly> assembliesToInspect = new List<Assembly>();
+        private bool isStarted;
 
         private CaliburnFramework(IServiceLocator serviceLocator, Action<IEnumerable<IComponentRegistration>> register)
         {
             Log.Info("Framework initialization begun.");
 
-            _serviceLocator = serviceLocator;
-            _register = register;
+            this.serviceLocator = serviceLocator;
+            this.register = register;
 
-            ServiceLocator.SetLocatorProvider(() => serviceLocator);
+            IoC.Initialize(serviceLocator);
             AddModule(CaliburnModule<CoreConfiguration>.Instance);
 
             Instance = this;
@@ -97,7 +96,7 @@
         /// <returns></returns>
         IConfigurationBuilder IModuleHook.Assemblies(params Assembly[] assembliesToInspect)
         {
-            _assembliesToInspect = assembliesToInspect != null ? assembliesToInspect.Where(x => x != null) : new Assembly[] { };
+            this.assembliesToInspect = assembliesToInspect != null ? assembliesToInspect.Where(x => x != null) : new Assembly[] { };
             return this;
         }
 
@@ -109,14 +108,14 @@
         /// <returns>The module.</returns>
         T IModuleHook.Module<T>(T module)
         {
-            if(!_modules.Contains(module))
-                _modules.Add(module);
-            else return (T)_modules.First(x => x.Equals(module));
+            if(!modules.Contains(module))
+                modules.Add(module);
+            else return (T)modules.First(x => x.Equals(module));
 
-            if(_isStarted)
+            if(isStarted)
             {
-                _register(module.GetComponents());
-                module.Initialize(_serviceLocator);
+                register(module.GetComponents());
+                module.Initialize(serviceLocator);
             }
 
             Log.Info("Module {0} added.", module);
@@ -138,16 +137,16 @@
         /// </summary>
         public void Start()
         {
-            if(_isStarted)
+            if(isStarted)
                 return;
 
             var registrations = new List<IComponentRegistration>();
             var modules = new List<IModule>();
 
-            _assembliesToInspect.Apply(x => Inspect(x, registrations, modules));
+            assembliesToInspect.Apply(x => Inspect(x, registrations, modules));
             modules.Apply(AddModule);
 
-            var components = _modules.SelectMany(x => x.GetComponents())
+            var components = this.modules.SelectMany(x => x.GetComponents())
                 .Union(registrations)
                 .Union(new[]
                 {
@@ -158,14 +157,14 @@
                     }
                 });
 
-            _register(components);
+            register(components);
 
-            var assemblySource = _serviceLocator.GetInstance<IAssemblySource>();
-            _assembliesToInspect.Apply(assemblySource.Add);
+            var assemblySource = serviceLocator.GetInstance<IAssemblySource>();
+            assembliesToInspect.Apply(assemblySource.Add);
 
-            _modules.Apply(x => x.Initialize(_serviceLocator));
+            this.modules.Apply(x => x.Initialize(serviceLocator));
             assemblySource.AssemblyAdded += NewAssemblyAdded;
-            _isStarted = true;
+            isStarted = true;
 
             CaliburnModule<CoreConfiguration>.Instance.ExecuteAfterStart();
 
@@ -179,7 +178,7 @@
 
             Inspect(assembly, registrations, modules);
 
-            _register(registrations);
+            register(registrations);
 
             foreach(var module in modules)
             {
@@ -199,7 +198,7 @@
 
             foreach (var type in types)
             {
-                if (!_moduleType.IsAssignableFrom(type) || type.IsAbstract || type.IsInterface)
+                if (!ModuleType.IsAssignableFrom(type) || type.IsAbstract || type.IsInterface)
                     continue;
 
                 var singleton = type.GetProperty("Instance", BindingFlags.Public | BindingFlags.Static | BindingFlags.FlattenHierarchy);

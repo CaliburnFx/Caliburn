@@ -5,7 +5,7 @@
     using System.Reflection;
     using Core;
     using Core.Invocation;
-    using Microsoft.Practices.ServiceLocation;
+    using Core.InversionOfControl;
     using RoutedMessaging;
 
     /// <summary>
@@ -17,9 +17,9 @@
     [AttributeUsage(AttributeTargets.Method | AttributeTargets.Property, AllowMultiple = false)]
     public class DependenciesAttribute : Attribute, IHandlerAware, IInitializable
     {
-        private readonly string[] _dependencies;
-        private MemberInfo _target;
-        private IMethodFactory _methodFactory;
+        private readonly string[] dependencies;
+        private MemberInfo target;
+        private IMethodFactory methodFactory;
 
         /// <summary>
         /// Gets the priority used to order filters.
@@ -34,7 +34,7 @@
         /// <value>The dependencies.</value>
         public string[] Dependencies
         {
-            get { return _dependencies; }
+            get { return dependencies; }
         }
 
         /// <summary>
@@ -43,7 +43,7 @@
         /// <param name="dependencies">The dependencies.</param>
         public DependenciesAttribute(params string[] dependencies)
         {
-            _dependencies = dependencies;
+            this.dependencies = dependencies;
         }
 
         /// <summary>
@@ -54,8 +54,8 @@
         /// <param name="serviceLocator">The serviceLocator.</param>
         public void Initialize(Type targetType, MemberInfo memberInfo, IServiceLocator serviceLocator)
         {
-            _target = memberInfo;
-            _methodFactory = serviceLocator.GetInstance<IMethodFactory>();
+            target = memberInfo;
+            methodFactory = serviceLocator.GetInstance<IMethodFactory>();
         }
 
         /// <summary>
@@ -70,7 +70,7 @@
             var helper = messageHandler.Metadata.FirstOrDefaultOfType<DependencyObserver>();
             if (helper != null) return;
 
-            helper = new DependencyObserver(messageHandler, _methodFactory, notifier);
+            helper = new DependencyObserver(messageHandler, methodFactory, notifier);
             messageHandler.Metadata.Add(helper);
         }
 
@@ -84,8 +84,8 @@
             var helper = messageHandler.Metadata.FirstOrDefaultOfType<DependencyObserver>();
             if (helper == null) return;
 
-            if (trigger.Message.RelatesTo(_target))
-                helper.MakeAwareOf(trigger, _dependencies);
+            if (trigger.Message.RelatesTo(target))
+                helper.MakeAwareOf(trigger, dependencies);
         }
     }
 }

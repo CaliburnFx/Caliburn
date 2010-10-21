@@ -168,7 +168,6 @@
 			<call target="mef"/>
 			<call target="ninject"/>
 			<call target="autofac"/>
-			<call target="prism"/>
 			<call target="fluentvalidation"/>
 			<call target="reactive"/>
 			<call target="test" />
@@ -201,7 +200,6 @@
       <call target="strongmef"/>
       <call target="ninject"/>
       <call target="autofac"/>
-      <call target="prism"/>
       <call target="fluentvalidation"/>
       <call target="reactive"/>
       <!--<call target="test" />-->
@@ -231,7 +229,6 @@
       <call target="ninject"/>
       <call target="mef"/>
       <call target="autofac"/>
-      <call target="prism"/>
       <call target="reactive"/>
       <call target="package-platform"/>
     </if>
@@ -259,7 +256,6 @@
       <call target="ninject"/>
       <call target="strongmef"/>
       <call target="autofac"/>
-      <call target="prism"/>
       <call target="fluentvalidation"/>
       <call target="reactive"/>
       <call target="package-platform"/>
@@ -282,7 +278,6 @@
 				<include name="mscorlib.dll"/>
 				<include name="System.dll"/>
 				<include name="System.Core.dll"/>
-				<include name="Microsoft.Practices.ServiceLocation.dll"/>
         <include name="System.ComponentModel.DataAnnotations.dll" />
 			</references>
 			<nowarn>
@@ -306,7 +301,6 @@
 				<include name="System.Core.dll"/>
 				<include name="System.Xml.dll"/>
 				<include name="Caliburn.Core.dll"/>
-        <include name="Microsoft.Practices.ServiceLocation.dll"/>
         <include name="System.ComponentModel.DataAnnotations.dll" />
 				<!--WPF-->
 				<include name="PresentationCore.dll"/>
@@ -340,7 +334,6 @@
         <include name="System.Xml.dll"/>
         <include name="Caliburn.Core.dll"/>
         <include name="Caliburn.PresentationFramework.dll"/>
-        <include name="Microsoft.Practices.ServiceLocation.dll"/>
         <include name="System.ComponentModel.DataAnnotations.dll" />
         <!--WPF-->
         <include name="PresentationCore.dll"/>
@@ -375,7 +368,6 @@
 				<include name="Caliburn.PresentationFramework.dll"/>
         <include name="Caliburn.ShellFramework.dll"/>
 				<include name="Caliburn.ModelFramework.dll"/>
-        <include name="Microsoft.Practices.ServiceLocation.dll"/>
 				<!--WPF-->
 				<include name="PresentationCore.dll"/>
 				<include name="PresentationFramework.dll"/>
@@ -406,7 +398,6 @@
 				<include name="Caliburn.Core.dll"/>
 				<include name="Castle.Core.dll"/>
 				<include name="Castle.Windsor.dll"/>
-        <include name="Microsoft.Practices.ServiceLocation.dll"/>
 			</references>
 			<nowarn>
 				<warning number="1584"/>
@@ -429,7 +420,6 @@
         <include name="System.Core.dll"/>
         <include name="System.Xml.dll"/>
         <include name="Caliburn.Core.dll"/>
-        <include name="Microsoft.Practices.ServiceLocation.dll"/>
         <include name="System.ComponentModel.DataAnnotations.dll" />
         <include name="Caliburn.PresentationFramework.dll"/>
         <include name="Castle.Core.dll"/>
@@ -455,7 +445,6 @@
 				<include name="System.Core.dll"/>
 				<include name="Caliburn.Core.dll"/>
 				<include name="Spring.Core.dll"/>
-        <include name="Microsoft.Practices.ServiceLocation.dll"/>
 			</references>
 			<nowarn>
 				<warning number="1584"/>
@@ -478,7 +467,6 @@
 				<include name="System.Core.dll"/>
 				<include name="Caliburn.Core.dll"/>
 				<include name="StructureMap.dll"/>
-        <include name="Microsoft.Practices.ServiceLocation.dll"/>
 			</references>
 			<nowarn>
 				<warning number="1584"/>
@@ -505,7 +493,6 @@
         <include name="Microsoft.Practices.Unity.Silverlight.dll"/>
 				<include name="Microsoft.Practices.Unity.Configuration.dll"/>
 				<include name="Microsoft.Practices.Unity.StaticFactory.dll"/>
-        <include name="Microsoft.Practices.ServiceLocation.dll"/>
 			</references>
 			<nowarn>
 				<warning number="1584"/>
@@ -528,7 +515,6 @@
         <include name="System.Core.dll"/>
         <include name="Caliburn.Core.dll"/>
         <include name="System.ComponentModel.Composition.dll"/>
-        <include name="Microsoft.Practices.ServiceLocation.dll"/>
       </references>
       <nowarn>
         <warning number="1584"/>
@@ -551,7 +537,6 @@
         <include name="System.Core.dll"/>
         <include name="Caliburn.Core.dll"/>
         <include name="System.ComponentModel.Composition.dll"/>
-        <include name="Microsoft.Practices.ServiceLocation.dll"/>
       </references>
       <nowarn>
         <warning number="1584"/>
@@ -574,7 +559,6 @@
         <include name="System.Core.dll"/>
         <include name="Caliburn.Core.dll"/>
         <include name="Ninject.dll"/>
-        <include name="Microsoft.Practices.ServiceLocation.dll"/>
       </references>
       <nowarn>
         <warning number="1584"/>
@@ -597,42 +581,6 @@
         <include name="System.Core.dll"/>
         <include name="Caliburn.Core.dll"/>
         <include name="Autofac.dll"/>
-        <include name="Microsoft.Practices.ServiceLocation.dll"/>
-      </references>
-      <nowarn>
-        <warning number="1584"/>
-      </nowarn>
-    </csc>
-  </target>
-
-  <target name="prism" depends="core">
-    <mkdir dir="${current.path.bin}"/>
-    <csc noconfig="true" warnaserror="false" target="library" debug="${build.debug}" optimize="${build.optimize}" define="${build.defines}"
-         output="${current.path.bin}/Caliburn.Prism.dll"
-         doc="${current.path.bin}/Caliburn.Prism.xml">
-      <sources basedir="${path.src}">
-        <include name="${build.asminfo}"/>
-        <include name="Caliburn.Prism/**/*.cs"/>
-      </sources>
-      <references basedir="${current.path.bin}">
-        <include name="mscorlib.dll"/>
-        <include name="System.dll"/>
-        <include name="System.Core.dll"/>
-        <include name="Caliburn.Core.dll"/>
-        <include name="Caliburn.PresentationFramework.dll"/>
-        <include name="Microsoft.Practices.ServiceLocation.dll"/>
-        <include name="Microsoft.Practices.Composite.dll"/>
-        <include name="Microsoft.Practices.Composite.Presentation.dll"/>
-        <include name="Microsoft.Practices.Composite.UnityExtensions.dll"/>
-        <include name="Microsoft.Practices.Unity.dll"/>
-        <!--WPF-->
-        <include name="PresentationCore.dll"/>
-        <include name="PresentationFramework.dll"/>
-        <include name="WindowsBase.dll"/>
-        <include name="System.Xaml.dll" />
-        <!--Silverlight-->
-        <include name="System.Windows.dll" />
-        <include name="System.Windows.Controls.dll" />
       </references>
       <nowarn>
         <warning number="1584"/>
@@ -654,7 +602,6 @@
         <include name="System.dll"/>
         <include name="System.Core.dll"/>
         <include name="Caliburn.Core.dll"/>
-        <include name="Microsoft.Practices.ServiceLocation.dll"/>
         <include name="FluentValidation.dll"/>
         <include name="FluentValidation.Silverlight.dll"/>
       </references>
@@ -678,7 +625,6 @@
         <include name="System.dll"/>
         <include name="System.Core.dll"/>
         <include name="Caliburn.Core.dll"/>
-        <include name="Microsoft.Practices.ServiceLocation.dll"/>
         <include name="System.Reactive.dll"/>
         <include name="System.Observable.dll"/>
       </references>
@@ -724,7 +670,6 @@
 				<include name="Caliburn.Core.dll"/>
 				<include name="Caliburn.PresentationFramework.dll"/>
 				<include name="Caliburn.Testability.dll"/>
-        <include name="Microsoft.Practices.ServiceLocation.dll"/>
         <include name="Caliburn.ShellFramework.dll"/>
 				<!--Adapters-->
 				<include name="Caliburn.Windsor.dll"/>

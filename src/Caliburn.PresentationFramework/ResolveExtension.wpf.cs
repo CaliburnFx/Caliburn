@@ -5,7 +5,7 @@ namespace Caliburn.PresentationFramework
     using System;
     using System.Windows.Markup;
     using Configuration;
-    using Microsoft.Practices.ServiceLocation;
+    using Core.InversionOfControl;
 
     /// <summary>
     /// A Markup Extension that enables type resolution through the DI container in XAML.
@@ -55,8 +55,8 @@ namespace Caliburn.PresentationFramework
         {
             if (PresentationFrameworkConfiguration.IsInDesignMode) return DesignTimeValue;
 
-            if (string.IsNullOrEmpty(Key)) return ServiceLocator.Current.GetInstance(Type);
-            return Type == null ? ServiceLocator.Current.GetInstance(null, Key) : ServiceLocator.Current.GetInstance(Type, Key);
+            if (string.IsNullOrEmpty(Key)) return IoC.GetInstance(Type, null);
+            return Type == null ? IoC.GetInstance(null, Key) : IoC.GetInstance(Type, Key);
         }
     }
 }

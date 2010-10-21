@@ -2,8 +2,7 @@ namespace Caliburn.Core.Configuration
 {
     using System;
     using System.Linq.Expressions;
-    using IoC;
-    using Microsoft.Practices.ServiceLocation;
+    using InversionOfControl;
 
     /// <summary>
     /// The default implemenation of <see cref="IServiceConfiguration"/>.
@@ -16,9 +15,9 @@ namespace Caliburn.Core.Configuration
         where TModule : ConventionalModule<TModule, TServicesDescription>, new()
         where TRegistration : ComponentRegistrationBase, new()
     {
-        private readonly TModule _module;
-        private readonly Type _serviceType;
-        private Action<TImplementation> _configuration;
+        private readonly TModule module;
+        private readonly Type serviceType;
+        private Action<TImplementation> configuration;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ServiceConfiguration&lt;TModule, TServicesDescription, TRegistration, TImplementation&gt;"/> class.
@@ -27,8 +26,8 @@ namespace Caliburn.Core.Configuration
         /// <param name="serviceType">Type of the service.</param>
         public ServiceConfiguration(TModule module, Type serviceType)
         {
-            _module = module;
-            _serviceType = serviceType;
+            this.module = module;
+            this.serviceType = serviceType;
         }
 
         /// <summary>
@@ -58,7 +57,7 @@ namespace Caliburn.Core.Configuration
         public ServiceConfiguration<TModule, TServicesDescription, TRegistration2, TInstance2> Using<TRegistration2, TInstance2>(Expression<Func<TServicesDescription, IConfiguredRegistration<TRegistration2, TInstance2>>> service)
             where TRegistration2 : ComponentRegistrationBase, new()
         {
-            return _module.Using(service);
+            return module.Using(service);
         }
 
         /// <summary>
@@ -68,7 +67,7 @@ namespace Caliburn.Core.Configuration
         /// <returns></returns>
         public ServiceConfiguration<TModule, TServicesDescription, TRegistration, TImplementation> Configured(Action<TImplementation> configure)
         {
-            _configuration = configure;
+            configuration = configure;
             return this;
         }
 
@@ -78,7 +77,7 @@ namespace Caliburn.Core.Configuration
         /// <returns></returns>
         IComponentRegistration IServiceConfiguration.CreateRegistration()
         {
-            var reg = new TRegistration {Service = _serviceType};
+            var reg = new TRegistration {Service = serviceType};
             reg.GetType().GetProperty("Implementation").SetValue(reg, typeof(TImplementation), null);
             return reg;
         }
@@ -89,11 +88,11 @@ namespace Caliburn.Core.Configuration
         /// <param name="locator">The locator.</param>
         void IServiceConfiguration.ConfigureService(IServiceLocator locator)
         {
-            if (_configuration == null) 
+            if (configuration == null) 
                 return;
 
-            var implementation = (TImplementation)locator.GetService(_serviceType);
-            _configuration(implementation);
+            var implementation = (TImplementation)locator.GetService(serviceType);
+            configuration(implementation);
         }
     }
 }

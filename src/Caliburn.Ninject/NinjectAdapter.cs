@@ -3,11 +3,9 @@
     using System;
     using System.Collections.Generic;
     using Core.Behaviors;
-    using Core.IoC;
+    using Core.InversionOfControl;
     using global::Ninject;
     using global::Ninject.Injection;
-    using Microsoft.Practices.ServiceLocation;
-    using ActivationException=global::Ninject.ActivationException;
 
     /// <summary>
     /// An adapter allowing an <see cref="IKernel"/> to plug into Caliburn via <see cref="IServiceLocator"/> and <see cref="IRegistry"/>.
@@ -45,14 +43,16 @@
         /// <param name="serviceType">Type of instance requested.</param>
         /// <param name="key">Name of registered service you want. May be null.</param>
         /// <returns>The requested service instance.</returns>
-        protected override object DoGetInstance(Type serviceType, string key)
+        public override object GetInstance(Type serviceType, string key)
         {
-            var instance = Kernel.Get(serviceType ?? typeof(object), key);
-
-            if(instance == null)
-                throw new ActivationException();
-
-            return instance;
+            try
+            {
+                return Kernel.Get(serviceType ?? typeof(object), key);                
+            }
+            catch(Exception)
+            {
+                return null;
+            }
         }
 
         /// <summary>
@@ -61,9 +61,18 @@
         /// </summary>
         /// <param name="serviceType">Type of service requested.</param>
         /// <returns>Sequence of service instance objects.</returns>
-        protected override IEnumerable<object> DoGetAllInstances(Type serviceType)
+        public override IEnumerable<object> GetAllInstances(Type serviceType)
         {
             return Kernel.GetAll(serviceType);
+        }
+
+        /// <summary>
+        /// Injects dependencies into the object.
+        /// </summary>
+        /// <param name="instance">The instance to build up.</param>
+        public override void BuildUp(object instance)
+        {
+            Kernel.Inject(instance);
         }
 
         /// <summary>

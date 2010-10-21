@@ -1,7 +1,6 @@
 namespace Caliburn.Core.Configuration
 {
-    using IoC;
-    using Microsoft.Practices.ServiceLocation;
+    using InversionOfControl;
 
     /// <summary>
     /// Represents a service configuration for a module.

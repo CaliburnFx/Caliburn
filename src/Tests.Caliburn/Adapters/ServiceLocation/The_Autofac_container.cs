@@ -3,7 +3,7 @@
     using Autofac;
     using Components;
     using global::Caliburn.Autofac;
-    using Microsoft.Practices.ServiceLocation;
+    using global::Caliburn.Core.InversionOfControl;
     using NUnit.Framework;
 
     [TestFixture]
@@ -22,8 +22,6 @@
             return new AutofacAdapter(container);
         }
 
-        public override void GetAllInstances()
-        {
-        }
+        public override void GetAllInstances() {}
     }
 }

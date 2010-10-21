@@ -14,18 +14,18 @@
     /// </summary>
     public class ProxyCatalog : ComposablePartCatalog, INotifyComposablePartCatalogChanged
     {
-        private readonly ComposablePartCatalog _innerCatalog;
-        private Dictionary<ComposablePartDefinition, ComposablePartDefinition> _parts;
+        private readonly ComposablePartCatalog innerCatalog;
+        private readonly Dictionary<ComposablePartDefinition, ComposablePartDefinition> parts;
         /// <summary>
         /// Initializes a new instance of the <see cref="ProxyCatalog"/> class.
         /// </summary>
         /// <param name="innerCatalog">The inner catalog.</param>
         public ProxyCatalog(ComposablePartCatalog innerCatalog)
         {
-            _innerCatalog = innerCatalog;
-			_parts = CreateFrom(_innerCatalog);
+            this.innerCatalog = innerCatalog;
+			parts = CreateFrom(this.innerCatalog);
 			
-            var notifyingCatalog = _innerCatalog as INotifyComposablePartCatalogChanged;
+            var notifyingCatalog = this.innerCatalog as INotifyComposablePartCatalogChanged;
             if(notifyingCatalog != null)
                 notifyingCatalog.Changing += NotifyingCatalog_Changing;
         }
@@ -47,13 +47,13 @@
         /// <param name="e">The <see cref="System.ComponentModel.Composition.Hosting.ComposablePartCatalogChangeEventArgs"/> instance containing the event data.</param>
         private void NotifyingCatalog_Changing(object sender, ComposablePartCatalogChangeEventArgs e)
         {
-            var removed = _parts.Where(x => e.RemovedDefinitions.Contains(x.Key)).Select(x => x.Key).ToList();
-            removed.Apply(x => _parts.Remove(x));
+            var removed = parts.Where(x => e.RemovedDefinitions.Contains(x.Key)).Select(x => x.Key).ToList();
+            removed.Apply(x => parts.Remove(x));
 
             var added =
                 e.AddedDefinitions.Select(
                     x => new KeyValuePair<ComposablePartDefinition, ComposablePartDefinition>(x, ConvertPart(x)));
-            added.Apply(x => _parts[x.Key] = x.Value);
+            added.Apply(x => parts[x.Key] = x.Value);
 
             Changing(
                 this,
@@ -84,7 +84,7 @@
         {
             get
             {
-				return _parts.Values.AsQueryable();
+				return parts.Values.AsQueryable();
             }
         }
 

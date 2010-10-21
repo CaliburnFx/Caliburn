@@ -6,24 +6,12 @@ namespace Caliburn.Core.Validation
     using System.ComponentModel.DataAnnotations;
     using System.Linq;
     using System.Reflection;
-    using Microsoft.Practices.ServiceLocation;
 
     /// <summary>
     /// The default implementation of <see cref="IValidator"/>.
     /// </summary>
     public class DefaultValidator : IValidator
     {
-        private readonly IServiceLocator _serviceLocator;
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="DefaultValidator"/> class.
-        /// </summary>
-        /// <param name="serviceLocator">The service locator.</param>
-        public DefaultValidator(IServiceLocator serviceLocator)
-        {
-            _serviceLocator = serviceLocator;
-        }
-
         /// <summary>
         /// Indicates whether the specified property should be validated.
         /// </summary>
@@ -62,7 +50,7 @@ namespace Caliburn.Core.Validation
 
         private IEnumerable<IError> GetValidationErrors(object instance, PropertyInfo property)
         {
-            var context = new ValidationContext(instance, _serviceLocator, null);
+            var context = new ValidationContext(instance, null, null);
             var validators = from attribute in property.GetAttributes<ValidationAttribute>(true)
                              where attribute.GetValidationResult(property.GetValue(instance, null), context) != ValidationResult.Success
                              select new DefaultError(

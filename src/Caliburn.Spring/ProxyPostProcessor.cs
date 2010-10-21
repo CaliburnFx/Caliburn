@@ -5,7 +5,7 @@
     using System.Linq;
     using Core;
     using Core.Behaviors;
-    using Core.IoC;
+    using Core.InversionOfControl;
     using global::Spring.Objects.Factory.Config;
 
     /// <summary>
@@ -13,7 +13,7 @@
     /// </summary>
     public class ProxyPostProcessor : IObjectPostProcessor
     {
-        private readonly SpringAdapter _container;
+        private readonly SpringAdapter container;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ProxyPostProcessor"/> class.
@@ -21,7 +21,7 @@
         /// <param name="container">The container.</param>
         public ProxyPostProcessor(SpringAdapter container)
         {
-            _container = container;
+            this.container = container;
         }
 
         /// <summary>
@@ -49,7 +49,7 @@
             if(!type.ShouldCreateProxy())
                 return instance;
 
-            var factory = _container.GetInstance<IProxyFactory>();
+            var factory = container.GetInstance<IProxyFactory>();
 
             return factory.CreateProxy(
                 type,
@@ -90,7 +90,7 @@
             {
                 foreach(var info in greedyConstructor.GetParameters())
                 {
-                    var arg = _container.GetInstance(info.ParameterType);
+                    var arg = container.GetInstance(info.ParameterType);
                     args.Add(arg);
                 }
             }

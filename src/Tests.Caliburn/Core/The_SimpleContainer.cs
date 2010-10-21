@@ -1,30 +1,29 @@
 ﻿using System;
-using Microsoft.Practices.ServiceLocation;
 using NUnit.Framework;
 using NUnit.Framework.SyntaxHelpers;
 using Tests.Caliburn.Fakes;
 
 namespace Tests.Caliburn.Core
 {
-    using global::Caliburn.Core.IoC;
+    using global::Caliburn.Core.InversionOfControl;
 
     [TestFixture]
     public class The_SimpleContainer
     {
-        private SimpleContainer _container;
+        private SimpleContainer container;
 
         [SetUp]
         public void SetUp()
         {
-            _container = new SimpleContainer();
+            container = new SimpleContainer();
         }
 
         [Test]
         public void can_add_a_type_handler()
         {
-            _container.AddHandler(typeof(ITestService), () => new TestService());
+            container.AddHandler(typeof(ITestService), () => new TestService());
 
-            Assert.That(_container.IsRegistered(typeof(ITestService)));
+            Assert.That(container.IsRegistered(typeof(ITestService)));
         }
 
         [Test]
@@ -32,9 +31,9 @@ namespace Tests.Caliburn.Core
         {
             Func<object> handler = () => new TestService();
 
-            _container.AddHandler(typeof(ITestService), handler);
+            container.AddHandler(typeof(ITestService), handler);
 
-            var found = _container.GetHandler(typeof(ITestService));
+            var found = container.GetHandler(typeof(ITestService));
 
             Assert.That(found, Is.EqualTo(handler));
         }
@@ -42,41 +41,41 @@ namespace Tests.Caliburn.Core
         [Test]
         public void can_register_a_service_by_type()
         {
-            _container.Register(typeof(ITestService), typeof(TestService));
+            container.Register(typeof(ITestService), typeof(TestService));
 
-            Assert.That(_container.IsRegistered(typeof(ITestService)));
+            Assert.That(container.IsRegistered(typeof(ITestService)));
         }
 
         [Test]
         public void can_register_a_service_using_generics()
         {
-            _container.Register<ITestService, TestService>();
+            container.Register<ITestService, TestService>();
 
-            Assert.That(_container.IsRegistered(typeof(ITestService)));
+            Assert.That(container.IsRegistered(typeof(ITestService)));
         }
 
         [Test]
         public void can_register_a_singleton_by_type()
         {
-            _container.RegisterSingleton(typeof(ITestService), typeof(TestService));
+            container.RegisterSingleton(typeof(ITestService), typeof(TestService));
 
-            Assert.That(_container.IsRegistered(typeof(ITestService)));
+            Assert.That(container.IsRegistered(typeof(ITestService)));
         }
 
         [Test]
         public void can_register_a_singleton_using_generics()
         {
-            _container.RegisterSingleton<ITestService, TestService>();
+            container.RegisterSingleton<ITestService, TestService>();
 
-            Assert.That(_container.IsRegistered(typeof(ITestService)));
+            Assert.That(container.IsRegistered(typeof(ITestService)));
         }
 
         [Test]
         public void can_resolve_a_service_by_type()
         {
-            _container.Register<ITestService, TestService>();
+            container.Register<ITestService, TestService>();
 
-            var instance = _container.GetInstance(typeof(ITestService));
+            var instance = container.GetInstance(typeof(ITestService));
 
             Assert.That(instance, Is.Not.Null);
             Assert.That(instance, Is.AssignableFrom(typeof(TestService)));
@@ -85,9 +84,9 @@ namespace Tests.Caliburn.Core
         [Test]
         public void can_resolve_a_service_using_generics()
         {
-            _container.Register<ITestService, TestService>();
+            container.Register<ITestService, TestService>();
 
-            var instance = _container.GetInstance<ITestService>();
+            var instance = container.GetInstance<ITestService>();
 
             Assert.That(instance, Is.Not.Null);
             Assert.That(instance, Is.AssignableFrom(typeof(TestService)));
@@ -96,10 +95,10 @@ namespace Tests.Caliburn.Core
         [Test]
         public void can_resolve_a_singleton_by_type()
         {
-            _container.RegisterSingleton<ITestService, TestService>();
+            container.RegisterSingleton<ITestService, TestService>();
 
-            var instance1 = _container.GetInstance(typeof(ITestService));
-            var instance2 = _container.GetInstance(typeof(ITestService));
+            var instance1 = container.GetInstance(typeof(ITestService));
+            var instance2 = container.GetInstance(typeof(ITestService));
 
             Assert.That(instance1, Is.Not.Null);
             Assert.That(instance1, Is.AssignableFrom(typeof(TestService)));
@@ -113,10 +112,10 @@ namespace Tests.Caliburn.Core
         [Test]
         public void can_resolve_a_singleton_using_generics()
         {
-            _container.RegisterSingleton<ITestService, TestService>();
+            container.RegisterSingleton<ITestService, TestService>();
 
-            var instance1 = _container.GetInstance<ITestService>();
-            var instance2 = _container.GetInstance<ITestService>();
+            var instance1 = container.GetInstance<ITestService>();
+            var instance2 = container.GetInstance<ITestService>();
 
             Assert.That(instance1, Is.Not.Null);
             Assert.That(instance1, Is.AssignableFrom(typeof(TestService)));
@@ -130,10 +129,10 @@ namespace Tests.Caliburn.Core
         [Test]
         public void can_fill_dependencies_using_the_greediest_constructor()
         {
-            _container.Register<ITestService, TestService>();
-            _container.Register<IDependentService, DependentService>();
+            container.Register<ITestService, TestService>();
+            container.Register<IDependentService, DependentService>();
 
-            var instance = _container.GetInstance<IDependentService>();
+            var instance = container.GetInstance<IDependentService>();
 
             Assert.That(instance, Is.Not.Null);
             Assert.That(instance, Is.AssignableFrom(typeof(DependentService)));
@@ -144,7 +143,7 @@ namespace Tests.Caliburn.Core
         [Test]
         public void can_create_concrete_types_without_registration()
         {
-            var instance = _container.GetInstance<TestService>();
+            var instance = container.GetInstance<TestService>();
 
             Assert.That(instance, Is.Not.Null);
             Assert.That(instance, Is.AssignableFrom(typeof(TestService)));
@@ -153,49 +152,49 @@ namespace Tests.Caliburn.Core
         [Test]
         public void automatically_registers_itself()
         {
-            var container = _container.GetInstance<IServiceLocator>();
+            var container = this.container.GetInstance<IServiceLocator>();
 
-            Assert.That(_container, Is.EqualTo(container));
+            Assert.That(this.container, Is.EqualTo(container));
         }
 
         [Test]
         public void can_register_a_service_by_key()
         {
-            _container.Register("test", typeof(TestService));
+            container.Register("test", typeof(TestService));
 
-            Assert.That(_container.IsRegistered("test"));
+            Assert.That(container.IsRegistered("test"));
         }
 
         [Test]
         public void can_register_a_service_using_key_and_generics()
         {
-            _container.Register<TestService>("test");
+            container.Register<TestService>("test");
 
-            Assert.That(_container.IsRegistered("test"));
+            Assert.That(container.IsRegistered("test"));
         }
 
         [Test]
         public void can_register_a_singleton_by_key()
         {
-            _container.RegisterSingleton("test", typeof(TestService));
+            container.RegisterSingleton("test", typeof(TestService));
 
-            Assert.That(_container.IsRegistered("test"));
+            Assert.That(container.IsRegistered("test"));
         }
 
         [Test]
         public void can_register_a_singleton_using_key_and_generics()
         {
-            _container.RegisterSingleton<TestService>("test");
+            container.RegisterSingleton<TestService>("test");
 
-            Assert.That(_container.IsRegistered("test"));
+            Assert.That(container.IsRegistered("test"));
         }
 
         [Test]
         public void can_resolve_a_service_by_key()
         {
-            _container.Register<TestService>("test");
+            container.Register<TestService>("test");
 
-            var instance = _container.GetInstance("test");
+            var instance = container.GetInstance("test");
 
             Assert.That(instance, Is.Not.Null);
             Assert.That(instance, Is.AssignableFrom(typeof(TestService)));
@@ -204,10 +203,10 @@ namespace Tests.Caliburn.Core
         [Test]
         public void can_resolve_a_singleton_by_key()
         {
-            _container.RegisterSingleton<TestService>("test");
+            container.RegisterSingleton<TestService>("test");
 
-            var instance1 = _container.GetInstance("test");
-            var instance2 = _container.GetInstance("test");
+            var instance1 = container.GetInstance("test");
+            var instance2 = container.GetInstance("test");
 
             Assert.That(instance1, Is.Not.Null);
             Assert.That(instance1, Is.AssignableFrom(typeof(TestService)));
@@ -221,9 +220,9 @@ namespace Tests.Caliburn.Core
 		[Test]
 		public void can_resolve_a_generic_type()
 		{
-			_container.Register(typeof(ITestService<>), typeof(TestService<>));
+			container.Register(typeof(ITestService<>), typeof(TestService<>));
 
-			var instance = _container.GetInstance<ITestService<int>>();
+			var instance = container.GetInstance<ITestService<int>>();
 
 			Assert.That(instance, Is.Not.Null);
 			Assert.That(instance, Is.InstanceOfType(typeof(TestService<int>)));
@@ -232,9 +231,9 @@ namespace Tests.Caliburn.Core
 		[Test]
 		public void can_resolve_a_generic_type_by_key()
 		{
-			_container.Register(typeof(ITestService<>), typeof(TestService<>), "test");
+			container.Register(typeof(ITestService<>), typeof(TestService<>), "test");
 
-			var instance = _container.GetInstance<ITestService<int>>("test");
+			var instance = container.GetInstance<ITestService<int>>("test");
 
 			Assert.That(instance, Is.Not.Null);
 			Assert.That(instance, Is.InstanceOfType(typeof(TestService<int>)));

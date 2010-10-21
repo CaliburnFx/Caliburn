@@ -1,46 +1,42 @@
-﻿using System;
-using System.Reflection;
-using Caliburn.Core.Invocation;
-using Microsoft.Practices.ServiceLocation;
-using NUnit.Framework;
-using Rhino.Mocks;
-
-namespace Tests.Caliburn.Actions.Filters
+﻿namespace Tests.Caliburn.Actions.Filters
 {
+    using System;
+    using System.Reflection;
     using Fakes.UI;
+    using global::Caliburn.Core.Invocation;
+    using global::Caliburn.Core.InversionOfControl;
     using global::Caliburn.PresentationFramework.Filters;
     using global::Caliburn.PresentationFramework.RoutedMessaging;
+    using NUnit.Framework;
+    using Rhino.Mocks;
 
     [TestFixture]
     public class Rescue_filter : TestBase
     {
-        private RescueAttribute _attribute;
-        private IMethodFactory _methodFactory;
-        private MethodInfo _info;
-        private IServiceLocator _container;
+        RescueAttribute attribute;
+        IMethodFactory methodFactory;
+        MethodInfo info;
+        IServiceLocator container;
 
         protected override void given_the_context_of()
         {
-            _methodFactory = Mock<IMethodFactory>();
-            _info = typeof(MethodHost).GetMethod("Rescue");
-            _attribute = new RescueAttribute("Rescue");
-            _container = Stub<IServiceLocator>();
-            _container.Stub(x => x.GetInstance<IMethodFactory>()).Return(_methodFactory).Repeat.Any();
+            methodFactory = Mock<IMethodFactory>();
+            info = typeof(MethodHost).GetMethod("Rescue");
+            attribute = new RescueAttribute("Rescue");
+            container = Stub<IServiceLocator>();
+            container.Stub(x => x.GetInstance<IMethodFactory>()).Return(methodFactory).Repeat.Any();
         }
 
-        [Test]
-        public void initializes_its_method()
+        internal class MethodHost
         {
-            _attribute.Initialize(typeof(MethodHost), null, _container);
-
-            _methodFactory.AssertWasCalled(x => x.CreateFrom(_info));
+            public void Rescue(Exception ex) {}
         }
 
         [Test]
         public void can_handle_an_exception()
         {
             var method = Mock<IMethod>();
-            method.Stub(x => x.Info).Return(_info);
+            method.Stub(x => x.Info).Return(info);
 
             var target = new MethodHost();
             var exception = new Exception();
@@ -55,22 +51,22 @@ namespace Tests.Caliburn.Actions.Filters
             handlingNode.MessageHandler.Stub(x => x.Unwrap())
                 .Return(target);
 
-            _methodFactory.Expect(x => x.CreateFrom(_info))
+            methodFactory.Expect(x => x.CreateFrom(info))
                 .Return(method);
 
-            _attribute.Initialize(typeof(MethodHost), null, _container);
+            attribute.Initialize(typeof(MethodHost), null, container);
 
-            _attribute.Handle(null, handlingNode, exception);
+            attribute.Handle(null, handlingNode, exception);
 
             method.AssertWasCalled(x => x.Invoke(target, exception));
         }
 
-        internal class MethodHost
+        [Test]
+        public void initializes_its_method()
         {
-            public void Rescue(Exception ex)
-            {
-                
-            }
+            attribute.Initialize(typeof(MethodHost), null, container);
+
+            methodFactory.AssertWasCalled(x => x.CreateFrom(info));
         }
     }
 }

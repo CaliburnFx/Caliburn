@@ -3,9 +3,9 @@
     using System;
     using System.Collections.Generic;
 	using Castle.DynamicProxy;
-	using Core.Validation;
+    using Core.InversionOfControl;
+    using Core.Validation;
     using Interceptors;
-    using Microsoft.Practices.ServiceLocation;
     using PresentationFramework.Behaviors;
 
     /// <summary>
@@ -22,9 +22,9 @@
         public override IEnumerable<IInterceptor> GetInterceptors(Type implementation, ValidateAttribute behavior)
         {
 #if SILVERLIGHT_40 || NET
-            yield return new DataErrorInfoInterceptor(ServiceLocator.Current.GetInstance<IValidator>());          
+            yield return new DataErrorInfoInterceptor(IoC.Get<IValidator>());          
 #else
-            yield return new ExceptionValidatorInterceptor(ServiceLocator.Current.GetInstance<IValidator>());
+            yield return new ExceptionValidatorInterceptor(IoC.Get<IValidator>());
 #endif
             yield return ProxyInterceptor.Instance;
         }

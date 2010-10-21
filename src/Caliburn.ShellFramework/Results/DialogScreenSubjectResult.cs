@@ -1,5 +1,6 @@
 ﻿namespace Caliburn.ShellFramework.Results
 {
+    using Core.InversionOfControl;
     using PresentationFramework.ApplicationModel;
     using PresentationFramework.RoutedMessaging;
     using PresentationFramework.Screens;

@@ -1,8 +1,9 @@
 ﻿namespace Tests.Caliburn.Adapters.ServiceLocation
 {
     using Components;
+    using global::Caliburn.Core.InversionOfControl;
     using global::Caliburn.Ninject;
-    using Microsoft.Practices.ServiceLocation;
+    using Ninject;
     using NUnit.Framework;
 
     [TestFixture]
@@ -10,7 +11,7 @@
     {
         protected override IServiceLocator CreateServiceLocator()
         {
-            var kernel = new Ninject.StandardKernel();
+            var kernel = new StandardKernel();
 
             kernel.Bind<ILogger>().To<AdvancedLogger>();
             kernel.Bind<ILogger>().To<SimpleLogger>().Named(typeof(SimpleLogger).FullName);
@@ -19,8 +20,6 @@
             return new NinjectAdapter(kernel);
         }
 
-        public override void GetAllInstances()
-        {
-        }
+        public override void GetAllInstances() {}
     }
 }

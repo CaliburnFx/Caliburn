@@ -1,8 +1,7 @@
 namespace Caliburn.Core.Configuration
 {
     using System.Collections.Generic;
-    using IoC;
-    using Microsoft.Practices.ServiceLocation;
+    using InversionOfControl;
 
     /// <summary>
     /// Implemented by modules.

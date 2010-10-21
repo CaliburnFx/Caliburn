@@ -8,7 +8,7 @@ namespace Caliburn.MEF
 	using System.ComponentModel.Composition.ReflectionModel;
 	using System.Linq;
 	using System.Reflection;
-	using Core.IoC;
+	using Core.InversionOfControl;
 	using Core;
 
 	/// <summary>

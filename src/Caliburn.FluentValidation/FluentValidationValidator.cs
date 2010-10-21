@@ -4,10 +4,10 @@
     using System.Linq;
     using System.Collections.Generic;
     using System.Reflection;
+    using Core.InversionOfControl;
     using Core.Validation;
     using global::FluentValidation;
     using global::FluentValidation.Validators;
-    using Microsoft.Practices.ServiceLocation;
     using IValidator = global::FluentValidation.IValidator;
 	using Core.Behaviors;
 

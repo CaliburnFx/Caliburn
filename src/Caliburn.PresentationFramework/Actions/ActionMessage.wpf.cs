@@ -6,8 +6,8 @@ namespace Caliburn.PresentationFramework.Actions
     using System.Reflection;
     using System.Windows;
     using System.Windows.Markup;
+    using Core.InversionOfControl;
     using Core.Logging;
-    using Microsoft.Practices.ServiceLocation;
     using RoutedMessaging;
     using ViewModels;
 
@@ -204,7 +204,7 @@ namespace Caliburn.PresentationFramework.Actions
                 yield break;
 
             yield return new ActionMessageHandler(
-                ServiceLocator.Current.GetInstance<IViewModelDescriptionFactory>()
+                IoC.Get<IViewModelDescriptionFactory>()
                     .Create(context.GetType()),
                 context
                 );

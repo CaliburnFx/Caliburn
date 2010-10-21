@@ -9,8 +9,8 @@
     /// </summary>
     public class DefaultEventPublisher : IEventPublisher
     {
-        private readonly Dictionary<Type, object> _subjects = new Dictionary<Type, object>();
-        private readonly object _lock = new object();
+        private readonly Dictionary<Type, object> subjects = new Dictionary<Type, object>();
+        private readonly object @lock = new object();
 
         /// <summary>
         /// Gets the event for use by subscribers.
@@ -22,13 +22,13 @@
             object subject;
             var eventType = typeof(TEvent);
 
-            if(!_subjects.TryGetValue(eventType, out subject))
+            if(!subjects.TryGetValue(eventType, out subject))
             {
-                lock(_lock)
+                lock(@lock)
                 {
-                    if(!_subjects.TryGetValue(eventType, out subject))
+                    if(!subjects.TryGetValue(eventType, out subject))
                     {
-                        _subjects[eventType] = subject = new Subject<TEvent>();
+                        subjects[eventType] = subject = new Subject<TEvent>();
                     }
                 }
             }
@@ -45,7 +45,7 @@
         {
             object subject;
 
-            if(_subjects.TryGetValue(typeof(TEvent), out subject))
+            if(subjects.TryGetValue(typeof(TEvent), out subject))
                 ((ISubject<TEvent>)subject).OnNext(sampleEvent);
         }
     }

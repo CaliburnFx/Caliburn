@@ -7,18 +7,17 @@
 	using System.Linq;
 	using Core;
 	using Core.Behaviors;
-	using Core.IoC;
-	using Microsoft.Practices.ServiceLocation;
+	using Core.InversionOfControl;
 
 	/// <summary>
 	/// An adapter allowing a <see cref="CompositionContainer"/> to plug into Caliburn via <see cref="IServiceLocator"/> and <see cref="IRegistry"/>.
 	/// </summary>
 	public class MEFAdapter : ContainerBase
 	{
-		private CompositionContainer _container;
-		private CompositionBatch _batch;
-		private bool _useSetterInjection;
-		private CompositionBatchStrategy _batchStrategy;
+		private readonly CompositionContainer container;
+		private CompositionBatch batch;
+		private readonly bool useSetterInjection;
+		private CompositionBatchStrategy batchStrategy;
 
 		
 		/// <summary>
@@ -36,9 +35,9 @@
 		/// <param name="useSetterInjection">Specifies if setter injection is used on public properties</param>
 		public MEFAdapter(CompositionContainer container, bool useSetterInjection) 
 		{
-			_container = container;
-			_useSetterInjection = useSetterInjection;
-			_batchStrategy = new CompositionBatchStrategy(_useSetterInjection);
+			this.container = container;
+			this.useSetterInjection = useSetterInjection;
+			batchStrategy = new CompositionBatchStrategy(this.useSetterInjection);
 
 		    IoCExtensions.SelectEligibleConstructorImplementation = type =>{
 		        return (from c in type.GetConstructors()
@@ -55,9 +54,9 @@
 			batch.AddExportedValue<IServiceLocator>(this);
 			batch.AddExportedValue<IRegistry>(this);
 			batch.AddExportedValue<IContainer>(this);
-			batch.AddExportedValue<CompositionContainer>(_container);
+			batch.AddExportedValue<CompositionContainer>(this.container);
 
-			_container.Compose(batch);
+			this.container.Compose(batch);
 
 			AddRegistrationHandler<Singleton>(HandleSingleton);
 			AddRegistrationHandler<PerRequest>(HandleSingleton);
@@ -70,7 +69,7 @@
 		/// <value>The container.</value>
 		public CompositionContainer Container
 		{
-			get { return _container; }
+			get { return container; }
 		}
 
 		/// <summary>
@@ -80,8 +79,8 @@
 		/// <value>The batch strategy.</value>
 		public CompositionBatchStrategy BatchStrategy
 		{
-			get { return _batchStrategy; }
-			set { _batchStrategy = value; }
+			get { return batchStrategy; }
+			set { batchStrategy = value; }
 		}
 
 		/// <summary>
@@ -91,15 +90,15 @@
 		/// <param name="serviceType">Type of instance requested.</param>
 		/// <param name="key">Name of registered service you want. May be null.</param>
 		/// <returns>The requested service instance.</returns>
-		protected override object DoGetInstance(Type serviceType, string key)
+		public override object GetInstance(Type serviceType, string key)
 		{
 			string contract = string.IsNullOrEmpty(key) ? AttributedModelServices.GetContractName(serviceType) : key;
-			var exports = _container.GetExportedValues<object>(contract);
+			var exports = container.GetExportedValues<object>(contract);
 			
             if(exports.Count() > 0)
 				return exports.First();
 
-			throw new ActivationException(string.Format("Could not locate any instances of contract {0}.", contract));
+			return null;
 		}
 
 		/// <summary>
@@ -108,23 +107,32 @@
 		/// </summary>
 		/// <param name="serviceType">Type of service requested.</param>
 		/// <returns>Sequence of service instance objects.</returns>
-		protected override IEnumerable<object> DoGetAllInstances(Type serviceType)
+		public override IEnumerable<object> GetAllInstances(Type serviceType)
 		{
-			return _container.GetExportedValues<object>(AttributedModelServices.GetContractName(serviceType));
+			return container.GetExportedValues<object>(AttributedModelServices.GetContractName(serviceType));
 		}
 
-		/// <summary>
+        /// <summary>
+        /// Injects dependencies into the object.
+        /// </summary>
+        /// <param name="instance">The instance to build up.</param>
+	    public override void BuildUp(object instance)
+        {
+            container.SatisfyImportsOnce(instance);
+        }
+
+	    /// <summary>
 		/// Configures the container using the provided component registrations.
 		/// </summary>
 		/// <param name="registrations">The component registrations.</param>
 		public override void Register(IEnumerable<IComponentRegistration> registrations)
 		{
-			_batch = new CompositionBatch();
+			batch = new CompositionBatch();
 
 			base.Register(registrations);
 
-			_container.Compose(_batch);
-			_batch = null;
+			container.Compose(batch);
+			batch = null;
 		}
 
 		/// <summary>
@@ -145,24 +153,24 @@
 		        }
 		    });
 
-			BatchStrategy = new ProxiedCompositionBatchStrategy(_useSetterInjection);
+			BatchStrategy = new ProxiedCompositionBatchStrategy(useSetterInjection);
 
 			return this;
 		}
 
 		private void HandleSingleton(Singleton singleton)
 		{
-			BatchStrategy.HandleSingleton(_batch, singleton);
+			BatchStrategy.HandleSingleton(batch, singleton);
 		}
 
 		private void HandleSingleton(PerRequest perRequest)
 		{
-			BatchStrategy.HandleSingleton(_batch, perRequest);
+			BatchStrategy.HandleSingleton(batch, perRequest);
 		}
 
 		private void HandleInstance(Instance instance)
 		{
-			BatchStrategy.HandleInstance(_batch, instance);
+			BatchStrategy.HandleInstance(batch, instance);
 		}
 	}
 }

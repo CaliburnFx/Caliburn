@@ -13,7 +13,7 @@ namespace Tests.Caliburn.Adapters.Integration
 	[TestFixture]
 	public class The_StructureMap_container : ContainerIntegrationTestBase
 	{
-		protected override global::Caliburn.Core.IoC.IContainer CreateContainerAdapter()
+		protected override global::Caliburn.Core.InversionOfControl.IContainer CreateContainerAdapter()
 		{
 			var registry = new Registry();
 			IContainer container = new Container(registry);

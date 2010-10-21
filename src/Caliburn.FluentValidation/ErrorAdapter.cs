@@ -8,8 +8,8 @@
     /// </summary>
     public class ErrorAdapter : IError
     {
-        private readonly ValidationFailure _failure;
-        private readonly object _instance;
+        private readonly ValidationFailure failure;
+        private readonly object instance;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ErrorAdapter"/> class.
@@ -18,8 +18,8 @@
         /// <param name="failure">The failure.</param>
         public ErrorAdapter(object instance, ValidationFailure failure)
         {
-            _failure = failure;
-            _instance = instance;
+            this.failure = failure;
+            this.instance = instance;
         }
 
         /// <summary>
@@ -28,7 +28,7 @@
         /// <value>The failure.</value>
         public ValidationFailure Failure
         {
-            get { return _failure; }
+            get { return failure; }
         }
 
         /// <summary>
@@ -37,7 +37,7 @@
         /// <value>The instance.</value>
         public object Instance
         {
-            get { return _instance; }
+            get { return instance; }
         }
 
         /// <summary>
@@ -46,7 +46,7 @@
         /// <value>The name of the property.</value>
         public string Key
         {
-            get { return _failure.PropertyName; }
+            get { return failure.PropertyName; }
         }
 
         /// <summary>
@@ -55,7 +55,7 @@
         /// <value>The message.</value>
         public string Message
         {
-            get { return _failure.ErrorMessage; }
+            get { return failure.ErrorMessage; }
         }
     }
 }

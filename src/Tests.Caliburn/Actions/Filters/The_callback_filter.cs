@@ -1,37 +1,36 @@
-﻿using System.Reflection;
-using Caliburn.Core.Invocation;
-using Microsoft.Practices.ServiceLocation;
-using NUnit.Framework;
-using Rhino.Mocks;
-
-namespace Tests.Caliburn.Actions.Filters
+﻿namespace Tests.Caliburn.Actions.Filters
 {
+    using System.Reflection;
     using Fakes.UI;
+    using global::Caliburn.Core.Invocation;
+    using global::Caliburn.Core.InversionOfControl;
     using global::Caliburn.PresentationFramework.Actions;
     using global::Caliburn.PresentationFramework.RoutedMessaging;
+    using NUnit.Framework;
+    using Rhino.Mocks;
 
     [TestFixture]
     public class The_async_attribute_filter : TestBase
     {
-        private AsyncActionAttribute _attribute;
-        private IMethodFactory _methodFactory;
-        private MethodInfo _info;
-        private IServiceLocator _container;
+        AsyncActionAttribute attribute;
+        IMethodFactory methodFactory;
+        MethodInfo info;
+        IServiceLocator container;
 
         protected override void given_the_context_of()
         {
-            _methodFactory = Mock<IMethodFactory>();
-            _info = typeof(MethodHost).GetMethod("Callback");
-            _attribute = new AsyncActionAttribute { Callback = "Callback" };
-            _container = Stub<IServiceLocator>();
-            _container.Stub(x => x.GetInstance<IMethodFactory>()).Return(_methodFactory).Repeat.Any();
+            methodFactory = Mock<IMethodFactory>();
+            info = typeof(MethodHost).GetMethod("Callback");
+            attribute = new AsyncActionAttribute {
+                Callback = "Callback"
+            };
+            container = Stub<IServiceLocator>();
+            container.Stub(x => x.GetInstance<IMethodFactory>()).Return(methodFactory).Repeat.Any();
         }
 
-        [Test]
-        public void initializes_its_method()
+        internal class MethodHost
         {
-            _attribute.Initialize(typeof(MethodHost), null, _container);
-            _methodFactory.AssertWasCalled(x => x.CreateFrom(_info));
+            public void Callback(object result) {}
         }
 
         [Test]
@@ -51,25 +50,24 @@ namespace Tests.Caliburn.Actions.Filters
             handlingNode.MessageHandler.Stub(x => x.Unwrap())
                 .Return(target);
 
-            _methodFactory.Expect(x => x.CreateFrom(_info))
+            methodFactory.Expect(x => x.CreateFrom(info))
                 .Return(method);
 
-            _attribute.Initialize(typeof(MethodHost), null, _container);
+            attribute.Initialize(typeof(MethodHost), null, container);
 
             method.Expect(x => x.Invoke(target, result)).Return(typeof(string));
             method.Stub(x => x.Info).Return(typeof(object).GetMethod("ToString"));
 
             var outcome = new MessageProcessingOutcome(result, result.GetType(), false);
 
-            _attribute.Execute(null, handlingNode, outcome);
+            attribute.Execute(null, handlingNode, outcome);
         }
 
-        internal class MethodHost
+        [Test]
+        public void initializes_its_method()
         {
-            public void Callback(object result)
-            {
-
-            }
+            attribute.Initialize(typeof(MethodHost), null, container);
+            methodFactory.AssertWasCalled(x => x.CreateFrom(info));
         }
     }
 }

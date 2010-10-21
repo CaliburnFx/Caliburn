@@ -4,8 +4,8 @@
     using System.Reflection;
     using Conventions;
     using Core.Invocation;
+    using Core.InversionOfControl;
     using Filters;
-    using Microsoft.Practices.ServiceLocation;
     using RoutedMessaging;
 
     /// <summary>

@@ -1,7 +1,7 @@
 namespace Caliburn.ShellFramework.Configuration
 {
     using Core.Configuration;
-    using Core.IoC;
+    using Core.InversionOfControl;
     using Questions;
     using Resources;
     using Services;

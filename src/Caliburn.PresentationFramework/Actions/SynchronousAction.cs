@@ -2,9 +2,9 @@
 {
     using System;
     using Core.Invocation;
+    using Core.InversionOfControl;
     using Core.Logging;
     using Filters;
-    using Microsoft.Practices.ServiceLocation;
     using RoutedMessaging;
 
     /// <summary>
@@ -14,7 +14,7 @@
     {
         private static readonly ILog Log = LogManager.GetLog(typeof(SynchronousAction));
 
-        private readonly IServiceLocator _serviceLocator;
+        private readonly IServiceLocator serviceLocator;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="SynchronousAction"/> class.
@@ -27,7 +27,7 @@
         public SynchronousAction(IServiceLocator serviceLocator, IMethod method, IMessageBinder messageBinder, IFilterManager filters, bool blockInteraction)
             : base(method, messageBinder, filters, blockInteraction)
         {
-            _serviceLocator = serviceLocator;
+            this.serviceLocator = serviceLocator;
         }
 
         /// <summary>
@@ -102,7 +102,7 @@
                 OnCompleted();
             };
 
-            result.Execute(new ResultExecutionContext(_serviceLocator, message, handlingNode));
+            result.Execute(new ResultExecutionContext(serviceLocator, message, handlingNode));
         }
     }
 }

@@ -1,8 +1,8 @@
 ﻿namespace Caliburn.PresentationFramework.ViewModels
 {
     using System.Linq;
+    using Core.InversionOfControl;
     using Core.Logging;
-    using Microsoft.Practices.ServiceLocation;
     using Screens;
 
     /// <summary>

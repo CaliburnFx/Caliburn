@@ -4,8 +4,7 @@ namespace Caliburn.MEF
 	using System.ComponentModel.Composition.Hosting;
 	using Core;
 	using Core.Behaviors;
-	using Core.IoC;
-	using Microsoft.Practices.ServiceLocation;
+	using Core.InversionOfControl;
 	using Enumerable = System.Linq.Enumerable;
 
 	public class ProxiedCompositionBatchStrategy : CompositionBatchStrategy
@@ -25,7 +24,7 @@ namespace Caliburn.MEF
 
 		public override void HandleInstance(CompositionBatch batch, Instance instance)
 		{
-			var factory = ServiceLocator.Current.GetInstance<IProxyFactory>();
+			var factory = IoC.Get<IProxyFactory>();
 		    var impl = factory.CreateProxyWithTarget(
 		        instance.Service,
 		        instance.Implementation,

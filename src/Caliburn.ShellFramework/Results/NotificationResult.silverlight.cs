@@ -4,55 +4,56 @@ namespace Caliburn.ShellFramework.Results
 {
     using System;
     using System.Windows;
+    using Core.InversionOfControl;
     using PresentationFramework.RoutedMessaging;
     using PresentationFramework.ViewModels;
     using PresentationFramework.Views;
 
     public class NotificationResult<T> : IResult
     {
-        private readonly int _durationInMilliseconds;
-        private bool _waitForClose;
-        private Func<T> _viewModelLocator;
+        private readonly int durationInMilliseconds;
+        private bool waitForClose;
+        private Func<T> viewModelLocator;
 
         public NotificationResult(int durationInMilliseconds)
         {
-            _durationInMilliseconds = durationInMilliseconds;
+            this.durationInMilliseconds = durationInMilliseconds;
         }
 
         public NotificationResult(T viewModel, int durationInMilliseconds)
         {
-            _durationInMilliseconds = durationInMilliseconds;
-            _viewModelLocator = () => viewModel;
+            this.durationInMilliseconds = durationInMilliseconds;
+            viewModelLocator = () => viewModel;
         }
 
         public NotificationResult<T> Wait()
         {
-            _waitForClose = true;
+            waitForClose = true;
             return this;
         }
 
         public void Execute(ResultExecutionContext context)
         {
-            if (_viewModelLocator == null)
-                _viewModelLocator = () => context.ServiceLocator.GetInstance<IViewModelFactory>().Create<T>();
+            if (viewModelLocator == null)
+                viewModelLocator = () => context.ServiceLocator.GetInstance<IViewModelFactory>().Create<T>();
 
             var window = new NotificationWindow();
-            var viewModel = _viewModelLocator();
+            var viewModel = viewModelLocator();
             var view = context.ServiceLocator.GetInstance<IViewLocator>().LocateForModel(viewModel, window, null);
 
             context.ServiceLocator.GetInstance<IViewModelBinder>().Bind(viewModel, view, null);
             window.Content = (FrameworkElement)view;
 
-            if (_waitForClose)
+            if (waitForClose)
             {
                 window.Closed += delegate{
                     Completed(this, new ResultCompletionEventArgs());
                 };
             }
 
-            window.Show(_durationInMilliseconds);
+            window.Show(durationInMilliseconds);
 
-            if (!_waitForClose)
+            if (!waitForClose)
                 Completed(this, new ResultCompletionEventArgs());
         }
 

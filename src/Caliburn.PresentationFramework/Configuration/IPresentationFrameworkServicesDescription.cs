@@ -4,7 +4,7 @@ namespace Caliburn.PresentationFramework.Configuration
     using ApplicationModel;
     using Conventions;
     using Core.Configuration;
-    using Core.IoC;
+    using Core.InversionOfControl;
     using Invocation;
     using RoutedMessaging;
     using RoutedMessaging.Parsers;

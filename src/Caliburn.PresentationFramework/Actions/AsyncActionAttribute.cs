@@ -3,8 +3,8 @@ namespace Caliburn.PresentationFramework.Actions
     using System;
     using System.Reflection;
     using Core.Invocation;
+    using Core.InversionOfControl;
     using Filters;
-    using Microsoft.Practices.ServiceLocation;
     using RoutedMessaging;
 
     /// <summary>
@@ -13,7 +13,7 @@ namespace Caliburn.PresentationFramework.Actions
     [AttributeUsage(AttributeTargets.Method, AllowMultiple = false)]
     public class AsyncActionAttribute : Attribute, IInitializable, IPostProcessor, IActionFactory
     {
-        private IMethod _callback;
+        private IMethod callback;
 
         /// <summary>
         /// Gets or sets a value indicating whether to block interaction with the trigger during asynchronous execution.
@@ -56,7 +56,7 @@ namespace Caliburn.PresentationFramework.Actions
                         )
                     );
 
-            _callback = serviceLocator.GetInstance<IMethodFactory>().CreateFrom(methodInfo);
+            callback = serviceLocator.GetInstance<IMethodFactory>().CreateFrom(methodInfo);
         }
 
 
@@ -68,11 +68,11 @@ namespace Caliburn.PresentationFramework.Actions
         /// <param name="outcome">The outcome of processing the message</param>
         public virtual void Execute(IRoutedMessage message, IInteractionNode handlingNode, MessageProcessingOutcome outcome)
         {
-            if(_callback == null || outcome.WasCancelled)
+            if(callback == null || outcome.WasCancelled)
                 return;
 
-            outcome.Result = _callback.Invoke(handlingNode.MessageHandler.Unwrap(), outcome.Result);
-            outcome.ResultType = _callback.Info.ReturnType;
+            outcome.Result = callback.Invoke(handlingNode.MessageHandler.Unwrap(), outcome.Result);
+            outcome.ResultType = callback.Info.ReturnType;
         }
 
         /// <summary>

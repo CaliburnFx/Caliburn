@@ -9,20 +9,19 @@
     /// </summary>
     public class ProxyPartDefinition : ComposablePartDefinition
     {
-        private readonly ComposablePartDefinition _innerDefinition;
-        private ProxyPart _part;
-        private readonly Type _implementation;
+        private readonly ComposablePartDefinition innerDefinition;
+        private ProxyPart part;
+        private readonly Type implementation;
 		
         /// <summary>
         /// Initializes a new instance of the <see cref="ProxyPartDefinition"/> class.
         /// </summary>
         /// <param name="implementation">The implementation.</param>
         /// <param name="innerDefinition">The inner definition.</param>
-		/// <param name="useSetterInjection">Use Setter Injection on parts.</param>
         public ProxyPartDefinition(Type implementation, ComposablePartDefinition innerDefinition)
         {
-            _innerDefinition = innerDefinition;
-            _implementation = implementation;
+            this.innerDefinition = innerDefinition;
+            this.implementation = implementation;
 		}
 
         /// <summary>
@@ -40,9 +39,9 @@
         /// </remarks>
         public override ComposablePart CreatePart()
         {
-            if(_part == null)
-                _part = new ProxyPart(_implementation, _innerDefinition.CreatePart());
-            return _part;
+            if(part == null)
+                part = new ProxyPart(implementation, innerDefinition.CreatePart());
+            return part;
         }
 
         /// <summary>
@@ -64,7 +63,7 @@
         /// </remarks>
         public override IEnumerable<ExportDefinition> ExportDefinitions
         {
-            get { return _innerDefinition.ExportDefinitions; }
+            get { return innerDefinition.ExportDefinitions; }
         }
 
         /// <summary>
@@ -86,7 +85,7 @@
         /// </remarks>
         public override IEnumerable<ImportDefinition> ImportDefinitions
         {
-            get { return _innerDefinition.ImportDefinitions; }
+            get { return innerDefinition.ImportDefinitions; }
         }
     }
 }

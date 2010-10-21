@@ -6,9 +6,9 @@ namespace Caliburn.PresentationFramework.ViewModels
     using Actions;
     using Conventions;
     using Core;
+    using Core.InversionOfControl;
     using Core.Logging;
     using Filters;
-    using Microsoft.Practices.ServiceLocation;
 
     /// <summary>
     /// The default implementation of <see cref="IViewModelDescriptionFactory"/>.

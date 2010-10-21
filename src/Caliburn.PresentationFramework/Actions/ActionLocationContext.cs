@@ -1,8 +1,8 @@
 ﻿namespace Caliburn.PresentationFramework.Actions
 {
     using System;
+    using Core.InversionOfControl;
     using Filters;
-    using Microsoft.Practices.ServiceLocation;
 
     /// <summary>
     /// Provides services and information for locating instances of <see cref="IAction"/>.

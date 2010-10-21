@@ -5,7 +5,7 @@
 	using System.Reflection;
 	using Core;
 	using Core.Invocation;
-	using Microsoft.Practices.ServiceLocation;
+	using Core.InversionOfControl;
 	using RoutedMessaging;
 
 	/// <summary>
@@ -14,7 +14,7 @@
 	[AttributeUsage(AttributeTargets.Method, AllowMultiple = true)]
 	public class PreviewAttribute : MethodCallFilterBase, IPreProcessor, IHandlerAware
 	{
-		private IMethodFactory _methodFactory;
+		private IMethodFactory methodFactory;
 
 		/// <summary>
 		/// Initializes a new instance of the <see cref="PreviewAttribute"/> class.
@@ -52,7 +52,7 @@
 		public override void Initialize(Type targetType, MemberInfo member, IServiceLocator serviceLocator)
 		{
 			base.Initialize(targetType, member, serviceLocator);
-			_methodFactory = serviceLocator.GetInstance<IMethodFactory>();
+			methodFactory = serviceLocator.GetInstance<IMethodFactory>();
 		}
 
 		/// <summary>
@@ -68,9 +68,9 @@
 			if (target == null)
 				return false;
 
-			var result = _method.Invoke(target, parameters);
+			var result = Method.Invoke(target, parameters);
 
-			if (_method.Info.ReturnType == typeof(bool))
+			if (Method.Info.ReturnType == typeof(bool))
 				return (bool)result;
 			return true;
 		}
@@ -99,7 +99,7 @@
 			var helper = messageHandler.Metadata.FirstOrDefaultOfType<DependencyObserver>();
 			if (helper != null) return;
 
-			helper = new DependencyObserver(messageHandler, _methodFactory, notifier);
+			helper = new DependencyObserver(messageHandler, methodFactory, notifier);
 			messageHandler.Metadata.Add(helper);
 		}
 

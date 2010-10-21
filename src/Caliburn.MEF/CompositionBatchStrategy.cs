@@ -3,7 +3,7 @@ namespace Caliburn.MEF
 	using System.ComponentModel.Composition;
 	using System.ComponentModel.Composition.Hosting;
 	using System.ComponentModel.Composition.Primitives;
-	using Core.IoC;
+	using Core.InversionOfControl;
 
 	public class CompositionBatchStrategy
 	{

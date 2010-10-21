@@ -6,8 +6,8 @@ namespace Caliburn.PresentationFramework.Views
     using System.Windows;
     using System.Windows.Interop;
     using Core;
+    using Core.InversionOfControl;
     using Core.Logging;
-    using Microsoft.Practices.ServiceLocation;
 
     /// <summary>
     /// The default implementation of <see cref="IViewLocator"/>.

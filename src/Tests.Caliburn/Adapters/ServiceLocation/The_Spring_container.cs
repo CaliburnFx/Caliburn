@@ -1,8 +1,8 @@
 ﻿namespace Tests.Caliburn.Adapters.ServiceLocation
 {
     using Components;
+    using global::Caliburn.Core.InversionOfControl;
     using global::Caliburn.Spring;
-    using Microsoft.Practices.ServiceLocation;
     using NUnit.Framework;
     using Spring.Context.Support;
 

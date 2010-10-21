@@ -6,7 +6,7 @@
     using global::Caliburn.Core;
     using global::Caliburn.Core.Configuration;
     using global::Caliburn.Core.Invocation;
-    using global::Caliburn.Core.IoC;
+    using global::Caliburn.Core.InversionOfControl;
     using global::Caliburn.PresentationFramework.Invocation;
     using NUnit.Framework;
     using NUnit.Framework.SyntaxHelpers;

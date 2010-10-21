@@ -31,10 +31,6 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Microsoft.Practices.ServiceLocation, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\lib\net-3.5\Microsoft.Practices.ServiceLocation.dll</HintPath>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.DataAnnotations">
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
@@ -68,18 +64,21 @@
     <Compile Include="CoreExtensions.cs" />
     <Compile Include="IAssemblySource.cs" />
     <Compile Include="Inflector.cs" />
+    <Compile Include="InversionOfControl\IBuilder.cs" />
     <Compile Include="Invocation\EventHelper.cs" />
-    <Compile Include="IoC\ComponentRegistrationBase.cs" />
-    <Compile Include="IoC\IComponentMetadata.cs" />
-    <Compile Include="IoC\IoCExtensions.cs" />
-    <Compile Include="IoC\Instance.cs" />
-    <Compile Include="IoC\IRegistry.cs" />
-    <Compile Include="IoC\IContainer.cs" />
+    <Compile Include="InversionOfControl\ComponentRegistrationBase.cs" />
+    <Compile Include="InversionOfControl\IComponentMetadata.cs" />
+    <Compile Include="InversionOfControl\IoC.cs" />
+    <Compile Include="InversionOfControl\IoCExtensions.cs" />
+    <Compile Include="InversionOfControl\Instance.cs" />
+    <Compile Include="InversionOfControl\IRegistry.cs" />
+    <Compile Include="InversionOfControl\IContainer.cs" />
     <Compile Include="Invocation\DelegateFactory.cs" />
-    <Compile Include="IoC\ContainerBase.cs" />
-    <Compile Include="IoC\IComponentRegistration.cs" />
-    <Compile Include="IoC\PerRequest.cs" />
-    <Compile Include="IoC\Singleton.cs" />
+    <Compile Include="InversionOfControl\ContainerBase.cs" />
+    <Compile Include="InversionOfControl\IComponentRegistration.cs" />
+    <Compile Include="InversionOfControl\IServiceLocator.cs" />
+    <Compile Include="InversionOfControl\PerRequest.cs" />
+    <Compile Include="InversionOfControl\Singleton.cs" />
     <Compile Include="Invocation\BackgroundTask.cs" />
     <Compile Include="Invocation\IMethod.cs" />
     <Compile Include="Invocation\IMethodFactory.cs" />
@@ -90,7 +89,7 @@
     <Compile Include="Logging\LogExtensions.cs" />
     <Compile Include="Logging\LogManager.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="IoC\SimpleContainer.cs" />
+    <Compile Include="InversionOfControl\SimpleContainer.cs" />
     <Compile Include="TypeDescriptor.silverlight.cs" />
     <Compile Include="Validation\DefaultError.cs" />
     <Compile Include="Validation\DefaultValidator.silverlight.cs" />

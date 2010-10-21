@@ -2,28 +2,27 @@
 {
     using System;
     using Core.Configuration;
+    using Core.InversionOfControl;
     using Menus;
-    using Microsoft.Practices.ServiceLocation;
     using PresentationFramework.ApplicationModel;
     using PresentationFramework.ViewModels;
     using PresentationFramework.Views;
     using Questions;
+    using Resources;
     using Results;
 
 #if SILVERLIGHT
     using ShellFramework.History;
-    using PresentationFramework.ApplicationModel;
-    using Core.IoC;
 #endif
 
     public class ShellFrameworkConfiguration :
         ConventionalModule<ShellFrameworkConfiguration, IShellFrameworkServicesDescription>
     {
-        private string _viewNamespace;
+        private string viewNamespace;
 
         public ShellFrameworkConfiguration RedirectViewNamespace(string viewNamespace)
         {
-            _viewNamespace = viewNamespace;
+            this.viewNamespace = viewNamespace;
             return this;
         }
 
@@ -49,13 +48,13 @@
         {
             base.Initialize(locator);
 
-            MenuModel.Initialize(locator.GetInstance<IInputManager>());
+            MenuModel.Initialize(locator.GetInstance<IInputManager>(), locator.GetInstance<IResourceManager>());
 
-            if(!string.IsNullOrEmpty(_viewNamespace))
+            if(!string.IsNullOrEmpty(viewNamespace))
             {
                 var viewLocator = locator.GetInstance<IViewLocator>() as DefaultViewLocator;
                 if(viewLocator != null)
-                    viewLocator.AddNamespaceAlias("Caliburn.ShellFramework.Questions", _viewNamespace);
+                    viewLocator.AddNamespaceAlias("Caliburn.ShellFramework.Questions", viewNamespace);
             }
         }
     }

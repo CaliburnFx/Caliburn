@@ -2,16 +2,14 @@
 
 namespace Caliburn.PresentationFramework.ApplicationModel
 {
-    using System;
     using System.Collections.Generic;
     using System.Reflection;
     using System.Windows;
     using Configuration;
     using Core;
     using Core.Configuration;
-    using Core.IoC;
+    using Core.InversionOfControl;
     using Core.Logging;
-    using Microsoft.Practices.ServiceLocation;
 
     /// <summary>
     /// A base class for applications based on Caliburn.
@@ -20,7 +18,7 @@ namespace Caliburn.PresentationFramework.ApplicationModel
     {
         private static readonly ILog Log = LogManager.GetLog(typeof(CaliburnApplication));
 
-        private readonly IServiceLocator _container;
+        private readonly IServiceLocator container;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="CaliburnApplication"/> class.
@@ -32,10 +30,10 @@ namespace Caliburn.PresentationFramework.ApplicationModel
         {
 			BeforeConfiguration();
 
-            _container = CreateContainer();
+            container = CreateContainer();
 
             var builder = CaliburnFramework
-                .Configure(_container, Register);
+                .Configure(container, Register);
 
             builder.With.Assemblies(SelectAssemblies());
 
@@ -51,7 +49,7 @@ namespace Caliburn.PresentationFramework.ApplicationModel
         /// <value>The container.</value>
         public IServiceLocator Container
         {
-            get { return _container; }
+            get { return container; }
         }
 
         /// <summary>
@@ -105,7 +103,7 @@ namespace Caliburn.PresentationFramework.ApplicationModel
         /// <param name="registrations">The component registrations.</param>
         protected virtual void Register(IEnumerable<IComponentRegistration> registrations)
         {
-            var registry = _container as IRegistry;
+            var registry = container as IRegistry;
 
             if (registry == null)
                 throw new CaliburnException(

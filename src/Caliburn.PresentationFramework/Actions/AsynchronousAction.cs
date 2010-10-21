@@ -2,10 +2,10 @@
 {
     using System;
     using Core.Invocation;
+    using Core.InversionOfControl;
     using Core.Logging;
     using Filters;
 	using System.Threading;
-    using Microsoft.Practices.ServiceLocation;
     using RoutedMessaging;
 
     /// <summary>
@@ -14,10 +14,10 @@
     public class AsynchronousAction : ActionBase
     {
         private static readonly ILog Log = LogManager.GetLog(typeof(AsynchronousAction));
-        private readonly IServiceLocator _serviceLocator;
+        private readonly IServiceLocator serviceLocator;
 
         [ThreadStatic]
-        private static IBackgroundTask _currentTask;
+        private static IBackgroundTask currentTask;
 
         /// <summary>
         /// Gets or sets the current background task.
@@ -25,11 +25,11 @@
         /// <value>The current task.</value>
         public static IBackgroundTask CurrentTask
         {
-            get { return _currentTask; }
-            set { _currentTask = value; }
+            get { return currentTask; }
+            set { currentTask = value; }
         }
 
-		private int _runningCount;
+		private int runningCount;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="AsynchronousAction"/> class.
@@ -42,7 +42,7 @@
         public AsynchronousAction(IServiceLocator serviceLocator, IMethod method, IMessageBinder messageBinder, IFilterManager filters, bool blockInteraction)
             : base(method, messageBinder, filters, blockInteraction)
         {
-            _serviceLocator = serviceLocator;
+            this.serviceLocator = serviceLocator;
         }
 
         /// <summary>
@@ -100,7 +100,7 @@
             CurrentTask.Completed +=
                 (s, e) => Invocation.Execute.OnUIThread(
                               () =>{
-                                  Interlocked.Decrement(ref _runningCount);
+                                  Interlocked.Decrement(ref runningCount);
                                   if(e.Error != null)
                                   {
                                       TryUpdateTrigger(actionMessage, handlingNode, false);
@@ -143,7 +143,7 @@
                                               OnCompleted();
                                           };
 
-                                          result.Execute(new ResultExecutionContext(_serviceLocator, actionMessage, handlingNode));
+                                          result.Execute(new ResultExecutionContext(serviceLocator, actionMessage, handlingNode));
                                       }
                                       catch(Exception ex)
                                       {
@@ -158,7 +158,7 @@
                                   }
                               });
 
-			Interlocked.Increment(ref _runningCount);
+			Interlocked.Increment(ref runningCount);
             CurrentTask.Start(this);
             CurrentTask = null;
         }
@@ -173,7 +173,7 @@
         /// </returns>
 		public override bool ShouldTriggerBeAvailable(ActionMessage actionMessage, IInteractionNode handlingNode)
 		{
-			if (BlockInteraction && _runningCount > 1) return false;
+			if (BlockInteraction && runningCount > 1) return false;
 			return base.ShouldTriggerBeAvailable(actionMessage, handlingNode);
 		}
     }

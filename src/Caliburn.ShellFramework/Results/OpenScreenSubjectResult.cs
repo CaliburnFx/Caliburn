@@ -2,6 +2,7 @@
 {
     using System;
     using System.Linq;
+    using Core.InversionOfControl;
     using PresentationFramework.RoutedMessaging;
     using PresentationFramework.Screens;
     using PresentationFramework.ViewModels;

@@ -16,9 +16,9 @@
     /// </summary>
     public class DynamicProxyFactory : IProxyFactory
     {
-        private readonly ProxyGenerator _proxyGenerator;
+        private readonly ProxyGenerator proxyGenerator;
 
-        private readonly Dictionary<Type, IBehaviorConfiguration> _configrations =
+        private readonly Dictionary<Type, IBehaviorConfiguration> configrations =
             new Dictionary<Type, IBehaviorConfiguration>();
 
         //private ModuleScope _scope;
@@ -40,7 +40,7 @@
             //var builder = new DefaultProxyBuilder(_scope);
             //_proxyGenerator = new ProxyGenerator(builder);
 
-            _proxyGenerator = new ProxyGenerator();
+            proxyGenerator = new ProxyGenerator();
         }
 
         /// <summary>
@@ -52,7 +52,7 @@
             where K : IBehaviorConfiguration<T>, new()
             where T : IBehavior
         {
-            _configrations[typeof(T)] = new K();
+            configrations[typeof(T)] = new K();
         }
 
         /// <summary>
@@ -70,11 +70,11 @@
                 .ToArray();
 
             var interceptors = (from behavior in behaviors
-                                from intercepor in _configrations[behavior.GetType()]
+                                from intercepor in configrations[behavior.GetType()]
                                     .GetInterceptors(targetType, behavior)
                                 select intercepor).Distinct().ToArray();
 
-            var proxy = _proxyGenerator.CreateInterfaceProxyWithTarget(
+            var proxy = proxyGenerator.CreateInterfaceProxyWithTarget(
                 interfaceType,
                 interfaces,
                 target,
@@ -107,7 +107,7 @@
                 .ToArray();
 
             var interceptors = (from behavior in behaviors
-                                from intercepor in _configrations[behavior.GetType()]
+                                from intercepor in configrations[behavior.GetType()]
                                     .GetInterceptors(type, behavior)
                                 select intercepor).Distinct().ToArray();
 
@@ -116,7 +116,7 @@
             if (!interfaces.Any() && !interceptors.Any())
                 return Activator.CreateInstance(type, args);
 
-            var proxy = _proxyGenerator.CreateClassProxy(
+            var proxy = proxyGenerator.CreateClassProxy(
                 type,
                 interfaces,
                 ProxyGenerationOptions.Default,

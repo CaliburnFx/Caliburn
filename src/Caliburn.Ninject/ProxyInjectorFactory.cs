@@ -5,23 +5,23 @@
     using System.Reflection;
     using Core;
     using Core.Behaviors;
+    using Core.InversionOfControl;
     using global::Ninject;
     using global::Ninject.Injection;
-    using Microsoft.Practices.ServiceLocation;
 
     /// <summary>
     /// An <see cref="IInjectorFactory"/> which adds proxy capabilities.
     /// </summary>
     public class ProxyInjectorFactory : IInjectorFactory
     {
-        private readonly DynamicMethodInjectorFactory _inner = new DynamicMethodInjectorFactory();
+        private readonly DynamicMethodInjectorFactory inner = new DynamicMethodInjectorFactory();
 
         /// <summary>
         /// Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
         /// </summary>
         public void Dispose()
         {
-            _inner.Dispose();
+            inner.Dispose();
         }
 
         /// <summary>
@@ -30,8 +30,8 @@
         /// <value>The settings.</value>
         public INinjectSettings Settings
         {
-            get { return _inner.Settings; }
-            set { _inner.Settings = value; }
+            get { return inner.Settings; }
+            set { inner.Settings = value; }
         }
 
         /// <summary>
@@ -42,13 +42,13 @@
         public ConstructorInjector Create(ConstructorInfo constructor)
         {
             if (typeof(IProxyFactory).IsAssignableFrom(constructor.DeclaringType))
-                return _inner.Create(constructor);
+                return inner.Create(constructor);
 
-            var factory = ServiceLocator.Current.GetInstance<IProxyFactory>();
+            var factory = IoC.Get<IProxyFactory>();
 
             return constructor.DeclaringType.ShouldCreateProxy()
                        ? new ProxyHelper(factory, constructor.DeclaringType).CreateConstructor
-                       : _inner.Create(constructor);
+                       : inner.Create(constructor);
         }
 
         /// <summary>
@@ -58,7 +58,7 @@
         /// <returns></returns>
         public PropertyInjector Create(PropertyInfo property)
         {
-            return _inner.Create(property);
+            return inner.Create(property);
         }
 
         /// <summary>
@@ -68,27 +68,27 @@
         /// <returns></returns>
         public MethodInjector Create(MethodInfo method)
         {
-            return _inner.Create(method);
+            return inner.Create(method);
         }
 
         private class ProxyHelper
         {
-            private readonly IProxyFactory _factory;
-            private readonly Type _implementation;
-            private readonly IBehavior[] _behaviors;
+            private readonly IProxyFactory factory;
+            private readonly Type implementation;
+            private readonly IBehavior[] behaviors;
 
             public ProxyHelper(IProxyFactory factory, Type implementation)
             {
-                _factory = factory;
-                _implementation = implementation;
-                _behaviors = implementation.GetAttributes<IBehavior>(true).ToArray();
+                this.factory = factory;
+                this.implementation = implementation;
+                behaviors = implementation.GetAttributes<IBehavior>(true).ToArray();
             }
 
             public object CreateConstructor(params object[] args)
             {
-                return _factory.CreateProxy(
-                    _implementation,
-                    _behaviors,
+                return factory.CreateProxy(
+                    implementation,
+                    behaviors,
                     args
                     );
             }

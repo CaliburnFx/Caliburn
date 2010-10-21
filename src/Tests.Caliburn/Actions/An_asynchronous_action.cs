@@ -1,58 +1,71 @@
-﻿using System;
-using Caliburn.Core.Invocation;
-using NUnit.Framework;
-using NUnit.Framework.SyntaxHelpers;
-using Rhino.Mocks;
-
-namespace Tests.Caliburn.Actions
+﻿namespace Tests.Caliburn.Actions
 {
+    using System;
+    using global::Caliburn.Core.Invocation;
+    using global::Caliburn.Core.InversionOfControl;
     using global::Caliburn.PresentationFramework.Actions;
     using global::Caliburn.PresentationFramework.Filters;
     using global::Caliburn.PresentationFramework.RoutedMessaging;
-    using Microsoft.Practices.ServiceLocation;
-    using IInteractionNode=global::Caliburn.PresentationFramework.RoutedMessaging.IInteractionNode;
+    using NUnit.Framework;
+    using NUnit.Framework.SyntaxHelpers;
+    using Rhino.Mocks;
 
     [TestFixture]
     public class An_asynchronous_action : TestBase
     {
-        private AsynchronousAction _action;
-        private IMethod _method;
-        private IMessageBinder _messageBinder;
-        private IFilterManager _filterManager;
+        AsynchronousAction action;
+        IMethod method;
+        IMessageBinder messageBinder;
+        IFilterManager filterManager;
 
         protected override void given_the_context_of()
         {
-            _method = Mock<IMethod>();
-            _method.Stub(x => x.Info).Return(typeof(object).GetMethod("ToString")).Repeat.Any();
+            method = Mock<IMethod>();
+            method.Stub(x => x.Info).Return(typeof(object).GetMethod("ToString")).Repeat.Any();
 
-            _messageBinder = Mock<IMessageBinder>();
-            _filterManager = Stub<IFilterManager>();
+            messageBinder = Mock<IMessageBinder>();
+            filterManager = Stub<IFilterManager>();
 
-            _action = new AsynchronousAction(
+            action = new AsynchronousAction(
                 Stub<IServiceLocator>(),
-                _method,
-                _messageBinder,
-                _filterManager,
+                method,
+                messageBinder,
+                filterManager,
                 false
                 );
         }
 
         [Test]
-        public void reports_has_trigger_affects_if_has_trigger_affecting_filters()
+        public void can_determine_negative_trigger_effect()
         {
-            _filterManager.Stub(x => x.TriggerEffects).Return(new[] { Stub<IPreProcessor>()});
+            var filter1 = Mock<IPreProcessor>();
+            var filter2 = Mock<IPreProcessor>();
 
-            var result = _action.HasTriggerEffects();
+            var sourceNode = Stub<IInteractionNode>();
+            var message = new ActionMessage();
+            message.Initialize(sourceNode);
 
-            Assert.That(result, Is.True);
-        }
+            var handlingNode = Stub<IInteractionNode>();
+            var target = new object();
+            var parameters = new object[] {
+                5, "param"
+            };
 
-        [Test]
-        public void reports_not_having_trigger_affects_if_no_trigger_affecting_filters()
-        {
-            _filterManager.Stub(x => x.TriggerEffects).Return(new IPreProcessor[]{});
+            messageBinder.Expect(x => x.DetermineParameters(message, null, handlingNode, null))
+                .Return(parameters);
 
-            var result = _action.HasTriggerEffects();
+            filterManager.Stub(x => x.TriggerEffects)
+                .Return(new[] {
+                    filter1, filter2
+                }).Repeat.Any();
+
+            filter1.Expect(x => x.Execute(message, handlingNode, parameters))
+                .Return(false);
+
+            filter2.Expect(x => x.Execute(message, handlingNode, parameters))
+                .Return(true);
+
+            var result = action.ShouldTriggerBeAvailable(message, handlingNode);
 
             Assert.That(result, Is.False);
         }
@@ -68,50 +81,79 @@ namespace Tests.Caliburn.Actions
             message.Initialize(sourceNode);
 
             var target = new object();
-            var parameters = new object[] { 5, "param" };
+            var parameters = new object[] {
+                5, "param"
+            };
 
-            _messageBinder.Expect(x => x.DetermineParameters(message, null, handlingNode, null))
+            messageBinder.Expect(x => x.DetermineParameters(message, null, handlingNode, null))
                 .Return(parameters);
 
-            _filterManager.Stub(x => x.TriggerEffects)
-                .Return(new[] { filter }).Repeat.Any();
+            filterManager.Stub(x => x.TriggerEffects)
+                .Return(new[] {
+                    filter
+                }).Repeat.Any();
 
             filter.Expect(x => x.Execute(message, handlingNode, parameters))
                 .IgnoreArguments()
                 .Return(true);
 
-            var result = _action.ShouldTriggerBeAvailable(message, handlingNode);
+            var result = action.ShouldTriggerBeAvailable(message, handlingNode);
 
             Assert.That(result, Is.True);
         }
 
         [Test]
-        public void can_determine_negative_trigger_effect()
+        public void can_execute()
         {
-            var filter1 = Mock<IPreProcessor>();
-            var filter2 = Mock<IPreProcessor>();
-
-            var sourceNode = Stub<IInteractionNode>();
-            var message = new ActionMessage();
-            message.Initialize(sourceNode);
-
+            var soureceNode = Stub<IInteractionNode>();
             var handlingNode = Stub<IInteractionNode>();
-            var target = new object();
-            var parameters = new object[] { 5, "param" };
 
-            _messageBinder.Expect(x => x.DetermineParameters(message, null, handlingNode, null))
+            var message = new ActionMessage();
+            message.Initialize(soureceNode);
+
+            var target = new object();
+            var parameters = new object[] {
+                5, "param"
+            };
+            var task = MockRepository.GenerateMock<IBackgroundTask>();
+            var context = EventArgs.Empty;
+            var handler = Stub<IRoutedMessageHandler>();
+            handler.Stub(x => x.Unwrap()).Return(target);
+            handlingNode.Stub(x => x.MessageHandler).Return(handler);
+
+            messageBinder.Expect(x => x.DetermineParameters(message, null, handlingNode, context))
+                .IgnoreArguments()
                 .Return(parameters);
 
-            _filterManager.Stub(x => x.TriggerEffects)
-                .Return(new[] { filter1, filter2 }).Repeat.Any();
+            filterManager.Stub(x => x.PreProcessors)
+                .Return(new IPreProcessor[] {});
 
-            filter1.Expect(x => x.Execute(message, handlingNode, parameters))
-                .Return(false);
+            method.Stub(x => x.CreateBackgroundTask(target, parameters))
+                .Return(task);
 
-            filter2.Expect(x => x.Execute(message, handlingNode, parameters))
-                .Return(true);
+            task.Expect(x => x.Start(null));
 
-            var result = _action.ShouldTriggerBeAvailable(message, handlingNode);
+            action.Execute(message, handlingNode, context);
+        }
+
+        [Test]
+        public void reports_has_trigger_affects_if_has_trigger_affecting_filters()
+        {
+            filterManager.Stub(x => x.TriggerEffects).Return(new[] {
+                Stub<IPreProcessor>()
+            });
+
+            var result = action.HasTriggerEffects();
+
+            Assert.That(result, Is.True);
+        }
+
+        [Test]
+        public void reports_not_having_trigger_affects_if_no_trigger_affecting_filters()
+        {
+            filterManager.Stub(x => x.TriggerEffects).Return(new IPreProcessor[] {});
+
+            var result = action.HasTriggerEffects();
 
             Assert.That(result, Is.False);
         }
@@ -127,17 +169,21 @@ namespace Tests.Caliburn.Actions
             message.Initialize(sourceNode);
 
             var handlingNode = Stub<IInteractionNode>();
-            var parameters = new object[] { 5, "param" };
+            var parameters = new object[] {
+                5, "param"
+            };
             var context = EventArgs.Empty;
             var handler = Stub<IRoutedMessageHandler>();
             handler.Stub(x => x.Unwrap()).Return(new object());
             handlingNode.Stub(x => x.MessageHandler).Return(handler);
 
-            _messageBinder.Expect(x => x.DetermineParameters(message, null, handlingNode, context))
+            messageBinder.Expect(x => x.DetermineParameters(message, null, handlingNode, context))
                 .Return(parameters);
 
-            _filterManager.Stub(x => x.PreProcessors)
-                .Return(new[] { filter1, filter2 });
+            filterManager.Stub(x => x.PreProcessors)
+                .Return(new[] {
+                    filter1, filter2
+                });
 
             filter1.Expect(x => x.Execute(message, handlingNode, parameters))
                 .Return(false);
@@ -145,39 +191,7 @@ namespace Tests.Caliburn.Actions
             filter2.Expect(x => x.Execute(message, handlingNode, parameters))
                 .Return(true);
 
-            _action.Execute(message, handlingNode, context);
-        }
-
-        [Test]
-        public void can_execute()
-        {
-            var soureceNode = Stub<IInteractionNode>();
-            var handlingNode = Stub<IInteractionNode>();
-
-            var message = new ActionMessage();
-            message.Initialize(soureceNode);
-            
-            var target = new object();
-            var parameters = new object[] { 5, "param" };
-            var task = MockRepository.GenerateMock<IBackgroundTask>();
-            var context = EventArgs.Empty;
-            var handler = Stub<IRoutedMessageHandler>();
-            handler.Stub(x => x.Unwrap()).Return(target);
-            handlingNode.Stub(x => x.MessageHandler).Return(handler);
-
-            _messageBinder.Expect(x => x.DetermineParameters(message, null, handlingNode, context))
-                .IgnoreArguments()
-                .Return(parameters);
-
-            _filterManager.Stub(x => x.PreProcessors)
-                .Return(new IPreProcessor[] { });
-
-            _method.Stub(x => x.CreateBackgroundTask(target, parameters))
-                .Return(task);
-
-            task.Expect(x => x.Start(null));
-
-            _action.Execute(message, handlingNode, context);
+            action.Execute(message, handlingNode, context);
         }
     }
 }

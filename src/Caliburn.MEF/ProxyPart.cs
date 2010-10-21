@@ -7,8 +7,7 @@
 	using System.Linq;
 	using Core;
 	using Core.Behaviors;
-	using Core.IoC;
-	using Microsoft.Practices.ServiceLocation;
+	using Core.InversionOfControl;
 	using System.Reflection;
 
 	/// <summary>
@@ -16,11 +15,11 @@
 	/// </summary>
 	public class ProxyPart : ComposablePart
 	{
-		private readonly Type _implementation;
-		readonly IComponentRegistration _registration;
-		private readonly ComposablePart _innerPart;
-		private object _instance;
-		private PropertyInfo[] _propertiesToInject;
+		private readonly Type implementation;
+		readonly IComponentRegistration registration;
+		private readonly ComposablePart innerPart;
+		private object instance;
+		private PropertyInfo[] propertiesToInject;
 
 		/// <summary>
 		/// Initializes a new instance of the <see cref="ProxyPart"/> class.
@@ -29,8 +28,8 @@
 		/// <param name="innerPart">The inner part.</param>
 		public ProxyPart(Type implementation, ComposablePart innerPart)
 		{
-			_implementation = implementation;
-			_innerPart = innerPart;
+			this.implementation = implementation;
+			this.innerPart = innerPart;
 			DeterminePropertiesToInject();
 		}
 
@@ -41,16 +40,16 @@
 		/// <param name="innerPart">The inner part.</param>
 		public ProxyPart(ComponentRegistrationBase registration, ComposablePart innerPart)
 		{
-			_implementation = GetImplementation(registration);
-			_registration = registration;
-			_innerPart = innerPart;
+			implementation = GetImplementation(registration);
+			this.registration = registration;
+			this.innerPart = innerPart;
 			DeterminePropertiesToInject();
 		}
 
 		private void DeterminePropertiesToInject()
 		{
-			var componentPart = _innerPart as ComponentPart;
-			_propertiesToInject = (componentPart != null)
+			var componentPart = innerPart as ComponentPart;
+			propertiesToInject = (componentPart != null)
 				? componentPart.PropertiesToInject
 				: new PropertyInfo[] { };
 		}
@@ -94,7 +93,7 @@
 		/// </remarks>
 		public override IEnumerable<ExportDefinition> ExportDefinitions
 		{
-			get { return _innerPart.ExportDefinitions; }
+			get { return innerPart.ExportDefinitions; }
 		}
 
 		/// <summary>
@@ -125,7 +124,7 @@
 		/// </remarks>
 		public override IEnumerable<ImportDefinition> ImportDefinitions
 		{
-			get { return _innerPart.ImportDefinitions; }
+			get { return innerPart.ImportDefinitions; }
 		}
 
 		/// <summary>
@@ -156,8 +155,8 @@
 		/// </exception>
 		public override object GetExportedValue(ExportDefinition definition)
 		{
-			if (_instance != null)
-				return _instance;
+			if (instance != null)
+				return instance;
 
 			object creationPolicy;
 			if (definition.Metadata.TryGetValue("System.ComponentModel.Composition.CreationPolicy", out creationPolicy))
@@ -166,16 +165,16 @@
 
 				if (actual == CreationPolicy.Shared)
 				{
-					_instance = CreateInstance();
-					return _instance;
+					instance = CreateInstance();
+					return instance;
 				}
 			}
 
-			var isSingleton = (_registration as Singleton) != null;
+			var isSingleton = (registration as Singleton) != null;
 			if (isSingleton)
 			{
-				_instance = CreateInstance();
-				return _instance;
+				instance = CreateInstance();
+				return instance;
 			}
 			return CreateInstance();
 		}
@@ -225,25 +224,25 @@
 		/// </exception>
 		public override void SetImport(ImportDefinition definition, IEnumerable<Export> exports)
 		{
-			_innerPart.SetImport(definition, exports);
+			innerPart.SetImport(definition, exports);
 		}
 
 		private object CreateInstance()
 		{
-			var factory = ServiceLocator.Current.GetInstance<IProxyFactory>();
+			var factory = IoC.Get<IProxyFactory>();
 
 			var instance = factory.CreateProxy(
-				_implementation,
-				_implementation.GetAttributes<IBehavior>(true).ToArray(),
+				implementation,
+				implementation.GetAttributes<IBehavior>(true).ToArray(),
 				DetermineConstructorArgs()
 				);
 
 
 
-			foreach (var property in _propertiesToInject)
+			foreach (var property in propertiesToInject)
 			{
 				property.SetValue(instance,
-					ServiceLocator.Current.GetInstance(property.PropertyType),
+					IoC.GetInstance(property.PropertyType, null),
 					new object[] { }
 					);
 			}
@@ -254,19 +253,17 @@
 		private object[] DetermineConstructorArgs()
 		{
 			var args = new List<object>();
-			var constructorInfo = _implementation.SelectEligibleConstructor();
+			var constructorInfo = implementation.SelectEligibleConstructor();
 
 
 			if (constructorInfo != null)
 			{
 				foreach (var info in constructorInfo.GetParameters())
 				{
-					var arg = ServiceLocator.Current.GetInstance(info.ParameterType);
+					var arg = IoC.GetInstance(info.ParameterType, null);
 					args.Add(arg);
 				}
 			}
-
-
 
 			return args.ToArray();
 		}

@@ -3,8 +3,8 @@ namespace Caliburn.PresentationFramework.Views
     using System;
     using System.Linq;
     using System.Windows;
+    using Core.InversionOfControl;
     using Core.Logging;
-    using Microsoft.Practices.ServiceLocation;
 
     /// <summary>
     /// An implementation of <see cref="IViewLocator"/> that provides a basic lookup strategy for an attributed model.
@@ -64,7 +64,7 @@ namespace Caliburn.PresentationFramework.Views
         /// <returns>The view.</returns>
         public DependencyObject Locate(Type modelType, DependencyObject displayLocation, object context)
         {
-            var instances = ServiceLocator.Current.GetAllInstances(key);
+            var instances = IoC.GetAllInstances(key);
 
             var view = instances.Count() > 0
                 ? instances.First()

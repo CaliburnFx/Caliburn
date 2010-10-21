@@ -5,9 +5,8 @@
     using System.Linq;
     using System.Linq.Expressions;
     using System.Reflection;
-    using IoC;
+    using InversionOfControl;
     using Logging;
-    using Microsoft.Practices.ServiceLocation;
 
     /// <summary>
     /// A module which uses conventions to register its requred components.
@@ -18,7 +17,7 @@
         where TModule : ConventionalModule<TModule, TServicesDescription>, new()
     {
         private static readonly ILog Log = LogManager.GetLog(typeof(ConventionalModule<TModule, TServicesDescription>));
-        private readonly Dictionary<Type, IServiceConfiguration> _services = new Dictionary<Type, IServiceConfiguration>();
+        private readonly Dictionary<Type, IServiceConfiguration> services = new Dictionary<Type, IServiceConfiguration>();
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ConventionalModule&lt;TModule, TServicesDescription&gt;"/> class.
@@ -59,7 +58,7 @@
                 serviceType
                 );
 
-            _services[serviceType] = configuration;
+            services[serviceType] = configuration;
 
             return configuration;
         }
@@ -71,7 +70,7 @@
         public override IEnumerable<IComponentRegistration> GetComponents()
         {
             Log.Info("Getting components for {0}.", this);
-            return _services.Values.Select(x => x.CreateRegistration());
+            return services.Values.Select(x => x.CreateRegistration());
         }
 
         /// <summary>
@@ -81,7 +80,7 @@
         public override void Initialize(IServiceLocator locator)
         {
             Log.Info("Initializing {0}.", this);
-            _services.Values.Apply(x => x.ConfigureService(locator));
+            services.Values.Apply(x => x.ConfigureService(locator));
         }
 
         private void SetupDefaultServices()
@@ -103,7 +102,7 @@
                     implementation
                     );
 
-                _services[service] = (IServiceConfiguration)Activator.CreateInstance(
+                services[service] = (IServiceConfiguration)Activator.CreateInstance(
                     closedConfigurationType,
                     new object[] { this, service }
                     );

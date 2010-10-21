@@ -11,7 +11,7 @@ namespace Tests.Caliburn.Adapters.Integration
 	[TestFixture]
 	public class The_Ninject_container : ContainerIntegrationTestBase
 	{
-		protected override global::Caliburn.Core.IoC.IContainer CreateContainerAdapter()
+		protected override global::Caliburn.Core.InversionOfControl.IContainer CreateContainerAdapter()
 		{
 			var kernel = new Ninject.StandardKernel();
 			return new NinjectAdapter(kernel);

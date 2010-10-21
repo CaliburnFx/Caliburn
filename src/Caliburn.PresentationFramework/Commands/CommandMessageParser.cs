@@ -4,8 +4,8 @@
     using System.Windows;
     using System.Windows.Data;
     using Conventions;
+    using Core.InversionOfControl;
     using Core.Logging;
-    using Microsoft.Practices.ServiceLocation;
     using RoutedMessaging;
     using RoutedMessaging.Parsers;
 
@@ -16,7 +16,7 @@
     {
         private static readonly ILog Log = LogManager.GetLog(typeof(CommandMessageParser));
 
-        private readonly CommandSource _commandSource;
+        private readonly CommandSource commandSource;
 
 #if !SILVERLIGHT
 
@@ -39,7 +39,7 @@
         public CommandMessageParser(IConventionManager conventionManager, IMessageBinder messageBinder, UpdateSourceTrigger defaultTrigger, CommandSource commandSource)
             : base(conventionManager, messageBinder, defaultTrigger)
         {
-            _commandSource = commandSource;
+            this.commandSource = commandSource;
         }
 
 #else
@@ -51,7 +51,7 @@
         public CommandMessageParser(IConventionManager conventionManager, IMessageBinder messageBinder, CommandSource commandSource)
             : base(conventionManager, messageBinder)
         {
-            _commandSource = commandSource;
+            commandSource = commandSource;
         }
 
 #endif
@@ -80,7 +80,7 @@
         /// <param name="coreOfMessage">The core representation of the message.</param>
         protected override void SetCore(CommandMessage message, DependencyObject target, string coreOfMessage)
         {
-            switch(_commandSource)
+            switch(commandSource)
             {
                 case CommandSource.Resource:
                     target.OnLoad(delegate{
@@ -88,7 +88,7 @@
                     });
                     break;
                 case CommandSource.Container:
-                    message.Command = ServiceLocator.Current.GetInstance(null, coreOfMessage);
+                    message.Command = IoC.GetInstance(null, coreOfMessage);
                     break;
                 case CommandSource.Bound:
                     var binding = new Binding(coreOfMessage);
@@ -107,7 +107,7 @@
 #endif
                     break;
                 default:
-                    var ex = new NotSupportedException(_commandSource + " is not a supported command source.");
+                    var ex = new NotSupportedException(commandSource + " is not a supported command source.");
                     Log.Error(ex);
                     throw ex;
             }

@@ -1,21 +1,19 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using Microsoft.Practices.ServiceLocation;
-using NUnit.Framework;
-using Tests.Caliburn.Adapters.Components;
-
-namespace Tests.Caliburn.Adapters.ServiceLocation
+﻿namespace Tests.Caliburn.Adapters.ServiceLocation
 {
-    using global::Caliburn.Core.IoC;
+    using System.Collections;
+    using System.Collections.Generic;
+    using Components;
+    using global::Caliburn.Core.InversionOfControl;
+    using NUnit.Framework;
     using NUnit.Framework.SyntaxHelpers;
 
     public abstract class ServiceLocatorTests
     {
-        protected readonly IServiceLocator locator;
+        protected readonly IServiceLocator Locator;
 
         protected ServiceLocatorTests()
         {
-            locator = CreateServiceLocator();
+            Locator = CreateServiceLocator();
         }
 
         protected abstract IServiceLocator CreateServiceLocator();
@@ -23,42 +21,42 @@ namespace Tests.Caliburn.Adapters.ServiceLocation
         [Test]
         public void GetInstance()
         {
-            ILogger instance = locator.GetInstance<ILogger>();
+            var instance = Locator.GetInstance<ILogger>();
             Assert.IsNotNull(instance);
         }
 
         [Test]
-        [ExpectedException(typeof(ActivationException))]
-        public void AskingForInvalidComponentShouldRaiseActivationException()
+        public void AskingForInvalidComponentShouldReturnNull()
         {
-            locator.GetInstance<IDictionary>();
+            var result = Locator.GetInstance<IDictionary>();
+            Assert.IsNull(result);
         }
 
         [Test]
         public void GetNamedInstance()
         {
-            ILogger instance = locator.GetInstance<ILogger>(typeof(AdvancedLogger).FullName);
+            var instance = Locator.GetInstance<ILogger>(typeof(AdvancedLogger).FullName);
             Assert.AreSame(instance.GetType(), typeof(AdvancedLogger));
         }
 
         [Test]
         public void GetNamedInstance2()
         {
-            ILogger instance = locator.GetInstance<ILogger>(typeof(SimpleLogger).FullName);
+            var instance = Locator.GetInstance<ILogger>(typeof(SimpleLogger).FullName);
             Assert.AreSame(instance.GetType(), typeof(SimpleLogger));
         }
 
         [Test]
-        [ExpectedException(typeof(ActivationException))]
         public virtual void GetUnknownInstance2()
         {
-            locator.GetInstance<ILogger>("test");
+            var result = Locator.GetInstance<ILogger>("test");
+            Assert.IsNull(result);
         }
 
         [Test]
         public virtual void GetAllInstances()
         {
-            IEnumerable<ILogger> instances = locator.GetAllInstances<ILogger>();
+            var instances = Locator.GetAllInstances<ILogger>();
             IList<ILogger> list = new List<ILogger>(instances);
             Assert.AreEqual(2, list.Count);
         }
@@ -66,7 +64,7 @@ namespace Tests.Caliburn.Adapters.ServiceLocation
         [Test]
         public void GetlAllInstance_ForUnknownType_ReturnEmptyEnumerable()
         {
-            IEnumerable<System.Collections.IDictionary> instances = locator.GetAllInstances<IDictionary>();
+            var instances = Locator.GetAllInstances<IDictionary>();
             IList<IDictionary> list = new List<IDictionary>(instances);
             Assert.AreEqual(0, list.Count);
         }
@@ -75,16 +73,16 @@ namespace Tests.Caliburn.Adapters.ServiceLocation
         public void GenericOverload_GetInstance()
         {
             Assert.AreEqual(
-                locator.GetInstance<ILogger>().GetType(),
-                locator.GetInstance(typeof(ILogger), null).GetType());
+                Locator.GetInstance<ILogger>().GetType(),
+                Locator.GetInstance(typeof(ILogger), null).GetType());
         }
 
         [Test]
         public void GenericOverload_GetInstance_WithName()
         {
             Assert.AreEqual(
-                locator.GetInstance<ILogger>(typeof(AdvancedLogger).FullName).GetType(),
-                locator.GetInstance(typeof(ILogger), typeof(AdvancedLogger).FullName).GetType()
+                Locator.GetInstance<ILogger>(typeof(AdvancedLogger).FullName).GetType(),
+                Locator.GetInstance(typeof(ILogger), typeof(AdvancedLogger).FullName).GetType()
                 );
         }
 
@@ -92,17 +90,17 @@ namespace Tests.Caliburn.Adapters.ServiceLocation
         public void Overload_GetInstance_NoName_And_NullName()
         {
             Assert.AreEqual(
-                locator.GetInstance<ILogger>().GetType(),
-                locator.GetInstance<ILogger>(null).GetType());
+                Locator.GetInstance<ILogger>().GetType(),
+                Locator.GetInstance<ILogger>(null).GetType());
         }
 
         [Test]
         public virtual void GenericOverload_GetAllInstances()
         {
-            List<ILogger> genericLoggers = new List<ILogger>(locator.GetAllInstances<ILogger>());
-            List<object> plainLoggers = new List<object>(locator.GetAllInstances(typeof(ILogger)));
+            var genericLoggers = new List<ILogger>(Locator.GetAllInstances<ILogger>());
+            var plainLoggers = new List<object>(Locator.GetAllInstances(typeof(ILogger)));
             Assert.AreEqual(genericLoggers.Count, plainLoggers.Count);
-            for (int i = 0; i < genericLoggers.Count; i++)
+            for(var i = 0; i < genericLoggers.Count; i++)
             {
                 Assert.AreEqual(
                     genericLoggers[i].GetType(),
@@ -113,22 +111,22 @@ namespace Tests.Caliburn.Adapters.ServiceLocation
         [Test]
         public void can_resolve_IRegistry()
         {
-            var sl = locator.GetInstance<IRegistry>();
-            Assert.That(sl, Is.EqualTo(locator));
+            var sl = Locator.GetInstance<IRegistry>();
+            Assert.That(sl, Is.EqualTo(Locator));
         }
 
         [Test]
         public void can_resolve_IServiceLocator()
         {
-            var sl = locator.GetInstance<IServiceLocator>();
-            Assert.That(sl, Is.EqualTo(locator));
+            var sl = Locator.GetInstance<IServiceLocator>();
+            Assert.That(sl, Is.EqualTo(Locator));
         }
 
         [Test]
         public void can_resolve_IContainer()
         {
-            var sl = locator.GetInstance<IContainer>();
-            Assert.That(sl, Is.EqualTo(locator));
+            var sl = Locator.GetInstance<IContainer>();
+            Assert.That(sl, Is.EqualTo(Locator));
         }
     }
 }
