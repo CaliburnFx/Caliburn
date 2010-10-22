@@ -71,15 +71,13 @@
     <Compile Include="Actions\IActionLocator.cs" />
     <Compile Include="Actions\OverloadedAction.cs" />
     <Compile Include="Actions\SynchronousAction.cs" />
-    <Compile Include="ApplicationModel\CaliburnApplication.silverlight.cs" />
-    <Compile Include="ApplicationModel\CaliburnApplication.wpf.cs" />
+    <Compile Include="ApplicationModel\Bootstrapper.cs" />
     <Compile Include="ApplicationModel\DeepLinkStateManager.silverlight.cs" />
     <Compile Include="ApplicationModel\DefaultInputManager.conditional.cs" />
     <Compile Include="ApplicationModel\DefaultInputManager.cs" />
     <Compile Include="ApplicationModel\DefaultWindowManager.silverlight.cs" />
     <Compile Include="ApplicationModel\IInputManager.cs" />
     <Compile Include="ApplicationModel\IShortcut.cs" />
-    <Compile Include="ApplicationModel\IWindowManager.silverlight.cs" />
     <Compile Include="Behaviors\DependencyMode.cs" />
     <Compile Include="Behaviors\DoNotNotifyAttribute.cs" />
     <Compile Include="Behaviors\NotifyPropertyChangedAttribute.cs" />
@@ -131,7 +129,7 @@
     <Compile Include="ViewModels\DefaultViewModelFactory.cs" />
     <Compile Include="Views\NotFoundView.cs" />
     <Compile Include="ViewModels\IViewModelBinder.cs" />
-    <Compile Include="ApplicationModel\IWindowManager.wpf.cs" />
+    <Compile Include="ApplicationModel\IWindowManager.cs" />
     <Compile Include="ApplicationModel\IsolatedStorageStateManager.cs" />
     <Compile Include="ApplicationModel\IStateManager.cs" />
     <Compile Include="Views\IViewLocator.cs" />
