@@ -14,11 +14,11 @@ namespace Caliburn.PresentationFramework.ApplicationModel
     using Conventions;
 
     /// <summary>
-    /// An implementation of <see cref="IWindowManager"/>.
+    /// A service that manages windows.
     /// </summary>
     public class DefaultWindowManager : IWindowManager
     {
-        private static readonly DependencyProperty IsElementGeneratedProperty =
+        static readonly DependencyProperty IsElementGeneratedProperty =
             DependencyProperty.RegisterAttached(
                 "IsElementGenerated",
                 typeof(bool),
@@ -27,13 +27,18 @@ namespace Caliburn.PresentationFramework.ApplicationModel
                 );
 
         /// <summary>
-        /// Gets the significant view.
+        /// Used to retrieve the root, non-framework-created view.
         /// </summary>
-        /// <param name="view">The view.</param>
-        /// <returns>The non-generated view that was wrapped by Caliburn.</returns>
+        /// <param name="view">The view to search.</param>
+        /// <returns>The root element that was not created by the framework.</returns>
+        /// <remarks>In certain instances the WindowManager creates UI elements in order to display windows.
+        /// For example, if you ask the window manager to show a UserControl as a dialog, it creates a window to host the UserControl in.
+        /// The WindowManager marks that element as a framework-created element so that it can determine what it created vs. what was intended by the developer.
+        /// Calling GetSignificantView allows the framework to discover what the original element was. 
+        /// </remarks>
         public static DependencyObject GetSignificantView(DependencyObject view)
         {
-            if ((bool)view.GetValue(IsElementGeneratedProperty))
+            if((bool)view.GetValue(IsElementGeneratedProperty))
                 return (DependencyObject)((ContentControl)view).Content;
 
             return view;
@@ -41,7 +46,6 @@ namespace Caliburn.PresentationFramework.ApplicationModel
 
         private readonly IViewLocator viewLocator;
         private readonly IViewModelBinder binder;
-        private bool actuallyClosing;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="DefaultWindowManager"/> class.
@@ -55,24 +59,11 @@ namespace Caliburn.PresentationFramework.ApplicationModel
         }
 
         /// <summary>
-        /// Shows the dialog.
+        /// Shows a modal dialog for the specified model.
         /// </summary>
         /// <param name="rootModel">The root model.</param>
         /// <param name="context">The context.</param>
-        /// <returns></returns>
-        public virtual void ShowDialog(object rootModel, object context)
-        {
-            var window = CreateWindow(rootModel, context);
-            window.Show();
-        }
-
-        /// <summary>
-        /// Creates the window.
-        /// </summary>
-        /// <param name="rootModel">The root model.</param>
-        /// <param name="context">The context.</param>
-        /// <returns></returns>
-        protected virtual ChildWindow CreateWindow(object rootModel, object context)
+        public void ShowDialog(object rootModel, object context)
         {
             var view = EnsureWindow(rootModel, viewLocator.LocateForModel(rootModel, null, context));
             binder.Bind(rootModel, view, context);
@@ -84,54 +75,16 @@ namespace Caliburn.PresentationFramework.ApplicationModel
                 view.SetBinding(ChildWindow.TitleProperty, binding);
             }
 
-            var activatable = rootModel as IActivate;
-            if (activatable != null)
-                activatable.Activate();
+            new WindowConductor(rootModel, view);
 
-            var deactivatable = rootModel as IDeactivate;
-            if (deactivatable != null)
-            {
-                bool deactivatingFromView = false;
-                bool deactivateFromVM = false;
-
-                view.Closed += (s, e) => {
-                    if(deactivateFromVM)
-                        return;
-
-                    deactivatingFromView = true;
-                    deactivatable.Deactivate(true);
-                    deactivatingFromView = false;
-                };
-
-                deactivatable.Deactivated += (s, e) => {
-                    if(e.WasClosed && !deactivatingFromView) {
-                        deactivateFromVM = true;
-                        actuallyClosing = true;
-                        view.Close();
-                        actuallyClosing = false;
-                        deactivateFromVM = false;
-                    }
-                };
-            }
-
-            var guard = rootModel as IGuardClose;
-            if (guard != null)
-                view.Closing += (s, e) => OnShutdownAttempted(guard, view, e);
-
-            return view;
+            view.Show();
         }
 
-        /// <summary>
-        /// Ensures the that the view is a window or provides one.
-        /// </summary>
-        /// <param name="model">The model.</param>
-        /// <param name="view">The view.</param>
-        /// <returns></returns>
-        protected virtual ChildWindow EnsureWindow(object model, object view)
+        static ChildWindow EnsureWindow(object model, object view)
         {
             var window = view as ChildWindow;
 
-            if (window == null)
+            if(window == null)
             {
                 window = new ChildWindow { Content = view };
                 window.SetValue(IsElementGeneratedProperty, true);
@@ -140,37 +93,85 @@ namespace Caliburn.PresentationFramework.ApplicationModel
             return window;
         }
 
-        /// <summary>
-        /// Called when shutdown attempted.
-        /// </summary>
-        /// <param name="guard">The guard model.</param>
-        /// <param name="view">The view.</param>
-        /// <param name="e">The <see cref="System.ComponentModel.CancelEventArgs"/> instance containing the event data.</param>
-        protected virtual void OnShutdownAttempted(IGuardClose guard, ChildWindow view, CancelEventArgs e)
-        {
-            if (actuallyClosing)
-            {
-                actuallyClosing = false;
-                return;
+        class WindowConductor {
+            bool deactivatingFromView;
+            bool deactivateFromViewModel;
+            bool actuallyClosing;
+            readonly ChildWindow view;
+            readonly object model;
+
+            public WindowConductor(object model, ChildWindow view) {
+                this.model = model;
+                this.view = view;
+
+                var activatable = model as IActivate;
+                if (activatable != null)
+                    activatable.Activate();
+
+                var deactivatable = model as IDeactivate;
+                if (deactivatable != null) {
+                    view.Closed += Closed;
+                    deactivatable.Deactivated += Deactivated;
+                }
+
+                var guard = model as IGuardClose;
+                if (guard != null)
+                    view.Closing += Closing;
             }
 
-            bool runningAsync = false, shouldEnd = false;
+            void Closed(object sender, EventArgs e) {
+                view.Closed -= Closed;
+                view.Closing -= Closing;
 
-            guard.CanClose(canClose =>{
-                if(runningAsync && canClose)
+                if (deactivateFromViewModel)
+                    return;
+
+                var deactivatable = (IDeactivate)model;
+
+                deactivatingFromView = true;
+                deactivatable.Deactivate(true);
+                deactivatingFromView = false;
+            }
+
+            void Deactivated(object sender, DeactivationEventArgs e) {
+                ((IDeactivate)model).Deactivated -= Deactivated;
+
+                if(!e.WasClosed || deactivatingFromView)
+                    return;
+
+                deactivateFromViewModel = true;
+                actuallyClosing = true;
+                view.Close();
+                actuallyClosing = false;
+                deactivateFromViewModel = false;
+            }
+
+            void Closing(object sender, CancelEventArgs e) {
+                var guard = (IGuardClose)model;
+
+                if (actuallyClosing)
                 {
-                    actuallyClosing = true;
-                    view.Close();
+                    actuallyClosing = false;
+                    return;
                 }
-                else e.Cancel = !canClose;
 
-                shouldEnd = true;
-            });
+                bool runningAsync = false, shouldEnd = false;
 
-            if (shouldEnd)
-                return;
+                guard.CanClose(canClose => {
+                    if(runningAsync && canClose) {
+                        actuallyClosing = true;
+                        view.Close();
+                    }
+                    else e.Cancel = !canClose;
 
-            runningAsync = e.Cancel = true;
+                    shouldEnd = true;
+                });
+
+                if (shouldEnd)
+                    return;
+
+                runningAsync = e.Cancel = true;
+            }
         }
     }
 }
