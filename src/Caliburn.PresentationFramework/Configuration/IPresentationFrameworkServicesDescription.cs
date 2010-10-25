@@ -88,8 +88,16 @@ namespace Caliburn.PresentationFramework.Configuration
         /// <summary>
         /// Customizes the input manager used by Caliburn.
         /// </summary>
-        /// <typeparam name="T"></typeparam>
+        /// <typeparam name="T">The input manager type.</typeparam>
         /// <returns></returns>
         IConfiguredRegistration<Singleton, T> InputManager<T>() where T : IInputManager;
+
+
+        /// <summary>
+        /// Customizes the event aggregator used by Caliburn.
+        /// </summary>
+        /// <typeparam name="T">The event aggregator type.</typeparam>
+        /// <returns></returns>
+        IConfiguredRegistration<Singleton, T> EventAggregator<T>() where T : IEventAggregator;
     }
 }

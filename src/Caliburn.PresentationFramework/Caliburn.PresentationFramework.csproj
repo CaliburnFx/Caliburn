@@ -73,9 +73,12 @@
     <Compile Include="Actions\SynchronousAction.cs" />
     <Compile Include="ApplicationModel\Bootstrapper.cs" />
     <Compile Include="ApplicationModel\DeepLinkStateManager.silverlight.cs" />
+    <Compile Include="ApplicationModel\DefaultEventAggregator.cs" />
     <Compile Include="ApplicationModel\DefaultInputManager.conditional.cs" />
     <Compile Include="ApplicationModel\DefaultInputManager.cs" />
     <Compile Include="ApplicationModel\DefaultWindowManager.silverlight.cs" />
+    <Compile Include="ApplicationModel\IEventAggregator.cs" />
+    <Compile Include="ApplicationModel\IHandle.cs" />
     <Compile Include="ApplicationModel\IInputManager.cs" />
     <Compile Include="ApplicationModel\IShortcut.cs" />
     <Compile Include="Behaviors\DependencyMode.cs" />
