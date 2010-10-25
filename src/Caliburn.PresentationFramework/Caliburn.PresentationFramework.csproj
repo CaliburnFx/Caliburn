@@ -97,6 +97,7 @@
     <Compile Include="Invocation\IDispatcher.cs" />
     <Compile Include="Invocation\IDispatcherOperation.cs" />
     <Compile Include="PropertyChangedBase.cs" />
+    <Compile Include="RoutedMessaging\Coroutine.cs" />
     <Compile Include="RoutedMessaging\MessagingExtensions.cs" />
     <Compile Include="RoutedMessaging\ResultCompletionEventArgs.cs" />
     <Compile Include="RoutedMessaging\ResultExecutionContext.cs" />
@@ -161,7 +162,6 @@
     <Compile Include="Conventions\IConventionManager.cs" />
     <Compile Include="Views\IViewApplicable.cs" />
     <Compile Include="Conventions\ItemsControlBindingConvention.cs" />
-    <Compile Include="RoutedMessaging\EnumerableResults.cs" />
     <Compile Include="Filters\DependencyObserver.cs" />
     <Compile Include="Filters\PropertyPathMonitor.cs" />
     <Compile Include="Invocation\DispatcherOperationProxy.cs" />

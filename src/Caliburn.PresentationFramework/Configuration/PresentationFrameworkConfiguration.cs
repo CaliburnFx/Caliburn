@@ -128,7 +128,7 @@
                 );
 
             Bind.Initialize(viewModelBinder);
-            EnumerableResults.Initialize(serviceLocator);
+            Coroutine.Initialize(serviceLocator);
 
             if (!registerItemsWithSubjects)
                 return;
