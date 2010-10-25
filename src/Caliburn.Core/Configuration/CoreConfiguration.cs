@@ -8,7 +8,7 @@
     /// </summary>
     public class CoreConfiguration : ConventionalModule<CoreConfiguration, ICoreServicesDescription>
     {
-        private readonly List<Action> _afterStart = new List<Action>();
+        private readonly List<Action> afterStart = new List<Action>();
 
         /// <summary>
         /// Adds actions to execute immediately following the framework startup.
@@ -17,14 +17,14 @@
         /// <returns></returns>
         public CoreConfiguration AfterStart(Action doThis)
         {
-            _afterStart.Add(doThis);
+            afterStart.Add(doThis);
             return this;
         }
 
         internal void ExecuteAfterStart()
         {
-            _afterStart.Apply(x => x());
-            _afterStart.Clear();
+            afterStart.Apply(x => x());
+            afterStart.Clear();
         }
     }
 }

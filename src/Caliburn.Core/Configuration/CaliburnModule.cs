@@ -7,7 +7,7 @@
     public class CaliburnModule<TModule> : ModuleBase, IConfigurationBuilder
         where TModule : CaliburnModule<TModule>, new()
     {
-        private static readonly TModule _instance = new TModule();
+        private static readonly TModule instance = new TModule();
 
         /// <summary>
         /// Gets the singleton instance of this module.
@@ -15,7 +15,7 @@
         /// <value>The instance.</value>
         public static TModule Instance
         {
-            get { return _instance; }
+            get { return instance; }
         }
 
         /// <summary>

@@ -54,7 +54,6 @@ namespace Caliburn.PresentationFramework.Views
             return Context.Equals(context);
         }
 
-
         /// <summary>
         /// Locates the View for the specified model type.
         /// </summary>

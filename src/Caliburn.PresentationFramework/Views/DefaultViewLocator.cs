@@ -79,7 +79,9 @@ namespace Caliburn.PresentationFramework.Views
                 }
             }
 
-            return LocateForModelType(model.GetModelType(), displayLocation, context);
+            var createdView = LocateForModelType(model.GetModelType(), displayLocation, context);
+            InitializeComponent(createdView);
+            return createdView;
         }
 
         /// <summary>
@@ -129,6 +131,28 @@ namespace Caliburn.PresentationFramework.Views
 
             Log.Warn(message);
             return new NotFoundView(message);
+        }
+
+        /// <summary>
+        /// When a view does not contain a code-behind file, we need to automatically call InitializeCompoent.
+        /// </summary>
+        /// <param name="element">The element to initialize</param>
+        public static void InitializeComponent(object element)
+        {
+            var initializeComponentMethod = element.GetType()
+                .GetMethod("InitializeComponent", System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.Instance);
+
+            if(initializeComponentMethod == null)
+                return;
+
+            try
+            {
+                initializeComponentMethod.Invoke(element, null);
+            }
+            catch(Exception ex)
+            {
+                Log.Error(ex);
+            }
         }
 
         /// <summary>

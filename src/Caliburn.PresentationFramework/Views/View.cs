@@ -1,9 +1,11 @@
 ﻿namespace Caliburn.PresentationFramework.Views
 {
+    using System;
     using System.Linq;
     using System.Windows;
     using System.Windows.Markup;
     using Core;
+    using RoutedMessaging;
     using ViewModels;
 
     /// <summary>
@@ -24,6 +26,27 @@
             View.viewLocator = viewLocator;
             View.viewModelBinder = viewModelBinder;
         }
+
+
+        /// <summary>
+        /// Get the <see cref="IInteractionNode"/> associated with the view.
+        /// </summary>
+        public static Func<DependencyObject, IInteractionNode> GetInteractionNode =
+            view =>{
+                IInteractionNode node = null;
+                if(view != null)
+                    node = view.GetValue(DefaultRoutedMessageController.NodeProperty) as IInteractionNode;
+                return node;
+            };
+
+        /// <summary>
+        /// Gets the view instance associated with the model.
+        /// </summary>
+        public static Func<object, object, DependencyObject> GetViewInstanceFromModel =
+            (model, context) =>{
+                var viewAware = model as IViewAware;
+                return viewAware != null ? viewAware.GetView(context) as DependencyObject : null;
+            };
 
         /// <summary>
         /// A dependency property for assigning a context to a particular portion of the UI.
