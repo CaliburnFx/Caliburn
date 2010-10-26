@@ -38,16 +38,44 @@
         }
 
         /// <summary>
+        /// Executes the specified result.
+        /// </summary>
+        /// <param name="result">The result.</param>
+        public static void Execute(IResult result)
+        {
+            Execute(new[] { result });
+        }
+
+        /// <summary>
+        /// Executes the result in the model's context.
+        /// </summary>
+        /// <param name="result">The result.</param>
+        /// <param name="model">The model.</param>
+        public static void ExecuteFor(IResult result, object model)
+        {
+            ExecuteFor(new[] { result }, model);
+        }
+
+        /// <summary>
         /// Executes the results for the model.
         /// </summary>
         /// <param name="results">The results.</param>
         /// <param name="model">The model.</param>
-        public static void ExecuteFor(this IEnumerable<IResult> results, object model)
+        public static void ExecuteFor(IEnumerable<IResult> results, object model)
+        {
+            ExecuteFor(results.GetEnumerator(), model);
+        }
+
+        /// <summary>
+        /// Executes a coroutine.
+        /// </summary>
+        /// <param name="coroutine">The coroutine to execute.</param>
+        public static void ExecuteFor(IEnumerator<IResult> coroutine, object model)
         {
             var view = View.GetViewInstanceFromModel(model, null);
             var node = View.GetInteractionNode(view);
 
-            Execute(results.GetEnumerator(), new ResultExecutionContext(serviceLocator, null, node));
+            Execute(coroutine, new ResultExecutionContext(serviceLocator, null, node));
         }
 
         /// <summary>
