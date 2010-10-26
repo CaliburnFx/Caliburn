@@ -51,7 +51,7 @@
         public CommandMessageParser(IConventionManager conventionManager, IMessageBinder messageBinder, CommandSource commandSource)
             : base(conventionManager, messageBinder)
         {
-            commandSource = commandSource;
+            this.commandSource = commandSource;
         }
 
 #endif

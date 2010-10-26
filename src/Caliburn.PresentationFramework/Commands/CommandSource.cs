@@ -10,7 +10,7 @@ namespace Caliburn.PresentationFramework.Commands
         /// </summary>
         Resource,
         /// <summary>
-        /// Looks for the command in the DI container.
+        /// Looks for the command in the IoC container.
         /// </summary>
         Container,
         /// <summary>
