@@ -6,6 +6,7 @@
     using System.Windows;
     using Behaviors;
     using Core.Logging;
+    using Invocation;
     using Views;
 
     /// <summary>
@@ -214,37 +215,39 @@
         /// </summary>
         public void TryClose()
         {
-            if(Parent != null)
-                Parent.CloseItem(this);
-            else
-            {
-                var view = GetView(null);
-
-                if(view == null)
+            Execute.OnUIThread(() =>{
+                if(Parent != null)
+                    Parent.CloseItem(this);
+                else
                 {
-                    var ex = new NotSupportedException("A Parent or default view is required.");
-                    Log.Error(ex);
-                    throw ex;
-                }
+                    var view = GetView(null);
 
-                var method = view.GetType().GetMethod("Close");
-                if(method != null)
-                {
-                    method.Invoke(view, null);
-                    return;
-                }
+                    if(view == null)
+                    {
+                        var ex = new NotSupportedException("A Parent or default view is required.");
+                        Log.Error(ex);
+                        throw ex;
+                    }
 
-                var property = view.GetType().GetProperty("IsOpen");
-                if(property != null)
-                {
-                    property.SetValue(view, false, new object[] {});
-                    return;
-                }
+                    var method = view.GetType().GetMethod("Close");
+                    if(method != null)
+                    {
+                        method.Invoke(view, null);
+                        return;
+                    }
 
-                var ex2 = new NotSupportedException("The default view does not support Close/IsOpen.");
-                Log.Error(ex2);
-                throw ex2;
-            }
+                    var property = view.GetType().GetProperty("IsOpen");
+                    if(property != null)
+                    {
+                        property.SetValue(view, false, new object[] {});
+                        return;
+                    }
+
+                    var ex2 = new NotSupportedException("The default view does not support Close/IsOpen.");
+                    Log.Error(ex2);
+                    throw ex2;
+                }
+            });
         }
 
 #if !SILVERLIGHT
@@ -256,16 +259,18 @@
         /// <param name="dialogResult">The dialog result.</param>
         public virtual void TryClose(bool? dialogResult)
         {
-            var view = GetView(null);
+            Execute.OnUIThread(() =>{
+                var view = GetView(null);
 
-            if(view != null)
-            {
-                var property = view.GetType().GetProperty("DialogResult");
-                if(property != null)
-                    property.SetValue(view, dialogResult, null);
-            }
+                if(view != null)
+                {
+                    var property = view.GetType().GetProperty("DialogResult");
+                    if(property != null)
+                        property.SetValue(view, dialogResult, null);
+                }
 
-            TryClose();
+                TryClose();
+            });
         }
 
 #endif
