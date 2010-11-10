@@ -111,6 +111,7 @@
     <Compile Include="Screens\ConductorWithCollectionAllActive.cs" />
     <Compile Include="Screens\ConductorWithCollectionOneActive.cs" />
     <Compile Include="Screens\IActivate.cs" />
+    <Compile Include="Screens\IClose.cs" />
     <Compile Include="Screens\ICloseStrategy.cs" />
     <Compile Include="Screens\IConductor.cs" />
     <Compile Include="Screens\IDeactivate.cs" />
