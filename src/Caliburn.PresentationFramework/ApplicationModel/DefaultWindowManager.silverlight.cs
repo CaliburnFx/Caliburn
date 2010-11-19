@@ -12,6 +12,7 @@ namespace Caliburn.PresentationFramework.ApplicationModel
     using ViewModels;
     using Views;
     using Conventions;
+    using Invocation;
 
     /// <summary>
     /// A service that manages windows.
@@ -157,14 +158,17 @@ namespace Caliburn.PresentationFramework.ApplicationModel
 
                 bool runningAsync = false, shouldEnd = false;
 
-                guard.CanClose(canClose => {
-                    if(runningAsync && canClose) {
-                        actuallyClosing = true;
-                        view.Close();
-                    }
-                    else e.Cancel = !canClose;
+                guard.CanClose(canClose =>{
+                    Execute.OnUIThread(() =>{
+                        if(runningAsync && canClose)
+                        {
+                            actuallyClosing = true;
+                            view.Close();
+                        }
+                        else e.Cancel = !canClose;
 
-                    shouldEnd = true;
+                        shouldEnd = true;
+                    });
                 });
 
                 if (shouldEnd)
