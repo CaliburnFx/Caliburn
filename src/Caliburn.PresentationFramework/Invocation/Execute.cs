@@ -18,7 +18,7 @@
         /// <param name="dispatcher">The dispatcher.</param>
         public static void Initialize(IDispatcher dispatcher)
         {
-            _dispatcher = dispatcher;
+            _dispatcher = dispatcher ?? new FakeDispatcher();
         }
 
         /// <summary>

@@ -112,6 +112,7 @@
   <ItemGroup>
     <Compile Include="Actions\An_overloaded_action.cs" />
     <Compile Include="Actions\Filters\Rescue_filter.cs" />
+    <Compile Include="Actions\Filters\Rescue_filter_integration.cs" />
     <Compile Include="Actions\Filters\The_callback_filter.cs" />
     <Compile Include="Actions\Filters\The_dependency_filter.cs" />
     <Compile Include="Actions\Filters\The_dependency_observer.cs" />

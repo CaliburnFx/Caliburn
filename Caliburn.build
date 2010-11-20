@@ -662,6 +662,8 @@
 			<sources basedir="${path.src}">
 				<include name="${build.asminfo}"/>
 				<include name="Tests.Caliburn/**/*.cs"/>
+				<exclude name="Tests.Caliburn/**/*.xaml.cs" />
+				<exclude name="Tests.Caliburn/**/When_testing_Xaml_element.cs" />
 			</sources>
 			<references basedir="${current.path.test}">
 				<include name="mscorlib.dll"/>
