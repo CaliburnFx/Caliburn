@@ -8,7 +8,6 @@ namespace Tests.Caliburn.RoutedUIMessaging.Triggers
     using global::Caliburn.PresentationFramework.RoutedMessaging;
     using global::Caliburn.PresentationFramework.RoutedMessaging.Triggers;
     using NUnit.Framework;
-    using NUnit.Framework.SyntaxHelpers;
     using Rhino.Mocks;
 
     [TestFixture]
@@ -46,19 +45,19 @@ namespace Tests.Caliburn.RoutedUIMessaging.Triggers
         }
 
         [Test]
-        [ExpectedException(typeof(CaliburnException))]
         public void throws_exception_if_attempt_to_attach_to_non_UIElement()
         {
-            var trigger = new AttachedEventMessageTrigger
-            {
-                Message = _message,
-                RoutedEvent = FakeElement.RoutedEvent
-            };
+            Assert.Throws<CaliburnException>(() =>{
+                var trigger = new AttachedEventMessageTrigger {
+                    Message = _message,
+                    RoutedEvent = FakeElement.RoutedEvent
+                };
 
-            _node.Expect(x => x.UIElement).Return(new DependencyObject()).Repeat.Twice();
+                _node.Expect(x => x.UIElement).Return(new DependencyObject()).Repeat.Twice();
 
 
-            trigger.Attach(_node);
+                trigger.Attach(_node);
+            });
         }
 
         [Test]

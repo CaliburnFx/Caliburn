@@ -8,7 +8,6 @@
     using global::Caliburn.PresentationFramework.Filters;
     using global::Caliburn.PresentationFramework.RoutedMessaging;
     using NUnit.Framework;
-    using NUnit.Framework.SyntaxHelpers;
 
     [TestFixture]
     public class An_overloaded_action : TestBase
@@ -67,12 +66,13 @@
             Assert.That(found, Is.Not.Null);
         }
 
-        [Test, ExpectedException(typeof(CaliburnException))]
-        
+        [Test]
         public void fails_if_no_match_is_found()
         {
-            var message = new ActionMessage();
-            action.DetermineOverloadOrFail(message);
+            Assert.Throws<CaliburnException>(() =>{
+                var message = new ActionMessage();
+                action.DetermineOverloadOrFail(message);
+            });
         }
     }
 }

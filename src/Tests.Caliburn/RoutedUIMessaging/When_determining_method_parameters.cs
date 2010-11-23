@@ -9,7 +9,6 @@ namespace Tests.Caliburn.RoutedUIMessaging
     using global::Caliburn.PresentationFramework.Conventions;
     using global::Caliburn.PresentationFramework.RoutedMessaging;
     using NUnit.Framework;
-    using NUnit.Framework.SyntaxHelpers;
     using Rhino.Mocks;
 
     [TestFixture]
@@ -35,7 +34,7 @@ namespace Tests.Caliburn.RoutedUIMessaging
                 new FakeMessage(), null, _handlingNode, null
                 );
 
-            Assert.That(result, Has.Length(0));
+            Assert.That(result, Has.Length.EqualTo(0));
         }
 
         [Test]
@@ -65,7 +64,7 @@ namespace Tests.Caliburn.RoutedUIMessaging
                 message, requirements, _handlingNode, null
                 );
 
-            Assert.That(result, Has.Length(2));
+            Assert.That(result, Has.Length.EqualTo(2));
             Assert.That(result, Has.Member(param1));
             Assert.That(result, Has.Member(param2));
         }
@@ -97,7 +96,7 @@ namespace Tests.Caliburn.RoutedUIMessaging
                 message, requirements, _handlingNode, null
                 );
 
-            Assert.That(result, Has.Length(2));
+            Assert.That(result, Has.Length.EqualTo(2));
             Assert.That(result, Has.Member(param1.ToString()));
             Assert.That(result, Has.Member(Convert.ToInt32(param2)));
         }
@@ -127,7 +126,7 @@ namespace Tests.Caliburn.RoutedUIMessaging
                 message, requirements, _handlingNode, context
                 );
 
-            Assert.That(result, Has.Length(1));
+            Assert.That(result, Has.Length.EqualTo(1));
             Assert.That(result, Has.Member(context));
         }
 
@@ -156,7 +155,7 @@ namespace Tests.Caliburn.RoutedUIMessaging
                 message, requirements, _handlingNode, context
                 );
 
-            Assert.That(result, Has.Length(1));
+            Assert.That(result, Has.Length.EqualTo(1));
             Assert.That(result, Has.Member(context));
         }
 
@@ -186,7 +185,7 @@ namespace Tests.Caliburn.RoutedUIMessaging
                 message, requirements, _handlingNode, null
                 );
 
-            Assert.That(result, Has.Length(1));
+            Assert.That(result, Has.Length.EqualTo(1));
             Assert.That(result, Has.Member(source));
         }
 
@@ -216,7 +215,7 @@ namespace Tests.Caliburn.RoutedUIMessaging
                 message, requirements, _handlingNode, null
                 );
 
-            Assert.That(result, Has.Length(1));
+            Assert.That(result, Has.Length.EqualTo(1));
             Assert.That(result, Has.Member(source.DataContext));
         }
 
@@ -251,7 +250,7 @@ namespace Tests.Caliburn.RoutedUIMessaging
                 message, requirements, _handlingNode, null
                 );
 
-            Assert.That(result, Has.Length(1));
+            Assert.That(result, Has.Length.EqualTo(1));
             Assert.That(result, Has.Member(source.Text));
         }
 
@@ -289,7 +288,7 @@ namespace Tests.Caliburn.RoutedUIMessaging
                 message, requirements, _handlingNode, null
                 );
 
-            Assert.That(result, Has.Length(2));
+            Assert.That(result, Has.Length.EqualTo(2));
             Assert.That(result, Has.Member(param1.ToString()));
             Assert.That(result, Has.Member(Convert.ToInt32(param2)));
         }
@@ -314,7 +313,7 @@ namespace Tests.Caliburn.RoutedUIMessaging
                 message, requirements, _handlingNode, context
                 );
 
-            Assert.That(result, Has.Length(1));
+            Assert.That(result, Has.Length.EqualTo(1));
             Assert.That(result, Has.Member(context));
         }
 
@@ -338,7 +337,7 @@ namespace Tests.Caliburn.RoutedUIMessaging
                 message, requirements, _handlingNode, context
                 );
 
-            Assert.That(result, Has.Length(1));
+            Assert.That(result, Has.Length.EqualTo(1));
             Assert.That(result, Has.Member(context));
         }
 
@@ -364,7 +363,7 @@ namespace Tests.Caliburn.RoutedUIMessaging
                 message, requirements, _handlingNode, null
                 );
 
-            Assert.That(result, Has.Length(1));
+            Assert.That(result, Has.Length.EqualTo(1));
             Assert.That(result, Has.Member(source));
         }
 
@@ -390,7 +389,7 @@ namespace Tests.Caliburn.RoutedUIMessaging
                 message, requirements, _handlingNode, null
                 );
 
-            Assert.That(result, Has.Length(1));
+            Assert.That(result, Has.Length.EqualTo(1));
             Assert.That(result, Has.Member(source.DataContext));
         }
 
@@ -421,9 +420,9 @@ namespace Tests.Caliburn.RoutedUIMessaging
 
             var result = _binder.DetermineParameters(
                 message, requirements, _handlingNode, null
-                ); 
+                );
 
-            Assert.That(result, Has.Length(1));
+            Assert.That(result, Has.Length.EqualTo(1));
             Assert.That(result, Has.Member(source.Text));
         }
     }

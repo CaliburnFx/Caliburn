@@ -9,13 +9,14 @@ namespace Tests.Caliburn.Testability
     public class When_testing_that_a_scenario_affects_change_notification
     {
         [Test]
-        [ExpectedException(typeof(Exception))]
         public void the_assertion_fails_if_notification_is_not_raised()
         {
-            var sut = new NoNotification();
+            Assert.Throws(Is.InstanceOf<Exception>(), () =>{
+                var sut = new NoNotification();
 
-            sut.AssertThatChangeNotificationIsRaisedBy(x=>x.PropertyWithoutNotification)
-                .When(()=> sut.PropertyWithoutNotification = "something");
+                sut.AssertThatChangeNotificationIsRaisedBy(x => x.PropertyWithoutNotification)
+                    .When(() => sut.PropertyWithoutNotification = "something");
+            });
         }
 
         [Test]
@@ -28,12 +29,12 @@ namespace Tests.Caliburn.Testability
         }
 
         [Test, Ignore("My approach using the destructor doesn't quite work. Is there a way to do this?")]
-        [ExpectedException(typeof(Exception))]
         public void an_incomplete_assertion_will_fail()
         {
-            var sut = new NotificationOnAllProperties();
-
-            sut.AssertThatChangeNotificationIsRaisedBy(x => x.Int);
+            Assert.Throws(Is.InstanceOf<Exception>(), () =>{
+                var sut = new NotificationOnAllProperties();
+                sut.AssertThatChangeNotificationIsRaisedBy(x => x.Int);
+            });
         }
     }
 }

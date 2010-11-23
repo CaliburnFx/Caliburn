@@ -7,18 +7,41 @@
     using Fakes.Model;
     using global::Caliburn.Testability;
     using NUnit.Framework;
-    using NUnit.Framework.SyntaxHelpers;
 
     [TestFixture]
     public class When_testing_basic_binding_with_hints : TestBase
     {
-        [Test]
-        public void cannot_detect_actual_type_if_no_hints_given()
+        public class MyUI : UserControl
         {
-            var validator = Validator.For<MyUI, MyPresenter>(new MyUI("Model.MyProperty"));
-            var result = validator.Validate();
+            public MyUI(string bindingPath)
+            {
+                var stack = new StackPanel();
+                Content = stack;
 
-            Assert.That(result.Errors.Count(), Is.EqualTo(1), result.ErrorSummary);
+                var textBlock = new TextBlock();
+                textBlock.SetBinding(TextBlock.TextProperty, new Binding(bindingPath));
+                stack.Children.Add(textBlock);
+            }
+        }
+
+        public class MyUIWithTemplate : UserControl
+        {
+            public MyUIWithTemplate(string rootBindingPath, string templateBindingPath)
+            {
+                ContentTemplate = CreateTemplate(templateBindingPath);
+                SetBinding(ContentProperty, new Binding(rootBindingPath));
+            }
+
+            DataTemplate CreateTemplate(string bindingPath)
+            {
+                var template = new DataTemplate();
+
+                var textBlock = new FrameworkElementFactory(typeof(TextBlock));
+                textBlock.SetBinding(TextBlock.TextProperty, new Binding(bindingPath));
+                template.VisualTree = textBlock;
+
+                return template;
+            }
         }
 
         [Test]
@@ -70,7 +93,7 @@
         public void can_detect_untyped_then_untyped_in_template()
         {
             var validator = Validator.For<MyUIWithTemplate, MyPresenter>(new MyUIWithTemplate("Model",
-                                                                                              "SubModel.MySubProperty"))
+                "SubModel.MySubProperty"))
                 .WithHint(x => x.Model, typeof(MyModel))
                 .WithHint("Model.SubModel", typeof(MySubModel));
 
@@ -79,37 +102,13 @@
             Assert.That(result.Errors.Count(), Is.EqualTo(0), result.ErrorSummary);
         }
 
-        public class MyUI : UserControl
+        [Test]
+        public void cannot_detect_actual_type_if_no_hints_given()
         {
-            public MyUI(string bindingPath)
-            {
-                var stack = new StackPanel();
-                Content = stack;
+            var validator = Validator.For<MyUI, MyPresenter>(new MyUI("Model.MyProperty"));
+            var result = validator.Validate();
 
-                var textBlock = new TextBlock();
-                textBlock.SetBinding(TextBlock.TextProperty, new Binding(bindingPath));
-                stack.Children.Add(textBlock);
-            }
-        }
-
-        public class MyUIWithTemplate : UserControl
-        {
-            public MyUIWithTemplate(string rootBindingPath, string templateBindingPath)
-            {
-                ContentTemplate = CreateTemplate(templateBindingPath);
-                SetBinding(ContentProperty, new Binding(rootBindingPath));
-            }
-
-            private DataTemplate CreateTemplate(string bindingPath)
-            {
-                var template = new DataTemplate();
-
-                var textBlock = new FrameworkElementFactory(typeof(TextBlock));
-                textBlock.SetBinding(TextBlock.TextProperty, new Binding(bindingPath));
-                template.VisualTree = textBlock;
-
-                return template;
-            }
+            Assert.That(result.Errors.Count(), Is.EqualTo(1), result.ErrorSummary);
         }
     }
 }

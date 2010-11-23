@@ -4,7 +4,6 @@ namespace Tests.Caliburn.RoutedUIMessaging
     using Fakes.UI;
     using global::Caliburn.PresentationFramework.RoutedMessaging;
     using NUnit.Framework;
-    using NUnit.Framework.SyntaxHelpers;
 
     [TestFixture]
     public class The_availability_effect_of : TestBase

@@ -1,7 +1,6 @@
 ﻿using System;
 using Caliburn.Testability.Extensions;
 using NUnit.Framework;
-using NUnit.Framework.SyntaxHelpers;
 using Tests.Caliburn.Testability.ChangeNotificationSamples;
 
 namespace Tests.Caliburn.Testability
@@ -10,12 +9,12 @@ namespace Tests.Caliburn.Testability
     public class When_testing_that_properties_implement_change_notification
     {
         [Test]
-        [ExpectedException(typeof(Exception))]
         public void a_notification_with_the_incorrect_property_name_will_fail()
         {
-            var sut = new NotificationWithWrongName();
-
-            sut.AssertThatAllProperties().RaiseChangeNotification();
+            Assert.Throws(Is.InstanceOf<Exception>(), () =>{
+                var sut = new NotificationWithWrongName();
+                sut.AssertThatAllProperties().RaiseChangeNotification();
+            });
         }
 
         [Test]
@@ -37,12 +36,12 @@ namespace Tests.Caliburn.Testability
         }
 
         [Test]
-        [ExpectedException(typeof(Exception))]
         public void if_the_class_has_no_eligible_properties_the_assertion_will_fail()
         {
-            var sut = new NoNotificationNecessary();
-
-            sut.AssertThatAllProperties().RaiseChangeNotification();
+            Assert.Throws(Is.InstanceOf<Exception>(), () =>{
+                var sut = new NoNotificationNecessary();
+                sut.AssertThatAllProperties().RaiseChangeNotification();
+            });
         }
 
         [Test]

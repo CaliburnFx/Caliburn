@@ -15,18 +15,59 @@
     using global::Caliburn.PresentationFramework.ViewModels;
     using global::Caliburn.PresentationFramework.Views;
     using NUnit.Framework;
-    using NUnit.Framework.SyntaxHelpers;
 
     [TestFixture]
     public class The_configuration : TestBase
     {
-        private PresentationFrameworkConfiguration _config;
-        private IModule _module;
+        PresentationFrameworkConfiguration _config;
+        IModule _module;
 
         protected override void given_the_context_of()
         {
             _config = CaliburnModule<PresentationFrameworkConfiguration>.Instance;
             _module = _config;
+        }
+
+        [Test]
+        public void can_provide_a_custom_method_binder()
+        {
+            _config.Using(x => x.MessageBinder<FakeMessageBinder>());
+
+            var registrations = _module.GetComponents();
+
+            var found = (from reg in registrations.OfType<Singleton>()
+                         where reg.Service == typeof(IMessageBinder)
+                         select reg).FirstOrDefault();
+
+            Assert.That(found.Implementation, Is.EqualTo(typeof(FakeMessageBinder)));
+        }
+
+        [Test]
+        public void can_provide_a_custom_parser()
+        {
+            _config.Using(x => x.Parser<FakeMessageParser>());
+
+            var registrations = _module.GetComponents();
+
+            var found = (from reg in registrations.OfType<Singleton>()
+                         where reg.Service == typeof(IParser)
+                         select reg).FirstOrDefault();
+
+            Assert.That(found.Implementation, Is.EqualTo(typeof(FakeMessageParser)));
+        }
+
+        [Test]
+        public void can_provide_a_custom_routed_message_handler()
+        {
+            _config.Using(x => x.RoutedMessageController<FakeRoutedMessageController>());
+
+            var registrations = _module.GetComponents();
+
+            var found = (from reg in registrations.OfType<Singleton>()
+                         where reg.Service == typeof(IRoutedMessageController)
+                         select reg).FirstOrDefault();
+
+            Assert.That(found.Implementation, Is.EqualTo(typeof(FakeRoutedMessageController)));
         }
 
         [Test]
@@ -97,51 +138,9 @@
             Assert.That(found, Is.Not.Null);
             Assert.That(found.Implementation, Is.Not.Null);
         }
-
-        [Test]
-        public void can_provide_a_custom_routed_message_handler()
-        {
-            _config.Using(x => x.RoutedMessageController<FakeRoutedMessageController>());
-
-            var registrations = _module.GetComponents();
-
-            var found = (from reg in registrations.OfType<Singleton>()
-                         where reg.Service == typeof(IRoutedMessageController)
-                         select reg).FirstOrDefault();
-
-            Assert.That(found.Implementation, Is.EqualTo(typeof(FakeRoutedMessageController)));
-        }
-
-        [Test]
-        public void can_provide_a_custom_method_binder()
-        {
-            _config.Using(x => x.MessageBinder<FakeMessageBinder>());
-
-            var registrations = _module.GetComponents();
-
-            var found = (from reg in registrations.OfType<Singleton>()
-                         where reg.Service == typeof(IMessageBinder)
-                         select reg).FirstOrDefault();
-
-            Assert.That(found.Implementation, Is.EqualTo(typeof(FakeMessageBinder)));
-        }
-
-        [Test]
-        public void can_provide_a_custom_parser()
-        {
-            _config.Using(x => x.Parser<FakeMessageParser>());
-
-            var registrations = _module.GetComponents();
-
-            var found = (from reg in registrations.OfType<Singleton>()
-                         where reg.Service == typeof(IParser)
-                         select reg).FirstOrDefault();
-
-            Assert.That(found.Implementation, Is.EqualTo(typeof(FakeMessageParser)));
-        }
     }
 
-    internal class FakeMessageBinder : IMessageBinder
+    class FakeMessageBinder : IMessageBinder
     {
         public bool IsSpecialValue(string potential)
         {
@@ -154,7 +153,7 @@
         }
 
         public object[] DetermineParameters(IRoutedMessage message, IList<RequiredParameter> requiredParameters,
-                                            IInteractionNode handlingNode, object context)
+            IInteractionNode handlingNode, object context)
         {
             throw new NotImplementedException();
         }
@@ -165,7 +164,7 @@
         }
     }
 
-    internal class FakeRoutedMessageController : IRoutedMessageController
+    class FakeRoutedMessageController : IRoutedMessageController
     {
         public void AddHandler(DependencyObject uiElement, IRoutedMessageHandler handler, bool setContext)
         {
@@ -183,7 +182,7 @@
         }
     }
 
-    internal class FakeMessageParser : IParser
+    class FakeMessageParser : IParser
     {
         public string MessageDelimiter { get; set; }
 

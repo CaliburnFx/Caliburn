@@ -76,9 +76,9 @@
                 });
 
                 var instance = Locator.GetInstance<ISampleCommand>() as SampleCommand;
-                Assert.IsInstanceOfType(typeof(StubProxyFactory.SampleCommandProxy), instance);
+                Assert.IsInstanceOf<StubProxyFactory.SampleCommandProxy>(instance);
                 Assert.IsNotNull(instance.Logger);
-                Assert.IsInstanceOfType(typeof(SimpleLogger), instance.Logger);
+                Assert.IsInstanceOf<SimpleLogger>(instance.Logger);
             }
         }
 

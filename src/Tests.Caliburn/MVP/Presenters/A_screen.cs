@@ -3,7 +3,6 @@
     using global::Caliburn.PresentationFramework.Screens;
     using global::Caliburn.Testability.Extensions;
     using NUnit.Framework;
-    using NUnit.Framework.SyntaxHelpers;
 
     [TestFixture]
     public class A_screen : TestBase

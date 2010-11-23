@@ -101,7 +101,7 @@
 
             var instance = Locator.GetInstance<IMailer>() as SimpleMailer;
             Assert.IsNotNull(instance.Logger);
-            Assert.IsInstanceOfType(typeof(SimpleLogger), instance.Logger);
+            Assert.IsInstanceOf<SimpleLogger>(instance.Logger);
         }
 
         [Test]
@@ -114,7 +114,7 @@
 
             var instance = Locator.GetInstance<ISampleCommand>() as SampleCommand;
             Assert.IsNotNull(instance.Logger);
-            Assert.IsInstanceOfType(typeof(SimpleLogger), instance.Logger);
+            Assert.IsInstanceOf<SimpleLogger>(instance.Logger);
         }
     }
 }

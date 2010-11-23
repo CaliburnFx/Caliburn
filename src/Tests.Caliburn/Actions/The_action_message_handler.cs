@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
 using Caliburn.Core;
 using NUnit.Framework;
-using NUnit.Framework.SyntaxHelpers;
 using Rhino.Mocks;
 using Tests.Caliburn.Fakes;
 
@@ -96,14 +95,14 @@ namespace Tests.Caliburn.Actions
         }
 
         [Test]
-        [ExpectedException(typeof(CaliburnException))]
         public void cannot_process_a_non_action_message()
         {
-            var node = Stub<IInteractionNode>();
-            var context = new object();
-            var message = new FakeMessage();
+            Assert.Throws<CaliburnException>(() =>{
+                var context = new object();
+                var message = new FakeMessage();
 
-            _handler.Process(message, context);
+                _handler.Process(message, context);
+            });
         }
 
         [Test]
@@ -167,15 +166,15 @@ namespace Tests.Caliburn.Actions
         }
 
         [Test]
-        [ExpectedException(typeof(CaliburnException))]
         public void cannot_update_trigger_for_a_non_action_message()
         {
-            var node = Stub<IInteractionNode>();
-            var message = new FakeMessage();
-            var trigger = Mock<IMessageTrigger>();
-            trigger.Stub(x => x.Message).Return(message);
+            Assert.Throws<CaliburnException>(() =>{
+                var message = new FakeMessage();
+                var trigger = Mock<IMessageTrigger>();
+                trigger.Stub(x => x.Message).Return(message);
 
-            _handler.UpdateAvailability(trigger);
+                _handler.UpdateAvailability(trigger);
+            });
         }
     }
 }

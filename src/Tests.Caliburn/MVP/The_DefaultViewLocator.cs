@@ -7,7 +7,6 @@
     using global::Caliburn.Core.InversionOfControl;
     using global::Caliburn.PresentationFramework.Views;
     using NUnit.Framework;
-    using NUnit.Framework.SyntaxHelpers;
 
     [TestFixture]
     public class The_DefaultViewLocator : TestBase

@@ -64,6 +64,8 @@ V2 Alpha
 -Fixed a bug in ScreenBase related to multiple calls to OnViewLoaded. 
 -Removed support for Silverlight 2.0 and WP7. WP7 is now supported by Caliburn.Micro.
 -Complete re-write of Screens/Conductors mechanism.
+-Remove CaliburnApplication and replaced with Bootstrapper<T>
+-Removed dependency on CSL.
 
 V1.1 Release
 -Fixed an issue in the WPF version of InteractionNode.

@@ -6,7 +6,6 @@
     using global::Caliburn.ShellFramework.Results;
     using global::Caliburn.Testability;
     using NUnit.Framework;
-    using NUnit.Framework.SyntaxHelpers;
 
     [TestFixture]
     public class When_testing_IResult_enumerables : TestBase

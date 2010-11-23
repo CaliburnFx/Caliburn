@@ -7,9 +7,7 @@
     using global::Caliburn.Core.Configuration;
     using global::Caliburn.Core.Invocation;
     using global::Caliburn.Core.InversionOfControl;
-    using global::Caliburn.PresentationFramework.Invocation;
     using NUnit.Framework;
-    using NUnit.Framework.SyntaxHelpers;
 
     [TestFixture]
     public class The_core_configuration : TestBase

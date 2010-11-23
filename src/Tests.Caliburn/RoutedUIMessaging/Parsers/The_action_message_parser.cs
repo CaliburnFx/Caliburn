@@ -5,7 +5,6 @@ namespace Tests.Caliburn.RoutedUIMessaging.Parsers
     using global::Caliburn.PresentationFramework.Conventions;
     using global::Caliburn.PresentationFramework.RoutedMessaging;
     using NUnit.Framework;
-    using NUnit.Framework.SyntaxHelpers;
     using Rhino.Mocks;
 
     [TestFixture]

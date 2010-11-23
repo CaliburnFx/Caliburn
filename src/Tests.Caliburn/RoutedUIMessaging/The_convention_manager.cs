@@ -5,7 +5,6 @@
     using global::Caliburn.PresentationFramework.Conventions;
     using NUnit.Framework;
     using System.Windows.Controls;
-    using NUnit.Framework.SyntaxHelpers;
 
     [TestFixture]
     public class The_convention_manager : TestBase

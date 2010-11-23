@@ -1,6 +1,5 @@
 ﻿using System;
 using NUnit.Framework;
-using NUnit.Framework.SyntaxHelpers;
 
 namespace Tests.Caliburn.Core.Threading
 {

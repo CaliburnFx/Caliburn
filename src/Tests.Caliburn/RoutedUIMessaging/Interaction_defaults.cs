@@ -4,7 +4,6 @@
     using global::Caliburn.PresentationFramework.Conventions;
     using global::Caliburn.PresentationFramework.RoutedMessaging.Triggers;
     using NUnit.Framework;
-    using NUnit.Framework.SyntaxHelpers;
 
     [TestFixture]
     public class Interaction_defaults : TestBase
@@ -34,7 +33,7 @@
             var trigger = _defaults.CreateTrigger();
 
             Assert.That(trigger, Is.Not.Null);
-            Assert.That(trigger, Is.InstanceOfType(typeof(EventMessageTrigger)));
+            Assert.That(trigger, Is.InstanceOf<EventMessageTrigger>());
         }
 
         [Test]

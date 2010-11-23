@@ -10,6 +10,8 @@
     using global::Autofac;
     using global::Autofac.Builder;
     using global::Autofac.Core;
+    using global::Autofac.Core.Activators.ProvidedInstance;
+    using global::Autofac.Core.Registration;
     using IContainer=global::Autofac.IContainer;
 
     /// <summary>
@@ -32,8 +34,7 @@
             AddRegistrationHandler<PerRequest>(HandlePerRequest);
             AddRegistrationHandler<Instance>(HandleInstance);
 
-            Register(new[]
-            {
+            Register(new[] {
                 new Instance{ Service = typeof(IServiceLocator), Implementation = this},
                 new Instance{ Service = typeof(IRegistry), Implementation = this },
                 new Instance{ Service = typeof(Core.InversionOfControl.IContainer), Implementation = this },
@@ -61,8 +62,8 @@
         {
             try
             {
-                return key != null
-                    ? container.Resolve(key, serviceType ?? typeof(object))
+                return !string.IsNullOrEmpty(key)
+                    ? container.ResolveNamed(key, serviceType ?? typeof(object))
                     : container.Resolve(serviceType);
             }
             catch(Exception)
@@ -125,12 +126,18 @@
                 if(!implementation.ShouldCreateProxy())
                     return;
 
-                e.ComponentRegistration.Activating += (s2, e2) =>{
-                    e2.Instance = factory.CreateProxy(
-                        implementation,
-                        implementation.GetAttributes<IBehavior>(true).ToArray(),
-                        DetermineConstructorArgs(implementation)
-                        );
+                e.ComponentRegistration.Preparing += (s2, e2) =>{
+                    var registration = e2.Component as ComponentRegistration;
+
+                    if(registration != null)
+                    {
+                        var instance = factory.CreateProxy(
+                            implementation,
+                            implementation.GetAttributes<IBehavior>(true).ToArray(),
+                            DetermineConstructorArgs(implementation));
+                        var activator = new ProvidedInstanceActivator(instance);
+                        registration.Activator = activator;
+                    }
                 };
             };
 

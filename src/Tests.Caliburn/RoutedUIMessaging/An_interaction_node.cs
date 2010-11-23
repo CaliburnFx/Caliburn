@@ -6,7 +6,6 @@
     using global::Caliburn.Core;
     using global::Caliburn.PresentationFramework.RoutedMessaging;
     using NUnit.Framework;
-    using NUnit.Framework.SyntaxHelpers;
     using Rhino.Mocks;
 
     [TestFixture]
@@ -119,19 +118,20 @@
         }
 
         [Test]
-        [ExpectedException(typeof(CaliburnException))]
         public void will_throw_exception_if_processing_node_is_not_found()
         {
-            var context = new object();
-            var message = new FakeMessage();
-            var handler = Mock<IRoutedMessageHandler>();
+            Assert.Throws<CaliburnException>(() =>{
+                var context = new object();
+                var message = new FakeMessage();
+                var handler = Mock<IRoutedMessageHandler>();
 
-            _node.RegisterHandler(handler);
+                _node.RegisterHandler(handler);
 
-            handler.Expect(x => x.Handles(message)).Return(false);
-            _controller.Expect(x => x.GetParent(_element)).Return(null);
+                handler.Expect(x => x.Handles(message)).Return(false);
+                _controller.Expect(x => x.GetParent(_element)).Return(null);
 
-            _node.ProcessMessage(message, context);
+                _node.ProcessMessage(message, context);
+            });
         }
 
         [Test]
@@ -172,21 +172,22 @@
         }
 
         [Test]
-        [ExpectedException(typeof(CaliburnException))]
         [Ignore]
         public void will_throw_exception_if_trigger_update_node_is_not_found()
         {
-            var trigger = Mock<IMessageTrigger>();
-            var message = new FakeMessage();
-            var handler = Mock<IRoutedMessageHandler>();
+            Assert.Throws<CaliburnException>(() =>{
+                var trigger = Mock<IMessageTrigger>();
+                var message = new FakeMessage();
+                var handler = Mock<IRoutedMessageHandler>();
 
-            _node.RegisterHandler(handler);
+                _node.RegisterHandler(handler);
 
-            trigger.Expect(x => x.Message).Return(message);
-            handler.Expect(x => x.Handles(message)).Return(false);
-            _controller.Expect(x => x.GetParent(_element)).Return(null);
+                trigger.Expect(x => x.Message).Return(message);
+                handler.Expect(x => x.Handles(message)).Return(false);
+                _controller.Expect(x => x.GetParent(_element)).Return(null);
 
-            _node.UpdateAvailability(trigger);
+                _node.UpdateAvailability(trigger);
+            });
         }
     }
 }

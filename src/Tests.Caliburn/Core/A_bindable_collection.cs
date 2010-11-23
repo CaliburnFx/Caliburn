@@ -2,7 +2,6 @@
 {
     using global::Caliburn.PresentationFramework;
     using NUnit.Framework;
-    using NUnit.Framework.SyntaxHelpers;
 
     [TestFixture]
     public class A_bindable_collection

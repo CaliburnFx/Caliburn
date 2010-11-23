@@ -1,6 +1,5 @@
 ﻿using Caliburn.Core.Invocation;
 using NUnit.Framework;
-using NUnit.Framework.SyntaxHelpers;
 using Tests.Caliburn.Fakes;
 
 namespace Tests.Caliburn.Core.Invocation
@@ -27,7 +26,7 @@ namespace Tests.Caliburn.Core.Invocation
             IMethod method = _factory.CreateFrom(methodInfo);
 
             Assert.That(method, Is.Not.Null);
-            Assert.That(method, Is.InstanceOfType(typeof(IMethod)));
+            Assert.That(method, Is.InstanceOf<IMethod>());
             Assert.That(method.Info, Is.EqualTo(methodInfo));
 
             method.Invoke(_theInvokeTarget, new object[] {});
@@ -37,7 +36,7 @@ namespace Tests.Caliburn.Core.Invocation
             var task = method.CreateBackgroundTask(_theInvokeTarget, new object[] { });
 
             Assert.That(task, Is.Not.Null);
-            Assert.That(task, Is.InstanceOfType(typeof(IBackgroundTask)));
+            Assert.That(task, Is.InstanceOf<IBackgroundTask>());
         }
 
         [Test]
@@ -48,7 +47,7 @@ namespace Tests.Caliburn.Core.Invocation
             IMethod method = _factory.CreateFrom(methodInfo);
 
             Assert.That(method, Is.Not.Null);
-            Assert.That(method, Is.InstanceOfType(typeof(IMethod)));
+            Assert.That(method, Is.InstanceOf<IMethod>());
             Assert.That(method.Info, Is.EqualTo(methodInfo));
 
             object result = method.Invoke(_theInvokeTarget, new object[] { });
@@ -59,7 +58,7 @@ namespace Tests.Caliburn.Core.Invocation
             var task = method.CreateBackgroundTask(_theInvokeTarget, new object[] { });
 
             Assert.That(task, Is.Not.Null);
-            Assert.That(task, Is.InstanceOfType(typeof(IBackgroundTask)));
+            Assert.That(task, Is.InstanceOf<IBackgroundTask>());
         }
 
         [Test]
@@ -70,7 +69,7 @@ namespace Tests.Caliburn.Core.Invocation
             IMethod method = _factory.CreateFrom(methodInfo);
 
             Assert.That(method, Is.Not.Null);
-            Assert.That(method, Is.InstanceOfType(typeof(IMethod)));
+            Assert.That(method, Is.InstanceOf<IMethod>());
             Assert.That(method.Info, Is.EqualTo(methodInfo));
 
             method.Invoke(_theInvokeTarget, new object[] { });
@@ -80,7 +79,7 @@ namespace Tests.Caliburn.Core.Invocation
             var task = method.CreateBackgroundTask(_theInvokeTarget, new object[] { });
 
             Assert.That(task, Is.Not.Null);
-            Assert.That(task, Is.InstanceOfType(typeof(IBackgroundTask)));
+            Assert.That(task, Is.InstanceOf<IBackgroundTask>());
         }
 
         [Test]
@@ -91,7 +90,7 @@ namespace Tests.Caliburn.Core.Invocation
             IMethod method = _factory.CreateFrom(methodInfo);
 
             Assert.That(method, Is.Not.Null);
-            Assert.That(method, Is.InstanceOfType(typeof(IMethod)));
+            Assert.That(method, Is.InstanceOf<IMethod>());
             Assert.That(method.Info, Is.EqualTo(methodInfo));
 
             object result = method.Invoke(_theInvokeTarget, new object[] { });
@@ -102,7 +101,7 @@ namespace Tests.Caliburn.Core.Invocation
             var task = method.CreateBackgroundTask(_theInvokeTarget, new object[] { });
 
             Assert.That(task, Is.Not.Null);
-            Assert.That(task, Is.InstanceOfType(typeof(IBackgroundTask)));
+            Assert.That(task, Is.InstanceOf<IBackgroundTask>());
         }
 
         [Test]

@@ -4,7 +4,6 @@ using System.Windows.Controls;
 using System.Windows.Data;
 using Caliburn.Testability;
 using NUnit.Framework;
-using NUnit.Framework.SyntaxHelpers;
 using Tests.Caliburn.Fakes.Model;
 
 namespace Tests.Caliburn.Testability

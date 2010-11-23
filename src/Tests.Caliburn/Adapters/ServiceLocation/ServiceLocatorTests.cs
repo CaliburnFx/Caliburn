@@ -5,7 +5,6 @@
     using Components;
     using global::Caliburn.Core.InversionOfControl;
     using NUnit.Framework;
-    using NUnit.Framework.SyntaxHelpers;
 
     public abstract class ServiceLocatorTests
     {

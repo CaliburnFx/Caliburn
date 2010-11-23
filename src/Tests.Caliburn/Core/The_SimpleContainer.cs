@@ -1,6 +1,5 @@
 ﻿using System;
 using NUnit.Framework;
-using NUnit.Framework.SyntaxHelpers;
 using Tests.Caliburn.Fakes;
 
 namespace Tests.Caliburn.Core
@@ -225,7 +224,7 @@ namespace Tests.Caliburn.Core
 			var instance = container.GetInstance<ITestService<int>>();
 
 			Assert.That(instance, Is.Not.Null);
-			Assert.That(instance, Is.InstanceOfType(typeof(TestService<int>)));
+			Assert.That(instance, Is.InstanceOf<TestService<int>>());
 		}
 
 		[Test]
@@ -236,7 +235,7 @@ namespace Tests.Caliburn.Core
 			var instance = container.GetInstance<ITestService<int>>("test");
 
 			Assert.That(instance, Is.Not.Null);
-			Assert.That(instance, Is.InstanceOfType(typeof(TestService<int>)));
+			Assert.That(instance, Is.InstanceOf<TestService<int>>());
 		}
     }
 }

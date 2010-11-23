@@ -6,7 +6,6 @@ namespace Tests.Caliburn.RoutedUIMessaging.Triggers
     using global::Caliburn.PresentationFramework.RoutedMessaging;
     using global::Caliburn.PresentationFramework.RoutedMessaging.Triggers;
     using NUnit.Framework;
-    using NUnit.Framework.SyntaxHelpers;
     using Rhino.Mocks;
 
     [TestFixture]

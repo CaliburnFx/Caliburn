@@ -10,7 +10,6 @@
     using global::Caliburn.PresentationFramework.Filters;
     using global::Caliburn.PresentationFramework.RoutedMessaging;
     using NUnit.Framework;
-    using NUnit.Framework.SyntaxHelpers;
     using Rhino.Mocks;
 
     [TestFixture]
@@ -118,7 +117,7 @@
                 .ToList();
 
             Assert.That(result.Count, Is.EqualTo(1));
-            Assert.That(result[0], Is.InstanceOfType(typeof(AsynchronousAction)));
+            Assert.That(result[0], Is.InstanceOf<AsynchronousAction>());
         }
 
         [Test]

@@ -1,90 +1,80 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
-namespace Tests.Caliburn.MVP.PropertyChanged
+﻿namespace Tests.Caliburn.MVP.PropertyChanged
 {
-	using NUnit.Framework;
-	using NUnit.Framework.SyntaxHelpers;
-	using global::Caliburn.PresentationFramework;
-	using System.Runtime.Serialization.Formatters.Binary;
-	using System.IO;
-	
-	
+    using System;
+    using System.IO;
+    using System.Runtime.Serialization.Formatters.Binary;
+    using global::Caliburn.PresentationFramework;
+    using NUnit.Framework;
 
-	[TestFixture]
-	public class A_Serializable_PropertyChangedBase_subclass : TestBase
-	{
-		 
-		[Test]
-		public void can_be_serialized_and_deserialized() {
-			var original = new FakeSerializableNotifier();
-			original.FakeProperty = "some string value";
-			
-			var serializer = new BinaryFormatter();
-			var stream = new MemoryStream();
-			serializer.Serialize(stream, original);
+    [TestFixture]
+    public class A_Serializable_PropertyChangedBase_subclass : TestBase
+    {
+        [Serializable]
+        public class FakeSerializableNotifier : PropertyChangedBase
+        {
+            string _FakeProperty;
 
-			stream.Position=0;
-			var deserialized = (FakeSerializableNotifier)serializer.Deserialize(stream);
+            public string FakeProperty
+            {
+                get { return _FakeProperty; }
+                set
+                {
+                    _FakeProperty = value;
+                    NotifyOfPropertyChange(() => FakeProperty);
+                }
+            }
+        }
 
-			Assert.AreNotSame(original, deserialized);
-			Assert.AreEqual(original.FakeProperty, deserialized.FakeProperty); 
-		}
+        [Test]
+        public void can_accept_handlers_after_deserialization()
+        {
+            var original = new FakeSerializableNotifier();
 
-	 
-		[Test]
-		public void can_notify_after_deserialization()
-		{
-			var original = new FakeSerializableNotifier();
-			
-			var serializer = new BinaryFormatter();
-			var stream = new MemoryStream();
-			serializer.Serialize(stream, original);
+            var serializer = new BinaryFormatter();
+            var stream = new MemoryStream();
+            serializer.Serialize(stream, original);
 
-			stream.Position = 0;
-			var deserialized = (FakeSerializableNotifier)serializer.Deserialize(stream);
+            stream.Position = 0;
+            var deserialized = (FakeSerializableNotifier)serializer.Deserialize(stream);
 
-			deserialized.FakeProperty = "some string value";
-		}
-		[Test]
-		public void can_accept_handlers_after_deserialization()
-		{
-			var original = new FakeSerializableNotifier();
+            var handlerCalls = 0;
+            deserialized.PropertyChanged += (o, e) => { handlerCalls++; };
+            deserialized.FakeProperty = "some string value";
 
-			var serializer = new BinaryFormatter();
-			var stream = new MemoryStream();
-			serializer.Serialize(stream, original);
+            Assert.AreEqual(1, handlerCalls);
+        }
 
-			stream.Position = 0;
-			var deserialized = (FakeSerializableNotifier)serializer.Deserialize(stream);
+        [Test]
+        public void can_be_serialized_and_deserialized()
+        {
+            var original = new FakeSerializableNotifier();
+            original.FakeProperty = "some string value";
 
-			int handlerCalls = 0;
-			deserialized.PropertyChanged += (o, e) => { handlerCalls++; };
-			deserialized.FakeProperty = "some string value";
+            var serializer = new BinaryFormatter();
+            var stream = new MemoryStream();
+            serializer.Serialize(stream, original);
 
-			Assert.AreEqual(1, handlerCalls);
-		}
+            stream.Position = 0;
+            var deserialized = (FakeSerializableNotifier)serializer.Deserialize(stream);
 
-
- 
+            Assert.AreNotSame(original, deserialized);
+            Assert.AreEqual(original.FakeProperty, deserialized.FakeProperty);
+        }
 
 
-		 
+        [Test]
+        public void can_notify_after_deserialization()
+        {
+            var original = new FakeSerializableNotifier();
 
-		[Serializable]
-		public class FakeSerializableNotifier : PropertyChangedBase
-		{
-			string _FakeProperty;
-			public string FakeProperty
-			{
-				get { return _FakeProperty; }
-				set { _FakeProperty = value; NotifyOfPropertyChange(() => FakeProperty); }
-			}
-		}
-	  
- 
-	}
-	 
+            var serializer = new BinaryFormatter();
+            var stream = new MemoryStream();
+            serializer.Serialize(stream, original);
+
+            stream.Position = 0;
+            var deserialized = (FakeSerializableNotifier)serializer.Deserialize(stream);
+
+            deserialized.FakeProperty = "some string value";
+        }
+    }
 }

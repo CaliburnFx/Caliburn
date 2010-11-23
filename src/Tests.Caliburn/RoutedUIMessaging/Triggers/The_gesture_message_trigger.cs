@@ -9,7 +9,6 @@ namespace Tests.Caliburn.RoutedUIMessaging.Triggers
     using global::Caliburn.PresentationFramework.RoutedMessaging.Triggers;
     using global::Caliburn.PresentationFramework.RoutedMessaging.Triggers.Support;
     using NUnit.Framework;
-    using NUnit.Framework.SyntaxHelpers;
     using Rhino.Mocks;
 
     [TestFixture]
@@ -82,20 +81,20 @@ namespace Tests.Caliburn.RoutedUIMessaging.Triggers
         }
 
         [Test]
-        [ExpectedException(typeof(CaliburnException))]
         public void throws_exception_if_attempt_to_attach_to_non_UIElement()
         {
-            var trigger = new GestureMessageTrigger
-            {
-                Modifiers = ModifierKeys.Alt,
-                Key = Key.S,
-                Message = _message
-            };
+            Assert.Throws<CaliburnException>(() =>{
+                var trigger = new GestureMessageTrigger {
+                    Modifiers = ModifierKeys.Alt,
+                    Key = Key.S,
+                    Message = _message
+                };
 
-            _node.Expect(x => x.UIElement).Return(new DependencyObject()).Repeat.Twice();
+                _node.Expect(x => x.UIElement).Return(new DependencyObject()).Repeat.Twice();
 
 
-            trigger.Attach(_node);
+                trigger.Attach(_node);
+            });
         }
 
         [Test]

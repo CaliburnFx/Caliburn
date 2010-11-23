@@ -1,7 +1,6 @@
 using System.Linq;
 using Caliburn.Testability;
 using NUnit.Framework;
-using NUnit.Framework.SyntaxHelpers;
 using Tests.Caliburn.Fakes.Model;
 using Tests.Caliburn.Fakes.UI;
 

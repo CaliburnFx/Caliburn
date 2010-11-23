@@ -11,7 +11,6 @@ namespace Tests.Caliburn.Adapters.ServiceLocation
 	using global::Caliburn.Core.InversionOfControl;
 	using global::Caliburn.DynamicProxy;
 	using global::Caliburn.PresentationFramework.Behaviors;
-	using NUnit.Framework.SyntaxHelpers;
 
 	[TestFixture]
     public class The_MEF_container : ServiceLocatorTests
@@ -34,7 +33,7 @@ namespace Tests.Caliburn.Adapters.ServiceLocation
             IoC.Initialize(adapter);
 
 			var vm = container.GetExportedValue<ExportedClass>();
-			Assert.That(vm, Is.InstanceOfType(typeof(INotifyPropertyChanged)));
+			Assert.That(vm, Is.InstanceOf<INotifyPropertyChanged>());
 		}
 
 		[Test]
@@ -50,7 +49,7 @@ namespace Tests.Caliburn.Adapters.ServiceLocation
 			adapter.Register(new[] { new PerRequest { Service = typeof(ClassWithBehaviour), Implementation = typeof(ClassWithBehaviour) } });
 
 			var vm = container.GetExportedValue<ClassWithBehaviour>();
-			Assert.That(vm, Is.InstanceOfType(typeof(INotifyPropertyChanged)));
+			Assert.That(vm, Is.InstanceOf<INotifyPropertyChanged>());
 		}
 
 		[Test]

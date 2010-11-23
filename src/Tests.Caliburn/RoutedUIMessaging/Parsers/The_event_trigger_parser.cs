@@ -3,7 +3,6 @@
     using global::Caliburn.PresentationFramework.RoutedMessaging.Parsers;
     using global::Caliburn.PresentationFramework.RoutedMessaging.Triggers;
     using NUnit.Framework;
-    using NUnit.Framework.SyntaxHelpers;
 
     [TestFixture]
     public class The_event_trigger_parser : TestBase
