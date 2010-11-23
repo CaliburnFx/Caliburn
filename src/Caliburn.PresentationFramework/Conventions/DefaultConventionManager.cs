@@ -11,6 +11,7 @@ namespace Caliburn.PresentationFramework.Conventions
     using System.Windows.Data;
     using System.Windows.Documents;
     using System.Windows.Media;
+    using System.Windows.Shapes;
     using Actions;
     using Converters;
     using Core;
@@ -299,6 +300,8 @@ namespace Caliburn.PresentationFramework.Conventions
 #else
                 yield return ElementConvention<PasswordBox>("PasswordChanged", PasswordBox.DataContextProperty, (c, o) => c.Password = o.SafeToString(), c => c.Password);
 #endif
+                yield return ElementConvention<Shape>("MouseLeftButtonUp", Shape.VisibilityProperty, (c, o) => c.DataContext = o, c => c.DataContext);
+                yield return ElementConvention<FrameworkElement>("Loaded", FrameworkElement.VisibilityProperty, (c, o) => c.DataContext = o, c => c.DataContext);
         }
 
         /// <summary>

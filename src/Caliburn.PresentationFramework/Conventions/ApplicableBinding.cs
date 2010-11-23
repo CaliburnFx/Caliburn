@@ -73,6 +73,26 @@
             if(!checkTemplate) 
                 return;
 
+#if !SILVERLIGHT
+            var tabControl = element as TabControl;
+            if (tabControl != null)
+            {
+                if (NeedsItemTemplate(tabControl))
+                {
+                    tabControl.DisplayMemberPath = "DisplayName";
+                    Log.Info("Applied DisplayMemberPath to {0}.", view);
+                }
+
+                if(tabControl.ContentTemplate == null 
+                    && tabControl.ContentTemplateSelector == null) {
+                    tabControl.ContentTemplate = CreateTemplate(tabControl);
+                    Log.Info("Applied content template to {0}.", view);
+                }
+
+                return;
+            }
+#endif
+
             var itemsControl = (ItemsControl)element;
 
             if (NeedsItemTemplate(itemsControl))
