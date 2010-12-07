@@ -9,6 +9,7 @@ namespace Caliburn.ShellFramework.Menus
     using PresentationFramework;
     using PresentationFramework.ApplicationModel;
     using PresentationFramework.RoutedMessaging;
+    using PresentationFramework.Screens;
     using Resources;
 
     public class MenuModel : BindableCollection<IMenu>, IMenu, IShortcut
@@ -63,6 +64,12 @@ namespace Caliburn.ShellFramework.Menus
                 parent = value; 
                 OnPropertyChanged(new PropertyChangedEventArgs("Parent"));
             }
+        }
+
+        object IChild.Parent
+        {
+            get { return Parent; }
+            set { Parent = (IMenu)value; }
         }
 
         public string DisplayName
