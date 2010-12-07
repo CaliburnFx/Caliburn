@@ -41,8 +41,8 @@ namespace Caliburn.PresentationFramework.ApplicationModel
 			return view;
 		}
 
-		private readonly IViewLocator viewLocator;
-		private readonly IViewModelBinder viewModelBinder;
+		protected readonly IViewLocator viewLocator;
+		protected readonly IViewModelBinder viewModelBinder;
 
 		/// <summary>
 		/// Initializes a new instance of the <see cref="DefaultWindowManager"/> class.
@@ -177,7 +177,7 @@ namespace Caliburn.PresentationFramework.ApplicationModel
 		/// <param name="rootModel">The root model.</param>
 		/// <param name="context">The context.</param>
 		/// <returns></returns>
-		public Page CreatePage(object rootModel, object context)
+		public virtual Page CreatePage(object rootModel, object context)
 		{
 			var view = EnsurePage(rootModel, viewLocator.LocateForModel(rootModel, null, context));
 			viewModelBinder.Bind(rootModel, view, context);

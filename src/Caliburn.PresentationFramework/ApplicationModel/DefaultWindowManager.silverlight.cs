@@ -45,8 +45,8 @@ namespace Caliburn.PresentationFramework.ApplicationModel
             return view;
         }
 
-        private readonly IViewLocator viewLocator;
-        private readonly IViewModelBinder binder;
+        protected readonly IViewLocator viewLocator;
+        protected readonly IViewModelBinder binder;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="DefaultWindowManager"/> class.
@@ -64,7 +64,7 @@ namespace Caliburn.PresentationFramework.ApplicationModel
         /// </summary>
         /// <param name="rootModel">The root model.</param>
         /// <param name="context">The context.</param>
-        public void ShowDialog(object rootModel, object context)
+        public virtual void ShowDialog(object rootModel, object context)
         {
             var view = EnsureWindow(rootModel, viewLocator.LocateForModel(rootModel, null, context));
             binder.Bind(rootModel, view, context);
