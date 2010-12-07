@@ -1,5 +1,8 @@
 ﻿namespace Caliburn.PresentationFramework.Configuration
 {
+    using System;
+    using System.ComponentModel;
+    using System.Diagnostics;
     using System.Linq;
     using System.Reflection;
     using System.Windows;
@@ -45,15 +48,15 @@
             {
                 if (isInDesignMode == null)
                 {
-                    if (Application.Current != null)
-                    {
-                        var app = Application.Current.ToString();
+#if SILVERLIGHT
+                    isInDesignMode = DesignerProperties.IsInDesignTool;
+#else
+                    var prop = DesignerProperties.IsInDesignModeProperty;
+                    isInDesignMode = (bool)DependencyPropertyDescriptor.FromProperty(prop, typeof(FrameworkElement)).Metadata.DefaultValue;
 
-                        if(app == "System.Windows.Application" || app == "Microsoft.Expression.Blend.BlendApplication")
-                            isInDesignMode = true;
-                        else isInDesignMode = false;
-                    }
-                    else isInDesignMode = true;
+                    if (!isInDesignMode.GetValueOrDefault(false) && Process.GetCurrentProcess().ProcessName.StartsWith("devenv", StringComparison.Ordinal))
+                        isInDesignMode = true;
+#endif
                 }
 
                 return isInDesignMode.GetValueOrDefault(false);
