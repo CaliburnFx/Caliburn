@@ -159,7 +159,7 @@ namespace Caliburn.PresentationFramework.ApplicationModel
 		/// </summary>
 		/// <param name="window">The window being opened</param>
 		/// <returns>The inferred owner</returns>
-		protected Window InferOwnerOf(Window window)
+        protected virtual Window InferOwnerOf(Window window)
 		{
 			if (Application.Current == null) return null;
 
@@ -206,7 +206,7 @@ namespace Caliburn.PresentationFramework.ApplicationModel
 		/// <param name="model">The model.</param>
 		/// <param name="view">The view.</param>
 		/// <returns></returns>
-		protected Page EnsurePage(object model, object view)
+		protected virtual Page EnsurePage(object model, object view)
 		{
 			var page = view as Page;
 

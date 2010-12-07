@@ -81,7 +81,7 @@ namespace Caliburn.PresentationFramework.ApplicationModel
             view.Show();
         }
 
-        static ChildWindow EnsureWindow(object model, object view)
+        protected virtual ChildWindow EnsureWindow(object model, object view)
         {
             var window = view as ChildWindow;
 
