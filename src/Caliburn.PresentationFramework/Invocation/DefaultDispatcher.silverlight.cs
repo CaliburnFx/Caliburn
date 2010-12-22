@@ -4,6 +4,8 @@ namespace Caliburn.PresentationFramework.Invocation
 {
     using System;
     using System.ComponentModel;
+    using System.Reflection;
+    using System.Threading;
     using System.Windows;
     using System.Windows.Controls;
     using System.Windows.Threading;
@@ -66,7 +68,25 @@ namespace Caliburn.PresentationFramework.Invocation
         {
             if (_dispatcher.CheckAccess())
                 uiAction();
-            else _dispatcher.BeginInvoke(uiAction);
+            else
+            {
+                var waitHandle = new ManualResetEvent(false);
+                Exception exception = null;
+                _dispatcher.BeginInvoke(() => {
+                    try
+                    {
+                        uiAction();
+                    }
+                    catch (Exception ex)
+                    {
+                        exception = ex;
+                    }
+                    waitHandle.Set();
+                });
+                waitHandle.WaitOne();
+                if (exception != null)
+                    throw new TargetInvocationException("An error occurred while dispatching a call to the UI Thread", exception);
+            } 
         }
 
         /// <summary>
