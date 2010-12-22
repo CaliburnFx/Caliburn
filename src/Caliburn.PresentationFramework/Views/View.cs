@@ -3,6 +3,7 @@
     using System;
     using System.Linq;
     using System.Windows;
+    using System.Windows.Controls;
     using System.Windows.Markup;
     using Core;
     using RoutedMessaging;
@@ -47,6 +48,35 @@
                 var viewAware = model as IViewAware;
                 return viewAware != null ? viewAware.GetView(context) as DependencyObject : null;
             };
+
+        /// <summary>
+        /// Used by the framework to indicate that this element was generated.
+        /// </summary>
+        public static readonly DependencyProperty IsGeneratedProperty =
+            DependencyProperty.RegisterAttached(
+                "IsGenerated",
+                typeof(bool),
+                typeof(View),
+                new PropertyMetadata(false, null)
+                );
+
+        /// <summary>
+        /// Used to retrieve the root, non-framework-created view.
+        /// </summary>
+        /// <param name="view">The view to search.</param>
+        /// <returns>The root element that was not created by the framework.</returns>
+        /// <remarks>In certain instances the services create UI elements.
+        /// For example, if you ask the window manager to show a UserControl as a dialog, it creates a window to host the UserControl in.
+        /// The WindowManager marks that element as a framework-created element so that it can determine what it created vs. what was intended by the developer.
+        /// Calling GetFirstNonGeneratedView allows the framework to discover what the original element was. 
+        /// </remarks>
+        public static Func<DependencyObject, DependencyObject> GetFirstNonGeneratedView = view =>
+        {
+            if ((bool)view.GetValue(IsGeneratedProperty))
+                return (DependencyObject)((ContentControl)view).Content;
+
+            return view;
+        };
 
         /// <summary>
         /// A dependency property for assigning a context to a particular portion of the UI.

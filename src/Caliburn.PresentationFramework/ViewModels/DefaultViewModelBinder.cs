@@ -49,7 +49,7 @@ namespace Caliburn.PresentationFramework.ViewModels
         {
             BindCore(viewModel, view, context);
 
-            var significantView = DefaultWindowManager.GetSignificantView(view);
+            var significantView = View.GetFirstNonGeneratedView(view);
 
             if (ShouldApplyConventions(viewModel, significantView, context))
                 ApplyConventions(viewModel, significantView);

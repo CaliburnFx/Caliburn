@@ -150,7 +150,7 @@ namespace Caliburn.ShellFramework.Services
             }
 
             UIElement busyIndicator = null;
-            view = DefaultWindowManager.GetSignificantView(view);
+            view = View.GetFirstNonGeneratedView(view);
 
             while (view != null && busyIndicator == null)
             {
