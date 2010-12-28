@@ -60,16 +60,11 @@
         /// <returns>The requested service instance.</returns>
         public override object GetInstance(Type serviceType, string key)
         {
-            try
-            {
-                return !string.IsNullOrEmpty(key)
-                    ? container.ResolveNamed(key, serviceType ?? typeof(object))
-                    : container.Resolve(serviceType);
-            }
-            catch(Exception)
-            {
-                return null;
-            }
+            object resolved;
+            if (!string.IsNullOrEmpty(key))
+                container.TryResolveNamed(key, serviceType ?? typeof(object), out resolved);
+            else container.TryResolve(serviceType, out resolved);
+            return resolved;
         }
 
         /// <summary>

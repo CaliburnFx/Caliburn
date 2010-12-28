@@ -58,16 +58,9 @@
         /// </returns>
         public override object GetInstance(Type serviceType, string key)
         {
-            try
-            {
-                return string.IsNullOrEmpty(key)
-                    ? container.GetInstance(serviceType)
-                    : container.GetInstance(serviceType ?? typeof(object), key);
-            }
-            catch(Exception)
-            {
-                return null;
-            }
+            return string.IsNullOrEmpty(key)
+                    ? container.TryGetInstance(serviceType)
+                    : container.TryGetInstance(serviceType ?? typeof(object), key);
         }
 
         /// <summary>

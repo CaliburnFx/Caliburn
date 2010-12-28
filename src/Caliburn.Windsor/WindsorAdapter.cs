@@ -62,20 +62,21 @@
         /// </returns>
         public override object GetInstance(Type serviceType, string key)
         {
-            try
+            if (key != null)
             {
-                if (key != null)
+                if (container.Kernel.HasComponent(key))
                 {
-                    if (serviceType != null) return container.Resolve(key, serviceType);
+                    if (serviceType != null)
+                        return container.Resolve(key, serviceType);
                     return container.Resolve(key, new Dictionary<string, object>());
                 }
 
-                return container.Resolve(serviceType);
-            }
-            catch(Exception)
-            {
                 return null;
             }
+
+            return container.Kernel.HasComponent(serviceType)
+                ? container.Resolve(serviceType)
+                : null;
         }
 
         /// <summary>

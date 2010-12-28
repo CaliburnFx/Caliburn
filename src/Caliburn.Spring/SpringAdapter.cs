@@ -78,9 +78,7 @@
                     if (it.MoveNext())
                         return it.Current;
 
-                    throw new ObjectCreationException(
-                        string.Format("No services of type '{0}' are defined.", serviceType.FullName)
-                        );
+                    return null;
                 }
 
                 return serviceType == null

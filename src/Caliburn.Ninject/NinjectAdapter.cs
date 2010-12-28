@@ -45,14 +45,7 @@
         /// <returns>The requested service instance.</returns>
         public override object GetInstance(Type serviceType, string key)
         {
-            try
-            {
-                return Kernel.Get(serviceType ?? typeof(object), key);                
-            }
-            catch(Exception)
-            {
-                return null;
-            }
+            return Kernel.TryGet(serviceType ?? typeof(object), key); 
         }
 
         /// <summary>

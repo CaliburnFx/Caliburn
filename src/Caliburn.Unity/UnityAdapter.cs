@@ -51,17 +51,12 @@
         /// </returns>
         public override object GetInstance(Type serviceType, string key)
         {
-            //HACK: Unity doesn't support component registration with string key only
-            //		Named service are registered as object, so a null serviceType has to
-            //		be adapted accordingly
-            try
-            {
-                return container.Resolve(serviceType ?? typeof(object), key);                
-            }
-            catch(Exception)
-            {
-                return null;
-            }
+            var typeToCheck = serviceType ?? typeof(object);
+            var actualKey = string.IsNullOrEmpty(key) ? null : key;
+
+            return container.IsRegistered(typeToCheck, actualKey)
+                ? container.Resolve(typeToCheck, actualKey)
+                : null;
         }
 
         /// <summary>

@@ -83,7 +83,7 @@
 			string contract = string.IsNullOrEmpty(key) ? AttributedModelServices.GetContractName(serviceType) : key;
 			var exports = container.GetExportedValues<object>(contract);
 			
-            if(exports.Count() > 0)
+            if(exports.Any())
 				return exports.First();
 
 			return null;
