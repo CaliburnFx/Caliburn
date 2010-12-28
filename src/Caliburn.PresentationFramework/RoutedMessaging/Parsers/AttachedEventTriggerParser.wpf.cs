@@ -60,7 +60,7 @@ namespace Caliburn.PresentationFramework.RoutedMessaging.Parsers
                 }
             }
 
-            var fieldEventProp = eventOwner.GetField(triggerText + "Event", BindingFlags.Static | BindingFlags.Public);
+            var fieldEventProp = eventOwner.GetField(triggerText + "Event", BindingFlags.Static | BindingFlags.Public | BindingFlags.FlattenHierarchy);
 
             if (fieldEventProp == null)
             {

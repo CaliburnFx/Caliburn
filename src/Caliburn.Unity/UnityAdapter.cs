@@ -54,9 +54,18 @@
             var typeToCheck = serviceType ?? typeof(object);
             var actualKey = string.IsNullOrEmpty(key) ? null : key;
 
+#if SILVERLIGHT_30
+            try{
+                return container.Resolve(typeToCheck, actualKey);
+            }
+            catch{
+                return null;
+            }
+#else
             return container.IsRegistered(typeToCheck, actualKey)
                 ? container.Resolve(typeToCheck, actualKey)
                 : null;
+#endif
         }
 
         /// <summary>
