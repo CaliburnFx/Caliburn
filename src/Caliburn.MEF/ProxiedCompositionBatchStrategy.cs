@@ -9,8 +9,8 @@ namespace Caliburn.MEF
 
 	public class ProxiedCompositionBatchStrategy : CompositionBatchStrategy
 	{
-		public ProxiedCompositionBatchStrategy(bool useSetterInjection)
-			: base(useSetterInjection) { }
+		public ProxiedCompositionBatchStrategy()
+			: base() { }
 
 		public override void HandleSingleton(CompositionBatch batch, PerRequest perRequest)
 		{
@@ -24,6 +24,12 @@ namespace Caliburn.MEF
 
 		public override void HandleInstance(CompositionBatch batch, Instance instance)
 		{
+			if (!instance.Service.IsInterface)
+			{
+				base.HandleInstance(batch, instance);
+				return;
+			}
+
 			var factory = IoC.Get<IProxyFactory>();
 		    var impl = factory.CreateProxyWithTarget(
 		        instance.Service,

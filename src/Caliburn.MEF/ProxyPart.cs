@@ -3,12 +3,12 @@
 	using System;
 	using System.Collections.Generic;
 	using System.ComponentModel.Composition;
+	using System.ComponentModel.Composition.Hosting;
 	using System.ComponentModel.Composition.Primitives;
 	using System.Linq;
 	using Core;
 	using Core.Behaviors;
 	using Core.InversionOfControl;
-	using System.Reflection;
 
 	/// <summary>
 	/// A <see cref="ComposablePart"/> which adds proxy capabilities.
@@ -18,8 +18,7 @@
 		private readonly Type implementation;
 		readonly IComponentRegistration registration;
 		private readonly ComposablePart innerPart;
-		private object instance;
-		private PropertyInfo[] propertiesToInject;
+		object instance;
 
 		/// <summary>
 		/// Initializes a new instance of the <see cref="ProxyPart"/> class.
@@ -30,7 +29,6 @@
 		{
 			this.implementation = implementation;
 			this.innerPart = innerPart;
-			DeterminePropertiesToInject();
 		}
 
 		/// <summary>
@@ -43,15 +41,6 @@
 			implementation = GetImplementation(registration);
 			this.registration = registration;
 			this.innerPart = innerPart;
-			DeterminePropertiesToInject();
-		}
-
-		private void DeterminePropertiesToInject()
-		{
-			var componentPart = innerPart as ComponentPart;
-			propertiesToInject = (componentPart != null)
-				? componentPart.PropertiesToInject
-				: new PropertyInfo[] { };
 		}
 
 		private static Type GetImplementation(IComponentRegistration registration)
@@ -127,6 +116,16 @@
 			get { return innerPart.ImportDefinitions; }
 		}
 
+		public override IDictionary<string, object> Metadata
+		{
+			get { return innerPart.Metadata; }
+		}
+
+		public override string ToString()
+		{
+			return innerPart.ToString();
+		}
+
 		/// <summary>
 		/// Gets the exported value described by the specified definition.
 		/// </summary>
@@ -155,28 +154,32 @@
 		/// </exception>
 		public override object GetExportedValue(ExportDefinition definition)
 		{
+			if (definition == null) throw new ArgumentNullException("definition");
+
 			if (instance != null)
 				return instance;
+
+			var isPerRequest = false;
 
 			object creationPolicy;
 			if (definition.Metadata.TryGetValue("System.ComponentModel.Composition.CreationPolicy", out creationPolicy))
 			{
 				var actual = (CreationPolicy)creationPolicy;
-
-				if (actual == CreationPolicy.Shared)
+				if (actual == CreationPolicy.NonShared)
 				{
-					instance = CreateInstance();
-					return instance;
+					isPerRequest = true;
 				}
 			}
 
-			var isSingleton = (registration as Singleton) != null;
-			if (isSingleton)
+			isPerRequest = (registration as PerRequest) != null || isPerRequest;
+			if (isPerRequest)
 			{
-				instance = CreateInstance();
-				return instance;
+				return CreateInstance();
 			}
-			return CreateInstance();
+
+			// default to Shared
+			instance = CreateInstance();
+			return instance;
 		}
 
 		/// <summary>
@@ -224,7 +227,16 @@
 		/// </exception>
 		public override void SetImport(ImportDefinition definition, IEnumerable<Export> exports)
 		{
+			if (definition == null) throw new ArgumentNullException("definition");
+			if (exports == null) throw new ArgumentNullException("exports");
+
 			innerPart.SetImport(definition, exports);
+		}
+		
+		public override void Activate()
+		{
+			// Don't call, because underlying MEF will create an instance too (which is not needed)
+			// innerPart.Activate();
 		}
 
 		private object CreateInstance()
@@ -237,16 +249,7 @@
 				DetermineConstructorArgs()
 				);
 
-
-
-			foreach (var property in propertiesToInject)
-			{
-				property.SetValue(instance,
-					IoC.GetInstance(property.PropertyType, null),
-					new object[] { }
-					);
-			}
-
+			IoC.Get<CompositionContainer>().SatisfyImportsOnce(instance);
 			return instance;
 		}
 
@@ -254,8 +257,7 @@
 		{
 			var args = new List<object>();
 			var constructorInfo = implementation.SelectEligibleConstructor();
-
-
+                      
 			if (constructorInfo != null)
 			{
 				foreach (var info in constructorInfo.GetParameters())

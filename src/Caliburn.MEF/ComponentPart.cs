@@ -25,13 +25,12 @@ namespace Caliburn.MEF
 
 		private object _cachedInstance;
 		private readonly ConstructorInfo _greedyConstructor;
-		private readonly PropertyInfo[] _propertiesToInject;
 
 		/// <summary>
 		/// Initializes a new instance of the <see cref="ComponentPart"/> class.
 		/// </summary>
 		/// <param name="registration">The registration.</param>
-		public ComponentPart(ComponentRegistrationBase registration, bool useSetterInjection)
+		public ComponentPart(ComponentRegistrationBase registration)
 		{
 			_registration = registration;
 
@@ -40,17 +39,8 @@ namespace Caliburn.MEF
 			_greedyConstructor = implementation
 				.SelectEligibleConstructor();
 
-			_propertiesToInject = useSetterInjection ?
-				implementation.GetProperties(BindingFlags.Public | BindingFlags.Instance | BindingFlags.SetProperty)
-				: new PropertyInfo[] { };
-
 			ConfigureImportDefinitions();
 			ConfigureExportDefinitions(implementation, registration.Service);
-		}
-
-
-		public PropertyInfo[] PropertiesToInject {
-			get { return _propertiesToInject; }
 		}
 
 		private void ConfigureExportDefinitions(Type implementationType, Type contractType)
@@ -87,27 +77,6 @@ namespace Caliburn.MEF
 						AttributedModelServices.GetTypeIdentity(importType),
 						Enumerable.Empty<KeyValuePair<string, Type>>(),
 						cardinality,
-						CreationPolicy.Any,
-						null
-						)
-					);
-			}
-
-			foreach (var property in _propertiesToInject)
-			{
-				var cardinality = GetCardinality(property.PropertyType);
-				var importType = cardinality == ImportCardinality.ZeroOrMore
-									 ? GetCollectionContractType(property.PropertyType)
-									 : property.PropertyType;
-
-				_imports.Add(
-					ReflectionModelServices.CreateImportDefinition(
-						new LazyMemberInfo(property),
-						AttributedModelServices.GetContractName(importType),
-						AttributedModelServices.GetTypeIdentity(importType),
-						Enumerable.Empty<KeyValuePair<string, Type>>(),
-						cardinality,
-						false, //isRecomposable
 						CreationPolicy.Any,
 						null
 						)
@@ -188,16 +157,7 @@ namespace Caliburn.MEF
 					   ? Activator.CreateInstance(GetImplementation(_registration), args.ToArray())
 					   : Activator.CreateInstance(GetImplementation(_registration));
 
-			_propertiesToInject.Apply(info =>
-			{
-				var dependency = (from export in _satisfiedImports.Values
-								  where export.Definition.ContractName ==
-									  AttributedModelServices.GetContractName(info.PropertyType)
-								  select export
-					).FirstOrDefault();
-
-				info.SetValue(instance, dependency.Value, new object[] { });
-			});
+			IoC.Get<CompositionContainer>().SatisfyImportsOnce(instance);
 
 			return instance;
 		}
@@ -247,6 +207,9 @@ namespace Caliburn.MEF
 		/// </exception>
 		public override void SetImport(ImportDefinition definition, IEnumerable<Export> exports)
 		{
+			if (definition == null) throw new ArgumentNullException("definition");
+			if (exports == null) throw new ArgumentNullException("exports");
+
 			_satisfiedImports[definition] = exports.FirstOrDefault();
 		}
 

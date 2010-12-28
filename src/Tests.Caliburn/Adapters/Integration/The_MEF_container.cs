@@ -18,7 +18,7 @@
             protected override IContainer CreateContainerAdapter()
             {
                 var container = new CompositionContainer();
-                return new MEFAdapter(container, true);
+                return new MEFAdapter(container);
             }
 
             [Test]
@@ -35,7 +35,7 @@
             protected override IContainer CreateContainerAdapter()
             {
                 var container = new CompositionContainer();
-                var adapter = new MEFAdapter(container, true).WithProxyFactory<StubProxyFactory>();
+                var adapter = new MEFAdapter(container).WithProxyFactory<StubProxyFactory>();
                 IoC.Initialize(adapter);
                 return adapter;
             }
@@ -96,6 +96,7 @@
             public override void can_inject_dependencies_on_public_properties() {}
 
             [Test]
+			[Ignore("MEF always injects properties with ImportAttribute specified")]
             public void doesnt_inject_dependencies_on_public_properties()
             {
                 Registry.Register(new[] {

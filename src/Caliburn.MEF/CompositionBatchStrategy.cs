@@ -7,19 +7,17 @@ namespace Caliburn.MEF
 
 	public class CompositionBatchStrategy
 	{
-		bool _useSetterInjection;
-		public CompositionBatchStrategy(bool useSetterInjection) {
-			_useSetterInjection = useSetterInjection;
+		public CompositionBatchStrategy() {
 		}
 
 		public virtual void HandleSingleton(CompositionBatch batch, Singleton singleton)
 		{
-			batch.AddPart(new ComponentPart(singleton, _useSetterInjection));
+			batch.AddPart(new ComponentPart(singleton));
 		}
 
 		public virtual void HandleSingleton(CompositionBatch batch, PerRequest perRequest)
 		{
-			batch.AddPart(new ComponentPart(perRequest, _useSetterInjection));
+			batch.AddPart(new ComponentPart(perRequest));
 		}
 
 		public virtual void HandleInstance(CompositionBatch batch, Instance instance)
@@ -31,7 +29,7 @@ namespace Caliburn.MEF
 
 		protected virtual ComposablePart CreatePart(ComponentRegistrationBase registration)
 		{
-			return new ComponentPart(registration, _useSetterInjection);
+			return new ComponentPart(registration);
 		}
 	}
 }

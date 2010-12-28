@@ -5,6 +5,7 @@ using Tests.Caliburn.Adapters.Components;
 
 namespace Tests.Caliburn.Adapters.ServiceLocation
 {
+	using System.Collections.Generic;
 	using System.ComponentModel;
 	using System.ComponentModel.Composition;
 	using System.Reflection;
@@ -101,13 +102,146 @@ namespace Tests.Caliburn.Adapters.ServiceLocation
 			aggregatecatalog.Catalogs.Add(new AssemblyCatalog(Assembly.GetExecutingAssembly()));			
 		}
 
+		[Test]
+		public void Can_use_setter_injection_with_proxycatalog_register_trough_container()
+		{
+			var catalog = new AssemblyCatalog(Assembly.GetAssembly(typeof(SharedExportedClass)));
+			var proxycatalog = new ProxyCatalog(catalog);
+			var container = new CompositionContainer(proxycatalog);
+
+			var adapter = new MEFAdapter(container).WithProxyFactory<DynamicProxyFactory>();
+			adapter.Register(new[] { new Singleton { Service = typeof(ClassWithBehaviour), Implementation = typeof(ClassWithBehaviour) } });
+			IoC.Initialize(adapter);
+
+			var shared = adapter.GetInstance<SharedExportedClass>();
+			var instance1 = adapter.GetInstance<ClassWithBehaviour>();
+			var instance2 = adapter.GetInstance<ClassWithBehaviour>();
+
+			Assert.AreSame(instance1, instance2);
+			Assert.That(shared, Is.Not.Null);
+			Assert.That(instance1.Shared, Is.SameAs(shared));
+			Assert.That(instance2.Shared, Is.SameAs(shared));
+		}
+
+		[Test]
+		public void Can_use_setter_injection_with_proxycatalog_register_trough_attributes()
+		{
+			var catalog = new AssemblyCatalog(Assembly.GetAssembly(typeof(SharedExportedClass)));
+			var proxycatalog = new ProxyCatalog(catalog);
+			var container = new CompositionContainer(proxycatalog);
+
+			var adapter = new MEFAdapter(container).WithProxyFactory<DynamicProxyFactory>();
+			IoC.Initialize(adapter);
+
+			var shared = adapter.GetInstance<SharedExportedClass>();
+			var instance1 = adapter.GetInstance<ExportedClassWithProperties>();
+			var instance2 = adapter.GetInstance<ExportedClassWithProperties>();
+
+			Assert.AreSame(instance1, instance2);
+			Assert.That(shared, Is.Not.Null);
+			Assert.That(instance1.Shared, Is.SameAs(shared));
+			Assert.That(instance2.Shared, Is.SameAs(shared));
+		}
+
+		[Test]
+		public void proxycatalog_Default_CreationPolicy_is_shared()
+		{
+			var catalog = new AssemblyCatalog(Assembly.GetAssembly(typeof(SharedExportedClass)));
+			var proxycatalog = new ProxyCatalog(catalog);
+			var container = new CompositionContainer(proxycatalog);
+
+			var adapter = new MEFAdapter(container).WithProxyFactory<DynamicProxyFactory>();
+			IoC.Initialize(adapter);
+
+			var instance1 = adapter.GetInstance<ExportedClassWithoutPolicy>();
+			var instance2 = adapter.GetInstance<ExportedClassWithoutPolicy>();
+
+			Assert.AreSame(instance1, instance2);
+		}
+
+		[Test]
+		public void NOproxycatalog_Default_CreationPolicy_is_shared()
+		{
+			var catalog = new AssemblyCatalog(Assembly.GetAssembly(typeof(SharedExportedClass)));
+			var container = new CompositionContainer(catalog);
+
+			var adapter = new MEFAdapter(container);
+			IoC.Initialize(adapter);
+
+			var instance1 = adapter.GetInstance<ExportedClassWithoutPolicy>();
+			var instance2 = adapter.GetInstance<ExportedClassWithoutPolicy>();
+
+			Assert.AreSame(instance1, instance2);
+		}
+
+		[Test]
+		public void Can_ImportMany()
+		{
+			var catalog = new AssemblyCatalog(Assembly.GetAssembly(typeof(SharedExportedClass)));
+			var container = new CompositionContainer(catalog);
+
+			var adapter = new MEFAdapter(container);
+			IoC.Initialize(adapter);
+
+			var instance1 = adapter.GetInstance<ExportedClassWithProperties>();
+
+			Assert.That(instance1.Multiple.Count, Is.EqualTo(2));
+		}
+
+		[Test]
+		public void Can_ImportMany_with_ProxyCatalog()
+		{
+			var catalog = new AssemblyCatalog(Assembly.GetAssembly(typeof(SharedExportedClass)));
+			var proxycatalog = new ProxyCatalog(catalog);
+			var container = new CompositionContainer(proxycatalog);
+
+			var adapter = new MEFAdapter(container).WithProxyFactory<DynamicProxyFactory>();
+			IoC.Initialize(adapter);
+
+			var instance = adapter.GetInstance<ExportedClassWithProperties>();
+
+			Assert.That(instance.Multiple.Count, Is.EqualTo(2));
+		}
+
 		[NotifyPropertyChanged]
 		public class ClassWithBehaviour
-		{ }
+		{
+			[Import]
+			public SharedExportedClass Shared { get; set; }			
+		}
 
 		[Export(typeof(ExportedClass))]
 		[NotifyPropertyChanged]
 		public class ExportedClass
 		{ }
+
+		[Export(typeof(SharedExportedClass))]
+		[NotifyPropertyChanged]
+		[PartCreationPolicy(CreationPolicy.Shared)]
+		public class SharedExportedClass
+		{ }
+
+		[Export(typeof(ExportedClassWithProperties))]
+		[NotifyPropertyChanged]
+		[PartCreationPolicy(CreationPolicy.Shared)]
+		public class ExportedClassWithProperties
+		{
+			[Import]
+			public SharedExportedClass Shared { get; set; }
+
+			[ImportMany]
+			public IList<ILogger> Multiple { get; set; }
+
+			public ExportedClassWithProperties()
+			{
+				Multiple = new List<ILogger>();
+			}
+		}
+
+		[Export(typeof(ExportedClassWithoutPolicy))]
+		[NotifyPropertyChanged]
+		public class ExportedClassWithoutPolicy
+		{
+		}
 	}
 }

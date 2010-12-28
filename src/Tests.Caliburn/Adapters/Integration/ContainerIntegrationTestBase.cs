@@ -14,6 +14,7 @@
             var container = CreateContainerAdapter();
             Locator = container;
             Registry = container;
+			IoC.Initialize(Locator);
         }
 
         protected abstract IContainer CreateContainerAdapter();

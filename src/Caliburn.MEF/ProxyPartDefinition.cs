@@ -20,7 +20,10 @@
         /// <param name="innerDefinition">The inner definition.</param>
         public ProxyPartDefinition(Type implementation, ComposablePartDefinition innerDefinition)
         {
-            this.innerDefinition = innerDefinition;
+        	if (implementation == null) throw new ArgumentNullException("implementation");
+        	if (innerDefinition == null) throw new ArgumentNullException("innerDefinition");
+
+        	this.innerDefinition = innerDefinition;
             this.implementation = implementation;
 		}
 
@@ -39,6 +42,10 @@
         /// </remarks>
         public override ComposablePart CreatePart()
         {
+			// TODO:
+			// return ReflectionModelServices.IsDisposalRequired(innerDefinition)
+			//           ? new DisposableProxyPart(implementation, innerDefinition.CreatePart())
+			//           : new ProxyPart(implementation, innerDefinition.CreatePart());
             if(part == null)
                 part = new ProxyPart(implementation, innerDefinition.CreatePart());
             return part;
@@ -87,5 +94,15 @@
         {
             get { return innerDefinition.ImportDefinitions; }
         }
-    }
+
+		public override IDictionary<string, object> Metadata
+		{
+			get { return innerDefinition.Metadata; }
+		}
+
+		public override string ToString()
+		{
+			return innerDefinition.ToString();
+		}
+	}
 }

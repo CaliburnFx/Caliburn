@@ -15,15 +15,16 @@
     public class ProxyCatalog : ComposablePartCatalog, INotifyComposablePartCatalogChanged
     {
         private readonly ComposablePartCatalog innerCatalog;
-        private readonly Dictionary<ComposablePartDefinition, ComposablePartDefinition> parts;
-        /// <summary>
+        private Dictionary<ComposablePartDefinition, ComposablePartDefinition> parts;
+    	private readonly object syncobj = new object();
+
+    	/// <summary>
         /// Initializes a new instance of the <see cref="ProxyCatalog"/> class.
         /// </summary>
         /// <param name="innerCatalog">The inner catalog.</param>
         public ProxyCatalog(ComposablePartCatalog innerCatalog)
         {
             this.innerCatalog = innerCatalog;
-			parts = CreateFrom(this.innerCatalog);
 			
             var notifyingCatalog = this.innerCatalog as INotifyComposablePartCatalogChanged;
             if(notifyingCatalog != null)
@@ -47,8 +48,8 @@
         /// <param name="e">The <see cref="System.ComponentModel.Composition.Hosting.ComposablePartCatalogChangeEventArgs"/> instance containing the event data.</param>
         private void NotifyingCatalog_Changing(object sender, ComposablePartCatalogChangeEventArgs e)
         {
-            var removed = parts.Where(x => e.RemovedDefinitions.Contains(x.Key)).Select(x => x.Key).ToList();
-            removed.Apply(x => parts.Remove(x));
+            var removed = Parts.Where(x => e.RemovedDefinitions.Contains(x)).ToList();
+			removed.Apply(x => parts.Remove(x));
 
             var added =
                 e.AddedDefinitions.Select(
@@ -84,11 +85,26 @@
         {
             get
             {
-				return parts.Values.AsQueryable();
+            	return GetParts();
             }
         }
 
-        private static Dictionary<ComposablePartDefinition, ComposablePartDefinition> CreateFrom(
+    	IQueryable<ComposablePartDefinition> GetParts()
+    	{
+    		if (this.parts == null)
+    		{
+    			lock(syncobj)
+    			{
+    				if (this.parts == null)
+    				{
+						this.parts = CreateFrom(this.innerCatalog);    					
+    				}
+    			}
+    		}
+			return this.parts.Values.AsQueryable();
+    	}
+
+    	private static Dictionary<ComposablePartDefinition, ComposablePartDefinition> CreateFrom(
             ComposablePartCatalog catalog)
         {
             var dictionary = new Dictionary<ComposablePartDefinition, ComposablePartDefinition>();

@@ -16,28 +16,16 @@
 	{
 		private readonly CompositionContainer container;
 		private CompositionBatch batch;
-		private readonly bool useSetterInjection;
 		private CompositionBatchStrategy batchStrategy;
 
-		
 		/// <summary>
 		/// Initializes a new instance of the <see cref="MEFAdapter"/> class.
 		/// </summary>
 		/// <param name="container">The container.</param>
-		public MEFAdapter(CompositionContainer container)
-			: this(container, false) { }
-
-
-		/// <summary>
-		/// Initializes a new instance of the <see cref="MEFAdapter"/> class.
-		/// </summary>
-		/// <param name="container">The container.</param>
-		/// <param name="useSetterInjection">Specifies if setter injection is used on public properties</param>
-		public MEFAdapter(CompositionContainer container, bool useSetterInjection) 
+		public MEFAdapter(CompositionContainer container) 
 		{
 			this.container = container;
-			this.useSetterInjection = useSetterInjection;
-			batchStrategy = new CompositionBatchStrategy(this.useSetterInjection);
+			batchStrategy = new CompositionBatchStrategy();
 
 		    IoCExtensions.SelectEligibleConstructorImplementation = type =>{
 		        return (from c in type.GetConstructors()
@@ -153,7 +141,7 @@
 		        }
 		    });
 
-			BatchStrategy = new ProxiedCompositionBatchStrategy(useSetterInjection);
+			BatchStrategy = new ProxiedCompositionBatchStrategy();
 
 			return this;
 		}
