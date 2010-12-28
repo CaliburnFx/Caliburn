@@ -49,6 +49,9 @@ namespace Caliburn.PresentationFramework.ViewModels
         {
             BindCore(viewModel, view, context);
 
+            if ((bool)view.GetValue(View.ConventionsAppliedProperty))
+                return;
+
             var significantView = View.GetFirstNonGeneratedView(view);
 
             if (ShouldApplyConventions(viewModel, significantView, context))
@@ -99,6 +102,8 @@ namespace Caliburn.PresentationFramework.ViewModels
 
             description.GetConventionsFor(view)
                 .Apply(x => x.ApplyTo(view));
+
+            view.SetValue(View.ConventionsAppliedProperty, true);
 
             Log.Info("Applied conventions to {0} and {1}.", view, viewModel);
         }

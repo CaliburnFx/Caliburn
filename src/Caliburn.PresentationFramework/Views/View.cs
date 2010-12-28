@@ -50,6 +50,17 @@
             };
 
         /// <summary>
+        /// Indicates whether or not the conventions have already been applied to the view.
+        /// </summary>
+        public static readonly DependencyProperty ConventionsAppliedProperty =
+            DependencyProperty.RegisterAttached(
+                "ConventionsApplied",
+                typeof(bool),
+                typeof(View),
+                null
+                );
+
+        /// <summary>
         /// Used by the framework to indicate that this element was generated.
         /// </summary>
         public static readonly DependencyProperty IsGeneratedProperty =
