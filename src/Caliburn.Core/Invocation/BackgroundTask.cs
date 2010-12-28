@@ -4,6 +4,9 @@ namespace Caliburn.Core.Invocation
     using System.ComponentModel;
     using Logging;
 
+    /// <summary>
+    /// The default implementation of <see cref="IBackgroundTask"/>.
+    /// </summary>
     public class BackgroundTask : IBackgroundTask
     {
         [ThreadStatic]
@@ -15,6 +18,10 @@ namespace Caliburn.Core.Invocation
         private bool _cancellationPending;
         private readonly BackgroundContext _context;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="BackgroundTask"/> class.
+        /// </summary>
+        /// <param name="theDelegate">The delegate.</param>
         public BackgroundTask(Func<object> theDelegate)
         {
             _worker = new BackgroundWorker

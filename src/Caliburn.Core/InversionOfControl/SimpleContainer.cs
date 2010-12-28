@@ -261,9 +261,6 @@
 			return this;
 		}
 
-
-
-
 		private Func<Object> InternalGetHandler(Type type)
 		{
 			Func<object> handler;
@@ -386,8 +383,6 @@
 				PerformPropertiesInjection(instance);
 			return instance;
 		}
-
-
 
 		private bool TryGetDefaultInstance(Type serviceType, out object instance)
 		{
