@@ -111,7 +111,6 @@
 			if (helper != null)
 				messageHandler.Metadata.Add(helper);
 		}
-		
 
 		/// <summary>
 		/// Makes the filter aware of the <see cref="IMessageTrigger"/>.
@@ -122,7 +121,6 @@
 		{
 			if (!AffectsTriggers || !trigger.Message.RelatesTo(Member)) 
 				return;
-
 			
 			var depObserver = messageHandler.Metadata.FirstOrDefaultOfType<DependencyObserver>();
 			if (IsGetter && depObserver != null)
@@ -131,7 +129,6 @@
 			var evtMonitor = messageHandler.Metadata.FirstOrDefaultOfType<EventMonitor>();
 			if (evtMonitor != null)
 				evtMonitor.MakeAwareOf(trigger);
-			
 		}
 	}
 }

@@ -10,12 +10,12 @@
         /// <summary>
         /// The item whose activation was processed.
         /// </summary>
-        public object Item;
+        public object Item { get; set; }
 
         /// <summary>
         /// Gets or sets a value indicating whether the activation was a success.
         /// </summary>
         /// <value><c>true</c> if success; otherwise, <c>false</c>.</value>
-        public bool Success;
+        public bool Success { get; set; }
     }
 }

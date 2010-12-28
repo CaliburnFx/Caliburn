@@ -11,6 +11,9 @@
     using ViewModels;
     using Views;
 
+    /// <summary>
+    /// A base class which can be used for view conventions.
+    /// </summary>
     public abstract class ViewConventionBase
     {
         protected static IMessageBinder MessageBinder;

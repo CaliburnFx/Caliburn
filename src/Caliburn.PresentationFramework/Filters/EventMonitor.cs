@@ -1,54 +1,67 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using Caliburn.PresentationFramework.RoutedMessaging;
-using Caliburn.Core.Invocation;
-using System.Reflection;
-using Caliburn.PresentationFramework.Invocation;
-
-namespace Caliburn.PresentationFramework.Filters
+﻿namespace Caliburn.PresentationFramework.Filters
 {
-	 
+    using System;
+    using System.Collections.Generic;
+    using System.Reflection;
+    using Core.Invocation;
+    using Invocation;
+    using RoutedMessaging;
 
-	public class EventMonitor
-	{
-		private readonly IRoutedMessageHandler _messageHandler;
-		private readonly IList<IMessageTrigger> _triggersToNotify;
-		
+    /// <summary>
+    /// Used to monitor XXXChanged events for properties.
+    /// </summary>
+    public class EventMonitor
+    {
+        readonly IRoutedMessageHandler _messageHandler;
+        readonly IList<IMessageTrigger> _triggersToNotify;
 
-		public static EventMonitor TryHook(IRoutedMessageHandler messageHandler, string eventName){
-			var target = messageHandler.Unwrap();
-			var eventInfo = target.GetType().GetEvent(eventName);
-			if (eventInfo == null) return null;
-			return new EventMonitor(messageHandler, eventInfo);
-		}
+        /// <summary>
+        /// Initializes a new instance of the <see cref="EventMonitor"/> class.
+        /// </summary>
+        /// <param name="messageHandler">The message handler.</param>
+        /// <param name="eventInfo">The event info.</param>
+        internal EventMonitor(IRoutedMessageHandler messageHandler, EventInfo eventInfo)
+        {
+            _messageHandler = messageHandler;
+            _triggersToNotify = new List<IMessageTrigger>();
 
+            EventHelper.WireEvent(messageHandler.Unwrap(), eventInfo, ChangedEventHandler);
+        }
 
-		internal EventMonitor(IRoutedMessageHandler messageHandler, EventInfo eventInfo)
-		{
-			_messageHandler = messageHandler;
-			_triggersToNotify = new List<IMessageTrigger>();
+        /// <summary>
+        /// Tries to hook the event.
+        /// </summary>
+        /// <param name="messageHandler">The message handler.</param>
+        /// <param name="eventName">Name of the event.</param>
+        /// <returns></returns>
+        public static EventMonitor TryHook(IRoutedMessageHandler messageHandler, string eventName)
+        {
+            var target = messageHandler.Unwrap();
+            var eventInfo = target.GetType().GetEvent(eventName);
+            if(eventInfo == null)
+                return null;
+            return new EventMonitor(messageHandler, eventInfo);
+        }
 
-			EventHelper.WireEvent(messageHandler.Unwrap(), eventInfo, ChangedEventHandler);
-		}
+        /// <summary>
+        /// The method that is called when the change event handler is raised.
+        /// </summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
+        public void ChangedEventHandler(object sender, EventArgs e)
+        {
+            Execute.OnUIThread(() =>{
+                foreach(var messageTrigger in _triggersToNotify)
+                {
+                    _messageHandler.UpdateAvailability(messageTrigger);
+                }
+            });
+        }
 
-
-		public void ChangedEventHandler(object sender, EventArgs e)
-		{
-			Execute.OnUIThread(() =>{
-
-				foreach (var messageTrigger in _triggersToNotify)
-				{
-					_messageHandler.UpdateAvailability(messageTrigger);
-				}
-			});
-		}
-
-		internal void MakeAwareOf(IMessageTrigger trigger)
-		{
-			if (!_triggersToNotify.Contains(trigger))
-				_triggersToNotify.Add(trigger);
-		}
-	}
+        internal void MakeAwareOf(IMessageTrigger trigger)
+        {
+            if(!_triggersToNotify.Contains(trigger))
+                _triggersToNotify.Add(trigger);
+        }
+    }
 }

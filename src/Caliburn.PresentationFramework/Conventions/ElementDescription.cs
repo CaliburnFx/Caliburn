@@ -11,18 +11,18 @@ namespace Caliburn.PresentationFramework.Conventions
         /// Gets or sets the type.
         /// </summary>
         /// <value>The type.</value>
-        public Type Type;
+        public Type Type { get; set; }
 
         /// <summary>
         /// Gets or sets the name.
         /// </summary>
         /// <value>The name.</value>
-        public string Name;
+        public string Name { get; set; }
 
         /// <summary>
         /// Gets or sets the conventions associated with the element.
         /// </summary>
         /// <value>The convention.</value>
-        public IElementConvention Convention;
+        public IElementConvention Convention { get; set; }
     }
 }

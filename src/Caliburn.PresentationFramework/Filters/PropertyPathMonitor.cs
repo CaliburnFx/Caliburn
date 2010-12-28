@@ -6,17 +6,9 @@
 	using Core;
 	using Core.Invocation;
 
-	public interface IChangeMonitorNode: IDisposable {
-		IChangeMonitorNode Parent { get; }
-		bool ShouldStopMonitoring();
-		void NotifyChange();
-	}
-
-
-	/// <summary>
+    /// <summary>
 	/// A class used to monitor changes in a property path.
 	/// </summary>
-	/// 
 	public class PropertyPathMonitor : IChangeMonitorNode
 	{
 		private const string ALL_PROPERTIES = "*";
@@ -55,7 +47,6 @@
 			HookSubpathMonitor();
 		}
 
-
 		private void VerifyObservedPropertyExists()
 		{
 			if (_observedPropertyName.Equals(ALL_PROPERTIES))
@@ -89,8 +80,6 @@
 			if (subTarget != null)
 				_subPathMonitor = new PropertyPathMonitor(_methodFactory, subTarget, _subPath, this);
 		}
-
-		  
 
 		private void Notifier_PropertyChanged(object sender, PropertyChangedEventArgs e)
 		{
@@ -126,27 +115,34 @@
 			return _observedPropertyName.Equals(propertyName) || _observedPropertyName == ALL_PROPERTIES;
 		}
 
-
-
+        /// <summary>
+        /// The parent node.
+        /// </summary>
+        /// <value></value>
 		public IChangeMonitorNode Parent {
 			get {
 				if (_parentMonitorRef != null && _parentMonitorRef.IsAlive)
 					return _parentMonitorRef.Target as IChangeMonitorNode;
-				else
-					return null;
+				return null;
 			}
 		}
+
+        /// <summary>
+        /// Indicates whether to stop monitoring changes.
+        /// </summary>
+        /// <returns></returns>
 		public bool ShouldStopMonitoring() {
 			return Parent == null || Parent.ShouldStopMonitoring();
 		}
 
-
+        /// <summary>
+        /// Raises change notification.
+        /// </summary>
 		public void NotifyChange()
 		{	
 			var parent = this.Parent;
 			if (parent!= null)
 				parent.NotifyChange();
-			
 		}
 
 		/// <summary>

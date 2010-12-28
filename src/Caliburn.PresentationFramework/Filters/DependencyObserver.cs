@@ -2,10 +2,8 @@ namespace Caliburn.PresentationFramework.Filters
 {
 	using System.Collections.Generic;
 	using System.ComponentModel;
-	using Core;
 	using Core.Invocation;
 	using RoutedMessaging;
-	using System;
 
 	/// <summary>
 	/// Metadata which can be used to trigger availability changes in triggers based on <see cref="INotifyPropertyChanged"/>.
@@ -70,53 +68,5 @@ namespace Caliburn.PresentationFramework.Filters
 		//        }
 		//    }
 		//}
-		
-	}
-
-
-
-	public class SinglePropertyPathObserver : IChangeMonitorNode
-	{
-		private IRoutedMessageHandler _messageHandler;
-		private IList<IMessageTrigger> _triggersToNotify = new List<IMessageTrigger>();
-		private PropertyPathMonitor _monitor;
-
-		public SinglePropertyPathObserver(IRoutedMessageHandler messageHandler, IMethodFactory methodFactory, INotifyPropertyChanged notifier, string propertyPath)
-		{
-			_messageHandler = messageHandler;
-			_monitor = new PropertyPathMonitor(methodFactory, notifier, propertyPath, this);
-		}
-
-		public void RegisterTrigger(IMessageTrigger trigger)
-		{
-			if (!_triggersToNotify.Contains(trigger))
-				_triggersToNotify.Add(trigger);
-		}
-
-		public void NotifyChange()
-		{
-			_triggersToNotify.Apply(x => _messageHandler.UpdateAvailability(x));
-		}
-		public IChangeMonitorNode Parent
-		{
-			get { return null; }
-		}
-
-		public bool ShouldStopMonitoring()
-		{
-			return false;
-		}
-
-
-		public void Dispose()
-		{
-			if (_monitor != null)
-				_monitor.Dispose();
-		}
-
-	 
-		
-
-	 
 	}
 }

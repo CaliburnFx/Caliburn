@@ -24,6 +24,12 @@
         /// </summary>
         public static Func<IConventionManager, DependencyObject, IEnumerable<ElementDescription>> SelectElementsToInspect = DefaultSelectElementsToInspectImplementation;
 
+        /// <summary>
+        /// Determines if the provided dependency property has a binding on the dependency object.
+        /// </summary>
+        /// <param name="dependencyObject">The object instance.</param>
+        /// <param name="dependencyProperty">The property to check.</param>
+        /// <returns>true if a binding exists; false otherwise</returns>
         public static bool HasBinding(this DependencyObject dependencyObject, DependencyProperty dependencyProperty)
         {
 #if !SILVERLIGHT

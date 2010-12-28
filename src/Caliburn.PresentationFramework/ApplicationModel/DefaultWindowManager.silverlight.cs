@@ -55,6 +55,12 @@ namespace Caliburn.PresentationFramework.ApplicationModel
             view.Show();
         }
 
+        /// <summary>
+        /// Ensures that the view is a ChildWindow.
+        /// </summary>
+        /// <param name="model">The model.</param>
+        /// <param name="view">The view.</param>
+        /// <returns>A child window.</returns>
         protected virtual ChildWindow EnsureWindow(object model, object view)
         {
             var window = view as ChildWindow;

@@ -95,6 +95,8 @@
     <Compile Include="Converters\EnumConverter.cs" />
     <Compile Include="ElementExtensions.cs" />
     <Compile Include="Filters\EventMonitor.cs" />
+    <Compile Include="Filters\IChangeMonitorNode.cs" />
+    <Compile Include="Filters\SinglePropertyPathObserver.cs" />
     <Compile Include="INotifyPropertyChangedEx.cs" />
     <Compile Include="Invocation\Execute.cs" />
     <Compile Include="Invocation\IDispatcher.cs" />
@@ -104,7 +106,9 @@
     <Compile Include="RoutedMessaging\MessagingExtensions.cs" />
     <Compile Include="RoutedMessaging\ResultCompletionEventArgs.cs" />
     <Compile Include="RoutedMessaging\ResultExecutionContext.cs" />
+    <Compile Include="Screens\ActivationEventArgs.cs" />
     <Compile Include="Screens\ActivationProcessedEventArgs.cs" />
+    <Compile Include="Screens\DeactivationEventArgs.cs" />
     <Compile Include="Screens\DefaultCloseStrategy.cs" />
     <Compile Include="Screens\Conductor.cs" />
     <Compile Include="Screens\ConductorBase.cs" />
@@ -140,6 +144,7 @@
     <Compile Include="Views\IViewLocator.cs" />
     <Compile Include="ViewModels\IViewModelFactory.cs" />
     <Compile Include="Views\View.cs" />
+    <Compile Include="Views\ViewAttachedEventArgs.cs" />
     <Compile Include="Views\ViewAttribute.cs" />
     <Compile Include="Views\IViewStrategy.cs" />
     <Compile Include="RoutedMessaging\AvailabilityEffect.cs" />

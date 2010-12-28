@@ -22,15 +22,4 @@ namespace Caliburn.PresentationFramework.Screens
         /// </summary>
         event EventHandler<ActivationEventArgs> Activated;
     }
-
-    /// <summary>
-    /// EventArgs sent during activation.
-    /// </summary>
-    public class ActivationEventArgs : EventArgs
-    {
-        /// <summary>
-        /// Inidicates whether the sender was initialized in addition to being activated.
-        /// </summary>
-        public bool WasInitialized;
-    }
 }
