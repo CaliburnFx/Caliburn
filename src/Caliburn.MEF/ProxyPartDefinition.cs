@@ -95,11 +95,35 @@
             get { return innerDefinition.ImportDefinitions; }
         }
 
+        /// <summary>
+        /// Gets the metadata of the definition.
+        /// </summary>
+        /// <value>
+        /// An <see cref="T:System.Collections.Generic.IDictionary`2"/> containing the metadata of the
+        /// <see cref="T:System.ComponentModel.Composition.Primitives.ComposablePartDefinition"/>. The default is an empty, read-only
+        /// <see cref="T:System.Collections.Generic.IDictionary`2"/>.
+        /// </value>
+        /// <remarks>
+        /// 	<note type="inheritinfo">
+        /// Overriders of this property should return a read-only
+        /// <see cref="T:System.Collections.Generic.IDictionary`2"/> object with a case-sensitive,
+        /// non-linguistic comparer, such as <see cref="P:System.StringComparer.Ordinal"/>,
+        /// and should never return <see langword="null"/>. If the
+        /// <see cref="T:System.ComponentModel.Composition.Primitives.ComposablePartDefinition"/> does contain metadata,
+        /// return an empty <see cref="T:System.Collections.Generic.IDictionary`2"/> instead.
+        /// </note>
+        /// </remarks>
 		public override IDictionary<string, object> Metadata
 		{
 			get { return innerDefinition.Metadata; }
 		}
 
+        /// <summary>
+        /// Returns a <see cref="System.String"/> that represents this instance.
+        /// </summary>
+        /// <returns>
+        /// A <see cref="System.String"/> that represents this instance.
+        /// </returns>
 		public override string ToString()
 		{
 			return innerDefinition.ToString();

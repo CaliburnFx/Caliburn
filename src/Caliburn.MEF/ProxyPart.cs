@@ -116,11 +116,47 @@
 			get { return innerPart.ImportDefinitions; }
 		}
 
+        /// <summary>
+        /// Gets the metadata of the part.
+        /// </summary>
+        /// <value>
+        /// An <see cref="T:System.Collections.Generic.IDictionary`2"/> containing the metadata of the
+        /// <see cref="T:System.ComponentModel.Composition.Primitives.ComposablePart"/>. The default is an empty, read-only
+        /// <see cref="T:System.Collections.Generic.IDictionary`2"/>.
+        /// </value>
+        /// <exception cref="T:System.ObjectDisposedException">
+        /// The <see cref="T:System.ComponentModel.Composition.Primitives.ComposablePart"/> has been disposed of.
+        /// </exception>
+        /// <remarks>
+        /// 	<para>
+        /// 		<note type="inheritinfo">
+        /// If the <see cref="T:System.ComponentModel.Composition.Primitives.ComposablePart"/> was created from a
+        /// <see cref="T:System.ComponentModel.Composition.Primitives.ComposablePartDefinition"/>, this property should return the result of
+        /// <see cref="P:System.ComponentModel.Composition.Primitives.ComposablePartDefinition.Metadata"/>.
+        /// </note>
+        /// 	</para>
+        /// 	<para>
+        /// 		<note type="inheritinfo">
+        /// Overriders of this property should return a read-only
+        /// <see cref="T:System.Collections.Generic.IDictionary`2"/> object with a case-sensitive,
+        /// non-linguistic comparer, such as <see cref="P:System.StringComparer.Ordinal"/>,
+        /// and should never return <see langword="null"/>. If the
+        /// <see cref="T:System.ComponentModel.Composition.Primitives.ComposablePart"/> does not contain metadata, return an
+        /// empty <see cref="T:System.Collections.Generic.IDictionary`2"/> instead.
+        /// </note>
+        /// 	</para>
+        /// </remarks>
 		public override IDictionary<string, object> Metadata
 		{
 			get { return innerPart.Metadata; }
 		}
 
+        /// <summary>
+        /// Returns a <see cref="System.String"/> that represents this instance.
+        /// </summary>
+        /// <returns>
+        /// A <see cref="System.String"/> that represents this instance.
+        /// </returns>
 		public override string ToString()
 		{
 			return innerPart.ToString();
@@ -232,7 +268,17 @@
 
 			innerPart.SetImport(definition, exports);
 		}
-		
+
+        /// <summary>
+        /// Called by the composition engine when all required imports on the part have been
+        /// satisfied.
+        /// </summary>
+        /// <exception cref="T:System.ObjectDisposedException">
+        /// The <see cref="T:System.ComponentModel.Composition.Primitives.ComposablePart"/> has been disposed of.
+        /// </exception>
+        /// <exception cref="T:System.ComponentModel.Composition.Primitives.ComposablePartException">
+        /// An error occurred activating the <see cref="T:System.ComponentModel.Composition.Primitives.ComposablePart"/>.
+        /// </exception>
 		public override void Activate()
 		{
 			// Don't call, because underlying MEF will create an instance too (which is not needed)

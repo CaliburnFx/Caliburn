@@ -47,7 +47,7 @@
 			this.container.Compose(batch);
 
 			AddRegistrationHandler<Singleton>(HandleSingleton);
-			AddRegistrationHandler<PerRequest>(HandleSingleton);
+			AddRegistrationHandler<PerRequest>(HandlePerRequest);
 			AddRegistrationHandler<Instance>(HandleInstance);
 		}
 
@@ -151,9 +151,9 @@
 			BatchStrategy.HandleSingleton(batch, singleton);
 		}
 
-		private void HandleSingleton(PerRequest perRequest)
+        private void HandlePerRequest(PerRequest perRequest)
 		{
-			BatchStrategy.HandleSingleton(batch, perRequest);
+            BatchStrategy.HandlePerRequest(batch, perRequest);
 		}
 
 		private void HandleInstance(Instance instance)

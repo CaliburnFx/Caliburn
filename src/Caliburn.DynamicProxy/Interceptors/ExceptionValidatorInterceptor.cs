@@ -8,6 +8,9 @@ namespace Caliburn.DynamicProxy.Interceptors
 	using Castle.DynamicProxy;
 	using Core.Validation;
 
+    /// <summary>
+    /// An interceptor for exception-based validation.
+    /// </summary>
 #if NET
 	[System.Serializable]
 #endif

@@ -7,21 +7,36 @@ namespace Caliburn.MEF
 	using Core.InversionOfControl;
 	using Enumerable = System.Linq.Enumerable;
 
+    /// <summary>
+    /// A special batch strategy used for creating proxied parts.
+    /// </summary>
 	public class ProxiedCompositionBatchStrategy : CompositionBatchStrategy
 	{
-		public ProxiedCompositionBatchStrategy()
-			: base() { }
-
-		public override void HandleSingleton(CompositionBatch batch, PerRequest perRequest)
+        /// <summary>
+        /// Registers a per request.
+        /// </summary>
+        /// <param name="batch">The batch.</param>
+        /// <param name="perRequest">The per request.</param>
+		public override void HandlePerRequest(CompositionBatch batch, PerRequest perRequest)
 		{
 			batch.AddPart(new ProxyPart(perRequest, CreatePart(perRequest)));
 		}
 
+        /// <summary>
+        /// Registers a singleton.
+        /// </summary>
+        /// <param name="batch">The batch.</param>
+        /// <param name="singleton">The singleton.</param>
 		public override void HandleSingleton(CompositionBatch batch, Singleton singleton)
 		{
 			batch.AddPart(new ProxyPart(singleton, CreatePart(singleton)));
 		}
 
+        /// <summary>
+        /// Registers an instance.
+        /// </summary>
+        /// <param name="batch">The batch.</param>
+        /// <param name="instance">The instance.</param>
 		public override void HandleInstance(CompositionBatch batch, Instance instance)
 		{
 			if (!instance.Service.IsInterface)

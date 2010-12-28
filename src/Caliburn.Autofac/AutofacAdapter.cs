@@ -83,6 +83,10 @@
                 : Enumerable.Empty<object>();
         }
 
+        /// <summary>
+        /// Injects dependencies into the object.
+        /// </summary>
+        /// <param name="instance">The instance to build up.</param>
         public override void BuildUp(object instance)
         {
             container.InjectProperties(instance);
