@@ -7,22 +7,41 @@
     using PresentationFramework.Screens;
     using PresentationFramework.ViewModels;
 
+    /// <summary>
+    /// Opens a view model as a dialog.
+    /// </summary>
+    /// <typeparam name="TDialog">The type of the dialog.</typeparam>
     public class OpenDialogResult<TDialog> : OpenResultBase<TDialog>
     {
         private readonly Func<ResultExecutionContext, TDialog> locateModal = 
             c => c.ServiceLocator.GetInstance<IViewModelFactory>().Create<TDialog>();
 
 #if !SILVERLIGHT
+        /// <summary>
+        /// Gets or sets the dialog result.
+        /// </summary>
+        /// <value>The dialog result.</value>
         public bool? DialogResult { get; set; }
 #endif
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="OpenDialogResult&lt;TDialog&gt;"/> class.
+        /// </summary>
         public OpenDialogResult() {}
 
+        /// <summary>
+        /// Initializes a new instance with the dialog view model to open.
+        /// </summary>
+        /// <param name="child">The child.</param>
         public OpenDialogResult(TDialog child)
         {
             locateModal = c => child;
         }
 
+        /// <summary>
+        /// Executes the specified context.
+        /// </summary>
+        /// <param name="context">The context.</param>
         public override void Execute(ResultExecutionContext context)
         {
             var dialogManager = context.ServiceLocator.GetInstance<IWindowManager>();

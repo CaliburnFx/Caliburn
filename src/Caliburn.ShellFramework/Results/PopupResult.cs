@@ -9,18 +9,33 @@
     using PresentationFramework.ViewModels;
     using PresentationFramework.Views;
 
+    /// <summary>
+    /// An <see cref="IResult"/> for showing popups.
+    /// </summary>
+    /// <typeparam name="TPopup">The type of the popup.</typeparam>
     public class PopupResult<TPopup> : OpenResultBase<TPopup>
     {
         private readonly Func<ResultExecutionContext, TPopup> locateModal = 
             c => c.ServiceLocator.GetInstance<IViewModelFactory>().Create<TPopup>();
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="PopupResult&lt;TPopup&gt;"/> class.
+        /// </summary>
         public PopupResult() {}
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="PopupResult&lt;TPopup&gt;"/> class.
+        /// </summary>
+        /// <param name="child">The child.</param>
         public PopupResult(TPopup child)
         {
             locateModal = c => child;
         }
 
+        /// <summary>
+        /// Executes the result using the specified context.
+        /// </summary>
+        /// <param name="context">The context.</param>
         public override void Execute(ResultExecutionContext context)
         {
             var child = locateModal(context);

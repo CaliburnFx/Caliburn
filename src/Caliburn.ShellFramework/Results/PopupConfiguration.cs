@@ -5,9 +5,19 @@ namespace Caliburn.ShellFramework.Results
     using System.Windows.Controls.Primitives;
     using PresentationFramework;
 
+    /// <summary>
+    /// The configuration for popup location.
+    /// </summary>
     public static class PopupConfiguration
     {
+        /// <summary>
+        /// Finds or creates a popup for the provided element.
+        /// </summary>
         public static Func<UIElement, Popup> FindOrCreatePopupFor = DefaultFindOrCreatePopupFor;
+        
+        /// <summary>
+        /// Determines the name of the popup based on it's owner's name.
+        /// </summary>
         public static Func<string, string> DeterminePopupName = DefaultDeterminePopupName;
 
         private static Popup DefaultFindOrCreatePopupFor(UIElement target)

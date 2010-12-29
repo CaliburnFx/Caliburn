@@ -7,7 +7,7 @@
     using PresentationFramework.ViewModels;
 
     /// <summary>
-    /// An <see cref="IResult"/> for showing model dialogs based on an <see cref="ISubjectSpecification"/>.
+    /// An <see cref="IResult"/> for showing modal dialogs based on an <see cref="ISubjectSpecification"/>.
     /// </summary>
     public class DialogScreenSubjectResult : OpenResultBase<object>
     {
