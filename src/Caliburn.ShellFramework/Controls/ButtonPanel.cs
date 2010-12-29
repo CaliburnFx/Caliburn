@@ -6,8 +6,14 @@
     using Core;
     using PresentationFramework;
 
+    /// <summary>
+    /// An <see cref="ItemsControl"/> that hosts instances of <see cref="ButtonModel"/>.
+    /// </summary>
     public class ButtonPanel : ItemsControl
     {
+        /// <summary>
+        /// The Buttons dependency property.
+        /// </summary>
         public static DependencyProperty ButtonsProperty =
             DependencyProperty.Register(
                 "Buttons",
@@ -16,12 +22,19 @@
                 new PropertyMetadata(ButtonsChanged)
                 );
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ButtonPanel"/> class.
+        /// </summary>
         public ButtonPanel()
         {
             Visibility = Visibility.Collapsed;
             DefaultStyleKey = typeof(ButtonPanel);
         }
 
+        /// <summary>
+        /// Gets or sets the buttons.
+        /// </summary>
+        /// <value>The buttons.</value>
         [TypeConverter(typeof(ButtonConverter))]
         public IObservableCollection<ButtonModel> Buttons
         {

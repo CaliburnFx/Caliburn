@@ -13,6 +13,9 @@ namespace Caliburn.ShellFramework.History
     using PresentationFramework.ApplicationModel;
     using PresentationFramework.Screens;
 
+    /// <summary>
+    /// The default implementation of <see cref="IHistoryCoordinator"/>.
+    /// </summary>
     public class DefaultHistoryCoordinator : IHistoryCoordinator
     {
         private static readonly ILog Log = LogManager.GetLog(typeof(DefaultHistoryCoordinator));
@@ -24,12 +27,21 @@ namespace Caliburn.ShellFramework.History
         private object previousScreen;
         private IList<IHistoryKey> historyKeys;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="DefaultHistoryCoordinator"/> class.
+        /// </summary>
+        /// <param name="stateManager">The state manager.</param>
+        /// <param name="assemblySource">The assembly source.</param>
         public DefaultHistoryCoordinator(IStateManager stateManager, IAssemblySource assemblySource)
         {
             this.stateManager = stateManager;
             this.assemblySource = assemblySource;
         }
 
+        /// <summary>
+        /// Starts the coordinator with the specified configuration callback.
+        /// </summary>
+        /// <param name="configurator">The configuration callback.</param>
         public void Start(Action<HistoryConfiguration> configurator)
         {
             historyKeys = assemblySource.SelectMany(assembly => FindKeys(assembly)).ToList();
@@ -54,6 +66,9 @@ namespace Caliburn.ShellFramework.History
             Log.Info("History coordinator started for conductor {0} with state {1}.", config.Conductor, config.StateName);
         }
 
+        /// <summary>
+        /// Refreshes the coordinated conductor from history.
+        /// </summary>
         public void Refresh()
         {
             Log.Info("Refreshing {0} from history.", config.Conductor);

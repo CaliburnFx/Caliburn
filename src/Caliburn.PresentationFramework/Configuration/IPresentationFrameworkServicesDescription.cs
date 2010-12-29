@@ -12,7 +12,7 @@ namespace Caliburn.PresentationFramework.Configuration
     using Views;
 
     /// <summary>
-    /// Desscribes the services required for the presentation framework to function.
+    /// Describes the services required for the presentation framework to function.
     /// </summary>
     public interface IPresentationFrameworkServicesDescription
     {

@@ -5,10 +5,19 @@
     using System.Windows;
     using Core.Logging;
 
+    /// <summary>
+    /// The default implementation of <see cref="IResourceManager"/>.
+    /// </summary>
     public class DefaultResourceManager : IResourceManager
     {
         private static readonly ILog Log = LogManager.GetLog(typeof(DefaultResourceManager));
 
+        /// <summary>
+        /// Gets a resource stream.
+        /// </summary>
+        /// <param name="relativeUri">The relative URI.</param>
+        /// <param name="assemblyName">Name of the assembly.</param>
+        /// <returns>The stream, or null if not found.</returns>
         public Stream GetStream(string relativeUri, string assemblyName)
         {
             try

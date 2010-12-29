@@ -9,24 +9,49 @@
     using System.Windows.Documents;
 #endif
 
+    /// <summary>
+    /// Extensions methods related to resources.
+    /// </summary>
     public static class ResourceExtensions
     {
+        /// <summary>
+        /// Gets the name of the executing assembly.
+        /// </summary>
+        /// <returns>The name.</returns>
         public static string GetExecutingAssemblyName()
         {
             return Assembly.GetExecutingAssembly().GetAssemblyName();
         }
 
+        /// <summary>
+        /// Gets the name of the assembly.
+        /// </summary>
+        /// <param name="assembly">The assembly.</param>
+        /// <returns>The name.</returns>
         public static string GetAssemblyName(this Assembly assembly)
         {
             string name = assembly.FullName;
             return name.Substring(0, name.IndexOf(','));
         }
 
+        /// <summary>
+        /// Gets the resource stream using the executing assembly.
+        /// </summary>
+        /// <param name="resourceManager">The resource manager.</param>
+        /// <param name="relativeUri">The relative URI.</param>
+        /// <returns>The stream, or null if not found.</returns>
         public static Stream GetStream(this IResourceManager resourceManager, string relativeUri)
         {
             return resourceManager.GetStream(relativeUri, GetExecutingAssemblyName());
         }
 
+        /// <summary>
+        /// Gets the bitmap resource.
+        /// </summary>
+        /// <param name="resourceManager">The resource manager.</param>
+        /// <param name="relativeUri">The relative URI.</param>
+        /// <param name="assemblyName">Name of the assembly.</param>
+        /// <returns>The bitmap, or null if not found.</returns>
         public static BitmapImage GetBitmap(this IResourceManager resourceManager, string relativeUri, string assemblyName)
         {
             var stream = resourceManager.GetStream(relativeUri, assemblyName);
@@ -49,11 +74,24 @@
             }
         }
 
+        /// <summary>
+        /// Gets the bitmap resource from the executing assembly.
+        /// </summary>
+        /// <param name="resourceManager">The resource manager.</param>
+        /// <param name="relativeUri">The relative URI.</param>
+        /// <returns>The bitmap, or null if not found.</returns>
         public static BitmapImage GetBitmap(this IResourceManager resourceManager, string relativeUri)
         {
             return resourceManager.GetBitmap(relativeUri, GetExecutingAssemblyName());
         }
 
+        /// <summary>
+        /// Gets the resource string.
+        /// </summary>
+        /// <param name="resourceManager">The resource manager.</param>
+        /// <param name="relativeUri">The relative URI.</param>
+        /// <param name="assemblyName">Name of the assembly.</param>
+        /// <returns>The string, or null if not found.</returns>
         public static string GetString(this IResourceManager resourceManager, string relativeUri, string assemblyName)
         {
             var stream = resourceManager.GetStream(relativeUri, assemblyName);
@@ -65,6 +103,12 @@
             }
         }
 
+        /// <summary>
+        /// Gets the resource string from the executing assmebly.
+        /// </summary>
+        /// <param name="resourceManager">The resource manager.</param>
+        /// <param name="relativeUri">The relative URI.</param>
+        /// <returns>The string, or null if not found.</returns>
         public static string GetString(this IResourceManager resourceManager, string relativeUri)
         {
             return resourceManager.GetString(relativeUri, GetExecutingAssemblyName());
@@ -72,6 +116,13 @@
 
 #if SILVERLIGHT
 
+        /// <summary>
+        /// Gets the font source resource.
+        /// </summary>
+        /// <param name="resourceManager">The resource manager.</param>
+        /// <param name="relativeUri">The relative URI.</param>
+        /// <param name="assemblyName">Name of the assembly.</param>
+        /// <returns>The FontSource, or null if not found.</returns>
         public static FontSource GetFontSource(this IResourceManager resourceManager, string relativeUri, string assemblyName)
         {
             var stream = resourceManager.GetStream(relativeUri, assemblyName);
@@ -83,6 +134,12 @@
             }
         }
 
+        /// <summary>
+        /// Gets the font source resource from the executing assembly.
+        /// </summary>
+        /// <param name="resourceManager">The resource manager.</param>
+        /// <param name="relativeUri">The relative URI.</param>
+        /// <returns></returns>
         public static FontSource GetFontSource(this IResourceManager resourceManager, string relativeUri)
         {
             return resourceManager.GetFontSource(relativeUri, GetExecutingAssemblyName());
@@ -90,6 +147,13 @@
 
 #endif
 
+        /// <summary>
+        /// Gets the xaml object resource.
+        /// </summary>
+        /// <param name="resourceManager">The resource manager.</param>
+        /// <param name="relativeUri">The relative URI.</param>
+        /// <param name="assemblyName">Name of the assembly.</param>
+        /// <returns>The xaml object, or null if not found.</returns>
         public static object GetXamlObject(this IResourceManager resourceManager, string relativeUri, string assemblyName)
         {
 #if SILVERLIGHT
@@ -108,6 +172,12 @@
 #endif
         }
 
+        /// <summary>
+        /// Gets the xaml object resource from the executing assembly.
+        /// </summary>
+        /// <param name="resourceManager">The resource manager.</param>
+        /// <param name="relativeUri">The relative URI.</param>
+        /// <returns>The xaml object, or null if not found.</returns>
         public static object GetXamlObject(this IResourceManager resourceManager, string relativeUri)
         {
             return resourceManager.GetXamlObject(relativeUri, GetExecutingAssemblyName());

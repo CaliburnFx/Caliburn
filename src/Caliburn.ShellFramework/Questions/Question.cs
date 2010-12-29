@@ -5,13 +5,25 @@
     using PresentationFramework;
     using PresentationFramework.ViewModels;
 
+    /// <summary>
+    /// Represents a question.
+    /// </summary>
     public class Question : PropertyChangedBase
     {
         private Answer answer = Answer.No;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="Question"/> class with the default no, yes and cancel answers.
+        /// </summary>
+        /// <param name="text">The text.</param>
         public Question(string text)
             : this(text, Answer.No, Answer.Yes, Answer.Cancel) {}
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="Question"/> class.
+        /// </summary>
+        /// <param name="text">The text.</param>
+        /// <param name="possibleAnswers">The possible answers.</param>
         public Question(string text, params Answer[] possibleAnswers)
         {
             Text = text;
@@ -19,10 +31,28 @@
             Buttons = ConvertToButtons(possibleAnswers);
         }
 
+        /// <summary>
+        /// Gets or sets the text.
+        /// </summary>
+        /// <value>The text.</value>
         public string Text { get; private set; }
+
+        /// <summary>
+        /// Gets or sets the possible answers.
+        /// </summary>
+        /// <value>The possible answers.</value>
         public BindableEnumCollection<Answer> PossibleAnswers { get; set; }
+
+        /// <summary>
+        /// Gets or sets the buttons.
+        /// </summary>
+        /// <value>The buttons.</value>
         public IObservableCollection<ButtonModel> Buttons { get; set; }
 
+        /// <summary>
+        /// Gets or sets the answer.
+        /// </summary>
+        /// <value>The answer.</value>
         public Answer Answer
         {
             get { return answer; }

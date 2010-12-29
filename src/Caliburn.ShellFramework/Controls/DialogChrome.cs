@@ -8,6 +8,9 @@
     using System.Windows.Controls;
 #endif
 
+    /// <summary>
+    /// A custom chrome for dialogs.
+    /// </summary>
     public class DialogChrome 
 #if SILVERLIGHT
         : ChildWindow
@@ -15,6 +18,9 @@
         : Window
 #endif
     {
+        /// <summary>
+        /// The Buttons dependency property.
+        /// </summary>
         public static DependencyProperty ButtonsProperty =
             DependencyProperty.Register(
                 "Buttons",
@@ -23,11 +29,18 @@
                 null
                 );
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="DialogChrome"/> class.
+        /// </summary>
         public DialogChrome()
         {
             DefaultStyleKey = typeof(DialogChrome);
         }
 
+        /// <summary>
+        /// Gets or sets the buttons.
+        /// </summary>
+        /// <value>The buttons.</value>
         [TypeConverter(typeof(ButtonConverter))]
         public IObservableCollection<ButtonModel> Buttons
         {
