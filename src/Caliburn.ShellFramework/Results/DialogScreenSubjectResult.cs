@@ -6,19 +6,34 @@
     using PresentationFramework.Screens;
     using PresentationFramework.ViewModels;
 
+    /// <summary>
+    /// An <see cref="IResult"/> for showing model dialogs based on an <see cref="ISubjectSpecification"/>.
+    /// </summary>
     public class DialogScreenSubjectResult : OpenResultBase<object>
     {
         readonly ISubjectSpecification subjectSpecification;
 
 #if !SILVERLIGHT
+        /// <summary>
+        /// Gets or sets the dialog result.
+        /// </summary>
+        /// <value>The dialog result.</value>
         public bool? DialogResult { get; set; }
 #endif
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="DialogScreenSubjectResult"/> class.
+        /// </summary>
+        /// <param name="subjectSpecification">The subject specification.</param>
         public DialogScreenSubjectResult(ISubjectSpecification subjectSpecification)
         {
             this.subjectSpecification = subjectSpecification;
         }
 
+        /// <summary>
+        /// Executes the specified context.
+        /// </summary>
+        /// <param name="context">The context.</param>
         public override void Execute(ResultExecutionContext context)
         {
             subjectSpecification.CreateSubjectHost(context.ServiceLocator.GetInstance<IViewModelFactory>(), host =>{

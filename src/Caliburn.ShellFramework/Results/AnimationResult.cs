@@ -5,13 +5,31 @@
     using System.Windows.Media.Animation;
     using PresentationFramework.RoutedMessaging;
 
+    /// <summary>
+    /// An <see cref="IResult"/> that controls animation in the view.
+    /// </summary>
     public class AnimationResult : IResult
     {
+        /// <summary>
+        /// The action to perform on an animation.
+        /// </summary>
         public enum AnimationAction
         {
+            /// <summary>
+            /// Begin the animation.
+            /// </summary>
             Begin,
+            /// <summary>
+            /// Pause the animation.
+            /// </summary>
             Pause,
+            /// <summary>
+            /// Resume the animation.
+            /// </summary>
             Resume,
+            /// <summary>
+            /// Stop the animation.
+            /// </summary>
             Stop
         }
 
@@ -19,28 +37,49 @@
         private readonly string _key;
         private readonly AnimationAction _action;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="AnimationResult"/> class.
+        /// </summary>
+        /// <param name="key">The key.</param>
+        /// <param name="action">The action.</param>
         public AnimationResult(string key, AnimationAction action)
         {
             _key = key;
             _action = action;
         }
 
+        /// <summary>
+        /// Gets the animation's resource key.
+        /// </summary>
+        /// <value>The key.</value>
         public string Key
         {
             get { return _key; }
         }
 
+        /// <summary>
+        /// Gets the action to perform on the animation.
+        /// </summary>
+        /// <value>The action.</value>
         public AnimationAction Action
         {
             get { return _action; }
         }
 
+        /// <summary>
+        /// Causes the completed event to fire after the animation completes.
+        /// </summary>
+        /// <returns></returns>
         public AnimationResult Wait()
         {
             _wait = true;
             return this;
         }
 
+        /// <summary>
+        /// Executes the result using the specified context.
+        /// </summary>
+        /// <param name="context">The context.</param>
         public void Execute(ResultExecutionContext context)
         {
             FrameworkElement element = null;
@@ -60,7 +99,14 @@
             var storyboard = (Storyboard)element.Resources[_key];
 
             if(_wait)
-                storyboard.Completed += delegate { Completed(this, new ResultCompletionEventArgs()); };
+            {
+                EventHandler handler = null;
+                handler = delegate{
+                    storyboard.Completed -= handler;
+                    Completed(this, new ResultCompletionEventArgs());
+                };
+                storyboard.Completed += handler;
+            }
 
             switch(_action)
             {
@@ -84,6 +130,9 @@
                 Completed(this, new ResultCompletionEventArgs());
         }
 
+        /// <summary>
+        /// Occurs when execution has completed.
+        /// </summary>
         public event EventHandler<ResultCompletionEventArgs> Completed = delegate { };
     }
 }

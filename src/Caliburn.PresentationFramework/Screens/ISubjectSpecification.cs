@@ -16,7 +16,7 @@ namespace Caliburn.PresentationFramework.Screens
         bool Matches(IHaveSubject iHaveSubject);
 
         /// <summary>
-        /// Creates an item capable of hosting the the subject.
+        /// Creates an item capable of hosting the subject.
         /// </summary>
         /// <param name="factory">The factory.</param>
         /// <param name="constructionComplete">The construction completion callback.</param>

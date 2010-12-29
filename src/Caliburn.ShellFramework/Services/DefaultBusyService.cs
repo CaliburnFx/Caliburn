@@ -12,10 +12,16 @@ namespace Caliburn.ShellFramework.Services
     using PresentationFramework.Screens;
     using PresentationFramework.Views;
 
+    /// <summary>
+    /// The default implementation of <see cref="IBusyService"/>.
+    /// </summary>
     public class DefaultBusyService : IBusyService
     {
         private static readonly ILog Log = LogManager.GetLog(typeof(DefaultBusyService));
 
+        /// <summary>
+        /// The name of the busy indicator to search for in the element hierarchy.
+        /// </summary>
         public static string BusyIndicatorName = "busyIndicator";
 
         private class BusyInfo
@@ -31,11 +37,20 @@ namespace Caliburn.ShellFramework.Services
 
         private readonly IWindowManager windowManager;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="DefaultBusyService"/> class.
+        /// </summary>
+        /// <param name="windowManager">The window manager.</param>
         public DefaultBusyService(IWindowManager windowManager)
         {
             this.windowManager = windowManager;
         }
 
+        /// <summary>
+        /// Marks a view model as busy.
+        /// </summary>
+        /// <param name="sourceViewModel">The source view model.</param>
+        /// <param name="busyViewModel">The busy view model.</param>
         public void MarkAsBusy(object sourceViewModel, object busyViewModel)
         {
             sourceViewModel = sourceViewModel ?? defaultKey;
@@ -78,6 +93,10 @@ namespace Caliburn.ShellFramework.Services
             }
         }
 
+        /// <summary>
+        /// Marks a view model as not busy.
+        /// </summary>
+        /// <param name="sourceViewModel">The source view model.</param>
         public void MarkAsNotBusy(object sourceViewModel)
         {
             sourceViewModel = sourceViewModel ?? defaultKey;
