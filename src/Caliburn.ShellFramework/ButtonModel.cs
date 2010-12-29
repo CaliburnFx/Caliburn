@@ -24,11 +24,11 @@
         /// </summary>
         /// <value>The content.</value>
         public object Content { get; set; }
+
         /// <summary>
         /// Gets or sets the tool tip.
         /// </summary>
         /// <value>The tool tip.</value>
-        /// 
         public object ToolTip { get; set; }
 
         /// <summary>

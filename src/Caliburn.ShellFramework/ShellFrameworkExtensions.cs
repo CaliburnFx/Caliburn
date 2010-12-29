@@ -28,7 +28,7 @@
         public static string DetermineDisplayName(this object item)
         {
             var displayNamed = item as IHaveDisplayName;
-            if (displayNamed != null)
+            if(displayNamed != null)
                 return displayNamed.DisplayName;
             return item != null ? item.ToString() : string.Empty;
         }
@@ -41,8 +41,8 @@
         /// <param name="inScope">The in item scope.</param>
         /// <param name="scope">The scope controller.</param>
         /// <returns></returns>
-        public static Scope<TScope, TInScope> CreateScope<TScope, TInScope>(this TInScope inScope, TScope scope) 
-            where TInScope : IList<TInScope>, IChild<TInScope> 
+        public static Scope<TScope, TInScope> CreateScope<TScope, TInScope>(this TInScope inScope, TScope scope)
+            where TInScope : IList<TInScope>, IChild<TInScope>
             where TScope : IActivate, IDeactivate
         {
             return new Scope<TScope, TInScope>(scope);
@@ -59,7 +59,7 @@
         {
             var queue = new Queue<T>(self);
 
-            while (queue.Count > 0)
+            while(queue.Count > 0)
             {
                 var current = queue.Dequeue();
                 current.Apply(queue.Enqueue);

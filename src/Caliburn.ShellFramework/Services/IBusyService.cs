@@ -6,16 +6,16 @@ namespace Caliburn.ShellFramework.Services
     public interface IBusyService
     {
         /// <summary>
-        /// Marks a view model as busy.
+        /// Marks a ViewModel as busy.
         /// </summary>
-        /// <param name="sourceViewModel">The source view model.</param>
-        /// <param name="busyViewModel">The busy view model.</param>
+        /// <param name="sourceViewModel">The ViewModel to mark as busy.</param>
+        /// <param name="busyViewModel">The busy content ViewModel.</param>
         void MarkAsBusy(object sourceViewModel, object busyViewModel);
 
         /// <summary>
-        /// Marks a view model as not busy.
+        /// Marks a ViewModel as not busy.
         /// </summary>
-        /// <param name="sourceViewModel">The source view model.</param>
+        /// <param name="sourceViewModel">The ViewModel to mark as not busy.</param>
         void MarkAsNotBusy(object sourceViewModel);
     }
 }

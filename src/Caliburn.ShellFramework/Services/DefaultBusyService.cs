@@ -17,25 +17,27 @@ namespace Caliburn.ShellFramework.Services
     /// </summary>
     public class DefaultBusyService : IBusyService
     {
-        private static readonly ILog Log = LogManager.GetLog(typeof(DefaultBusyService));
+        /// <summary>
+        /// The log.
+        /// </summary>
+        protected static readonly ILog Log = LogManager.GetLog(typeof(DefaultBusyService));
 
         /// <summary>
-        /// The name of the busy indicator to search for in the element hierarchy.
+        /// The Indicators lock.
         /// </summary>
-        public static string BusyIndicatorName = "busyIndicator";
+        protected readonly object IndicatorLock = new object();
 
-        private class BusyInfo
-        {
-            public UIElement BusyIndicator { get; set; }
-            public object BusyViewModel { get; set; }
-            public int Depth { get; set; }
-        }
+        /// <summary>
+        /// The currently active busy indicator, keyed by ViewModel.
+        /// </summary>
+        protected readonly Dictionary<object, BusyInfo> Indicators = new Dictionary<object, BusyInfo>();
 
-        private readonly Dictionary<object, BusyInfo> loaders = new Dictionary<object, BusyInfo>();
-        private readonly object lockObject = new object();
-        private readonly object defaultKey = new object();
+        /// <summary>
+        /// The window manager.
+        /// </summary>
+        protected readonly IWindowManager WindowManager;
 
-        private readonly IWindowManager windowManager;
+        readonly object defaultKey = new object();
 
         /// <summary>
         /// Initializes a new instance of the <see cref="DefaultBusyService"/> class.
@@ -43,81 +45,111 @@ namespace Caliburn.ShellFramework.Services
         /// <param name="windowManager">The window manager.</param>
         public DefaultBusyService(IWindowManager windowManager)
         {
-            this.windowManager = windowManager;
+            WindowManager = windowManager;
         }
 
         /// <summary>
-        /// Marks a view model as busy.
+        /// Marks a ViewModel as busy.
         /// </summary>
-        /// <param name="sourceViewModel">The source view model.</param>
-        /// <param name="busyViewModel">The busy view model.</param>
+        /// <param name="sourceViewModel">The ViewModel to mark as busy.</param>
+        /// <param name="busyViewModel">The busy content ViewModel.</param>
         public void MarkAsBusy(object sourceViewModel, object busyViewModel)
         {
             sourceViewModel = sourceViewModel ?? defaultKey;
 
-            if (loaders.ContainsKey(sourceViewModel))
+            if(Indicators.ContainsKey(sourceViewModel))
             {
-                var info = loaders[sourceViewModel];
+                var info = Indicators[sourceViewModel];
                 info.BusyViewModel = busyViewModel;
-                UpdateLoader(info);
+                UpdateIndicator(info);
             }
             else
             {
                 var busyIndicator = TryFindBusyIndicator(sourceViewModel);
 
-                if (busyIndicator == null)
-                {
-                    var activator = busyViewModel as IActivate;
-                    if (activator == null)
-                        return;
-
-                    activator.Activated += (s,e) =>{
-                        if (!e.WasInitialized)
-                            return;
-
-                        var info = new BusyInfo { BusyViewModel = busyViewModel };
-                        loaders[sourceViewModel] = info;
-                        UpdateLoader(info);
-                    };
-
-                    Log.Warn("No busy indicator with name '" + BusyIndicatorName + "' was found in the UI hierarchy. Using modal.");
-                    windowManager.ShowDialog(busyViewModel, null);
-                }
+                if(busyIndicator == null)
+                    NoBusyIndicatorFound(sourceViewModel, busyViewModel);
                 else
-                {
-                    var info = new BusyInfo { BusyIndicator = busyIndicator, BusyViewModel = busyViewModel };
-                    loaders[sourceViewModel] = info;
-                    ToggleBusyIndicator(info, true);
-                    UpdateLoader(info);
-                }
+                    BusyIndicatorFound(sourceViewModel, busyViewModel, busyIndicator);
             }
         }
 
         /// <summary>
-        /// Marks a view model as not busy.
+        /// Marks a ViewModel as not busy.
         /// </summary>
-        /// <param name="sourceViewModel">The source view model.</param>
+        /// <param name="sourceViewModel">The ViewModel to mark as not busy.</param>
         public void MarkAsNotBusy(object sourceViewModel)
         {
             sourceViewModel = sourceViewModel ?? defaultKey;
+            BusyInfo info;
 
-            var info = loaders[sourceViewModel];
+            if(!Indicators.TryGetValue(sourceViewModel, out info))
+                return;
 
-            lock (lockObject)
+            lock(IndicatorLock)
             {
                 info.Depth--;
 
                 if(info.Depth == 0)
                 {
-                    loaders.Remove(sourceViewModel);
+                    Indicators.Remove(sourceViewModel);
                     ToggleBusyIndicator(info, false);
                 }
             }
         }
 
-        private void UpdateLoader(BusyInfo info)
+        /// <summary>
+        /// Called when the busy indicator is found.
+        /// </summary>
+        /// <param name="sourceViewModel">The source view model.</param>
+        /// <param name="busyViewModel">The busy view model.</param>
+        /// <param name="busyIndicator">The busy indicator.</param>
+        protected virtual void BusyIndicatorFound(object sourceViewModel, object busyViewModel, UIElement busyIndicator)
         {
-            lock(lockObject)
+            var info = new BusyInfo {
+                BusyIndicator = busyIndicator,
+                BusyViewModel = busyViewModel
+            };
+
+            Indicators[sourceViewModel] = info;
+
+            ToggleBusyIndicator(info, true);
+            UpdateIndicator(info);
+        }
+
+        /// <summary>
+        /// Called when no busy indicator can be found.
+        /// </summary>
+        /// <param name="sourceViewModel">The source view model.</param>
+        /// <param name="busyViewModel">The busy view model.</param>
+        protected virtual void NoBusyIndicatorFound(object sourceViewModel, object busyViewModel)
+        {
+            var activator = busyViewModel as IActivate;
+            if(activator == null)
+                return;
+
+            activator.Activated += (s, e) =>{
+                if(!e.WasInitialized)
+                    return;
+
+                var info = new BusyInfo {
+                    BusyViewModel = busyViewModel
+                };
+                Indicators[sourceViewModel] = info;
+                UpdateIndicator(info);
+            };
+
+            Log.Warn("No busy indicator was found in the UI hierarchy. Using modal dialog.");
+            WindowManager.ShowDialog(busyViewModel, null);
+        }
+
+        /// <summary>
+        /// Updates the indicator.
+        /// </summary>
+        /// <param name="info">The info.</param>
+        protected virtual void UpdateIndicator(BusyInfo info)
+        {
+            lock(IndicatorLock)
             {
                 info.Depth++;
             }
@@ -142,51 +174,96 @@ namespace Caliburn.ShellFramework.Services
             content.SetValue(info.BusyIndicator, info.BusyViewModel, null);
         }
 
-        private void ToggleBusyIndicator(BusyInfo info, bool isBusy)
+        /// <summary>
+        /// Toggles the busy indicator.
+        /// </summary>
+        /// <param name="info">The info.</param>
+        /// <param name="isBusy">if set to <c>true</c> should be busy.</param>
+        protected void ToggleBusyIndicator(BusyInfo info, bool isBusy)
         {
-            if (info.BusyIndicator != null)
+            if(info.BusyIndicator != null)
             {
                 var busyProperty = info.BusyIndicator.GetType().GetProperty("IsBusy");
-                if (busyProperty != null)
+                if(busyProperty != null)
                     busyProperty.SetValue(info.BusyIndicator, isBusy, null);
-                else info.BusyIndicator.Visibility = isBusy ? Visibility.Visible : Visibility.Collapsed;
+                else
+                    info.BusyIndicator.Visibility = isBusy ? Visibility.Visible : Visibility.Collapsed;
             }
             else if(!isBusy)
             {
                 var close = info.BusyViewModel.GetType().GetMethod("Close", Type.EmptyTypes);
-                if (close != null)
+                if(close != null)
                     close.Invoke(info.BusyViewModel, null);
             }
         }
 
-        private UIElement TryFindBusyIndicator(object viewModel)
+        /// <summary>
+        /// Finds the busy indicator for the provided view.
+        /// </summary>
+        /// <param name="view">The view.</param>
+        /// <returns>The busy indicator, or null if not found.</returns>
+        protected UIElement FindBusyIndicatorCore(DependencyObject view)
         {
-            DependencyObject view = GetView(viewModel);
-            if (view == null)
-            {
-                Log.Warn("Could not find view for {0}.", viewModel);
-                return null;
-            }
-
             UIElement busyIndicator = null;
-            view = View.GetFirstNonGeneratedView(view);
 
-            while (view != null && busyIndicator == null)
+            while(view != null && busyIndicator == null)
             {
-                busyIndicator = view.FindName(BusyIndicatorName) as UIElement;
+                busyIndicator = view.FindName("busyIndicator") as UIElement;
                 view = view.GetParent();
             }
 
             return busyIndicator;
         }
 
-        private UIElement GetView(object viewModel) 
+        /// <summary>
+        /// Gets the view.
+        /// </summary>
+        /// <param name="viewModel">The view model.</param>
+        /// <returns></returns>
+        protected virtual UIElement GetView(object viewModel)
         {
             var viewAware = viewModel as IViewAware;
-            if (viewAware == null)
+            if(viewAware == null)
                 return null;
 
             return viewAware.GetView(null) as UIElement;
+        }
+
+        UIElement TryFindBusyIndicator(object viewModel)
+        {
+            DependencyObject view = GetView(viewModel);
+            if(view == null)
+            {
+                Log.Warn("Could not find view for {0}.", viewModel);
+                return null;
+            }
+
+            view = View.GetFirstNonGeneratedView(view);
+            return FindBusyIndicatorCore(view);
+        }
+
+        /// <summary>
+        /// Stores information on currently active busy indicators.
+        /// </summary>
+        protected class BusyInfo
+        {
+            /// <summary>
+            /// Gets or sets the busy indicator.
+            /// </summary>
+            /// <value>The busy indicator.</value>
+            public UIElement BusyIndicator { get; set; }
+
+            /// <summary>
+            /// Gets or sets the busy view model.
+            /// </summary>
+            /// <value>The busy view model.</value>
+            public object BusyViewModel { get; set; }
+
+            /// <summary>
+            /// Gets or sets the depth.
+            /// </summary>
+            /// <value>The depth.</value>
+            public int Depth { get; set; }
         }
     }
 }

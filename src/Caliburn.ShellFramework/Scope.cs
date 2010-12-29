@@ -14,10 +14,10 @@ namespace Caliburn.ShellFramework
         where TScope : IActivate, IDeactivate
         where TInScope : IList<TInScope>, IChild<TInScope>
     {
-        private static readonly ILog Log = LogManager.GetLog(typeof(Scope<TScope, TInScope>));
+        static readonly ILog Log = LogManager.GetLog(typeof(Scope<TScope, TInScope>));
 
-        private readonly List<Instruction> _toAdd = new List<Instruction>();
-        private readonly List<Instruction> _toRemove = new List<Instruction>();
+        readonly List<Instruction> toAdd = new List<Instruction>();
+        readonly List<Instruction> toRemove = new List<Instruction>();
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Scope&lt;TScope, TInScope&gt;"/> class.
@@ -71,7 +71,7 @@ namespace Caliburn.ShellFramework
         /// <returns>The scope.</returns>
         public Scope<TScope, TInScope> AddAt(TInScope parent, Func<int> index, TInScope child)
         {
-            _toAdd.Add(new Instruction {
+            toAdd.Add(new Instruction {
                 Parent = parent,
                 Index = index,
                 Child = child
@@ -89,7 +89,7 @@ namespace Caliburn.ShellFramework
         {
             var index = child.Parent.IndexOf(child);
 
-            _toRemove.Add(new Instruction {
+            toRemove.Add(new Instruction {
                 Parent = child.Parent,
                 Child = child,
                 Index = () => index
@@ -98,41 +98,42 @@ namespace Caliburn.ShellFramework
             return this;
         }
 
-        private void ScopeActivated(object sender, EventArgs e)
+        void ScopeActivated(object sender, EventArgs e)
         {
             Log.Info("Activating menus for {0}.", sender);
 
-            foreach (var instruction in _toAdd)
+            foreach(var instruction in toAdd)
             {
                 var index = instruction.Index();
 
-                if (index == -1)
+                if(index == -1)
                     instruction.Parent.Add(instruction.Child);
-                else instruction.Parent.Insert(index, instruction.Child);
+                else
+                    instruction.Parent.Insert(index, instruction.Child);
             }
 
-            foreach(var instruction in _toRemove)
+            foreach(var instruction in toRemove)
             {
                 instruction.Parent.Remove(instruction.Child);
             }
         }
 
-        private void ScopedDeactivated(object sender, EventArgs e)
+        void ScopedDeactivated(object sender, EventArgs e)
         {
             Log.Info("Deactivating menus for {0}.", sender);
 
-            foreach (var instruction in _toAdd)
+            foreach(var instruction in toAdd)
             {
                 instruction.Parent.Remove(instruction.Child);
             }
 
-            foreach (var instruction in _toRemove)
+            foreach(var instruction in toRemove)
             {
                 instruction.Parent.Insert(instruction.Index(), instruction.Child);
             }
         }
 
-        private class Instruction
+        class Instruction
         {
             public TInScope Parent { get; set; }
             public Func<int> Index { get; set; }
