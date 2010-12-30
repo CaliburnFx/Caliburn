@@ -62,8 +62,11 @@
                 return null;
             }
 #else
-            return container.IsRegistered(typeToCheck, actualKey)
-                ? container.Resolve(typeToCheck, actualKey)
+            if (container.IsRegistered(typeToCheck, actualKey))
+                return container.Resolve(typeToCheck, actualKey);
+
+            return typeToCheck.IsConcrete()
+                ? container.Resolve(typeToCheck)
                 : null;
 #endif
         }
