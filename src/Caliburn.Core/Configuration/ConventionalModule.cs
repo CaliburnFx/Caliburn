@@ -16,8 +16,8 @@
     public abstract class ConventionalModule<TModule, TServicesDescription> : CaliburnModule<TModule>
         where TModule : ConventionalModule<TModule, TServicesDescription>, new()
     {
-        private static readonly ILog Log = LogManager.GetLog(typeof(ConventionalModule<TModule, TServicesDescription>));
-        private readonly Dictionary<Type, IServiceConfiguration> services = new Dictionary<Type, IServiceConfiguration>();
+        static readonly ILog Log = LogManager.GetLog(typeof(ConventionalModule<TModule, TServicesDescription>));
+        readonly Dictionary<Type, IServiceConfiguration> services = new Dictionary<Type, IServiceConfiguration>();
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ConventionalModule&lt;TModule, TServicesDescription&gt;"/> class.

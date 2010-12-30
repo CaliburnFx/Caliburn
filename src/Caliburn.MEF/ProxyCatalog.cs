@@ -14,9 +14,9 @@
     /// </summary>
     public class ProxyCatalog : ComposablePartCatalog, INotifyComposablePartCatalogChanged
     {
-        private readonly ComposablePartCatalog innerCatalog;
-        private Dictionary<ComposablePartDefinition, ComposablePartDefinition> parts;
-    	private readonly object syncobj = new object();
+        readonly ComposablePartCatalog innerCatalog;
+        Dictionary<ComposablePartDefinition, ComposablePartDefinition> parts;
+    	readonly object syncobj = new object();
 
     	/// <summary>
         /// Initializes a new instance of the <see cref="ProxyCatalog"/> class.

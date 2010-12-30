@@ -16,7 +16,7 @@ namespace Caliburn.DynamicProxy.Interceptors
 #endif
     public class DataErrorInfoInterceptor : InterceptorBase
     {
-        private readonly IValidator _validator;
+        readonly IValidator validator;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="DataErrorInfoInterceptor"/> class.
@@ -24,7 +24,7 @@ namespace Caliburn.DynamicProxy.Interceptors
         /// <param name="validator">The validator.</param>
         public DataErrorInfoInterceptor(IValidator validator)
         {
-            _validator = validator;
+            this.validator = validator;
         }
 
         /// <summary>
@@ -37,7 +37,7 @@ namespace Caliburn.DynamicProxy.Interceptors
             {
                 if ("get_Item".Equals(invocation.Method.Name))
                 {
-                    var messages = _validator
+                    var messages = validator
                         .Validate(invocation.Proxy, (string)invocation.Arguments[0])
                         .Select(x => x.Message)
                         .ToArray();
@@ -46,7 +46,7 @@ namespace Caliburn.DynamicProxy.Interceptors
                 }
                 else if ("get_Error".Equals(invocation.Method.Name))
                 {
-                    var messages = _validator.Validate(invocation.Proxy)
+                    var messages = validator.Validate(invocation.Proxy)
                         .Select(x => x.Message)
                         .ToArray();
 

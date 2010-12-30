@@ -13,8 +13,8 @@
     /// </summary>
     public class SpringAdapter : ContainerBase
     {
-        private readonly GenericApplicationContext context;
-        private readonly AutoWiringMode autoWiringMode;
+        readonly GenericApplicationContext context;
+        readonly AutoWiringMode autoWiringMode;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="SpringAdapter"/> class.

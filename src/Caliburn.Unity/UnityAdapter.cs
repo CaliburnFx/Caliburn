@@ -11,7 +11,7 @@
     /// </summary>
     public class UnityAdapter : ContainerBase
     {
-        private readonly IUnityContainer container;
+        readonly IUnityContainer container;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="UnityAdapter"/> class.

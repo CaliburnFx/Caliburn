@@ -7,8 +7,8 @@
     /// </summary>
     public static class LogManager
     {
-        private static readonly ILog _nullLog = new NullLog();
-        private static Func<Type, ILog> _logLocator = type => _nullLog;
+        static readonly ILog NullLogSingleton = new NullLog();
+        static Func<Type, ILog> logLocator = type => NullLogSingleton;
 
         /// <summary>
         /// Initializes the system with the specified log creator.
@@ -16,7 +16,7 @@
         /// <param name="logLocator">The log locator.</param>
         public static void Initialize(Func<Type, ILog> logLocator)
         {
-            _logLocator = logLocator;
+            LogManager.logLocator = logLocator;
         }
 
         /// <summary>
@@ -26,7 +26,7 @@
         /// <returns></returns>
         public static ILog GetLog(Type type)
         {
-            return _logLocator(type);
+            return logLocator(type);
         }
 
         private class NullLog : ILog 

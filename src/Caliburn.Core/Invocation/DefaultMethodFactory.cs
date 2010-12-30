@@ -10,8 +10,8 @@ namespace Caliburn.Core.Invocation
     /// </summary>
     public class DefaultMethodFactory : IMethodFactory
     {
-        private static readonly ILog Log = LogManager.GetLog(typeof(DefaultMethodFactory));
-        private readonly Dictionary<MethodInfo, IMethod> _cache = new Dictionary<MethodInfo, IMethod>();
+        static readonly ILog Log = LogManager.GetLog(typeof(DefaultMethodFactory));
+        readonly Dictionary<MethodInfo, IMethod> cache = new Dictionary<MethodInfo, IMethod>();
 
         /// <summary>
         /// Creates an instance of <see cref="IMethod"/> using the <see cref="MethodInfo"/>.
@@ -22,7 +22,7 @@ namespace Caliburn.Core.Invocation
         {
             IMethod method;
 
-            if(!_cache.TryGetValue(methodInfo, out method))
+            if(!cache.TryGetValue(methodInfo, out method))
             {
                 if(methodInfo.ReturnType == typeof(void))
                     method = new Procedure(methodInfo);
@@ -30,7 +30,7 @@ namespace Caliburn.Core.Invocation
 
                 Log.Info("Created method for {0}.", method);
 
-                _cache[methodInfo] = method;
+                cache[methodInfo] = method;
             }
 
             return method;
@@ -38,16 +38,16 @@ namespace Caliburn.Core.Invocation
 
         private abstract class MethodProxyBase : IMethod
         {
-            private readonly MethodInfo _info;
+            readonly MethodInfo info;
 
             protected MethodProxyBase(MethodInfo info)
             {
-                _info = info;
+                this.info = info;
             }
 
             public MethodInfo Info
             {
-                get { return _info; }
+                get { return info; }
             }
 
             public object Invoke(object instance, params object[] parameters)
@@ -92,34 +92,34 @@ namespace Caliburn.Core.Invocation
 
         private class Procedure : MethodProxyBase
         {
-            private readonly DelegateFactory.LateBoundProc _theDelegate;
+            readonly DelegateFactory.LateBoundProc theDelegate;
 
             internal Procedure(MethodInfo info)
                 : base(info)
             {
-                _theDelegate = DelegateFactory.Create<DelegateFactory.LateBoundProc>(info);
+                theDelegate = DelegateFactory.Create<DelegateFactory.LateBoundProc>(info);
             }
 
             protected override object InvokeCore(object instance, object[] parameters)
             {
-                _theDelegate(instance, parameters);
+                theDelegate(instance, parameters);
                 return null;
             }
         }
 
         private class Function : MethodProxyBase
         {
-            private readonly DelegateFactory.LateBoundFunc _theDelegate;
+            readonly DelegateFactory.LateBoundFunc theDelegate;
 
             internal Function(MethodInfo info)
                 : base(info)
             {
-                _theDelegate = DelegateFactory.Create<DelegateFactory.LateBoundFunc>(info);
+                theDelegate = DelegateFactory.Create<DelegateFactory.LateBoundFunc>(info);
             }
 
             protected override object InvokeCore(object instance, object[] parameters)
             {
-                return _theDelegate(instance, parameters);
+                return theDelegate(instance, parameters);
             }
         }
     }

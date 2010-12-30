@@ -8,8 +8,8 @@
     /// </summary>
     public class ErrorAdapter : IError
     {
-        private readonly ValidationFailure failure;
-        private readonly object instance;
+        readonly ValidationFailure failure;
+        readonly object instance;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ErrorAdapter"/> class.

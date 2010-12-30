@@ -16,9 +16,9 @@
     /// </summary>
     public class DynamicProxyFactory : IProxyFactory
     {
-        private readonly ProxyGenerator proxyGenerator;
+        readonly ProxyGenerator proxyGenerator;
 
-        private readonly Dictionary<Type, IBehaviorConfiguration> configrations =
+        readonly Dictionary<Type, IBehaviorConfiguration> configrations =
             new Dictionary<Type, IBehaviorConfiguration>();
 
         //private ModuleScope _scope;

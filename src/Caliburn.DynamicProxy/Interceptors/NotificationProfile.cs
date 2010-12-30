@@ -16,17 +16,17 @@
 #endif
 	public class NotificationProfile
     {
-        private static readonly Dictionary<Type, NotificationProfile> _profiles =
+        static readonly Dictionary<Type, NotificationProfile> Profiles =
             new Dictionary<Type, NotificationProfile>();
 
-        private static readonly object _creationLock = new object();
+        static readonly object CreationLock = new object();
 
-        private readonly List<string> _recorded = new List<string>();
-        private readonly List<string> _ignores = new List<string>();
-        private readonly Dictionary<string, IList<string>> _dependencies = new Dictionary<string, IList<string>>();
-        private readonly List<string> _getters = new List<string>();
-        private readonly object _recordLock = new object();
-        private readonly DependencyMode _dependencyMode;
+        readonly List<string> recorded = new List<string>();
+        readonly List<string> ignores = new List<string>();
+        readonly Dictionary<string, IList<string>> dependencies = new Dictionary<string, IList<string>>();
+        readonly List<string> getters = new List<string>();
+        readonly object recordLock = new object();
+        readonly DependencyMode dependencyMode;
 
         /// <summary>
         /// Gets the specified profile for the specified type.
@@ -38,13 +38,13 @@
         {
             NotificationProfile profile;
 
-            if(!_profiles.TryGetValue(type, out profile))
+            if(!Profiles.TryGetValue(type, out profile))
             {
-                lock(_creationLock)
+                lock(CreationLock)
                 {
-                    if(!_profiles.TryGetValue(type, out profile))
+                    if(!Profiles.TryGetValue(type, out profile))
                     {
-                        _profiles[type] = profile = new NotificationProfile(type, behavior);
+                        Profiles[type] = profile = new NotificationProfile(type, behavior);
                     }
                 }
             }
@@ -54,11 +54,11 @@
 
         private NotificationProfile(Type type, NotifyPropertyChangedAttribute behavior)
         {
-            _dependencyMode = behavior.DependencyMode;
+            dependencyMode = behavior.DependencyMode;
 
             var properties = type.GetProperties();
 
-            _ignores = (from property in properties
+            ignores = (from property in properties
                         where property.GetAttributes<DoNotNotifyAttribute>(true).Any()
                         select property.Name).ToList();
 
@@ -79,8 +79,8 @@
                 GetOrCreateDependencies(dependent.DependsOn)
                     .Add(dependent.Property);
 
-                if (!_recorded.Contains(dependent.Property))
-                    _recorded.Add(dependent.Property);
+                if (!recorded.Contains(dependent.Property))
+                    recorded.Add(dependent.Property);
             }
         }
 
@@ -91,38 +91,38 @@
         /// <param name="invocation">The invocation.</param>
         public void HandleGetter(string propertyName, IInvocation invocation)
         {
-            switch (_dependencyMode)
+            switch (dependencyMode)
             {
                 case DependencyMode.AlwaysRecord:
-                    lock (_recordLock)
+                    lock (recordLock)
                     {
                         try
                         {
-                            _getters.Add(propertyName);
+                            getters.Add(propertyName);
                             invocation.Proceed();                            
                         }
                         finally
                         {
-                            _getters.Remove(propertyName);
+                            getters.Remove(propertyName);
                             RecordDependencies(propertyName);
                         }
                     }
                     break;
                 case DependencyMode.RecordOnce:
-                    if(!_recorded.Contains(propertyName))
+                    if(!recorded.Contains(propertyName))
                     {
-                        lock(_recordLock)
+                        lock(recordLock)
                         {
-                            if(!_recorded.Contains(propertyName))
+                            if(!recorded.Contains(propertyName))
                             {
                                 try
                                 {
-                                    _getters.Add(propertyName);
+                                    getters.Add(propertyName);
                                     invocation.Proceed();
                                 }
                                 finally
                                 {
-                                    _getters.Remove(propertyName);
+                                    getters.Remove(propertyName);
                                     RecordDependencies(propertyName);
                                 }
                             }
@@ -146,7 +146,7 @@
         /// <returns></returns>
         public bool ShouldNotify(string propertyName)
         {
-            return !_ignores.Contains(propertyName);
+            return !ignores.Contains(propertyName);
         }
 
         /// <summary>
@@ -158,7 +158,7 @@
         {
             IList<string> properties;
 
-            if(!_dependencies.TryGetValue(propertyName, out properties))
+            if(!dependencies.TryGetValue(propertyName, out properties))
                 properties = new List<string>();
 
             foreach(var prop in properties)
@@ -174,27 +174,27 @@
 
         private void RecordDependencies(string propertyName)
         {
-            if(_getters.Count < 1)
+            if(getters.Count < 1)
                 return;
 
             var dependencies = GetOrCreateDependencies(propertyName);
 
-            foreach(var getter in _getters)
+            foreach(var getter in getters)
             {
                 if(!dependencies.Contains(getter))
                     dependencies.Add(getter);
             }
 
-            if(!_recorded.Contains(propertyName))
-                _recorded.Add(propertyName);
+            if(!recorded.Contains(propertyName))
+                recorded.Add(propertyName);
         }
 
         private IList<string> GetOrCreateDependencies(string propertyName)
         {
             IList<string> dependencies;
 
-            if(!_dependencies.TryGetValue(propertyName, out dependencies))
-                _dependencies[propertyName] = dependencies = new List<string>();
+            if(!this.dependencies.TryGetValue(propertyName, out dependencies))
+                this.dependencies[propertyName] = dependencies = new List<string>();
 
             return dependencies;
         }

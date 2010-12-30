@@ -11,7 +11,7 @@
     /// </summary>
     public class ProxyExtension : UnityContainerExtension
     {
-        private readonly IList<Type> registry = new List<Type>();
+        readonly IList<Type> registry = new List<Type>();
 
         /// <summary>
         /// Initial the container with this extension's functionality.

@@ -9,9 +9,9 @@
     /// </summary>
     public class ProxyPartDefinition : ComposablePartDefinition
     {
-        private readonly ComposablePartDefinition innerDefinition;
-        private ProxyPart part;
-        private readonly Type implementation;
+        readonly ComposablePartDefinition innerDefinition;
+        ProxyPart part;
+        readonly Type implementation;
 		
         /// <summary>
         /// Initializes a new instance of the <see cref="ProxyPartDefinition"/> class.

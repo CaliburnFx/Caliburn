@@ -2,12 +2,19 @@ namespace Caliburn.Core.InversionOfControl
 {
     using System;
     using System.Collections.Generic;
+    using Logging;
 
     /// <summary>
     /// Implemented by services which can locate other services.
     /// </summary>
     public interface IServiceLocator : IServiceProvider
     {
+        /// <summary>
+        /// Gets or sets the logger.
+        /// </summary>
+        /// <value>The logger.</value>
+        ILog Log { get; set; }
+
         /// <summary>
         /// Gets an instance by type and/or key.
         /// </summary>

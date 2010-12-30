@@ -13,7 +13,7 @@
     /// </summary>
     public class ProxyPostProcessor : IObjectPostProcessor
     {
-        private readonly SpringAdapter container;
+        readonly SpringAdapter container;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ProxyPostProcessor"/> class.

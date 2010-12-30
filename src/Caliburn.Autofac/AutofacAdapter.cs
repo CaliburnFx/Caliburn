@@ -19,8 +19,8 @@
     /// </summary>
     public class AutofacAdapter : ContainerBase
     {
-        private readonly IContainer container;
-        private ContainerUpdater updater;
+        readonly IContainer container;
+        ContainerUpdater updater;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="AutofacAdapter"/> class.

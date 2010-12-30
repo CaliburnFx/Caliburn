@@ -14,8 +14,8 @@
     /// </summary>
     public class ProxyBuilderStrategy : BuilderStrategy
     {
-        private readonly IUnityContainer container;
-        private readonly IEnumerable<Type> registry;
+        readonly IUnityContainer container;
+        readonly IEnumerable<Type> registry;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ProxyBuilderStrategy"/> class.

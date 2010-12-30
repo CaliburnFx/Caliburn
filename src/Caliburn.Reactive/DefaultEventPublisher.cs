@@ -9,8 +9,8 @@
     /// </summary>
     public class DefaultEventPublisher : IEventPublisher
     {
-        private readonly Dictionary<Type, object> subjects = new Dictionary<Type, object>();
-        private readonly object @lock = new object();
+        readonly Dictionary<Type, object> subjects = new Dictionary<Type, object>();
+        readonly object @lock = new object();
 
         /// <summary>
         /// Gets the event for use by subscribers.

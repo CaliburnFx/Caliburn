@@ -15,9 +15,9 @@
 	/// </summary>
 	public class ProxyPart : ComposablePart
 	{
-		private readonly Type implementation;
+		readonly Type implementation;
 		readonly IComponentRegistration registration;
-		private readonly ComposablePart innerPart;
+		readonly ComposablePart innerPart;
 		object instance;
 
 		/// <summary>

@@ -11,7 +11,7 @@
 #endif
 	public class ProxyInterceptor : InterceptorBase
     {
-        private static readonly ProxyInterceptor _instance = new ProxyInterceptor();
+        static readonly ProxyInterceptor ActualInstance = new ProxyInterceptor();
 
         /// <summary>
         /// Gets the instance.
@@ -19,7 +19,7 @@
         /// <value>The instance.</value>
         public static ProxyInterceptor Instance
         {
-            get { return _instance; }
+            get { return ActualInstance; }
         }
 
         private ProxyInterceptor() {}

@@ -7,6 +7,7 @@
 	using System.Linq;
 	using Core;
 	using Core.Behaviors;
+	using Core.Configuration;
 	using Core.InversionOfControl;
 
 	/// <summary>
@@ -14,9 +15,9 @@
 	/// </summary>
 	public class MEFAdapter : ContainerBase
 	{
-		private readonly CompositionContainer container;
-		private CompositionBatch batch;
-		private CompositionBatchStrategy batchStrategy;
+		readonly CompositionContainer container;
+		CompositionBatch batch;
+		CompositionBatchStrategy batchStrategy;
 
 		/// <summary>
 		/// Initializes a new instance of the <see cref="MEFAdapter"/> class.
@@ -27,15 +28,16 @@
 			this.container = container;
 			batchStrategy = new CompositionBatchStrategy();
 
-		    IoCExtensions.SelectEligibleConstructorImplementation = type =>{
-		        return (from c in type.GetConstructors()
-		                where c.GetAttributes<ImportingConstructorAttribute>(false)
-		                    .FirstOrDefault() != null
-		                select c).FirstOrDefault() ??
-		                    (from c in type.GetConstructors()
-		                     orderby c.GetParameters().Length descending
-		                     select c).FirstOrDefault();
-		    };
+		    CaliburnModule<CoreConfiguration>.Instance.SelectConstructorsWith(
+		        type =>{
+		            return (from c in type.GetConstructors()
+		                    where c.GetAttributes<ImportingConstructorAttribute>(false)
+		                        .FirstOrDefault() != null
+		                    select c).FirstOrDefault() ??
+		                        (from c in type.GetConstructors()
+		                         orderby c.GetParameters().Length descending
+		                         select c).FirstOrDefault();
+		        });
 
 			var batch = new CompositionBatch();
 

@@ -13,7 +13,7 @@
 #endif
 	public abstract class NotifyPropertyChangedBaseInterceptor : InterceptorBase
     {
-        private readonly NotificationProfile _profile;
+        readonly NotificationProfile profile;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="NotifyPropertyChangedBaseInterceptor"/> class.
@@ -22,7 +22,7 @@
         /// <param name="behavior">The behavior.</param>
         protected NotifyPropertyChangedBaseInterceptor(Type implementation, NotifyPropertyChangedAttribute behavior)
         {
-            _profile = NotificationProfile.Get(implementation, behavior);
+            profile = NotificationProfile.Get(implementation, behavior);
         }
 
         /// <summary>
@@ -37,7 +37,7 @@
                 return;
 
             if(methodName.StartsWith("get_"))
-                _profile.HandleGetter(GetPropertyName(methodName), invocation);
+                profile.HandleGetter(GetPropertyName(methodName), invocation);
             else
             {
                 invocation.Proceed();
@@ -68,11 +68,11 @@
         {
             var propertyName = GetPropertyName(methodName);
 
-            if(_profile.ShouldNotify(propertyName))
+            if(profile.ShouldNotify(propertyName))
                 OnPropertyChanged(proxy, propertyName);
 
-            _profile.GetDependencies(propertyName).Apply(x =>{
-                if(_profile.ShouldNotify(x))
+            profile.GetDependencies(propertyName).Apply(x =>{
+                if(profile.ShouldNotify(x))
                     OnPropertyChanged(proxy, x);
             });
         }

@@ -12,8 +12,6 @@
     /// </summary>
     public class CaliburnFramework : ICaliburnFramework, IConfigurationBuilder, IModuleHook
     {
-        private static readonly ILog Log = LogManager.GetLog(typeof(CaliburnFramework));
-
         /// <summary>
         /// Configures caliburn with the <see cref="SimpleContainer"/>.
         /// </summary>
@@ -55,26 +53,24 @@
             return new CaliburnFramework(serviceLocator, register);
         }
 
-        private static readonly Type ModuleType = typeof(IModule);
+        static readonly Type ModuleType = typeof(IModule);
 
         internal static ICaliburnFramework Instance { get; private set; }
         internal static IModuleHook ModuleHook { get; private set; }
 
-        private readonly IServiceLocator serviceLocator;
-        private readonly Action<IEnumerable<IComponentRegistration>> register;
-        private readonly List<IModule> modules = new List<IModule>();
-        private IEnumerable<Assembly> assembliesToInspect = new List<Assembly>();
-        private bool isStarted;
+        readonly IServiceLocator serviceLocator;
+        readonly Action<IEnumerable<IComponentRegistration>> register;
+        readonly List<IModule> modules = new List<IModule>();
+        IEnumerable<Assembly> assembliesToInspect = new List<Assembly>();
+        bool isStarted;
+        ILog log = LogManager.GetLog(typeof(CaliburnFramework));
 
         private CaliburnFramework(IServiceLocator serviceLocator, Action<IEnumerable<IComponentRegistration>> register)
         {
-            Log.Info("Framework initialization begun.");
-
             this.serviceLocator = serviceLocator;
             this.register = register;
 
             IoC.Initialize(serviceLocator);
-            AddModule(CaliburnModule<CoreConfiguration>.Instance);
 
             Instance = this;
             ModuleHook = this;
@@ -108,8 +104,11 @@
         /// <returns>The module.</returns>
         T IModuleHook.Module<T>(T module)
         {
-            if(!modules.Contains(module))
+            if (!modules.Contains(module))
+            {
                 modules.Add(module);
+                log.Info("Module {0} added.", module);
+            }
             else return (T)modules.First(x => x.Equals(module));
 
             if(isStarted)
@@ -117,8 +116,6 @@
                 register(module.GetComponents());
                 module.Initialize(serviceLocator);
             }
-
-            Log.Info("Module {0} added.", module);
 
             return module;
         }
@@ -139,6 +136,13 @@
         {
             if(isStarted)
                 return;
+
+            AddModule(CaliburnModule<CoreConfiguration>.Instance);
+
+            log = LogManager.GetLog(typeof(CaliburnFramework));
+            serviceLocator.Log = LogManager.GetLog(serviceLocator.GetType());
+
+            log.Info("Framework initialization begun.");
 
             var registrations = new List<IComponentRegistration>();
             var modules = new List<IModule>();
@@ -168,10 +172,10 @@
 
             CaliburnModule<CoreConfiguration>.Instance.ExecuteAfterStart();
 
-            Log.Info("Framework initialization complete.");
+            log.Info("Framework initialization complete.");
         }
 
-        private void NewAssemblyAdded(Assembly assembly)
+        void NewAssemblyAdded(Assembly assembly)
         {
             var registrations = new List<IComponentRegistration>();
             var modules = new List<IModule>();
@@ -186,7 +190,7 @@
             }
         }
 
-        private static void Inspect(Assembly assembly, ICollection<IComponentRegistration> componentList, ICollection<IModule> modules)
+        void Inspect(Assembly assembly, ICollection<IComponentRegistration> componentList, ICollection<IModule> modules)
         {
             var types = CoreExtensions.GetInspectableTypes(assembly);
 
@@ -208,7 +212,7 @@
                 else modules.Add((IModule)Activator.CreateInstance(type));
             }
 
-            Log.Info("Assembly {0} inspected.", assembly);
+            log.Info("Assembly {0} inspected.", assembly);
         }
     }
 }

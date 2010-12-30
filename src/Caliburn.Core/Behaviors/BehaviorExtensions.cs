@@ -9,10 +9,7 @@
     /// </summary>
     public static class BehaviorExtensions
     {
-        /// <summary>
-        /// The overridable implemenation of ShouldCreateProxy.
-        /// </summary>
-        public static Func<Type, bool> DefaultShouldCreateProxyImplementation = DefaultShouldCreateProxy;
+        internal static Func<Type, bool> DefaultShouldCreateProxyImplementation = DefaultShouldCreateProxy;
 
         /// <summary>
         /// Checks whether the specified type should be proxied.

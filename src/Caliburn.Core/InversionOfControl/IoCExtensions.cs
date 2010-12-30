@@ -55,10 +55,7 @@
             return locator.GetAllInstances(typeof(TService)).Cast<TService>();
         }
 
-        /// <summary>
-        /// The overridable implemenation of GetModelType.
-        /// </summary>
-        public static Func<Type, ConstructorInfo> SelectEligibleConstructorImplementation = DefaultSelectEligibleConstructor;
+        internal static Func<Type, ConstructorInfo> SelectEligibleConstructorImplementation = DefaultSelectEligibleConstructor;
 
         /// <summary>
         /// Gets the preferred constructor for instantiation.

@@ -16,8 +16,8 @@
     /// </summary>
     public class StructureMapAdapter : ContainerBase
     {
-        private readonly global::StructureMap.IContainer container;
-        private ConfigurationExpression exp;
+        readonly global::StructureMap.IContainer container;
+        ConfigurationExpression exp;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="StructureMapAdapter"/> class.

@@ -16,7 +16,7 @@ namespace Caliburn.DynamicProxy.Interceptors
 #endif
 	public class ExceptionValidatorInterceptor : InterceptorBase
     {
-        private readonly IValidator _validator;
+        readonly IValidator validator;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ExceptionValidatorInterceptor"/> class.
@@ -24,7 +24,7 @@ namespace Caliburn.DynamicProxy.Interceptors
         /// <param name="validator">The validator.</param>
         public ExceptionValidatorInterceptor(IValidator validator)
         {
-            _validator = validator;
+            this.validator = validator;
         }
 
         /// <summary>
@@ -38,7 +38,7 @@ namespace Caliburn.DynamicProxy.Interceptors
             if(!invocation.Method.Name.StartsWith("set_"))
                 return;
 
-            var messages = _validator
+            var messages = validator
                 .Validate(invocation.Proxy, invocation.Method.Name.Substring(4))
                 .Select(x => x.Message)
                 .ToArray();

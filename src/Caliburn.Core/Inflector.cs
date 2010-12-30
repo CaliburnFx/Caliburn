@@ -9,9 +9,9 @@
     /// </summary>
     public static class Inflector
     {
-        private static readonly List<InflectorRule> _plurals = new List<InflectorRule>();
-        private static readonly List<InflectorRule> _singulars = new List<InflectorRule>();
-        private static readonly List<string> _uncountables = new List<string>();
+        static readonly List<InflectorRule> Plurals = new List<InflectorRule>();
+        static readonly List<InflectorRule> Singulars = new List<InflectorRule>();
+        static readonly List<string> Uncountables = new List<string>();
 
         /// <summary>
         /// Initializes the <see cref="Inflector"/> class.
@@ -87,10 +87,10 @@
         /// <param name="plural">The plural.</param>
         private static void AddIrregularRule(string singular, string plural)
         {
-            AddPluralRule(String.Concat("(", singular[0], ")", singular.Substring(1), "$"),
-                          String.Concat("$1", plural.Substring(1)));
-            AddSingularRule(String.Concat("(", plural[0], ")", plural.Substring(1), "$"),
-                            String.Concat("$1", singular.Substring(1)));
+            AddPluralRule(string.Concat("(", singular[0], ")", singular.Substring(1), "$"),
+                          string.Concat("$1", plural.Substring(1)));
+            AddSingularRule(string.Concat("(", plural[0], ")", plural.Substring(1), "$"),
+                            string.Concat("$1", singular.Substring(1)));
         }
 
         /// <summary>
@@ -99,7 +99,7 @@
         /// <param name="word">The word.</param>
         private static void AddUnknownCountRule(string word)
         {
-            _uncountables.Add(word.ToLower());
+            Uncountables.Add(word.ToLower());
         }
 
         /// <summary>
@@ -109,7 +109,7 @@
         /// <param name="replacement">The replacement.</param>
         private static void AddPluralRule(string rule, string replacement)
         {
-            _plurals.Add(new InflectorRule(rule, replacement));
+            Plurals.Add(new InflectorRule(rule, replacement));
         }
 
         /// <summary>
@@ -119,7 +119,7 @@
         /// <param name="replacement">The replacement.</param>
         private static void AddSingularRule(string rule, string replacement)
         {
-            _singulars.Add(new InflectorRule(rule, replacement));
+            Singulars.Add(new InflectorRule(rule, replacement));
         }
 
         /// <summary>
@@ -129,7 +129,7 @@
         /// <returns></returns>
         public static string MakePlural(this string word)
         {
-            return ApplyRules(_plurals, word);
+            return ApplyRules(Plurals, word);
         }
 
         /// <summary>
@@ -139,7 +139,7 @@
         /// <returns></returns>
         public static string MakeSingular(this string word)
         {
-            return ApplyRules(_singulars, word);
+            return ApplyRules(Singulars, word);
         }
 
         /// <summary>
@@ -150,13 +150,13 @@
         /// <returns></returns>
         private static string ApplyRules(IList<InflectorRule> rules, string word)
         {
-            string result = word;
+            var result = word;
 
-            if(!_uncountables.Contains(word.ToLower()))
+            if(!Uncountables.Contains(word.ToLower()))
             {
-                for(int i = rules.Count - 1; i >= 0; i--)
+                for(var i = rules.Count - 1; i >= 0; i--)
                 {
-                    string currentPass = rules[i].Apply(word);
+                    var currentPass = rules[i].Apply(word);
                     if(currentPass != null)
                     {
                         result = currentPass;
@@ -175,8 +175,8 @@
         /// </summary>
         private class InflectorRule
         {
-            private readonly Regex regex;
-            private readonly string replacement;
+            readonly Regex regex;
+            readonly string replacement;
 
             /// <summary>
             /// Initializes a new instance of the <see cref="InflectorRule"/> class.
@@ -199,7 +199,7 @@
                 if(!regex.IsMatch(word))
                     return null;
 
-                string replace = regex.Replace(word, replacement);
+                var replace = regex.Replace(word, replacement);
                 if(word == word.ToUpper())
                     replace = replace.ToUpper();
 

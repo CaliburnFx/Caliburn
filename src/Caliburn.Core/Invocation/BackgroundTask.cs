@@ -10,13 +10,13 @@ namespace Caliburn.Core.Invocation
     public class BackgroundTask : IBackgroundTask
     {
         [ThreadStatic]
-        private static IBackgroundContext _currentContext;
+        static IBackgroundContext currentContext;
 
-        private static readonly ILog Log = LogManager.GetLog(typeof(BackgroundTask));
+        static readonly ILog Log = LogManager.GetLog(typeof(BackgroundTask));
 
-        private readonly BackgroundWorker _worker;
-        private bool _cancellationPending;
-        private readonly BackgroundContext _context;
+        readonly BackgroundWorker worker;
+        bool cancellationPending;
+        readonly BackgroundContext context;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="BackgroundTask"/> class.
@@ -24,32 +24,32 @@ namespace Caliburn.Core.Invocation
         /// <param name="theDelegate">The delegate.</param>
         public BackgroundTask(Func<object> theDelegate)
         {
-            _worker = new BackgroundWorker
+            worker = new BackgroundWorker
             {
                 WorkerSupportsCancellation = true,
                 WorkerReportsProgress = true
             };
 
-            _context = new BackgroundContext(_worker);
+            context = new BackgroundContext(worker);
 
-            _worker.DoWork += (s, e) =>{
+            worker.DoWork += (s, e) =>{
                 Log.Info("Starting background task.");
 
-                CurrentContext = _context;
+                CurrentContext = context;
                 Starting(this, EventArgs.Empty);
 
                 e.Result = theDelegate();
-                e.Cancel = _cancellationPending;
+                e.Cancel = cancellationPending;
 
                 CurrentContext = null;
                 Log.Info("Completed background task.");
             };
 
-            _worker.ProgressChanged += (s, e) =>{
+            worker.ProgressChanged += (s, e) =>{
                 ProgressChanged(this, new ProgressChangedEventArgs(e.ProgressPercentage, e.UserState));
             };
 
-            _worker.RunWorkerCompleted += (s, e) =>{
+            worker.RunWorkerCompleted += (s, e) =>{
                 Completed(this, new RunWorkerCompletedEventArgs(e.Error != null || e.Cancelled ? null : e.Result, e.Error, e.Cancelled));
             };
         }
@@ -60,8 +60,8 @@ namespace Caliburn.Core.Invocation
         /// <value>The current context.</value>
         public static IBackgroundContext CurrentContext
         {
-            get { return _currentContext; }
-            set { _currentContext = value; }
+            get { return currentContext; }
+            set { currentContext = value; }
         }
 
         /// <summary>
@@ -71,7 +71,7 @@ namespace Caliburn.Core.Invocation
         public void Start(object userState)
         {
             Log.Info("Queueing background task.");
-            _worker.RunWorkerAsync(userState);
+            worker.RunWorkerAsync(userState);
         }
 
         /// <summary>
@@ -79,9 +79,9 @@ namespace Caliburn.Core.Invocation
         /// </summary>
         public void Cancel()
         {
-            _cancellationPending = true;
+            cancellationPending = true;
             Log.Info("Cancelling background task.");
-            _worker.CancelAsync();
+            worker.CancelAsync();
         }
 
         /// <summary>
@@ -90,7 +90,7 @@ namespace Caliburn.Core.Invocation
         /// <value><c>true</c> if this instance is busy; otherwise, <c>false</c>.</value>
         public bool IsBusy
         {
-            get { return _worker.IsBusy; }
+            get { return worker.IsBusy; }
         }
 
         /// <summary>
@@ -99,7 +99,7 @@ namespace Caliburn.Core.Invocation
         /// <value><c>true</c> if cancellation is pending; otherwise, <c>false</c>.</value>
         public bool CancellationPending
         {
-            get { return _worker.CancellationPending; }
+            get { return worker.CancellationPending; }
         }
 
         /// <summary>
@@ -122,14 +122,14 @@ namespace Caliburn.Core.Invocation
         /// </summary>
         private class BackgroundContext : IBackgroundContext
         {
-            private readonly BackgroundWorker _worker;
+            readonly BackgroundWorker capturedWorker;
 
             /// <summary>
             /// Initializes a new instance of the <see cref="BackgroundContext"/> class.
             /// </summary>
             public BackgroundContext(BackgroundWorker worker)
             {
-                _worker = worker;
+                capturedWorker = worker;
             }
 
             /// <summary>
@@ -138,7 +138,7 @@ namespace Caliburn.Core.Invocation
             /// <value><c>true</c> if cancelled; otherwise, <c>false</c>.</value>
             public bool CancellationPending
             {
-                get { return _worker.CancellationPending; }
+                get { return capturedWorker.CancellationPending; }
             }
 
             /// <summary>
@@ -147,7 +147,7 @@ namespace Caliburn.Core.Invocation
             /// <param name="percentage">The percentage.</param>
             public void ReportProgress(int percentage)
             {
-                _worker.ReportProgress(percentage);
+                capturedWorker.ReportProgress(percentage);
             }
 
             /// <summary>
@@ -157,7 +157,7 @@ namespace Caliburn.Core.Invocation
             /// <param name="userState"></param>
             public void ReportProgress(int percentage, object userState)
             {
-                _worker.ReportProgress(percentage, userState);
+                capturedWorker.ReportProgress(percentage, userState);
             }
         }
     }

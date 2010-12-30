@@ -15,9 +15,9 @@ namespace Caliburn.Core.Configuration
         where TModule : ConventionalModule<TModule, TServicesDescription>, new()
         where TRegistration : ComponentRegistrationBase, new()
     {
-        private readonly TModule module;
-        private readonly Type serviceType;
-        private Action<TImplementation> configuration;
+        readonly TModule module;
+        readonly Type serviceType;
+        Action<TImplementation> configuration;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ServiceConfiguration&lt;TModule, TServicesDescription, TRegistration, TImplementation&gt;"/> class.

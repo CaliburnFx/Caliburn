@@ -12,8 +12,8 @@
     /// </summary>
     public class WindsorAdapter : ContainerBase, IContainerAccessor
     {
-        private readonly IWindsorContainer container;
-    	private readonly ComponentInstaller installer = new ComponentInstaller();
+        readonly IWindsorContainer container;
+    	readonly ComponentInstaller installer = new ComponentInstaller();
 
         /// <summary>
         /// Initializes a new instance of the <see cref="WindsorAdapter"/> class.

@@ -10,7 +10,7 @@ namespace Caliburn.Windsor
 	/// </summary>
 	public class ComponentInstaller : IWindsorInstaller
 	{
-		private readonly List<IRegistration> registrations = new List<IRegistration>();
+		readonly List<IRegistration> registrations = new List<IRegistration>();
 
 		/// <summary>
 		/// Adds a component registration to the installer.

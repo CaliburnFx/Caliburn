@@ -14,7 +14,7 @@
     /// </summary>
     public class ProxyInjectorFactory : IInjectorFactory
     {
-        private readonly DynamicMethodInjectorFactory inner = new DynamicMethodInjectorFactory();
+        readonly DynamicMethodInjectorFactory inner = new DynamicMethodInjectorFactory();
 
         /// <summary>
         /// Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.

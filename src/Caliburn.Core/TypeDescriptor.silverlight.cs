@@ -11,7 +11,7 @@ namespace Caliburn.Core
     /// </summary>
     public static class TypeDescriptor
     {
-        private static readonly Dictionary<Type, TypeConverter> _cache =
+        static readonly Dictionary<Type, TypeConverter> Cache =
             new Dictionary<Type, TypeConverter>();
 
         /// <summary>
@@ -23,14 +23,14 @@ namespace Caliburn.Core
         {
             TypeConverter converter;
 
-            if (!_cache.TryGetValue(type, out converter))
+            if (!Cache.TryGetValue(type, out converter))
             {
-                object[] customAttributes = type.GetCustomAttributes(typeof(TypeConverterAttribute), true);
+                var customAttributes = type.GetCustomAttributes(typeof(TypeConverterAttribute), true);
 
                 if (customAttributes.Length == 0) return new TypeConverter();
 
                 converter = CreateConverter(((TypeConverterAttribute)customAttributes[0]).ConverterTypeName);
-                _cache[type] = converter;
+                Cache[type] = converter;
             }
 
             return converter;

@@ -9,22 +9,21 @@ namespace Caliburn.MEF
 	using System.Linq;
 	using System.Reflection;
 	using Core.InversionOfControl;
-	using Core;
 
 	/// <summary>
 	/// A <see cref="ComposablePart"/> used to configure MEF with Caliburn's required services.
 	/// </summary>
 	public class ComponentPart : ComposablePart
 	{
-		private readonly ComponentRegistrationBase _registration;
-		private readonly List<ImportDefinition> _imports = new List<ImportDefinition>();
-		private ExportDefinition[] _exports;
+		readonly ComponentRegistrationBase registration;
+		readonly List<ImportDefinition> imports = new List<ImportDefinition>();
+		ExportDefinition[] exports;
 
-		private readonly Dictionary<ImportDefinition, Export> _satisfiedImports =
+		readonly Dictionary<ImportDefinition, Export> satisfiedImports =
 			new Dictionary<ImportDefinition, Export>();
 
-		private object _cachedInstance;
-		private readonly ConstructorInfo _greedyConstructor;
+		object cachedInstance;
+		readonly ConstructorInfo greedyConstructor;
 
 		/// <summary>
 		/// Initializes a new instance of the <see cref="ComponentPart"/> class.
@@ -32,11 +31,11 @@ namespace Caliburn.MEF
 		/// <param name="registration">The registration.</param>
 		public ComponentPart(ComponentRegistrationBase registration)
 		{
-			_registration = registration;
+			this.registration = registration;
 
 			var implementation = GetImplementation(registration);
 
-			_greedyConstructor = implementation
+			greedyConstructor = implementation
 				.SelectEligibleConstructor();
 
 			ConfigureImportDefinitions();
@@ -46,9 +45,9 @@ namespace Caliburn.MEF
 		private void ConfigureExportDefinitions(Type implementationType, Type contractType)
 		{
 			var lazyMember = new LazyMemberInfo(implementationType);
-			var contractName = !_registration.HasName()
-								  ? AttributedModelServices.GetContractName(_registration.Service)
-								  : _registration.Name;
+			var contractName = !registration.HasName()
+								  ? AttributedModelServices.GetContractName(registration.Service)
+								  : registration.Name;
 
 			var metadata = new Lazy<IDictionary<string, object>>(() =>
 			{
@@ -58,19 +57,19 @@ namespace Caliburn.MEF
 				return md;
 			});
 
-			_exports = new[] { ReflectionModelServices.CreateExportDefinition(lazyMember, contractName, metadata, null) };
+			exports = new[] { ReflectionModelServices.CreateExportDefinition(lazyMember, contractName, metadata, null) };
 		}
 
 		private void ConfigureImportDefinitions()
 		{
-			foreach (var param in _greedyConstructor.GetParameters())
+			foreach (var param in greedyConstructor.GetParameters())
 			{
 				var cardinality = GetCardinality(param.ParameterType);
 				var importType = cardinality == ImportCardinality.ZeroOrMore
 									 ? GetCollectionContractType(param.ParameterType)
 									 : param.ParameterType;
 
-				_imports.Add(
+				imports.Add(
 					ReflectionModelServices.CreateImportDefinition(
 						new Lazy<ParameterInfo>(() => param),
 						AttributedModelServices.GetContractName(importType),
@@ -125,13 +124,13 @@ namespace Caliburn.MEF
 		/// </exception>
 		public override object GetExportedValue(ExportDefinition definition)
 		{
-			if (_registration is PerRequest)
+			if (registration is PerRequest)
 				return CreateInstance(definition);
 
-			if (_cachedInstance == null)
-				_cachedInstance = CreateInstance(definition);
+			if (cachedInstance == null)
+				cachedInstance = CreateInstance(definition);
 
-			return _cachedInstance;
+			return cachedInstance;
 		}
 
 		/// <summary>
@@ -143,9 +142,9 @@ namespace Caliburn.MEF
 		{
 			var args = new List<object>();
 
-			foreach (var parameterInfo in _greedyConstructor.GetParameters())
+			foreach (var parameterInfo in greedyConstructor.GetParameters())
 			{
-				var arg = (from export in _satisfiedImports.Values
+				var arg = (from export in satisfiedImports.Values
 						   where export.Definition.ContractName ==
 								 AttributedModelServices.GetContractName(parameterInfo.ParameterType)
 						   select export).FirstOrDefault();
@@ -154,8 +153,8 @@ namespace Caliburn.MEF
 			}
 
 			var instance = args.Count > 0
-					   ? Activator.CreateInstance(GetImplementation(_registration), args.ToArray())
-					   : Activator.CreateInstance(GetImplementation(_registration));
+					   ? Activator.CreateInstance(GetImplementation(registration), args.ToArray())
+					   : Activator.CreateInstance(GetImplementation(registration));
 
 			IoC.Get<CompositionContainer>().SatisfyImportsOnce(instance);
 
@@ -210,7 +209,7 @@ namespace Caliburn.MEF
 			if (definition == null) throw new ArgumentNullException("definition");
 			if (exports == null) throw new ArgumentNullException("exports");
 
-			_satisfiedImports[definition] = exports.FirstOrDefault();
+			satisfiedImports[definition] = exports.FirstOrDefault();
 		}
 
 		/// <summary>
@@ -241,7 +240,7 @@ namespace Caliburn.MEF
 		/// </remarks>
 		public override IEnumerable<ExportDefinition> ExportDefinitions
 		{
-			get { return _exports; }
+			get { return exports; }
 		}
 
 		/// <summary>
@@ -272,7 +271,7 @@ namespace Caliburn.MEF
 		/// </remarks>
 		public override IEnumerable<ImportDefinition> ImportDefinitions
 		{
-			get { return _imports; }
+			get { return imports; }
 		}
 
 		private static Type GetImplementation(IComponentRegistration registration)

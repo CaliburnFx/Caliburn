@@ -5,20 +5,17 @@
 	using System.Collections.Generic;
 	using Behaviors;
 	using Core;
-	using Logging;
 
 	/// <summary>
 	/// A simple dependency injection container.
 	/// </summary>
 	public class SimpleContainer : ContainerBase
 	{
-		private static readonly ILog Log = LogManager.GetLog(typeof(SimpleContainer));
-
-		private readonly Dictionary<string, Func<object>> typeToHandler
+		readonly Dictionary<string, Func<object>> typeToHandler
 			= new Dictionary<string, Func<object>>();
 
-		private bool inspectingForBehaviors;
-		private readonly bool performPropertyInjection;
+		bool inspectingForBehaviors;
+		readonly bool performPropertyInjection;
 
 		/// <summary>
 		/// Initializes a new instance of the <see cref="SimpleContainer"/> class.
@@ -151,15 +148,10 @@
 		{
 			object singleton = null;
 
-			AddHandler(
-				key,
-				() =>
-				{
-					if (singleton == null)
-						singleton = CreateInstance(implementation);
-
-					return singleton;
-				});
+		    AddHandler(
+		        key,
+		        () => singleton ?? (singleton = CreateInstance(implementation))
+		        );
 		}
 
 		/// <summary>

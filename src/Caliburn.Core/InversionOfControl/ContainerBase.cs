@@ -11,8 +11,18 @@ namespace Caliburn.Core.InversionOfControl
     /// </summary>
     public abstract class ContainerBase : IContainer
     {
-        private static readonly ILog Log = LogManager.GetLog(typeof(ContainerBase));
-        private readonly Dictionary<Type, Delegate> handlers = new Dictionary<Type, Delegate>();
+        ILog log = LogManager.GetLog(typeof(ContainerBase));
+        readonly Dictionary<Type, Delegate> handlers = new Dictionary<Type, Delegate>();
+
+        /// <summary>
+        /// Gets or sets the logger.
+        /// </summary>
+        /// <value>The logger.</value>
+        public ILog Log
+        {
+            get { return log; }
+            set { log = value; }
+        }
 
         /// <summary>
         /// Configures the container using the provided component registrations.

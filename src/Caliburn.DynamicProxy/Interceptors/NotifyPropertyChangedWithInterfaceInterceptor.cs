@@ -14,7 +14,7 @@
 #endif
 	public class NotifyPropertyChangedWithInterfaceInterceptor : NotifyPropertyChangedBaseInterceptor
     {
-        private PropertyChangedEventHandler _handler = delegate { };
+        PropertyChangedEventHandler handler = delegate { };
 
         /// <summary>
         /// Initializes a new instance of the <see cref="NotifyPropertyChangedWithInterfaceInterceptor"/> class.
@@ -44,12 +44,12 @@
 
         private void AddHandler(Delegate @delegate)
         {
-            _handler = (PropertyChangedEventHandler)Delegate.Combine(_handler, @delegate);
+            handler = (PropertyChangedEventHandler)Delegate.Combine(handler, @delegate);
         }
 
         private void RemoveHandler(Delegate @delegate)
         {
-            _handler = (PropertyChangedEventHandler)Delegate.Remove(_handler, @delegate);
+            handler = (PropertyChangedEventHandler)Delegate.Remove(handler, @delegate);
         }
 
         /// <summary>
@@ -59,7 +59,7 @@
         /// <param name="propertyName">Name of the property.</param>
         protected override void OnPropertyChanged(object sender, string propertyName)
         {
-            Execute.OnUIThread(() => _handler(sender, new PropertyChangedEventArgs(propertyName)));
+            Execute.OnUIThread(() => handler(sender, new PropertyChangedEventArgs(propertyName)));
         }
     }
 }

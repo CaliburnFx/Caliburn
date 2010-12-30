@@ -16,7 +16,7 @@
     /// </summary>
     public class FluentValidationValidator : ValidatorFactoryBase, Core.Validation.IValidator
     {
-        private readonly IServiceLocator serviceLocator;
+        readonly IServiceLocator serviceLocator;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="FluentValidationValidator"/> class.
