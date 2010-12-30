@@ -13,7 +13,7 @@
     /// <typeparam name="TDialog">The type of the dialog.</typeparam>
     public class OpenDialogResult<TDialog> : OpenResultBase<TDialog>
     {
-        private readonly Func<ResultExecutionContext, TDialog> locateModal = 
+        readonly Func<ResultExecutionContext, TDialog> locateModal = 
             c => c.ServiceLocator.GetInstance<IViewModelFactory>().Create<TDialog>();
 
 #if !SILVERLIGHT
@@ -44,7 +44,6 @@
         /// <param name="context">The context.</param>
         public override void Execute(ResultExecutionContext context)
         {
-            var dialogManager = context.ServiceLocator.GetInstance<IWindowManager>();
             var child = locateModal(context);
 
             if(onConfigure != null)
@@ -53,16 +52,23 @@
             var deactivator = child as IDeactivate;
             if (deactivator != null)
             {
-                deactivator.Deactivated += (s, e) =>{
+                EventHandler<DeactivationEventArgs> handler = null;
+                handler = (s, e) =>{
                     if(!e.WasClosed)
                         return;
 
-                    if (onClose != null)
+                    deactivator.Deactivated -= handler;
+
+                    if(onClose != null)
                         onClose(child);
 
                     OnCompleted(null, false);
                 };
+
+                deactivator.Deactivated += handler;
             }
+
+            var dialogManager = context.ServiceLocator.GetInstance<IWindowManager>();
 
 #if !SILVERLIGHT
             DialogResult = dialogManager.ShowDialog(child, null);

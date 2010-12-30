@@ -10,8 +10,8 @@
     /// </summary>
     public class BusyResult : IResult
     {
-        private readonly bool _isBusy;
-        private readonly object _busyViewModel;
+        readonly bool isBusy;
+        readonly object busyViewModel;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="BusyResult"/> class.
@@ -20,8 +20,8 @@
         /// <param name="busyViewModel">The view model for the busy indicator, or null for default.</param>
         public BusyResult(bool isBusy, object busyViewModel)
         {
-            _isBusy = isBusy;
-            _busyViewModel = busyViewModel;
+            this.isBusy = isBusy;
+            this.busyViewModel = busyViewModel;
         }
 
         /// <summary>
@@ -35,9 +35,11 @@
             if(context.HandlingNode != null)
                 sourceViewModel = context.HandlingNode.MessageHandler.Unwrap();
 
-            if(_isBusy)
-                context.ServiceLocator.GetInstance<IBusyService>().MarkAsBusy(sourceViewModel, _busyViewModel);
-            else context.ServiceLocator.GetInstance<IBusyService>().MarkAsNotBusy(sourceViewModel);
+            var busyService = context.ServiceLocator.GetInstance<IBusyService>();
+
+            if(isBusy)
+                busyService.MarkAsBusy(sourceViewModel, busyViewModel);
+            else busyService.MarkAsNotBusy(sourceViewModel);
 
             Completed(this, new ResultCompletionEventArgs());
         }

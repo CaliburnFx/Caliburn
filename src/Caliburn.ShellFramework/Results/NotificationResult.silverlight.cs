@@ -15,9 +15,10 @@ namespace Caliburn.ShellFramework.Results
     /// <typeparam name="T">The notification view model.</typeparam>
     public class NotificationResult<T> : IResult
     {
-        private readonly int durationInMilliseconds;
-        private bool waitForClose;
-        private Func<T> viewModelLocator;
+        readonly int durationInMilliseconds;
+        bool waitForClose;
+        readonly Func<ResultExecutionContext, T> locateViewModel =
+            c => c.ServiceLocator.GetInstance<IViewModelFactory>().Create<T>();
 
         /// <summary>
         /// Initializes a new instance of the <see cref="NotificationResult&lt;T&gt;"/> class.
@@ -36,7 +37,7 @@ namespace Caliburn.ShellFramework.Results
         public NotificationResult(T viewModel, int durationInMilliseconds)
         {
             this.durationInMilliseconds = durationInMilliseconds;
-            viewModelLocator = () => viewModel;
+            locateViewModel = c => viewModel;
         }
 
         /// <summary>
@@ -55,11 +56,8 @@ namespace Caliburn.ShellFramework.Results
         /// <param name="context">The context.</param>
         public void Execute(ResultExecutionContext context)
         {
-            if (viewModelLocator == null)
-                viewModelLocator = () => context.ServiceLocator.GetInstance<IViewModelFactory>().Create<T>();
-
             var window = new NotificationWindow();
-            var viewModel = viewModelLocator();
+            var viewModel = locateViewModel(context);
             var view = context.ServiceLocator.GetInstance<IViewLocator>().LocateForModel(viewModel, window, null);
 
             context.ServiceLocator.GetInstance<IViewModelBinder>().Bind(viewModel, view, null);

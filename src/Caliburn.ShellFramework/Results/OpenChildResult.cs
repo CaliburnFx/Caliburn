@@ -12,9 +12,10 @@
     /// <typeparam name="TChild">The type of the child.</typeparam>
     public class OpenChildResult<TChild> : OpenResultBase<TChild>
     {
-        private Func<ResultExecutionContext, IConductor> locateParent;
+        Func<ResultExecutionContext, IConductor> locateParent =
+            c => (IConductor)c.HandlingNode.MessageHandler.Unwrap();
 
-        private readonly Func<ResultExecutionContext, TChild> locateChild =
+        readonly Func<ResultExecutionContext, TChild> locateChild =
             c => c.ServiceLocator.GetInstance<IViewModelFactory>().Create<TChild>();
 
         /// <summary>
@@ -60,9 +61,6 @@
         /// <param name="context">The context.</param>
         public override void Execute(ResultExecutionContext context)
         {
-            if (locateParent == null)
-                locateParent = c => (IConductor)c.HandlingNode.MessageHandler.Unwrap();
-
             var parent = locateParent(context);
             var child = locateChild(context);
 
@@ -80,10 +78,16 @@
                     var deactivator = child as IDeactivate;
                     if (deactivator != null && onClose != null)
                     {
-                        deactivator.Deactivated += (s2, e2) =>{
-                            if(e2.WasClosed)
-                                onClose(child);
+                        EventHandler<DeactivationEventArgs> handler = null;
+                        handler = (s2, e2) =>{
+                            if(!e2.WasClosed)
+                                return;
+
+                            deactivator.Deactivated -= handler;
+                            onClose(child);
                         };
+
+                        deactivator.Deactivated += handler;
                     }
 
                     OnCompleted(null, false);

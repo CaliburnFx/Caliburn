@@ -1,5 +1,6 @@
 ﻿namespace Caliburn.ShellFramework.Results
 {
+    using System;
     using Core.InversionOfControl;
     using PresentationFramework.ApplicationModel;
     using PresentationFramework.RoutedMessaging;
@@ -36,31 +37,37 @@
         /// <param name="context">The context.</param>
         public override void Execute(ResultExecutionContext context)
         {
-            subjectSpecification.CreateSubjectHost(context.ServiceLocator.GetInstance<IViewModelFactory>(), host =>{
+            var factory = context.ServiceLocator.GetInstance<IViewModelFactory>();
+
+            subjectSpecification.CreateSubjectHost(factory, host => {
                 if(onConfigure != null)
                     onConfigure(host);
 
                 var deactivator = host as IDeactivate;
                 if(deactivator != null)
                 {
-                    deactivator.Deactivated +=
-                        (s, e) =>{
-                            if(!e.WasClosed)
-                                return;
+                    EventHandler<DeactivationEventArgs> handler = null;
+                    handler = (s, e) =>{
+                        deactivator.Deactivated -= handler;
 
-                            if (onClose != null)
-                                onClose(host);
+                        if(!e.WasClosed)
+                            return;
 
-                            OnCompleted(null, false);
-                        };
+                        if(onClose != null)
+                            onClose(host);
+
+                        OnCompleted(null, false);
+                    };
+
+                    deactivator.Deactivated += handler;
                 }
 
+                var windowManager = context.ServiceLocator.GetInstance<IWindowManager>();
+
 #if !SILVERLIGHT
-                DialogResult = context.ServiceLocator.GetInstance<IWindowManager>()
-                    .ShowDialog(host, null);
+                DialogResult = windowManager.ShowDialog(host, null);
 #else
-                context.ServiceLocator.GetInstance<IWindowManager>()
-                    .ShowDialog(host, null);
+                windowManager.ShowDialog(host, null);
 #endif
 
                 if (deactivator == null)

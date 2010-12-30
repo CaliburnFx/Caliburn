@@ -12,8 +12,10 @@
     /// </summary>
     public class OpenScreenSubjectResult : OpenResultBase<object>
     {
-        private readonly ISubjectSpecification subjectSpecification;
-        private Func<ResultExecutionContext, IConductor> locateParent;
+        readonly ISubjectSpecification subjectSpecification;
+
+        Func<ResultExecutionContext, IConductor> locateParent =
+            c => (IConductor)c.HandlingNode.MessageHandler.Unwrap();
 
         /// <summary>
         /// Initializes a new instance of the <see cref="OpenScreenSubjectResult"/> class.
@@ -53,9 +55,6 @@
         /// <param name="context">The context.</param>
         public override void Execute(ResultExecutionContext context)
         {
-            if (locateParent == null)
-                locateParent = c => (IConductor)c.HandlingNode.MessageHandler.Unwrap();
-
             var parent = locateParent(context);
 
             parent.ActivateSubject(subjectSpecification, success =>{
@@ -72,19 +71,22 @@
                     OnOpened(parent, child);
 
                     var deactivator = child as IDeactivate;
-                    if(deactivator != null)
+                    if (deactivator != null && onClose != null)
                     {
-                        deactivator.Deactivated += (s, e) =>{
-                            if(!e.WasClosed)
-                                return;
-
-                            if(onClose != null)
+                        EventHandler<DeactivationEventArgs> handler = null;
+                        handler = (s2, e2) =>
+                        {
+                            if (e2.WasClosed)
+                            {
+                                deactivator.Deactivated -= handler;
                                 onClose(child);
-
-                            OnCompleted(null, false);
+                            }
                         };
+
+                        deactivator.Deactivated += handler;
                     }
-                    else OnCompleted(null, false);
+
+                    OnCompleted(null, false);
                 }
                 else OnCompleted(null, true);
             });

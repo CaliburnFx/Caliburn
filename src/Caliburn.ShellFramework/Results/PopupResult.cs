@@ -15,7 +15,7 @@
     /// <typeparam name="TPopup">The type of the popup.</typeparam>
     public class PopupResult<TPopup> : OpenResultBase<TPopup>
     {
-        private readonly Func<ResultExecutionContext, TPopup> locateModal = 
+        readonly Func<ResultExecutionContext, TPopup> locateModal = 
             c => c.ServiceLocator.GetInstance<IViewModelFactory>().Create<TPopup>();
 
         /// <summary>
@@ -44,18 +44,19 @@
                 onConfigure(child);
 
             var deactivator = child as IDeactivate;
-            if (deactivator != null)
+            if (deactivator != null && onClose != null)
             {
-                deactivator.Deactivated +=
-                    (s, e) =>{
-                        if(!e.WasClosed)
-                            return;
+                EventHandler<DeactivationEventArgs> handler = null;
+                handler = (s2, e2) =>
+                {
+                    if(!e2.WasClosed)
+                        return;
 
-                        if (onClose != null)
-                            onClose(child);
+                    deactivator.Deactivated -= handler;
+                    onClose(child);
+                };
 
-                        OnCompleted(null, false);
-                    };
+                deactivator.Deactivated += handler;
             }
 
             var target = (UIElement)context.Message.Source.UIElement;
@@ -78,8 +79,7 @@
             popup.IsOpen = true;
             popup.CaptureMouse();
 
-            if (deactivator == null)
-                OnCompleted(null, false);
+            OnCompleted(null, false);
         }
     }
 }

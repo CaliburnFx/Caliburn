@@ -277,24 +277,11 @@
         /// </summary>
         /// <param name="text">The message text.</param>
         /// <param name="caption">The caption text.</param>
-        /// <param name="handleResult">The result callback.</param>
-        /// <returns>The result.</returns>
-        public static MessageBoxResult MessageBox(string text, string caption, Action<Answer> handleResult)
-        {
-            return new MessageBoxResult(text, caption, handleResult);
-        }
-
-        /// <summary>
-        /// Shows a message box.
-        /// </summary>
-        /// <param name="text">The message text.</param>
-        /// <param name="caption">The caption text.</param>
-        /// <param name="handleResult">The result callback.</param>
         /// <param name="possibleAnswers">The possible answers.</param>
         /// <returns>The result.</returns>
-        public static MessageBoxResult MessageBox(string text, string caption, Action<Answer> handleResult, params Answer[] possibleAnswers)
+        public static MessageBoxResult MessageBox(string text, string caption, params Answer[] possibleAnswers)
         {
-            return new MessageBoxResult(text, caption, handleResult, possibleAnswers);
+            return new MessageBoxResult(text, caption, possibleAnswers);
         }
     }
 }

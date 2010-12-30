@@ -10,8 +10,8 @@
     /// </summary>
     public class FocusResult : IResult
     {
-        private readonly object _model;
-        private readonly string _property;
+        readonly object model;
+        readonly string property;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="FocusResult"/> class.
@@ -20,8 +20,8 @@
         /// <param name="property">The property.</param>
         public FocusResult(object model, string property)
         {
-            _model = model;
-            _property = property;
+            this.model = model;
+            this.property = property;
         }
 
         /// <summary>
@@ -32,9 +32,9 @@
         {
             var inputManager = context.ServiceLocator.GetInstance<IInputManager>();
 
-            if(string.IsNullOrEmpty(_property))
-                inputManager.Focus(_model);
-            else inputManager.Focus(_model, _property);
+            if(string.IsNullOrEmpty(property))
+                inputManager.Focus(model);
+            else inputManager.Focus(model, property);
 
             Completed(this, new ResultCompletionEventArgs());
         }

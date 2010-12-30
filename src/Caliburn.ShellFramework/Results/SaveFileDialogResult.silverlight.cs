@@ -12,7 +12,7 @@ namespace Caliburn.ShellFramework.Results
     /// </summary>
     public class SaveFileDialogResult : IResult
     {
-        private readonly SaveFileDialog _dialog;
+        readonly SaveFileDialog dialog;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="SaveFileDialogResult"/> class.
@@ -20,7 +20,7 @@ namespace Caliburn.ShellFramework.Results
         /// <param name="dialog">The dialog.</param>
         public SaveFileDialogResult(SaveFileDialog dialog)
         {
-            _dialog = dialog;
+            this.dialog = dialog;
         }
 
         /// <summary>
@@ -29,7 +29,7 @@ namespace Caliburn.ShellFramework.Results
         /// <value>The dialog.</value>
         public SaveFileDialog Dialog
         {
-            get { return _dialog; }
+            get { return dialog; }
         }
 
         /// <summary>
@@ -38,7 +38,7 @@ namespace Caliburn.ShellFramework.Results
         /// <param name="context">The context.</param>
         public void Execute(ResultExecutionContext context)
         {
-            var result = _dialog.ShowDialog()
+            var result = dialog.ShowDialog()
                 .GetValueOrDefault(false);
 
             Completed(this, new ResultCompletionEventArgs{ WasCancelled = !result});

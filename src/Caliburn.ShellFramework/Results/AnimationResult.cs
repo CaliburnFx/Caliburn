@@ -33,9 +33,9 @@
             Stop
         }
 
-        private bool _wait;
-        private readonly string _key;
-        private readonly AnimationAction _action;
+        bool wait;
+        readonly string key;
+        readonly AnimationAction action;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="AnimationResult"/> class.
@@ -44,8 +44,8 @@
         /// <param name="action">The action.</param>
         public AnimationResult(string key, AnimationAction action)
         {
-            _key = key;
-            _action = action;
+            this.key = key;
+            this.action = action;
         }
 
         /// <summary>
@@ -54,7 +54,7 @@
         /// <value>The key.</value>
         public string Key
         {
-            get { return _key; }
+            get { return key; }
         }
 
         /// <summary>
@@ -63,7 +63,7 @@
         /// <value>The action.</value>
         public AnimationAction Action
         {
-            get { return _action; }
+            get { return action; }
         }
 
         /// <summary>
@@ -72,7 +72,7 @@
         /// <returns></returns>
         public AnimationResult Wait()
         {
-            _wait = true;
+            wait = true;
             return this;
         }
 
@@ -96,9 +96,9 @@
                 return;
             }
 
-            var storyboard = (Storyboard)element.Resources[_key];
+            var storyboard = (Storyboard)element.Resources[key];
 
-            if(_wait)
+            if(wait)
             {
                 EventHandler handler = null;
                 handler = delegate{
@@ -108,7 +108,7 @@
                 storyboard.Completed += handler;
             }
 
-            switch(_action)
+            switch(action)
             {
                 case AnimationAction.Begin:
                     storyboard.Begin();
@@ -126,7 +126,7 @@
                     throw new ArgumentOutOfRangeException();
             }
 
-            if(!_wait)
+            if(!wait)
                 Completed(this, new ResultCompletionEventArgs());
         }
 

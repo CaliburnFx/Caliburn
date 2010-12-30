@@ -11,7 +11,7 @@ namespace Caliburn.ShellFramework.Results
     /// </summary>
     public class ShowCommonDialogResult : IResult
     {
-        private readonly CommonDialog _commonDialog;
+        readonly CommonDialog commonDialog;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ShowCommonDialogResult"/> class.
@@ -19,7 +19,7 @@ namespace Caliburn.ShellFramework.Results
         /// <param name="commonDialog">The common dialog.</param>
         public ShowCommonDialogResult(CommonDialog commonDialog)
         {
-            _commonDialog = commonDialog;
+            this.commonDialog = commonDialog;
         }
 
         /// <summary>
@@ -28,7 +28,7 @@ namespace Caliburn.ShellFramework.Results
         /// <param name="context">The context.</param>
         public void Execute(ResultExecutionContext context)
         {
-            var result = _commonDialog.ShowDialog()
+            var result = commonDialog.ShowDialog()
                 .GetValueOrDefault(false);
 
             Completed(this, new ResultCompletionEventArgs {WasCancelled = !result});

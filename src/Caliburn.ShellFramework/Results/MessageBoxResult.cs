@@ -4,6 +4,7 @@
     using Core.InversionOfControl;
     using PresentationFramework.ApplicationModel;
     using PresentationFramework.RoutedMessaging;
+    using PresentationFramework.Screens;
     using Questions;
 
     /// <summary>
@@ -11,10 +12,9 @@
     /// </summary>
     public class MessageBoxResult : IResult
     {
-        private readonly string _text;
-        private readonly string _caption = "Shell";
-        private readonly Action<Answer> _handleResult = delegate { };
-        private readonly Answer[] _possibleAnswers = new[] {Answer.Ok};
+        readonly string text;
+        readonly string caption = "Info";
+        readonly Answer[] possibleAnswers = new[] {Answer.Ok};
 
         /// <summary>
         /// Initializes a new instance of the <see cref="MessageBoxResult"/> class.
@@ -22,7 +22,7 @@
         /// <param name="text">The text.</param>
         public MessageBoxResult(string text)
         {
-            _text = text;
+            this.text = text;
         }
 
         /// <summary>
@@ -32,8 +32,8 @@
         /// <param name="caption">The caption.</param>
         public MessageBoxResult(string text, string caption)
         {
-            _text = text;
-            _caption = caption;
+            this.text = text;
+            this.caption = caption;
         }
 
         /// <summary>
@@ -41,28 +41,12 @@
         /// </summary>
         /// <param name="text">The text.</param>
         /// <param name="caption">The caption.</param>
-        /// <param name="handleResult">The result callback.</param>
-        public MessageBoxResult(string text, string caption, Action<Answer> handleResult)
-        {
-            _text = text;
-            _caption = caption;
-            _handleResult = handleResult;
-            _possibleAnswers = new[] {Answer.Cancel, Answer.Ok};
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="MessageBoxResult"/> class.
-        /// </summary>
-        /// <param name="text">The text.</param>
-        /// <param name="caption">The caption.</param>
-        /// <param name="handleResult">The handle result.</param>
         /// <param name="possibleAnswers">The possible answers.</param>
-        public MessageBoxResult(string text, string caption, Action<Answer> handleResult, params Answer[] possibleAnswers)
+        public MessageBoxResult(string text, string caption, params Answer[] possibleAnswers)
         {
-            _text = text;
-            _caption = caption;
-            _handleResult = handleResult;
-            _possibleAnswers = possibleAnswers;
+            this.text = text;
+            this.caption = caption;
+            this.possibleAnswers = possibleAnswers;
         }
 
         /// <summary>
@@ -71,7 +55,7 @@
         /// <value>The text.</value>
         public string Text
         {
-            get { return _text; }
+            get { return text; }
         }
 
         /// <summary>
@@ -80,7 +64,7 @@
         /// <value>The caption.</value>
         public string Caption
         {
-            get { return _caption; }
+            get { return caption; }
         }
 
         /// <summary>
@@ -89,8 +73,14 @@
         /// <value>The possible answers.</value>
         public Answer[] PossibleAnswers
         {
-            get { return _possibleAnswers; }
+            get { return possibleAnswers; }
         }
+
+        /// <summary>
+        /// Gets or sets the answer.
+        /// </summary>
+        /// <value>The answer.</value>
+        public Answer Answer { get; set; }
 
         /// <summary>
         /// Executes the result using the specified context.
@@ -99,33 +89,28 @@
         public void Execute(ResultExecutionContext context)
         {
             var questionDialog = context.ServiceLocator.GetInstance<IQuestionDialog>();
-            var windowManager = context.ServiceLocator.GetInstance<IWindowManager>();
+            var question = new Question(Text, possibleAnswers);
+            questionDialog.Setup(Caption, new[]{question});
 
-            var question = new Question(
-                Text,
-                _possibleAnswers
-                );
-
-            questionDialog.Setup(
-                Caption,
-                new[] {question}
-                );
-
-            questionDialog.Deactivated += (s,e) => {
-                if (!e.WasClosed)
+            EventHandler<DeactivationEventArgs> handler = null;
+            handler = (s, e) =>{
+                if(!e.WasClosed)
                     return;
 
-                if(_handleResult != null)
-                    _handleResult(question.Answer);
-                else if(question.Answer == Answer.No || question.Answer == Answer.Cancel)
+                questionDialog.Deactivated -= handler;
+                Answer = question.Answer;
+
+                if (question.Answer == Answer.No || question.Answer == Answer.Cancel)
                 {
-                    Completed(this, new ResultCompletionEventArgs {WasCancelled = true});
+                    Completed(this, new ResultCompletionEventArgs { WasCancelled = true });
                     return;
                 }
 
                 Completed(this, new ResultCompletionEventArgs());
             };
+            questionDialog.Deactivated += handler;
 
+            var windowManager = context.ServiceLocator.GetInstance<IWindowManager>();
             windowManager.ShowDialog(questionDialog, null);
         }
 
