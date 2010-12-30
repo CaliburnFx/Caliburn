@@ -262,7 +262,10 @@ namespace Caliburn.PresentationFramework.ApplicationModel
 
 			void Closing(object sender, CancelEventArgs e)
 			{
-				var guard = (IGuardClose)model;
+                if(e.Cancel)
+                    return;
+
+			    var guard = (IGuardClose)model;
 
 				if (actuallyClosing)
 				{
