@@ -1,5 +1,6 @@
 ﻿namespace Caliburn.ShellFramework.Questions
 {
+    using System;
     using System.Collections.Generic;
     using System.Linq;
     using PresentationFramework;
@@ -10,6 +11,8 @@
     /// </summary>
     public class Question : PropertyChangedBase
     {
+        internal static Func<Answer, string> LocalizeAnswer = answer => answer.ToString();
+
         private Answer answer = Answer.No;
 
         /// <summary>
@@ -68,13 +71,13 @@
             if(possibleAnswers.Contains(Answer.Yes))
             {
                 return possibleAnswers.Contains(Answer.Cancel)
-                           ? new BindableCollection<ButtonModel>{new ButtonModel("Yes"), new ButtonModel("No"), new ButtonModel("Cancel")}
-                           : new BindableCollection<ButtonModel> {new ButtonModel("Yes"), new ButtonModel("No")};
+                           ? new BindableCollection<ButtonModel>{new ButtonModel(LocalizeAnswer(Answer.Yes)), new ButtonModel(LocalizeAnswer(Answer.No)), new ButtonModel(LocalizeAnswer(Answer.Cancel))}
+                           : new BindableCollection<ButtonModel> {new ButtonModel(LocalizeAnswer(Answer.Yes)), new ButtonModel(LocalizeAnswer(Answer.No))};
             }
 
             return possibleAnswers.Contains(Answer.Cancel)
-                       ? new BindableCollection<ButtonModel> {new ButtonModel("Ok"), new ButtonModel("Cancel")}
-                       : new BindableCollection<ButtonModel> {new ButtonModel("Ok")};
+                       ? new BindableCollection<ButtonModel> {new ButtonModel(LocalizeAnswer(Answer.Ok)), new ButtonModel(LocalizeAnswer(Answer.Cancel))}
+                       : new BindableCollection<ButtonModel> {new ButtonModel(LocalizeAnswer(Answer.Ok))};
         }
     }
 }

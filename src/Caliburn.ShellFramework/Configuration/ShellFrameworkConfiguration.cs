@@ -1,6 +1,7 @@
 ﻿namespace Caliburn.ShellFramework.Configuration
 {
     using System;
+    using System.Reflection;
     using Core.Configuration;
     using Core.InversionOfControl;
     using Menus;
@@ -31,6 +32,39 @@
         public ShellFrameworkConfiguration RedirectViewNamespace(string viewNamespace)
         {
             this.viewNamespace = viewNamespace;
+            return this;
+        }
+
+        /// <summary>
+        /// Localizes the question answers using the provided delegate.
+        /// </summary>
+        /// <param name="localizer">The localizer.</param>
+        /// <returns>The configuration.</returns>
+        public ShellFrameworkConfiguration LocalizeAnswersWith(Func<Answer, string> localizer)
+        {
+            Question.LocalizeAnswer = localizer;
+            return this;
+        }
+
+        /// <summary>
+        /// Sets up the default resource assembly.
+        /// </summary>
+        /// <param name="defaultResourceAssembly">The default resource assembly.</param>
+        /// <returns></returns>
+        public ShellFrameworkConfiguration LocateDefaultResourcesIn(Assembly defaultResourceAssembly)
+        {
+            ResourceExtensions.DefaultResourceAssembly = defaultResourceAssembly;
+            return this;
+        }
+
+        /// <summary>
+        /// Determines the icon path by using a display name.
+        /// </summary>
+        /// <param name="displayNameToResourcePath">The display name to resource path converter.</param>
+        /// <returns>The configuration.</returns>
+        public ShellFrameworkConfiguration DetermineIconPathWith(Func<string, string> displayNameToResourcePath)
+        {
+            ResourceExtensions.DetermineIconPath = displayNameToResourcePath;
             return this;
         }
 

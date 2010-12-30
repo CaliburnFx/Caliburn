@@ -257,16 +257,16 @@ namespace Caliburn.ShellFramework.Menus
         }
 
         /// <summary>
-        /// Adds an icon using the default location resolution to the menu item.
+        /// Adds an icon using the default location resolution to the menu item in the calling assembly.
         /// </summary>
         /// <returns>The item.</returns>
         public MenuModel WithIcon()
         {
-            return WithIcon(Assembly.GetCallingAssembly(), "Resources/Icons/" + DisplayName.Replace(" ", string.Empty) + ".png");
+            return WithIcon(Assembly.GetCallingAssembly(), ResourceExtensions.DetermineIconPath(DisplayName));
         }
 
         /// <summary>
-        /// Adds an icon to the menu item, searching the executing assmebly for the resource.
+        /// Adds an icon to the menu item, searching the calling assmebly for the resource.
         /// </summary>
         /// <param name="path">The path.</param>
         /// <returns>The item.</returns>
@@ -285,7 +285,7 @@ namespace Caliburn.ShellFramework.Menus
         {
             var iconSource = resourceManager.GetBitmap(path, source.GetAssemblyName());
 
-            if (source != null)
+            if (iconSource != null)
                 Icon = new Image { Source = iconSource };
 
             return this;

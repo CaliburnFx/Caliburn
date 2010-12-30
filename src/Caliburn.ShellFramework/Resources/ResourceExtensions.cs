@@ -1,5 +1,6 @@
 ﻿namespace Caliburn.ShellFramework.Resources
 {
+    using System;
     using System.IO;
     using System.Reflection;
     using System.Windows.Markup;
@@ -14,15 +15,11 @@
     /// </summary>
     public static class ResourceExtensions
     {
-        /// <summary>
-        /// Gets the name of the executing assembly.
-        /// </summary>
-        /// <returns>The name.</returns>
-        public static string GetExecutingAssemblyName()
-        {
-            return Assembly.GetExecutingAssembly().GetAssemblyName();
-        }
+        internal static Assembly DefaultResourceAssembly = Assembly.GetExecutingAssembly();
 
+        internal static Func<string, string> DetermineIconPath =
+            displayName => "Resources/Icons/" + displayName.Replace(" ", string.Empty) + ".png";
+        
         /// <summary>
         /// Gets the name of the assembly.
         /// </summary>
@@ -35,14 +32,14 @@
         }
 
         /// <summary>
-        /// Gets the resource stream using the executing assembly.
+        /// Gets the resource stream using the default resource assembly.
         /// </summary>
         /// <param name="resourceManager">The resource manager.</param>
         /// <param name="relativeUri">The relative URI.</param>
         /// <returns>The stream, or null if not found.</returns>
         public static Stream GetStream(this IResourceManager resourceManager, string relativeUri)
         {
-            return resourceManager.GetStream(relativeUri, GetExecutingAssemblyName());
+            return resourceManager.GetStream(relativeUri, DefaultResourceAssembly.GetAssemblyName());
         }
 
         /// <summary>
@@ -75,14 +72,14 @@
         }
 
         /// <summary>
-        /// Gets the bitmap resource from the executing assembly.
+        /// Gets the bitmap resource from the default resource assembly.
         /// </summary>
         /// <param name="resourceManager">The resource manager.</param>
         /// <param name="relativeUri">The relative URI.</param>
         /// <returns>The bitmap, or null if not found.</returns>
         public static BitmapImage GetBitmap(this IResourceManager resourceManager, string relativeUri)
         {
-            return resourceManager.GetBitmap(relativeUri, GetExecutingAssemblyName());
+            return resourceManager.GetBitmap(relativeUri, DefaultResourceAssembly.GetAssemblyName());
         }
 
         /// <summary>
@@ -104,14 +101,14 @@
         }
 
         /// <summary>
-        /// Gets the resource string from the executing assmebly.
+        /// Gets the resource string from the default resource assmebly.
         /// </summary>
         /// <param name="resourceManager">The resource manager.</param>
         /// <param name="relativeUri">The relative URI.</param>
         /// <returns>The string, or null if not found.</returns>
         public static string GetString(this IResourceManager resourceManager, string relativeUri)
         {
-            return resourceManager.GetString(relativeUri, GetExecutingAssemblyName());
+            return resourceManager.GetString(relativeUri, DefaultResourceAssembly.GetAssemblyName());
         }
 
 #if SILVERLIGHT
@@ -135,14 +132,14 @@
         }
 
         /// <summary>
-        /// Gets the font source resource from the executing assembly.
+        /// Gets the font source resource from the default resource assembly.
         /// </summary>
         /// <param name="resourceManager">The resource manager.</param>
         /// <param name="relativeUri">The relative URI.</param>
         /// <returns></returns>
         public static FontSource GetFontSource(this IResourceManager resourceManager, string relativeUri)
         {
-            return resourceManager.GetFontSource(relativeUri, GetExecutingAssemblyName());
+            return resourceManager.GetFontSource(relativeUri, DefaultResourceAssembly.GetAssemblyName());
         }
 
 #endif
@@ -173,14 +170,14 @@
         }
 
         /// <summary>
-        /// Gets the xaml object resource from the executing assembly.
+        /// Gets the xaml object resource from the default resource assembly.
         /// </summary>
         /// <param name="resourceManager">The resource manager.</param>
         /// <param name="relativeUri">The relative URI.</param>
         /// <returns>The xaml object, or null if not found.</returns>
         public static object GetXamlObject(this IResourceManager resourceManager, string relativeUri)
         {
-            return resourceManager.GetXamlObject(relativeUri, GetExecutingAssemblyName());
+            return resourceManager.GetXamlObject(relativeUri, DefaultResourceAssembly.GetAssemblyName());
         }
     }
 }
