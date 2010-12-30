@@ -6,6 +6,7 @@
     using System.Linq;
     using System.Linq.Expressions;
     using System.Reflection;
+    using Behaviors;
     using Configuration;
 
     /// <summary>
@@ -13,10 +14,8 @@
     /// </summary>
     public static class CoreExtensions
     {
-        /// <summary>
-        /// Enables customization of the discoverable types within a given assembly.
-        /// </summary>
-        public static Func<Assembly, IEnumerable<Type>> GetInspectableTypes = assembly => assembly.GetExportedTypes();
+        internal static Func<Assembly, IEnumerable<Type>> GetInspectableTypesImplementation = assembly => assembly.GetExportedTypes();
+        internal static Func<object, Type> GetModelTypeImplementation = DefaultGetModelTypeImplemenation;
 
         /// <summary>
         /// Configures the core.
@@ -26,6 +25,32 @@
         public static CoreConfiguration Core(this IModuleHook hook)
         {
             return CaliburnModule<CoreConfiguration>.Instance;
+        }
+
+        /// <summary>
+        /// Gets the type of the model, inspecting for proxies and returning the underlying type if necessary.
+        /// </summary>
+        /// <param name="model">The model.</param>
+        /// <returns></returns>
+        public static Type GetModelType(this object model)
+        {
+            return GetModelTypeImplementation(model);
+        }
+
+        static Type DefaultGetModelTypeImplemenation(this object model)
+        {
+            var proxy = model as IProxy;
+            return proxy != null ? proxy.OriginalType : model.GetType();
+        }
+
+        /// <summary>
+        /// Gets the inspectable types in an assembly.
+        /// </summary>
+        /// <param name="assembly">The assembly.</param>
+        /// <returns>The types to inspect.</returns>
+        public static IEnumerable<Type> GetInspectableTypes(Assembly assembly)
+        {
+            return GetInspectableTypesImplementation(assembly);
         }
 
         /// <summary>

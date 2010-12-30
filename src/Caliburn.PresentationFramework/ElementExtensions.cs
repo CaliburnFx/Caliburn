@@ -11,9 +11,9 @@
     /// </summary>
     public static class ElementExtensions
     {
-        private static readonly ILog Log = LogManager.GetLog(typeof(ElementExtensions));
+        static readonly ILog Log = LogManager.GetLog(typeof(ElementExtensions));
 
-        // <summary>
+        /// <summary>
         /// Gets the parent of the dependency object.
         /// </summary>
         /// <param name="dependencyObject">The dependency object.</param>

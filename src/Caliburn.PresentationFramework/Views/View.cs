@@ -14,8 +14,8 @@
     /// </summary>
     public static class View
     {
-        private static IViewLocator viewLocator;
-        private static IViewModelBinder viewModelBinder;
+        static IViewLocator viewLocator;
+        static IViewModelBinder viewModelBinder;
 
         /// <summary>
         /// Initializes the framework with the specified view locator and view model binder.
@@ -28,6 +28,10 @@
             View.viewModelBinder = viewModelBinder;
         }
 
+        /// <summary>
+        /// The default view context.
+        /// </summary>
+        public static readonly object DefaultContext = new object();
 
         /// <summary>
         /// Get the <see cref="IInteractionNode"/> associated with the view.

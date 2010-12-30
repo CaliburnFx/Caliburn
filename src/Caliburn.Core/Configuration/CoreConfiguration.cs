@@ -32,7 +32,7 @@
         /// <returns></returns>
         public CoreConfiguration LocateTypesWith(Func<Assembly,IEnumerable<Type>> assemblyInspector)
         {
-            CoreExtensions.GetInspectableTypes = assemblyInspector;
+            CoreExtensions.GetInspectableTypesImplementation = assemblyInspector;
             return this;
         }
 
@@ -66,6 +66,17 @@
         public CoreConfiguration LocateLoggerWith(Func<Type, ILog> locator)
         {
             LogManager.Initialize(locator);
+            return this;
+        }
+
+        /// <summary>
+        /// Determines the model type using the provided custom delegate.
+        /// </summary>
+        /// <param name="getType">Gets the type.</param>
+        /// <returns>The configuration.</returns>
+        public CoreConfiguration DetermineModelTypeWith(Func<object, Type> getType)
+        {
+            CoreExtensions.GetModelTypeImplementation = getType;
             return this;
         }
 

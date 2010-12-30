@@ -12,8 +12,8 @@ namespace Caliburn.PresentationFramework.Views
     [AttributeUsage(AttributeTargets.Class | AttributeTargets.Enum | AttributeTargets.Struct, AllowMultiple = true)]
     public class ViewAttribute : Attribute, IViewStrategy
     {
-        private static readonly ILog Log = LogManager.GetLog(typeof(ViewAttribute));
-        private readonly Type key;
+        static readonly ILog Log = LogManager.GetLog(typeof(ViewAttribute));
+        readonly Type key;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ViewAttribute"/> class.

@@ -1,8 +1,6 @@
 ﻿namespace Caliburn.PresentationFramework
 {
-    using System;
     using Configuration;
-    using Core.Behaviors;
     using Core.Configuration;
 
     /// <summary>
@@ -10,27 +8,6 @@
     /// </summary>
     public static class PresentationFrameworkExtensions
     {
-        /// <summary>
-        /// The overridable implemenation of GetModelType.
-        /// </summary>
-        public static Func<object, Type> GetModelTypeImplementation = DefaultGetModelTypeImplemenation;
-
-        /// <summary>
-        /// Gets the type of the model.
-        /// </summary>
-        /// <param name="model">The model.</param>
-        /// <returns></returns>
-        public static Type GetModelType(this object model)
-        {
-            return GetModelTypeImplementation(model);
-        }
-
-        private static Type DefaultGetModelTypeImplemenation(this object model)
-        {
-            var proxy = model as IProxy;
-            return proxy != null ? proxy.OriginalType : model.GetType();
-        }
-
         /// <summary>
         /// Adds the presentation framework module's configuration to the system.
         /// </summary>

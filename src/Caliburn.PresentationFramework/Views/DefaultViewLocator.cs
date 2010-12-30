@@ -14,17 +14,12 @@ namespace Caliburn.PresentationFramework.Views
     /// </summary>
     public class DefaultViewLocator : IViewLocator
     {
-        private static readonly ILog Log = LogManager.GetLog(typeof(DefaultViewLocator));
+        static readonly ILog Log = LogManager.GetLog(typeof(DefaultViewLocator));
 
-        /// <summary>
-        /// The default view context.
-        /// </summary>
-        public static readonly object DefaultContext = new object();
-
-        private readonly IAssemblySource assemblySource;
-        private readonly IServiceLocator serviceLocator;
-        private readonly Dictionary<string, Type> cache = new Dictionary<string, Type>();
-        private readonly Dictionary<string, string> namespaceAliases = new Dictionary<string, string>();
+        readonly IAssemblySource assemblySource;
+        readonly IServiceLocator serviceLocator;
+        readonly Dictionary<string, Type> cache = new Dictionary<string, Type>();
+        readonly Dictionary<string, string> namespaceAliases = new Dictionary<string, string>();
 
         /// <summary>
         /// Initializes a new instance of the <see cref="DefaultViewLocator"/> class.
@@ -242,7 +237,7 @@ namespace Caliburn.PresentationFramework.Views
             }
         }
 
-        private IEnumerable<string> ProcessOption(string context, IEnumerable<string> options)
+        IEnumerable<string> ProcessOption(string context, IEnumerable<string> options)
         {
             if (!string.IsNullOrEmpty(context))
             {

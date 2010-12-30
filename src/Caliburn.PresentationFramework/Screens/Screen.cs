@@ -187,7 +187,7 @@
         public virtual void AttachView(object view, object context)
         {
             var loadWired = views.Values.Contains(view);
-            views[context ?? DefaultViewLocator.DefaultContext] = view;
+            views[context ?? View.DefaultContext] = view;
 
             var element = view as FrameworkElement;
             if (!loadWired && element != null)
@@ -211,7 +211,7 @@
         public virtual object GetView(object context)
         {
             object view;
-            views.TryGetValue(context ?? DefaultViewLocator.DefaultContext, out view);
+            views.TryGetValue(context ?? View.DefaultContext, out view);
             return view;
         }
 
