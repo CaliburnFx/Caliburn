@@ -66,6 +66,9 @@ V2 Alpha
 -Complete re-write of Screens/Conductors mechanism.
 -Remove CaliburnApplication and replaced with Bootstrapper<T>
 -Removed dependency on CSL.
+-Major improvements to configuration.
+-Replaced Doxygen with Sandcastle.
+-Removed direct support for Prism.
 
 V1.1 Release
 -Fixed an issue in the WPF version of InteractionNode.

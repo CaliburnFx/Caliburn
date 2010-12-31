@@ -30,6 +30,7 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <DocumentationFile>bin\Release\Caliburn.FluentValidation.xml</DocumentationFile>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="FluentValidation, Version=1.2.0.0, Culture=neutral, PublicKeyToken=a82054b837897c66, processorArchitecture=MSIL">

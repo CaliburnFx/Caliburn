@@ -30,6 +30,7 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <DocumentationFile>bin\Release\Caliburn.Autofac.xml</DocumentationFile>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Autofac, Version=2.1.12.802, Culture=neutral, PublicKeyToken=17863af14b0044da, processorArchitecture=MSIL">

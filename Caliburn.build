@@ -5,12 +5,10 @@
 	<property name="path.bin" value="${path.base}/bin"/>
 	<property name="path.lib" value="${path.base}/lib"/>
 	<property name="path.dist" value="${path.base}/dist"/>
-	<property name="path.docs" value="${path.base}/docs"/>
 	<property name="path.src" value="${path.base}/src"/>
 	<property name="path.tools" value="${path.base}/tools"/>
 	<property name="path.tools.nunit" value="${path.tools}/NUnit/bin"/>
 	<property name="path.tools.rhino" value="${path.tools}/Rhino.Mocks"/>
-	<property name="path.tools.doxygen" value="${path.tools}/Doxygen"/>
 
 	<property name="version" value="2.0.0.0" overwrite="false"/>
 	<property name="version.major" value="${version::get-major(version::parse(version))}" dynamic="true"/>
@@ -23,8 +21,6 @@
 	<property name="skip.tests" value="false" readonly="false" overwrite="false"/>
 	<property name="build.asminfo" value="SharedBuildAssemblyInfo.cs"/>
 
-	<property name="generate.docs" value="false" />
-	
 	<target name="rebuild" depends="clean, all"/>
 
 	<target name="debug">
@@ -40,7 +36,6 @@
     <call target="platform-net40" />
     <call target="platform-silverlight30"/>
     <call target="platform-silverlight40"/>
-    <call target="generate-docs" />
   </target>
 
 	<target name="clean">
@@ -94,14 +89,6 @@
 				<attribute type="ComVisibleAttribute" value="false"/>
 			</attributes>
 		</asminfo>
-	</target>
-
-	<target name="generate-docs" depends="core">
-		<if test="${generate.docs=='true'}">
-			<exec program="doxygen.exe" basedir="${path.tools.doxygen}">
-				<arg value="doxyfile" />
-			</exec>
-		</if>
 	</target>
 
 	<target name="config-platform-net35">
