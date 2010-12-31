@@ -14,16 +14,16 @@ namespace Tests.Caliburn.RoutedUIMessaging.Triggers
     [TestFixture]
     public class The_gesture_message_trigger : TestBase
     {
-        private IInteractionNode _node;
-        private FakeElement _element;
-        private FakeMessage _message;
+        IInteractionNode node;
+        FakeElement element;
+        FakeMessage message;
 
         protected override void given_the_context_of()
         {
-            _node = Mock<IInteractionNode>();
+            node = Mock<IInteractionNode>();
 
-            _element = new FakeElement();
-            _message = new FakeMessage {AvailabilityEffect = Mock<IAvailabilityEffect>()};
+            element = new FakeElement();
+            message = new FakeMessage {AvailabilityEffect = Mock<IAvailabilityEffect>()};
         }
 
         [Test]
@@ -33,19 +33,19 @@ namespace Tests.Caliburn.RoutedUIMessaging.Triggers
             {
                 Modifiers = ModifierKeys.Control,
                 MouseAction = MouseAction.LeftDoubleClick,
-                Message = _message
+                Message = message
             };
 
-            _node.Expect(x => x.UIElement).Return(_element);
+            node.Expect(x => x.UIElement).Return(element);
 
 
-            trigger.Attach(_node);
+            trigger.Attach(node);
 
-            Assert.That(trigger.Node, Is.EqualTo(_node));
-            Assert.That(_message.InvalidatedHandler, Is.Not.Null);
-            Assert.That(_message.InitializeCalledWith, Is.EqualTo(_node));
+            Assert.That(trigger.Node, Is.EqualTo(node));
+            Assert.That(message.InvalidatedHandler, Is.Not.Null);
+            Assert.That(message.InitializeCalledWith, Is.EqualTo(node));
 
-            var binding = _element.InputBindings[0];
+            var binding = element.InputBindings[0];
             var gesture = binding.Gesture as MouseGesture;
 
             Assert.That(binding.Command, Is.EqualTo(new GestureMessageTrigger.GestureCommand(binding.Gesture)));
@@ -60,19 +60,19 @@ namespace Tests.Caliburn.RoutedUIMessaging.Triggers
             {
                 Modifiers = ModifierKeys.Alt,
                 Key = Key.S,
-                Message = _message
+                Message = message
             };
 
-            _node.Expect(x => x.UIElement).Return(_element);
+            node.Expect(x => x.UIElement).Return(element);
 
 
-            trigger.Attach(_node);
+            trigger.Attach(node);
 
-            Assert.That(trigger.Node, Is.EqualTo(_node));
-            Assert.That(_message.InvalidatedHandler, Is.Not.Null);
-            Assert.That(_message.InitializeCalledWith, Is.EqualTo(_node));
+            Assert.That(trigger.Node, Is.EqualTo(node));
+            Assert.That(message.InvalidatedHandler, Is.Not.Null);
+            Assert.That(message.InitializeCalledWith, Is.EqualTo(node));
 
-            var binding = _element.InputBindings[0];
+            var binding = element.InputBindings[0];
             var gesture = binding.Gesture as UnrestrictedKeyGesture;
 
             Assert.That(binding.Command, Is.EqualTo(new GestureMessageTrigger.GestureCommand(binding.Gesture)));
@@ -87,13 +87,13 @@ namespace Tests.Caliburn.RoutedUIMessaging.Triggers
                 var trigger = new GestureMessageTrigger {
                     Modifiers = ModifierKeys.Alt,
                     Key = Key.S,
-                    Message = _message
+                    Message = message
                 };
 
-                _node.Expect(x => x.UIElement).Return(new DependencyObject()).Repeat.Twice();
+                node.Expect(x => x.UIElement).Return(new DependencyObject()).Repeat.Twice();
 
 
-                trigger.Attach(_node);
+                trigger.Attach(node);
             });
         }
 
@@ -104,17 +104,17 @@ namespace Tests.Caliburn.RoutedUIMessaging.Triggers
             {
                 Modifiers = ModifierKeys.Alt,
                 Key = Key.S,
-                Message = _message
+                Message = message
             };
 
             object parameter = new object();
 
-            _node.Expect(x => x.UIElement).Return(_element);
-            _node.Expect(x => x.ProcessMessage(Arg<IRoutedMessage>.Is.Equal(_message), Arg<object>.Is.Equal(parameter)));
+            node.Expect(x => x.UIElement).Return(element);
+            node.Expect(x => x.ProcessMessage(Arg<IRoutedMessage>.Is.Equal(message), Arg<object>.Is.Equal(parameter)));
 
 
-            trigger.Attach(_node);
-            _element.InputBindings[0].Command.Execute(parameter);
+            trigger.Attach(node);
+            element.InputBindings[0].Command.Execute(parameter);
         }
 
         [Test]
@@ -124,106 +124,106 @@ namespace Tests.Caliburn.RoutedUIMessaging.Triggers
             {
                 Modifiers = ModifierKeys.Alt,
                 Key = Key.S,
-                Message = _message
+                Message = message
             };
 
-            _node.Expect(x => x.UIElement).Return(_element);
+            node.Expect(x => x.UIElement).Return(element);
 
-            _node.Expect(x => x.UIElement).Return(_element);
-            _message.AvailabilityEffect.Expect(x => x.ApplyTo(_element, false));
+            node.Expect(x => x.UIElement).Return(element);
+            message.AvailabilityEffect.Expect(x => x.ApplyTo(element, false));
 
 
-            trigger.Attach(_node);
+            trigger.Attach(node);
             trigger.UpdateAvailabilty(false);
         }
 
         [Test]
         public void represents_availability_consistently_through_ICommand_for_disable_availability_when_not_available()
         {
-            _message = new FakeMessage {AvailabilityEffect = AvailabilityEffect.Disable};
+            message = new FakeMessage {AvailabilityEffect = AvailabilityEffect.Disable};
 
             var trigger = new GestureMessageTrigger
             {
                 Modifiers = ModifierKeys.Alt,
                 Key = Key.S,
-                Message = _message
+                Message = message
             };
 
-            _node.Expect(x => x.UIElement).Return(_element);
-            _node.Expect(x => x.UIElement).Return(_element);
+            node.Expect(x => x.UIElement).Return(element);
+            node.Expect(x => x.UIElement).Return(element);
 
 
-            trigger.Attach(_node);
+            trigger.Attach(node);
             trigger.UpdateAvailabilty(false);
 
-            Assert.That(_element.IsEnabled, Is.False);
+            Assert.That(element.IsEnabled, Is.False);
         }
 
         [Test]
         public void represents_availability_consistently_through_ICommand_for_disable_availability_when_available()
         {
-            _message = new FakeMessage {AvailabilityEffect = AvailabilityEffect.Disable};
+            message = new FakeMessage {AvailabilityEffect = AvailabilityEffect.Disable};
 
             var trigger = new GestureMessageTrigger
             {
                 Modifiers = ModifierKeys.Alt,
                 Key = Key.S,
-                Message = _message
+                Message = message
             };
 
-            _node.Expect(x => x.UIElement).Return(_element);
-            _node.Expect(x => x.UIElement).Return(_element);
+            node.Expect(x => x.UIElement).Return(element);
+            node.Expect(x => x.UIElement).Return(element);
 
 
-            trigger.Attach(_node);
+            trigger.Attach(node);
             trigger.UpdateAvailabilty(true);
 
-            Assert.That(_element.IsEnabled);
+            Assert.That(element.IsEnabled);
         }
 
         [Test]
         public void
             represents_availability_consistently_through_ICommand_for_non_disable_availability_when_not_available()
         {
-            _message = new FakeMessage {AvailabilityEffect = AvailabilityEffect.Hide};
+            message = new FakeMessage {AvailabilityEffect = AvailabilityEffect.Hide};
 
             var trigger = new GestureMessageTrigger
             {
                 Modifiers = ModifierKeys.Alt,
                 Key = Key.S,
-                Message = _message
+                Message = message
             };
 
-            _node.Expect(x => x.UIElement).Return(_element);
-            _node.Expect(x => x.UIElement).Return(_element);
+            node.Expect(x => x.UIElement).Return(element);
+            node.Expect(x => x.UIElement).Return(element);
 
 
-            trigger.Attach(_node);
+            trigger.Attach(node);
             trigger.UpdateAvailabilty(false);
 
-            Assert.That(_element.IsEnabled);
+            Assert.That(element.IsEnabled);
         }
 
         [Test]
         public void represents_availability_consistently_through_ICommand_for_non_disable_availability_when_available()
         {
-            _message = new FakeMessage {AvailabilityEffect = AvailabilityEffect.Hide};
+            message = new FakeMessage {AvailabilityEffect = AvailabilityEffect.Hide};
 
             var trigger = new GestureMessageTrigger
             {
                 Modifiers = ModifierKeys.Alt,
                 Key = Key.S,
-                Message = _message
+                Message = message
             };
 
-            _node.Expect(x => x.UIElement).Return(_element);
-            _node.Expect(x => x.UIElement).Return(_element);
+            node.Expect(x => x.UIElement).Return(element);
+            node.Expect(x => x.UIElement).Return(element);
 
 
-            trigger.Attach(_node);
+            trigger.Attach(node);
             trigger.UpdateAvailabilty(true);
 
-            Assert.That(_element.IsEnabled);
+            Assert.That(element.IsEnabled);
         }
     }
 }

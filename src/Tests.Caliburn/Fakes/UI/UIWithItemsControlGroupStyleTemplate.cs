@@ -1,9 +1,9 @@
-﻿using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-
-namespace Tests.Caliburn.Fakes.UI
+﻿namespace Tests.Caliburn.Fakes.UI
 {
+    using System.Windows;
+    using System.Windows.Controls;
+    using System.Windows.Data;
+
     public class UIWithItemsControlGroupStyleTemplate : UserControl
     {
         public UIWithItemsControlGroupStyleTemplate()
@@ -14,15 +14,14 @@ namespace Tests.Caliburn.Fakes.UI
             var itemsControl = new ItemsControl();
 
             itemsControl.GroupStyle.Add(
-                new GroupStyle
-                {
+                new GroupStyle {
                     HeaderTemplate = CreateItemTemplate()
                 });
 
             stack.Children.Add(itemsControl);
         }
 
-        private DataTemplate CreateItemTemplate()
+        DataTemplate CreateItemTemplate()
         {
             var template = new DataTemplate();
 

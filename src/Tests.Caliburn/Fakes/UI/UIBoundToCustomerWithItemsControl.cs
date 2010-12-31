@@ -1,10 +1,10 @@
-﻿using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-
-namespace Tests.Caliburn.Fakes.UI
+﻿namespace Tests.Caliburn.Fakes.UI
 {
-    public class UIBoundToCustomerWithItemsControl: UserControl
+    using System.Windows;
+    using System.Windows.Controls;
+    using System.Windows.Data;
+
+    public class UIBoundToCustomerWithItemsControl : UserControl
     {
         public UIBoundToCustomerWithItemsControl()
         {
@@ -34,12 +34,14 @@ namespace Tests.Caliburn.Fakes.UI
             textBlock.SetBinding(TextBlock.TextProperty, new Binding("BllingAddress.Street2")); //misspelling
             addressStack.Children.Add(textBlock);
 
-            var listBox = new ListBox {ItemTemplate = CreateItemTemplate()};
+            var listBox = new ListBox {
+                ItemTemplate = CreateItemTemplate()
+            };
             listBox.SetBinding(ListBox.ItemsSourceProperty, new Binding("Orders"));
             stack.Children.Add(listBox);
         }
 
-        private DataTemplate CreateItemTemplate()
+        DataTemplate CreateItemTemplate()
         {
             var template = new DataTemplate();
 

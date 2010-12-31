@@ -7,11 +7,11 @@
     [TestFixture]
     public class The_event_trigger_parser : TestBase
     {
-        private EventTriggerParser _parser;
+        EventTriggerParser parser;
 
         protected override void given_the_context_of()
         {
-            _parser = new EventTriggerParser();
+            parser = new EventTriggerParser();
         }
 
         [Test]
@@ -19,7 +19,7 @@
         {
             const string eventName = "Click";
 
-            var result = _parser.Parse(null, eventName) as EventMessageTrigger;
+            var result = parser.Parse(null, eventName) as EventMessageTrigger;
 
             Assert.That(result, Is.Not.Null);
             Assert.That(result.EventName, Is.EqualTo(eventName));

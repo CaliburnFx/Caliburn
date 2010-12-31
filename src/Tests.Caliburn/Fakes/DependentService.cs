@@ -2,18 +2,18 @@ namespace Tests.Caliburn.Fakes
 {
     public class DependentService : IDependentService
     {
-        private readonly ITestService _dependency;
+        readonly ITestService dependency;
 
         public DependentService() { }
 
         public DependentService(ITestService dependency)
         {
-            _dependency = dependency;
+            this.dependency = dependency;
         }
 
         public ITestService Dependency
         {
-            get { return _dependency; }
+            get { return dependency; }
         }
     }
 }

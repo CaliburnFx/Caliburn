@@ -1,10 +1,10 @@
-﻿using System;
-using Caliburn.Testability.Extensions;
-using NUnit.Framework;
-using Tests.Caliburn.Testability.ChangeNotificationSamples;
-
-namespace Tests.Caliburn.Testability
+﻿namespace Tests.Caliburn.Testability
 {
+    using System;
+    using ChangeNotificationSamples;
+    using global::Caliburn.Testability.Extensions;
+    using NUnit.Framework;
+
     [TestFixture]
     public class When_testing_that_properties_implement_change_notification
     {

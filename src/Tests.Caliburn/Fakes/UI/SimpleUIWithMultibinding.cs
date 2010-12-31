@@ -1,8 +1,8 @@
-﻿using System.Windows.Controls;
-using System.Windows.Data;
-
-namespace Tests.Caliburn.Fakes.UI
+﻿namespace Tests.Caliburn.Fakes.UI
 {
+    using System.Windows.Controls;
+    using System.Windows.Data;
+
     public class SimpleUIWithMultibinding : UserControl
     {
         public SimpleUIWithMultibinding()
@@ -10,7 +10,9 @@ namespace Tests.Caliburn.Fakes.UI
             var stack = new StackPanel();
             Content = stack;
 
-            var multibinding = new MultiBinding { Converter = new SimpleMultiValueConverter()};
+            var multibinding = new MultiBinding {
+                Converter = new SimpleMultiValueConverter()
+            };
             multibinding.Bindings.Add(new Binding("FirstName"));
             multibinding.Bindings.Add(new Binding("LstName")); //purposefully misspelled
 

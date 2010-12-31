@@ -11,16 +11,16 @@ namespace Tests.Caliburn.RoutedUIMessaging.Triggers
     [TestFixture]
     public class The_event_message_trigger : TestBase
     {
-        private IInteractionNode _node;
-        private FakeElement _element;
-        private FakeMessage _message;
+        IInteractionNode node;
+        FakeElement element;
+        FakeMessage message;
 
         protected override void given_the_context_of()
         {
-            _node = Mock<IInteractionNode>();
+            node = Mock<IInteractionNode>();
 
-            _element = new FakeElement();
-            _message = new FakeMessage {AvailabilityEffect = Mock<IAvailabilityEffect>()};
+            element = new FakeElement();
+            message = new FakeMessage {AvailabilityEffect = Mock<IAvailabilityEffect>()};
         }
 
         [Test]
@@ -28,17 +28,17 @@ namespace Tests.Caliburn.RoutedUIMessaging.Triggers
         {
             var trigger = new EventMessageTrigger
             {
-                Message = _message,
+                Message = message,
                 EventName = FakeElement.EventName
             };
 
-            _node.Expect(x => x.UIElement).Return(_element).Repeat.Any();
+            node.Expect(x => x.UIElement).Return(element).Repeat.Any();
 
-            trigger.Attach(_node);
+            trigger.Attach(node);
 
-            Assert.That(trigger.Node, Is.EqualTo(_node));
-            Assert.That(_message.InvalidatedHandler, Is.Not.Null);
-            Assert.That(_message.InitializeCalledWith, Is.EqualTo(_node));
+            Assert.That(trigger.Node, Is.EqualTo(node));
+            Assert.That(message.InvalidatedHandler, Is.Not.Null);
+            Assert.That(message.InitializeCalledWith, Is.EqualTo(node));
         }
 
         [Test]
@@ -46,16 +46,16 @@ namespace Tests.Caliburn.RoutedUIMessaging.Triggers
         {
             var trigger = new EventMessageTrigger
             {
-                Message = _message,
+                Message = message,
                 EventName = FakeElement.EventName
             };
 
-            _node.Expect(x => x.UIElement).Return(_element).Repeat.Any();
-            _node.Expect(x => x.ProcessMessage(Arg<IRoutedMessage>.Is.Equal(_message), Arg<EventArgs>.Is.TypeOf));
+            node.Expect(x => x.UIElement).Return(element).Repeat.Any();
+            node.Expect(x => x.ProcessMessage(Arg<IRoutedMessage>.Is.Equal(message), Arg<EventArgs>.Is.TypeOf));
 
 
-            trigger.Attach(_node);
-            _element.RaiseClick();
+            trigger.Attach(node);
+            element.RaiseClick();
         }
 
         [Test]
@@ -63,17 +63,17 @@ namespace Tests.Caliburn.RoutedUIMessaging.Triggers
         {
             var trigger = new EventMessageTrigger
             {
-                Message = _message,
+                Message = message,
                 EventName = FakeElement.EventName
             };
 
-            _node.Expect(x => x.UIElement).Return(_element);
+            node.Expect(x => x.UIElement).Return(element);
 
-            _node.Expect(x => x.UIElement).Return(_element);
-            _message.AvailabilityEffect.Expect(x => x.ApplyTo(_element, false));
+            node.Expect(x => x.UIElement).Return(element);
+            message.AvailabilityEffect.Expect(x => x.ApplyTo(element, false));
 
 
-            trigger.Attach(_node);
+            trigger.Attach(node);
             trigger.UpdateAvailabilty(false);
         }
     }

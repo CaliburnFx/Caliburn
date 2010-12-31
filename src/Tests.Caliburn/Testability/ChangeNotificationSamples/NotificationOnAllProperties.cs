@@ -2,47 +2,47 @@ namespace Tests.Caliburn.Testability.ChangeNotificationSamples
 {
     public class NotificationOnAllProperties : ChangeNotificationBase
     {
-        private bool _bool;
-        private int _int;
-        private object _object;
-        private string _string;
+        private bool @bool;
+        private int @int;
+        private object @object;
+        private string @string;
 
         public object Object
         {
-            get { return _object; }
+            get { return @object; }
             set
             {
-                _object = value;
+                @object = value;
                 RaisePropertyChanged("Object");
             }
         }
 
         public string String
         {
-            get { return _string; }
+            get { return @string; }
             set
             {
-                _string = value;
+                @string = value;
                 RaisePropertyChanged("String");
             }
         }
 
         public int Int
         {
-            get { return _int; }
+            get { return @int; }
             set
             {
-                _int = value;
+                @int = value;
                 RaisePropertyChanged("Int");
             }
         }
 
         public bool Bool
         {
-            get { return _bool; }
+            get { return @bool; }
             set
             {
-                _bool = value;
+                @bool = value;
                 RaisePropertyChanged("Bool");
             }
         }

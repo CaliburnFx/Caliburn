@@ -1,9 +1,8 @@
-using System.Windows.Controls;
-using System.Windows.Data;
-using Tests.Caliburn.Fakes.UI;
-
 namespace Tests.Caliburn.Fakes.UI
 {
+    using System.Windows.Controls;
+    using System.Windows.Data;
+
     public class SimpleUIUsingResourceDictionary : UserControl
     {
         public SimpleUIUsingResourceDictionary()
@@ -12,11 +11,11 @@ namespace Tests.Caliburn.Fakes.UI
             Content = stack;
 
             var textBlock = new TextBlock();
-            textBlock.SetResourceReference(TextBlock.StyleProperty, SimpleResourceDictionary.TextBlockStyleKey);
+            textBlock.SetResourceReference(StyleProperty, SimpleResourceDictionary.TextBlockStyleKey);
             textBlock.SetBinding(TextBlock.TextProperty, new Binding("FirstName"));
             stack.Children.Add(textBlock);
 
-            var local = textBlock.GetValue(TextBlock.StyleProperty);
+            var local = textBlock.GetValue(StyleProperty);
 
             textBlock = new TextBlock();
             textBlock.SetBinding(TextBlock.TextProperty, new Binding("LstName")); //purposefully misspelled

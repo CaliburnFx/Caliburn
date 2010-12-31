@@ -1,8 +1,8 @@
-using System;
-using System.Windows;
-
 namespace Tests.Caliburn.Fakes.UI
 {
+    using System;
+    using System.Windows;
+
     public class FakeElement : UIElement
     {
         public static readonly string EventName = "Click";
@@ -18,7 +18,7 @@ namespace Tests.Caliburn.Fakes.UI
 
         public void RaiseClick()
         {
-            if (Click != null)
+            if(Click != null)
                 Click(this, EventArgs.Empty);
         }
     }

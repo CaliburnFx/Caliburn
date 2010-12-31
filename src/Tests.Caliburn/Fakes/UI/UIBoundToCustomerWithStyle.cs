@@ -1,9 +1,9 @@
-﻿using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-
-namespace Tests.Caliburn.Fakes.UI
+﻿namespace Tests.Caliburn.Fakes.UI
 {
+    using System.Windows;
+    using System.Windows.Controls;
+    using System.Windows.Data;
+
     public class UIBoundToCustomerWithStyle : UserControl
     {
         public UIBoundToCustomerWithStyle()
@@ -22,7 +22,7 @@ namespace Tests.Caliburn.Fakes.UI
             stack.Children.Add(textBlock);
         }
 
-        private Style CreateStyle()
+        Style CreateStyle()
         {
             var style = new Style();
 

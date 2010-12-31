@@ -1,9 +1,9 @@
-﻿using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-
-namespace Tests.Caliburn.Fakes.UI
+﻿namespace Tests.Caliburn.Fakes.UI
 {
+    using System.Windows;
+    using System.Windows.Controls;
+    using System.Windows.Data;
+
     public class UIBoundToCustomerWithContentControlAndTriggers : UserControl
     {
         public UIBoundToCustomerWithContentControlAndTriggers()
@@ -19,23 +19,25 @@ namespace Tests.Caliburn.Fakes.UI
             textBlock.SetBinding(TextBlock.TextProperty, new Binding("LastName"));
             stack.Children.Add(textBlock);
 
-            var contentControl = new ContentControl {ContentTemplate = CreateItemTemplate()};
-            contentControl.SetBinding(ContentControl.ContentProperty, new Binding("MailingAddress"));
+            var contentControl = new ContentControl {
+                ContentTemplate = CreateItemTemplate()
+            };
+            contentControl.SetBinding(ContentProperty, new Binding("MailingAddress"));
             stack.Children.Add(contentControl);
         }
 
-        private DataTemplate CreateItemTemplate()
+        DataTemplate CreateItemTemplate()
         {
             var template = new DataTemplate();
 
             template.VisualTree = new FrameworkElementFactory(typeof(StackPanel));
 
             var txtBlock = new FrameworkElementFactory(typeof(TextBlock));
-            txtBlock.SetBinding(TextBlock.TextProperty, new Binding("Street1")); 
+            txtBlock.SetBinding(TextBlock.TextProperty, new Binding("Street1"));
             template.VisualTree.AppendChild(txtBlock);
 
             txtBlock = new FrameworkElementFactory(typeof(TextBlock));
-            txtBlock.SetBinding(TextBlock.TextProperty, new Binding("City")); 
+            txtBlock.SetBinding(TextBlock.TextProperty, new Binding("City"));
             template.VisualTree.AppendChild(txtBlock);
 
             var trigger = new DataTrigger();

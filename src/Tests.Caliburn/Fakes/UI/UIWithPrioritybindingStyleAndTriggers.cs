@@ -1,10 +1,9 @@
-﻿using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using DataTrigger=System.Windows.DataTrigger;
-
-namespace Tests.Caliburn.Fakes.UI
+﻿namespace Tests.Caliburn.Fakes.UI
 {
+    using System.Windows;
+    using System.Windows.Controls;
+    using System.Windows.Data;
+
     public class UIWithPrioritybindingStyleAndTriggers : UserControl
     {
         public UIWithPrioritybindingStyleAndTriggers()
@@ -23,7 +22,7 @@ namespace Tests.Caliburn.Fakes.UI
             stack.Children.Add(textBlock);
         }
 
-        private Style CreateStyle()
+        Style CreateStyle()
         {
             var style = new Style();
 

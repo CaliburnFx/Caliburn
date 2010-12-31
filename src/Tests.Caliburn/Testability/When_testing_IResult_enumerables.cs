@@ -31,13 +31,13 @@
             Assert.That(showChild, Is.Not.Null);
         }
 
-        private IEnumerable<IResult> DoAnimation()
+        IEnumerable<IResult> DoAnimation()
         {
             int i = 2 * 2;
             yield return Animation.Begin(i.ToString());
         }
 
-        private IEnumerable<IResult> DoSeveralThings()
+        IEnumerable<IResult> DoSeveralThings()
         {
             foreach(var result in DoAnimation())
             {

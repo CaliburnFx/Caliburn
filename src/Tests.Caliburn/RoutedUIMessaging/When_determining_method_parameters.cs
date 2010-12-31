@@ -14,24 +14,24 @@ namespace Tests.Caliburn.RoutedUIMessaging
     [TestFixture]
     public class When_determining_method_parameters : TestBase
     {
-        private DefaultMessageBinder _binder;
-        private IInteractionNode _handlingNode;
-        private IInteractionNode _sourceNode;
-        private IConventionManager _conventionManager;
+        DefaultMessageBinder binder;
+        IInteractionNode handlingNode;
+        IInteractionNode sourceNode;
+        IConventionManager conventionManager;
 
         protected override void given_the_context_of()
         {
-            _conventionManager = Mock<IConventionManager>();
-            _binder = new DefaultMessageBinder(_conventionManager);
-            _handlingNode = Stub<IInteractionNode>();
-            _sourceNode = Stub<IInteractionNode>();
+            conventionManager = Mock<IConventionManager>();
+            binder = new DefaultMessageBinder(conventionManager);
+            handlingNode = Stub<IInteractionNode>();
+            sourceNode = Stub<IInteractionNode>();
         }
 
         [Test]
         public void methods_with_no_parameters_should_yield_an_empty_array()
         {
-            var result = _binder.DetermineParameters(
-                new FakeMessage(), null, _handlingNode, null
+            var result = binder.DetermineParameters(
+                new FakeMessage(), null, handlingNode, null
                 );
 
             Assert.That(result, Has.Length.EqualTo(0));
@@ -52,7 +52,7 @@ namespace Tests.Caliburn.RoutedUIMessaging
                 }
             };
 
-            message.Initialize(_sourceNode);
+            message.Initialize(sourceNode);
 
             var requirements = new List<RequiredParameter>
             {
@@ -60,8 +60,8 @@ namespace Tests.Caliburn.RoutedUIMessaging
                 new RequiredParameter("param2", typeof(int))
             };
 
-            var result = _binder.DetermineParameters(
-                message, requirements, _handlingNode, null
+            var result = binder.DetermineParameters(
+                message, requirements, handlingNode, null
                 );
 
             Assert.That(result, Has.Length.EqualTo(2));
@@ -84,7 +84,7 @@ namespace Tests.Caliburn.RoutedUIMessaging
                 }
             };
 
-            message.Initialize(_sourceNode);
+            message.Initialize(sourceNode);
 
             var requirements = new List<RequiredParameter>
             {
@@ -92,8 +92,8 @@ namespace Tests.Caliburn.RoutedUIMessaging
                 new RequiredParameter("param2", typeof(int))
             };
 
-            var result = _binder.DetermineParameters(
-                message, requirements, _handlingNode, null
+            var result = binder.DetermineParameters(
+                message, requirements, handlingNode, null
                 );
 
             Assert.That(result, Has.Length.EqualTo(2));
@@ -115,15 +115,15 @@ namespace Tests.Caliburn.RoutedUIMessaging
                 }
             };
 
-            message.Initialize(_sourceNode);
+            message.Initialize(sourceNode);
 
             var requirements = new List<RequiredParameter>
             {
                 new RequiredParameter("param1", typeof(EventArgs))
             };
 
-            var result = _binder.DetermineParameters(
-                message, requirements, _handlingNode, context
+            var result = binder.DetermineParameters(
+                message, requirements, handlingNode, context
                 );
 
             Assert.That(result, Has.Length.EqualTo(1));
@@ -144,15 +144,15 @@ namespace Tests.Caliburn.RoutedUIMessaging
                 }
             };
 
-            message.Initialize(_sourceNode);
+            message.Initialize(sourceNode);
 
             var requirements = new List<RequiredParameter>
             {
                 new RequiredParameter("param1", typeof(object))
             };
 
-            var result = _binder.DetermineParameters(
-                message, requirements, _handlingNode, context
+            var result = binder.DetermineParameters(
+                message, requirements, handlingNode, context
                 );
 
             Assert.That(result, Has.Length.EqualTo(1));
@@ -173,16 +173,16 @@ namespace Tests.Caliburn.RoutedUIMessaging
                 }
             };
 
-            _sourceNode.Stub(x => x.UIElement).Return(source);
-            message.Initialize(_sourceNode);
+            sourceNode.Stub(x => x.UIElement).Return(source);
+            message.Initialize(sourceNode);
 
             var requirements = new List<RequiredParameter>
             {
                 new RequiredParameter("param1", typeof(Button))
             };
 
-            var result = _binder.DetermineParameters(
-                message, requirements, _handlingNode, null
+            var result = binder.DetermineParameters(
+                message, requirements, handlingNode, null
                 );
 
             Assert.That(result, Has.Length.EqualTo(1));
@@ -203,16 +203,16 @@ namespace Tests.Caliburn.RoutedUIMessaging
                 }
             };
 
-            _sourceNode.Stub(x => x.UIElement).Return(source);
-            message.Initialize(_sourceNode);
+            sourceNode.Stub(x => x.UIElement).Return(source);
+            message.Initialize(sourceNode);
 
             var requirements = new List<RequiredParameter>
             {
                 new RequiredParameter("param1", typeof(object))
             };
 
-            var result = _binder.DetermineParameters(
-                message, requirements, _handlingNode, null
+            var result = binder.DetermineParameters(
+                message, requirements, handlingNode, null
                 );
 
             Assert.That(result, Has.Length.EqualTo(1));
@@ -226,7 +226,7 @@ namespace Tests.Caliburn.RoutedUIMessaging
             var source = new TextBox { Text = "the value" };
 
             var convention = Mock<IElementConvention>();
-            _conventionManager.Expect(x => x.GetElementConvention(typeof(TextBox)))
+            conventionManager.Expect(x => x.GetElementConvention(typeof(TextBox)))
                 .Return(convention);
             convention.Expect(x => x.GetValue(source)).Return(source.Text);
 
@@ -238,16 +238,16 @@ namespace Tests.Caliburn.RoutedUIMessaging
                 }
             };
 
-            _sourceNode.Stub(x => x.UIElement).Return(source);
-            message.Initialize(_sourceNode);
+            sourceNode.Stub(x => x.UIElement).Return(source);
+            message.Initialize(sourceNode);
 
             var requirements = new List<RequiredParameter>
             {
                 new RequiredParameter("param1", typeof(object))
             };
 
-            var result = _binder.DetermineParameters(
-                message, requirements, _handlingNode, null
+            var result = binder.DetermineParameters(
+                message, requirements, handlingNode, null
                 );
 
             Assert.That(result, Has.Length.EqualTo(1));
@@ -264,11 +264,11 @@ namespace Tests.Caliburn.RoutedUIMessaging
             element.SetParam1(param1);
             element.SetParam2(param2);
 
-            _handlingNode.Stub(x => x.UIElement).Return(element).Repeat.Twice();
+            handlingNode.Stub(x => x.UIElement).Return(element).Repeat.Twice();
 
             var defaults = Mock<IElementConvention>();
 
-            _conventionManager.Expect(x => x.GetElementConvention(typeof(TextBox)))
+            conventionManager.Expect(x => x.GetElementConvention(typeof(TextBox)))
                 .Return(defaults).Repeat.Twice();
 
             defaults.Expect(x => x.GetValue(Arg<DependencyObject>.Is.Anything)).Return(param1);
@@ -276,7 +276,7 @@ namespace Tests.Caliburn.RoutedUIMessaging
 
             var message = new FakeMessage();
 
-            message.Initialize(_sourceNode);
+            message.Initialize(sourceNode);
 
             var requirements = new List<RequiredParameter>
             {
@@ -284,8 +284,8 @@ namespace Tests.Caliburn.RoutedUIMessaging
                 new RequiredParameter("param2", typeof(int))
             };
 
-            var result = _binder.DetermineParameters(
-                message, requirements, _handlingNode, null
+            var result = binder.DetermineParameters(
+                message, requirements, handlingNode, null
                 );
 
             Assert.That(result, Has.Length.EqualTo(2));
@@ -299,18 +299,18 @@ namespace Tests.Caliburn.RoutedUIMessaging
             var context = EventArgs.Empty;
 
             var message = new FakeMessage();
-            message.Initialize(_sourceNode);
+            message.Initialize(sourceNode);
 
             var element = new ControlHost();
-            _handlingNode.Stub(x => x.UIElement).Return(element).Repeat.Twice();
+            handlingNode.Stub(x => x.UIElement).Return(element).Repeat.Twice();
 
             var requirements = new List<RequiredParameter>
             {
                 new RequiredParameter("eventArgs", typeof(EventArgs)),
             };
 
-            var result = _binder.DetermineParameters(
-                message, requirements, _handlingNode, context
+            var result = binder.DetermineParameters(
+                message, requirements, handlingNode, context
                 );
 
             Assert.That(result, Has.Length.EqualTo(1));
@@ -323,18 +323,18 @@ namespace Tests.Caliburn.RoutedUIMessaging
             var context = new object();
 
             var message = new FakeMessage();
-            message.Initialize(_sourceNode);
+            message.Initialize(sourceNode);
 
             var element = new ControlHost();
-            _handlingNode.Stub(x => x.UIElement).Return(element).Repeat.Twice();
+            handlingNode.Stub(x => x.UIElement).Return(element).Repeat.Twice();
 
             var requirements = new List<RequiredParameter>
             {
                 new RequiredParameter("parameter", typeof(object)),
             };
 
-            var result = _binder.DetermineParameters(
-                message, requirements, _handlingNode, context
+            var result = binder.DetermineParameters(
+                message, requirements, handlingNode, context
                 );
 
             Assert.That(result, Has.Length.EqualTo(1));
@@ -346,21 +346,21 @@ namespace Tests.Caliburn.RoutedUIMessaging
         {
             var source = new Button();
 
-            _sourceNode.Stub(x => x.UIElement).Return(source);
+            sourceNode.Stub(x => x.UIElement).Return(source);
 
             var message = new FakeMessage();
-            message.Initialize(_sourceNode);
+            message.Initialize(sourceNode);
 
             var element = new ControlHost();
-            _handlingNode.Stub(x => x.UIElement).Return(element).Repeat.Twice();
+            handlingNode.Stub(x => x.UIElement).Return(element).Repeat.Twice();
 
             var requirements = new List<RequiredParameter>
             {
                 new RequiredParameter("source", typeof(object)),
             };
 
-            var result = _binder.DetermineParameters(
-                message, requirements, _handlingNode, null
+            var result = binder.DetermineParameters(
+                message, requirements, handlingNode, null
                 );
 
             Assert.That(result, Has.Length.EqualTo(1));
@@ -372,21 +372,21 @@ namespace Tests.Caliburn.RoutedUIMessaging
         {
             var source = new Button { DataContext = new object() };
 
-            _sourceNode.Stub(x => x.UIElement).Return(source);
+            sourceNode.Stub(x => x.UIElement).Return(source);
 
             var message = new FakeMessage();
-            message.Initialize(_sourceNode);
+            message.Initialize(sourceNode);
 
             var element = new ControlHost();
-            _handlingNode.Stub(x => x.UIElement).Return(element).Repeat.Twice();
+            handlingNode.Stub(x => x.UIElement).Return(element).Repeat.Twice();
 
             var requirements = new List<RequiredParameter>
             {
                 new RequiredParameter("datacontext", typeof(object)),
             };
 
-            var result = _binder.DetermineParameters(
-                message, requirements, _handlingNode, null
+            var result = binder.DetermineParameters(
+                message, requirements, handlingNode, null
                 );
 
             Assert.That(result, Has.Length.EqualTo(1));
@@ -398,28 +398,28 @@ namespace Tests.Caliburn.RoutedUIMessaging
         {
             var source = new TextBox { Text = "the text" };
 
-            _sourceNode.Stub(x => x.UIElement).Return(source);
+            sourceNode.Stub(x => x.UIElement).Return(source);
 
             var defaults = Stub<IElementConvention>();
 
-            _conventionManager.Expect(x => x.GetElementConvention(typeof(TextBox)))
+            conventionManager.Expect(x => x.GetElementConvention(typeof(TextBox)))
                 .Return(defaults);
 
             defaults.Expect(x => x.GetValue(source)).Return(source.Text);
 
             var message = new FakeMessage();
-            message.Initialize(_sourceNode);
+            message.Initialize(sourceNode);
 
             var element = new ControlHost();
-            _handlingNode.Stub(x => x.UIElement).Return(element).Repeat.Twice();
+            handlingNode.Stub(x => x.UIElement).Return(element).Repeat.Twice();
 
             var requirements = new List<RequiredParameter>
             {
                 new RequiredParameter("value", typeof(object)),
             };
 
-            var result = _binder.DetermineParameters(
-                message, requirements, _handlingNode, null
+            var result = binder.DetermineParameters(
+                message, requirements, handlingNode, null
                 );
 
             Assert.That(result, Has.Length.EqualTo(1));

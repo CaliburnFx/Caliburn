@@ -1,8 +1,8 @@
-using System.Windows.Controls;
-using System.Windows.Data;
-
 namespace Tests.Caliburn.Fakes.UI
 {
+    using System.Windows.Controls;
+    using System.Windows.Data;
+
     public class SimpleUIBoundToCustomerByAttachedPorperty : UserControl
     {
         public SimpleUIBoundToCustomerByAttachedPorperty()
@@ -19,7 +19,7 @@ namespace Tests.Caliburn.Fakes.UI
             stack.Children.Add(textBlock);
 
             textBlock = new TextBlock();
-            textBlock.SetBinding(Grid.ColumnSpanProperty, new Binding("IQ")); 
+            textBlock.SetBinding(Grid.ColumnSpanProperty, new Binding("IQ"));
             stack.Children.Add(textBlock);
         }
     }

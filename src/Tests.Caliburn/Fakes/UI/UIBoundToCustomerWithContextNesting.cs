@@ -1,8 +1,8 @@
-﻿using System.Windows.Controls;
-using System.Windows.Data;
-
-namespace Tests.Caliburn.Fakes.UI
+﻿namespace Tests.Caliburn.Fakes.UI
 {
+    using System.Windows.Controls;
+    using System.Windows.Data;
+
     public class UIBoundToCustomerWithContextNesting : UserControl
     {
         public UIBoundToCustomerWithContextNesting()
@@ -19,7 +19,7 @@ namespace Tests.Caliburn.Fakes.UI
             stack.Children.Add(textBlock);
 
             var addressStack = new StackPanel();
-            addressStack.SetBinding(StackPanel.DataContextProperty, new Binding("MailingAddress"));
+            addressStack.SetBinding(DataContextProperty, new Binding("MailingAddress"));
             stack.Children.Add(addressStack);
 
             textBlock = new TextBlock();
@@ -35,10 +35,8 @@ namespace Tests.Caliburn.Fakes.UI
             addressStack.Children.Add(textBlock);
 
 
-
-
             addressStack = new StackPanel();
-            addressStack.SetBinding(StackPanel.DataContextProperty, new Binding("BllingAddress")); //misspelled
+            addressStack.SetBinding(DataContextProperty, new Binding("BllingAddress")); //misspelled
             stack.Children.Add(addressStack);
 
             textBlock = new TextBlock();

@@ -30,11 +30,11 @@
 
     public class MyDataSource
     {
-        private readonly DataItemsCollection _items = new DataItemsCollection();
+        readonly DataItemsCollection items = new DataItemsCollection();
 
         public DataItemsCollection Items
         {
-            get { return _items; }
+            get { return items; }
         }
     }
 }

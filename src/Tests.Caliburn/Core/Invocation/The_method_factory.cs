@@ -7,15 +7,15 @@ namespace Tests.Caliburn.Core.Invocation
     [TestFixture]
     public class The_method_factory : TestBase
     {
-        private MethodInvokeTarget _theInvokeTarget;
-        private IMethodFactory _factory;
+        MethodInvokeTarget theInvokeTarget;
+        IMethodFactory factory;
 
         protected override void given_the_context_of()
         {
-            _theInvokeTarget = new MethodInvokeTarget();
+            theInvokeTarget = new MethodInvokeTarget();
             MethodInvokeTarget.Reset();
 
-            _factory = new DefaultMethodFactory();
+            factory = new DefaultMethodFactory();
         }
 
         [Test]
@@ -23,17 +23,17 @@ namespace Tests.Caliburn.Core.Invocation
         {
             var methodInfo = typeof(MethodInvokeTarget).GetMethod("AnInstanceProcedure");
 
-            IMethod method = _factory.CreateFrom(methodInfo);
+            IMethod method = factory.CreateFrom(methodInfo);
 
             Assert.That(method, Is.Not.Null);
             Assert.That(method, Is.InstanceOf<IMethod>());
             Assert.That(method.Info, Is.EqualTo(methodInfo));
 
-            method.Invoke(_theInvokeTarget, new object[] {});
+            method.Invoke(theInvokeTarget, new object[] {});
 
-            Assert.That(_theInvokeTarget.InstanceProcedureWasCalled);
+            Assert.That(theInvokeTarget.InstanceProcedureWasCalled);
 
-            var task = method.CreateBackgroundTask(_theInvokeTarget, new object[] { });
+            var task = method.CreateBackgroundTask(theInvokeTarget, new object[] { });
 
             Assert.That(task, Is.Not.Null);
             Assert.That(task, Is.InstanceOf<IBackgroundTask>());
@@ -44,18 +44,18 @@ namespace Tests.Caliburn.Core.Invocation
         {
             var methodInfo = typeof(MethodInvokeTarget).GetMethod("AnInstanceFunction");
 
-            IMethod method = _factory.CreateFrom(methodInfo);
+            IMethod method = factory.CreateFrom(methodInfo);
 
             Assert.That(method, Is.Not.Null);
             Assert.That(method, Is.InstanceOf<IMethod>());
             Assert.That(method.Info, Is.EqualTo(methodInfo));
 
-            object result = method.Invoke(_theInvokeTarget, new object[] { });
+            object result = method.Invoke(theInvokeTarget, new object[] { });
 
-            Assert.That(_theInvokeTarget.InstanceFunctionWasCalled);
+            Assert.That(theInvokeTarget.InstanceFunctionWasCalled);
             Assert.That(result, Is.EqualTo(MethodInvokeTarget.ReturnValue));
 
-            var task = method.CreateBackgroundTask(_theInvokeTarget, new object[] { });
+            var task = method.CreateBackgroundTask(theInvokeTarget, new object[] { });
 
             Assert.That(task, Is.Not.Null);
             Assert.That(task, Is.InstanceOf<IBackgroundTask>());
@@ -66,17 +66,17 @@ namespace Tests.Caliburn.Core.Invocation
         {
             var methodInfo = typeof(MethodInvokeTarget).GetMethod("AStaticProcedure");
 
-            IMethod method = _factory.CreateFrom(methodInfo);
+            IMethod method = factory.CreateFrom(methodInfo);
 
             Assert.That(method, Is.Not.Null);
             Assert.That(method, Is.InstanceOf<IMethod>());
             Assert.That(method.Info, Is.EqualTo(methodInfo));
 
-            method.Invoke(_theInvokeTarget, new object[] { });
+            method.Invoke(theInvokeTarget, new object[] { });
 
             Assert.That(MethodInvokeTarget.StaticProcedureWasCalled);
 
-            var task = method.CreateBackgroundTask(_theInvokeTarget, new object[] { });
+            var task = method.CreateBackgroundTask(theInvokeTarget, new object[] { });
 
             Assert.That(task, Is.Not.Null);
             Assert.That(task, Is.InstanceOf<IBackgroundTask>());
@@ -87,18 +87,18 @@ namespace Tests.Caliburn.Core.Invocation
         {
             var methodInfo = typeof(MethodInvokeTarget).GetMethod("AStaticFunction");
 
-            IMethod method = _factory.CreateFrom(methodInfo);
+            IMethod method = factory.CreateFrom(methodInfo);
 
             Assert.That(method, Is.Not.Null);
             Assert.That(method, Is.InstanceOf<IMethod>());
             Assert.That(method.Info, Is.EqualTo(methodInfo));
 
-            object result = method.Invoke(_theInvokeTarget, new object[] { });
+            object result = method.Invoke(theInvokeTarget, new object[] { });
 
             Assert.That(MethodInvokeTarget.StaticFunctionWasCalled);
             Assert.That(result, Is.EqualTo(MethodInvokeTarget.ReturnValue));
 
-            var task = method.CreateBackgroundTask(_theInvokeTarget, new object[] { });
+            var task = method.CreateBackgroundTask(theInvokeTarget, new object[] { });
 
             Assert.That(task, Is.Not.Null);
             Assert.That(task, Is.InstanceOf<IBackgroundTask>());
@@ -108,10 +108,10 @@ namespace Tests.Caliburn.Core.Invocation
         public void caches_method_instances()
         {
             var methodInfo = typeof(MethodInvokeTarget).GetMethod("AnInstanceProcedure");
-            IMethod method = _factory.CreateFrom(methodInfo);
+            IMethod method = factory.CreateFrom(methodInfo);
 
             var methodInfo2 = typeof(MethodInvokeTarget).GetMethod("AnInstanceProcedure");
-            IMethod method2 = _factory.CreateFrom(methodInfo2);
+            IMethod method2 = factory.CreateFrom(methodInfo2);
 
             Assert.That(method, Is.SameAs(method2));
         }

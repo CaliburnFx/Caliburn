@@ -7,14 +7,14 @@
 
     public class ChildNotification : ParentNotification
     {
-        private string _notification;
+        private string notification;
 
         public string Notification
         {
-            get { return _notification; }
+            get { return notification; }
             set
             {
-                _notification = value;
+                notification = value;
                 RaisePropertyChanged("Notification");
             }
         }

@@ -1,8 +1,8 @@
-﻿using System.Windows.Controls;
-using System.Windows.Data;
-
-namespace Tests.Caliburn.Fakes.UI
+﻿namespace Tests.Caliburn.Fakes.UI
 {
+    using System.Windows.Controls;
+    using System.Windows.Data;
+
     public class SimpleUIBoundToCustomer : UserControl
     {
         public SimpleUIBoundToCustomer()
@@ -27,7 +27,7 @@ namespace Tests.Caliburn.Fakes.UI
             stack.Children.Add(checkbox);
 
             var tooltip = new ToolTip();
-            tooltip.SetBinding(System.Windows.Controls.ToolTip.ContentProperty, new Binding("asdfasdasdf")); // does not exist
+            tooltip.SetBinding(ContentProperty, new Binding("asdfasdasdf")); // does not exist
             stack.ToolTip = tooltip;
 
             var childUserControl = new SimpleUIBoundToCustomerByAttachedPorperty();

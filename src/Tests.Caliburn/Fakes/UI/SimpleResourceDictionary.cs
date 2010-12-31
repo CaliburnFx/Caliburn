@@ -1,9 +1,9 @@
-﻿using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Media;
-
-namespace Tests.Caliburn.Fakes.UI
+﻿namespace Tests.Caliburn.Fakes.UI
 {
+    using System.Windows;
+    using System.Windows.Controls;
+    using System.Windows.Media;
+
     public class SimpleResourceDictionary : ResourceDictionary
     {
         public static readonly string TextBlockStyleKey = "textBlockStyle";
@@ -13,13 +13,14 @@ namespace Tests.Caliburn.Fakes.UI
             Add(TextBlockStyleKey, CreateStyle());
         }
 
-        private Style CreateStyle()
+        Style CreateStyle()
         {
-            var style = new Style {TargetType = typeof(TextBlock)};
+            var style = new Style {
+                TargetType = typeof(TextBlock)
+            };
 
             style.Setters.Add(
-                new Setter 
-                { 
+                new Setter {
                     Property = TextBlock.ForegroundProperty,
                     Value = Brushes.AliceBlue
                 });

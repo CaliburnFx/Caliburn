@@ -1,9 +1,9 @@
-﻿using System.Windows.Controls;
-using System.Windows.Data;
-
-namespace Tests.Caliburn.Fakes.UI
+﻿namespace Tests.Caliburn.Fakes.UI
 {
-    public class UIBoundToCustomerIndexer: UserControl
+    using System.Windows.Controls;
+    using System.Windows.Data;
+
+    public class UIBoundToCustomerIndexer : UserControl
     {
         public UIBoundToCustomerIndexer()
         {
@@ -15,11 +15,11 @@ namespace Tests.Caliburn.Fakes.UI
             stack.Children.Add(textBlock);
 
             var contentControl = new ContentControl();
-            contentControl.SetBinding(ContentControl.ContentProperty, new Binding("[0].Quantity"));
+            contentControl.SetBinding(ContentProperty, new Binding("[0].Quantity"));
             stack.Children.Add(contentControl);
 
             contentControl = new ContentControl();
-            contentControl.SetBinding(ContentControl.ContentProperty, new Binding("[text].Quaity")); //purposefully misspelled
+            contentControl.SetBinding(ContentProperty, new Binding("[text].Quaity")); //purposefully misspelled
             stack.Children.Add(contentControl);
         }
     }

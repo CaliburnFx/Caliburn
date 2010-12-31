@@ -116,7 +116,7 @@ namespace Tests.Caliburn.RoutedUIMessaging
             conventionManager.Expect(x => x.GetElementConvention(typeof(TextBox)))
                 .Return(defaults);
 
-            defaults.Expect(x => x.SetValue(host._methodResult, returnValue));
+            defaults.Expect(x => x.SetValue(host.MethodResult, returnValue));
 
             var result = binder.CreateResult(
                 new MessageProcessingOutcome(
@@ -198,7 +198,7 @@ namespace Tests.Caliburn.RoutedUIMessaging
                     )
                 );
 
-            Assert.That(host._param1.Text, Is.EqualTo(returnValue));
+            Assert.That(host.Param1.Text, Is.EqualTo(returnValue));
         }
     }
 }

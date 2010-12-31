@@ -2,11 +2,11 @@ namespace Tests.Caliburn.Testability.ChangeNotificationSamples
 {
     public class NoNotificationNecessary : ChangeNotificationBase
     {
-        private readonly string _string = string.Empty;
+        private readonly string @string = string.Empty;
 
         public string String
         {
-            get { return _string; }
+            get { return @string; }
         }
     }
 }

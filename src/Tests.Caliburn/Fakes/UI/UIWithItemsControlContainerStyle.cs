@@ -1,9 +1,9 @@
-﻿using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-
-namespace Tests.Caliburn.Fakes.UI
+﻿namespace Tests.Caliburn.Fakes.UI
 {
+    using System.Windows;
+    using System.Windows.Controls;
+    using System.Windows.Data;
+
     public class UIWithItemsControlContainerStyle : UserControl
     {
         public UIWithItemsControlContainerStyle()
@@ -17,7 +17,7 @@ namespace Tests.Caliburn.Fakes.UI
             stack.Children.Add(itemsControl);
         }
 
-        private Style CreateStyle()
+        Style CreateStyle()
         {
             var style = new Style();
 

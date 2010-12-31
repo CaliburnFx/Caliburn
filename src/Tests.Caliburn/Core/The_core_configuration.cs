@@ -12,19 +12,19 @@
     [TestFixture]
     public class The_core_configuration : TestBase
     {
-        private CoreConfiguration _config;
-        private IModule _module;
+        CoreConfiguration config;
+        IModule module;
 
         protected override void given_the_context_of()
         {
-            _config = ConventionalModule<CoreConfiguration, ICoreServicesDescription>.Instance;
-            _module = _config;
+            config = ConventionalModule<CoreConfiguration, ICoreServicesDescription>.Instance;
+            module = config;
         }
 
         [Test]
         public void when_started_configures_required_components_and_children()
         {
-            var registrations = _module.GetComponents();
+            var registrations = module.GetComponents();
 
             var found = (from reg in registrations.OfType<Singleton>()
                          where reg.Service == typeof(IMethodFactory)
@@ -44,9 +44,9 @@
         [Test]
         public void can_provide_a_custom_method_factory()
         {
-            _config.Using(x => x.MethodFactory<FakeMethodFactory>());
+            config.Using(x => x.MethodFactory<FakeMethodFactory>());
 
-            var registrations = _module.GetComponents();
+            var registrations = module.GetComponents();
 
             var found = (from reg in registrations.OfType<Singleton>()
                          where reg.Service == typeof(IMethodFactory)
@@ -55,7 +55,7 @@
             Assert.That(found.Implementation, Is.EqualTo(typeof(FakeMethodFactory)));
         }
 
-        private class FakeMethodFactory : IMethodFactory
+        class FakeMethodFactory : IMethodFactory
         {
             public IMethod CreateFrom(MethodInfo methodInfo)
             {

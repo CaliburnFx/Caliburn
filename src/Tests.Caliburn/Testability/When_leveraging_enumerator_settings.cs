@@ -1,32 +1,20 @@
-﻿using System.Linq;
-using Caliburn.Testability;
-using NUnit.Framework;
-using Tests.Caliburn.Fakes.Model;
-using Tests.Caliburn.Fakes.UI;
-
-namespace Tests.Caliburn.Testability
+﻿namespace Tests.Caliburn.Testability
 {
+    using System.Linq;
+    using Fakes.Model;
+    using Fakes.UI;
+    using global::Caliburn.Testability;
+    using NUnit.Framework;
+
     [TestFixture]
     public class When_leveraging_enumerator_settings : TestBase
     {
         [Test]
-        public void can_stop_after_first_error()
+        public void can_exclude_content_control_templates()
         {
-            var validator = Validator.For<SimpleUIBoundToCustomer, Customer>();
+            var validator = Validator.For<UIBoundToCustomerWithContentControl, Customer>();
 
-            validator.Settings.StopAfterFirstError = true;
-
-            var result = validator.Validate();
-
-            Assert.That(result.Errors.Count(), Is.EqualTo(1));
-        }
-
-        [Test]
-        public void can_execlude_styles()
-        {
-            var validator = Validator.For<UIBoundToCustomerWithStyle, Customer>();
-
-            validator.Settings.IncludeStyles = false;
+            validator.Settings.IncludeTemplates = false;
 
             var result = validator.Validate();
 
@@ -58,27 +46,15 @@ namespace Tests.Caliburn.Testability
         }
 
         [Test]
-        public void can_exclude_content_control_templates()
+        public void can_execlude_styles()
         {
-            var validator = Validator.For<UIBoundToCustomerWithContentControl, Customer>();
+            var validator = Validator.For<UIBoundToCustomerWithStyle, Customer>();
 
-            validator.Settings.IncludeTemplates = false;
+            validator.Settings.IncludeStyles = false;
 
             var result = validator.Validate();
 
             Assert.That(result.Errors.Count(), Is.EqualTo(0));
-        }
-
-        [Test]
-        public void can_include_properties_with_dependency_object_values()
-        {
-            var validator = Validator.For<SimpleUIBoundToCustomer, Customer>();
-
-            validator.Settings.IncludeAllDependencyObjects = true;
-
-            var result = validator.Validate();
-
-            Assert.That(result.Errors.Count(), Is.EqualTo(3));
         }
 
         [Test]
@@ -99,6 +75,30 @@ namespace Tests.Caliburn.Testability
             var validator = Validator.For<UIWithBoundBrush, StopModel>();
 
             validator.Settings.IncludeAllDependencyObjects = true;
+
+            var result = validator.Validate();
+
+            Assert.That(result.Errors.Count(), Is.EqualTo(1));
+        }
+
+        [Test]
+        public void can_include_properties_with_dependency_object_values()
+        {
+            var validator = Validator.For<SimpleUIBoundToCustomer, Customer>();
+
+            validator.Settings.IncludeAllDependencyObjects = true;
+
+            var result = validator.Validate();
+
+            Assert.That(result.Errors.Count(), Is.EqualTo(3));
+        }
+
+        [Test]
+        public void can_stop_after_first_error()
+        {
+            var validator = Validator.For<SimpleUIBoundToCustomer, Customer>();
+
+            validator.Settings.StopAfterFirstError = true;
 
             var result = validator.Validate();
 

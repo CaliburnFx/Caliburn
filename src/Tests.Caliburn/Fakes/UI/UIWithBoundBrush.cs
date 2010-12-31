@@ -1,10 +1,10 @@
-﻿using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Media;
-using System.Windows.Shapes;
-
-namespace Tests.Caliburn.Fakes.UI
+﻿namespace Tests.Caliburn.Fakes.UI
 {
+    using System.Windows.Controls;
+    using System.Windows.Data;
+    using System.Windows.Media;
+    using System.Windows.Shapes;
+
     public class UIWithBoundBrush : UserControl
     {
         public UIWithBoundBrush()

@@ -1,8 +1,8 @@
-﻿using System.Windows.Controls;
-using System.Windows.Data;
-
-namespace Tests.Caliburn.Fakes.UI
+﻿namespace Tests.Caliburn.Fakes.UI
 {
+    using System.Windows.Controls;
+    using System.Windows.Data;
+
     public class UIBoundToCustomerWithNesting : UserControl
     {
         public UIBoundToCustomerWithNesting()

@@ -1,45 +1,51 @@
-﻿using System.Windows;
-using System.Windows.Controls;
-
-namespace Tests.Caliburn.Fakes.UI
+﻿namespace Tests.Caliburn.Fakes.UI
 {
+    using System.Windows;
+    using System.Windows.Controls;
+
     public class ControlHost : UserControl
     {
-        public TextBox _param1;
-        private TextBox _param2;
-        public TextBox _methodResult;
-        private NameScope _scope;
+        readonly TextBox param2;
+        readonly NameScope scope;
+        public TextBox MethodResult;
+        public TextBox Param1;
 
         public ControlHost()
         {
             var stack = new StackPanel();
             Content = stack;
 
-            _param1 = new TextBox {Name = "param1"};
-            _param2 = new TextBox {Name = "param2"};
+            Param1 = new TextBox {
+                Name = "param1"
+            };
+            param2 = new TextBox {
+                Name = "param2"
+            };
 
-            stack.Children.Add(_param1);
-            stack.Children.Add(_param2);
+            stack.Children.Add(Param1);
+            stack.Children.Add(param2);
 
-            _scope = new NameScope();
+            scope = new NameScope();
 
-            NameScope.SetNameScope(this, _scope);
+            NameScope.SetNameScope(this, scope);
 
-            _scope.RegisterName("param1", _param1);
-            _scope.RegisterName("param2", _param2);
+            scope.RegisterName("param1", Param1);
+            scope.RegisterName("param2", param2);
 
-            _methodResult = new TextBox {Name = "MethodResult"};
-            _scope.RegisterName("MethodResult", _methodResult);
+            MethodResult = new TextBox {
+                Name = "MethodResult"
+            };
+            scope.RegisterName("MethodResult", MethodResult);
         }
 
         public void SetParam1(object param1)
         {
-            _param1.Text = param1.ToString();
+            Param1.Text = param1.ToString();
         }
 
         public void SetParam2(object param2)
         {
-            _param2.Text = param2.ToString();
+            this.param2.Text = param2.ToString();
         }
     }
 }

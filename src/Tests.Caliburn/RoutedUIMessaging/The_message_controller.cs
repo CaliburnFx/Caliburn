@@ -9,11 +9,11 @@
     [TestFixture]
     public class The_message_controller : TestBase
     {
-        private IRoutedMessageController _controller;
+        IRoutedMessageController controller;
 
         protected override void given_the_context_of()
         {
-            _controller = new DefaultRoutedMessageController();
+            controller = new DefaultRoutedMessageController();
         }
 
         [Test]
@@ -24,7 +24,7 @@
 
             trigger.Expect(x => x.Attach(Arg<InteractionNode>.Is.NotNull));
 
-            _controller.AttachTrigger(
+            controller.AttachTrigger(
                 dp,
                 trigger
                 );
@@ -44,7 +44,7 @@
             handler.Expect(x => x.Unwrap()).Return(handler);
             handler.Expect(x => x.Initialize(Arg<IInteractionNode>.Is.NotNull));
 
-            _controller.AddHandler(
+            controller.AddHandler(
                 dp,
                 handler,
                 true
@@ -63,7 +63,7 @@
             var dp = new Button();
             var handler = Mock<IRoutedMessageHandler>();
 
-            _controller.AddHandler(
+            controller.AddHandler(
                 dp,
                 handler,
                 false
@@ -85,10 +85,10 @@
             panel.Children.Add(button);
             panel.SetValue(
                 DefaultRoutedMessageController.NodeProperty,
-                new InteractionNode(panel, _controller)
+                new InteractionNode(panel, controller)
                 );
 
-            var parent = _controller.GetParent(button);
+            var parent = controller.GetParent(button);
 
             Assert.That(parent, Is.Not.Null);
             Assert.That(parent.UIElement, Is.EqualTo(panel));

@@ -8,11 +8,11 @@
     [TestFixture]
     public class Interaction_defaults : TestBase
     {
-        private DefaultElementConvention<Button> _defaults;
+        DefaultElementConvention<Button> defaults;
 
         protected override void given_the_context_of()
         {
-            _defaults = new DefaultElementConvention<Button>(
+            defaults = new DefaultElementConvention<Button>(
                 "Click",
                 Button.ContentProperty,
                 (c, v) => c.DataContext = v,
@@ -24,13 +24,13 @@
         [Test]
         public void declare_an_element_type()
         {
-            Assert.That(_defaults.Type, Is.EqualTo(typeof(Button)));
+            Assert.That(defaults.Type, Is.EqualTo(typeof(Button)));
         }
 
         [Test]
         public void can_provide_a_default_trigger_as_an_event_trigger()
         {
-            var trigger = _defaults.CreateTrigger();
+            var trigger = defaults.CreateTrigger();
 
             Assert.That(trigger, Is.Not.Null);
             Assert.That(trigger, Is.InstanceOf<EventMessageTrigger>());
@@ -42,7 +42,7 @@
             var value = new object();
             var button = new Button {DataContext = value};
 
-            var result = _defaults.GetValue(button);
+            var result = defaults.GetValue(button);
 
             Assert.That(result, Is.EqualTo(value));
         }
@@ -53,7 +53,7 @@
             var value = new object();
             var button = new Button();
 
-            _defaults.SetValue(button, value);
+            defaults.SetValue(button, value);
 
             Assert.That(button.DataContext, Is.EqualTo(value));
         }

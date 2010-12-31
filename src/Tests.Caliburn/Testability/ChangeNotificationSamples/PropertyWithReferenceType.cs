@@ -2,14 +2,14 @@ namespace Tests.Caliburn.Testability.ChangeNotificationSamples
 {
     public class PropertyWithReferenceType : ChangeNotificationBase
     {
-        private NoNotificationNecessary _someField;
+        private NoNotificationNecessary someField;
 
         public NoNotificationNecessary SomeField
         {
-            get { return _someField; }
+            get { return someField; }
             set
             {
-                _someField = value;
+                someField = value;
                 RaisePropertyChanged("SomeField");
             }
         }

@@ -1,27 +1,27 @@
-using System.Linq;
-using Caliburn.Testability;
-using NUnit.Framework;
-using Tests.Caliburn.Fakes.Model;
-using Tests.Caliburn.Fakes.UI;
-
 namespace Tests.Caliburn.Testability
 {
+    using System.Linq;
+    using Fakes.Model;
+    using Fakes.UI;
+    using global::Caliburn.Testability;
+    using NUnit.Framework;
+
     [TestFixture]
     public class When_testing_styles : TestBase
     {
         [Test]
-        public void can_locate_errors_in_setters()
+        public void can_locate_errors_in_container_styles()
         {
-            var validator = Validator.For<UIBoundToCustomerWithStyle, Customer>();
+            var validator = Validator.For<UIWithItemsControlContainerStyle, Customer>();
             var result = validator.Validate();
 
             Assert.That(result.Errors.Count(), Is.EqualTo(1));
         }
 
         [Test]
-        public void can_locate_errors_in_triggers()
+        public void can_locate_errors_in_group_styles()
         {
-            var validator = Validator.For<UIBoundToCustomerWithStyleAndTriggers, Customer>();
+            var validator = Validator.For<UIWithItemsControlGroupStyle, Customer>();
             var result = validator.Validate();
 
             Assert.That(result.Errors.Count(), Is.EqualTo(1));
@@ -37,18 +37,18 @@ namespace Tests.Caliburn.Testability
         }
 
         [Test]
-        public void can_locate_errors_in_container_styles()
+        public void can_locate_errors_in_setters()
         {
-            var validator = Validator.For<UIWithItemsControlContainerStyle, Customer>();
+            var validator = Validator.For<UIBoundToCustomerWithStyle, Customer>();
             var result = validator.Validate();
 
             Assert.That(result.Errors.Count(), Is.EqualTo(1));
         }
 
         [Test]
-        public void can_locate_errors_in_group_styles()
+        public void can_locate_errors_in_triggers()
         {
-            var validator = Validator.For<UIWithItemsControlGroupStyle, Customer>();
+            var validator = Validator.For<UIBoundToCustomerWithStyleAndTriggers, Customer>();
             var result = validator.Validate();
 
             Assert.That(result.Errors.Count(), Is.EqualTo(1));

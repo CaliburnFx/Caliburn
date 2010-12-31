@@ -19,21 +19,21 @@
     [TestFixture]
     public class The_configuration : TestBase
     {
-        PresentationFrameworkConfiguration _config;
-        IModule _module;
+        PresentationFrameworkConfiguration config;
+        IModule module;
 
         protected override void given_the_context_of()
         {
-            _config = CaliburnModule<PresentationFrameworkConfiguration>.Instance;
-            _module = _config;
+            config = CaliburnModule<PresentationFrameworkConfiguration>.Instance;
+            module = config;
         }
 
         [Test]
         public void can_provide_a_custom_method_binder()
         {
-            _config.Using(x => x.MessageBinder<FakeMessageBinder>());
+            config.Using(x => x.MessageBinder<FakeMessageBinder>());
 
-            var registrations = _module.GetComponents();
+            var registrations = module.GetComponents();
 
             var found = (from reg in registrations.OfType<Singleton>()
                          where reg.Service == typeof(IMessageBinder)
@@ -45,9 +45,9 @@
         [Test]
         public void can_provide_a_custom_parser()
         {
-            _config.Using(x => x.Parser<FakeMessageParser>());
+            config.Using(x => x.Parser<FakeMessageParser>());
 
-            var registrations = _module.GetComponents();
+            var registrations = module.GetComponents();
 
             var found = (from reg in registrations.OfType<Singleton>()
                          where reg.Service == typeof(IParser)
@@ -59,9 +59,9 @@
         [Test]
         public void can_provide_a_custom_routed_message_handler()
         {
-            _config.Using(x => x.RoutedMessageController<FakeRoutedMessageController>());
+            config.Using(x => x.RoutedMessageController<FakeRoutedMessageController>());
 
-            var registrations = _module.GetComponents();
+            var registrations = module.GetComponents();
 
             var found = (from reg in registrations.OfType<Singleton>()
                          where reg.Service == typeof(IRoutedMessageController)
@@ -73,7 +73,7 @@
         [Test]
         public void when_started_configures_required_components_and_defaults()
         {
-            var registrations = _module.GetComponents();
+            var registrations = module.GetComponents();
 
             var found = (from reg in registrations.OfType<Singleton>()
                          where reg.Service == typeof(IRoutedMessageController)

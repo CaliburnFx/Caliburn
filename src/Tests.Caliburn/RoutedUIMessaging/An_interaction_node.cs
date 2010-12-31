@@ -11,37 +11,37 @@
     [TestFixture]
     public class An_interaction_node : TestBase
     {
-        private IRoutedMessageController _controller;
-        private InteractionNode _node;
-        private Button _element;
-        private StackPanel _parent;
-        private InteractionNode _parentNode;
+        private IRoutedMessageController controller;
+        private InteractionNode node;
+        private Button element;
+        private StackPanel parent;
+        private InteractionNode parentNode;
 
         protected override void given_the_context_of()
         {
-            _controller = Mock<IRoutedMessageController>();
-            _parent = new StackPanel();
-            _element = new Button();
-            _parentNode = new InteractionNode(_parent, _controller);
-            _node = new InteractionNode(_element, _controller);
+            controller = Mock<IRoutedMessageController>();
+            parent = new StackPanel();
+            element = new Button();
+            parentNode = new InteractionNode(parent, controller);
+            node = new InteractionNode(element, controller);
 
-            _parent.Children.Add(_element);
+            parent.Children.Add(element);
         }
 
         [Test]
         public void declares_the_ui_element()
         {
-            Assert.That(_node.UIElement, Is.EqualTo(_element));
+            Assert.That(node.UIElement, Is.EqualTo(element));
         }
 
         [Test]
         public void can_find_parent_node()
         {
-            _controller.Expect(x => x.GetParent(_element)).Return(_parentNode);
+            controller.Expect(x => x.GetParent(element)).Return(parentNode);
 
-            var found = _node.FindParent();
+            var found = node.FindParent();
 
-            Assert.That(found, Is.EqualTo(_parentNode));
+            Assert.That(found, Is.EqualTo(parentNode));
         }
 
         [Test]
@@ -49,11 +49,11 @@
         {
             var trigger = Mock<IMessageTrigger>();
 
-            trigger.Expect(x => x.Attach(Arg<InteractionNode>.Is.Equal(_node)));
+            trigger.Expect(x => x.Attach(Arg<InteractionNode>.Is.Equal(node)));
 
-            _node.AddTrigger(trigger);
+            node.AddTrigger(trigger);
 
-            Assert.That(_node.Triggers.Contains(trigger));
+            Assert.That(node.Triggers.Contains(trigger));
         }
 
         [Test]
@@ -61,9 +61,9 @@
         {
             var handler = Mock<IRoutedMessageHandler>();
 
-            _node.RegisterHandler(handler);
+            node.RegisterHandler(handler);
 
-            Assert.That(_node.MessageHandler, Is.EqualTo(handler));
+            Assert.That(node.MessageHandler, Is.EqualTo(handler));
         }
 
         [Test]
@@ -72,12 +72,12 @@
             var message = new FakeMessage();
             var handler = Mock<IRoutedMessageHandler>();
 
-            handler.Expect(x => x.Initialize(_node));
+            handler.Expect(x => x.Initialize(node));
             handler.Expect(x => x.Handles(message)).Return(true);
 
-            _node.RegisterHandler(handler);
+            node.RegisterHandler(handler);
 
-            bool result = _node.Handles(message);
+            bool result = node.Handles(message);
 
             Assert.That(result, Is.True);
         }
@@ -89,12 +89,12 @@
             var message = new FakeMessage();
             var handler = Mock<IRoutedMessageHandler>();
 
-            handler.Expect(x => x.Initialize(_node));
+            handler.Expect(x => x.Initialize(node));
             handler.Expect(x => x.Handles(message)).Return(true);
             handler.Expect(x => x.Process(message, context));
 
-            _node.RegisterHandler(handler);
-            _node.ProcessMessage(message, context);
+            node.RegisterHandler(handler);
+            node.ProcessMessage(message, context);
         }
 
         [Test]
@@ -105,16 +105,16 @@
             var handler = Mock<IRoutedMessageHandler>();
             var parentHandler = Mock<IRoutedMessageHandler>();
 
-            _node.RegisterHandler(handler);
-            _parentNode.RegisterHandler(parentHandler);
+            node.RegisterHandler(handler);
+            parentNode.RegisterHandler(parentHandler);
 
             handler.Expect(x => x.Handles(message)).Return(false);
-            _controller.Expect(x => x.GetParent(_element)).Return(_parentNode);
+            controller.Expect(x => x.GetParent(element)).Return(parentNode);
             parentHandler.Expect(x => x.Handles(message)).Return(true);
 
             parentHandler.Expect(x => x.Process(message, context));
 
-            _node.ProcessMessage(message, context);
+            node.ProcessMessage(message, context);
         }
 
         [Test]
@@ -125,12 +125,12 @@
                 var message = new FakeMessage();
                 var handler = Mock<IRoutedMessageHandler>();
 
-                _node.RegisterHandler(handler);
+                node.RegisterHandler(handler);
 
                 handler.Expect(x => x.Handles(message)).Return(false);
-                _controller.Expect(x => x.GetParent(_element)).Return(null);
+                controller.Expect(x => x.GetParent(element)).Return(null);
 
-                _node.ProcessMessage(message, context);
+                node.ProcessMessage(message, context);
             });
         }
 
@@ -141,14 +141,14 @@
             var handler = Mock<IRoutedMessageHandler>();
             var trigger = Mock<IMessageTrigger>();
 
-            handler.Expect(x => x.Initialize(_node));
+            handler.Expect(x => x.Initialize(node));
             trigger.Expect(x => x.Message).Return(message);
             handler.Expect(x => x.Handles(message)).Return(true);
             handler.Expect(x => x.UpdateAvailability(trigger));
 
-            _node.RegisterHandler(handler);
+            node.RegisterHandler(handler);
 
-            _node.UpdateAvailability(trigger);
+            node.UpdateAvailability(trigger);
         }
 
         [Test]
@@ -159,16 +159,16 @@
             var parentHandler = Mock<IRoutedMessageHandler>();
             var trigger = Mock<IMessageTrigger>();
 
-            _node.RegisterHandler(handler);
-            _parentNode.RegisterHandler(parentHandler);
+            node.RegisterHandler(handler);
+            parentNode.RegisterHandler(parentHandler);
 
             trigger.Expect(x => x.Message).Return(message);
             handler.Expect(x => x.Handles(message)).Return(false);
-            _controller.Expect(x => x.GetParent(_element)).Return(_parentNode);
+            controller.Expect(x => x.GetParent(element)).Return(parentNode);
             parentHandler.Expect(x => x.Handles(message)).Return(true);
             parentHandler.Expect(x => x.UpdateAvailability(trigger));
 
-            _node.UpdateAvailability(trigger);
+            node.UpdateAvailability(trigger);
         }
 
         [Test]
@@ -180,13 +180,13 @@
                 var message = new FakeMessage();
                 var handler = Mock<IRoutedMessageHandler>();
 
-                _node.RegisterHandler(handler);
+                node.RegisterHandler(handler);
 
                 trigger.Expect(x => x.Message).Return(message);
                 handler.Expect(x => x.Handles(message)).Return(false);
-                _controller.Expect(x => x.GetParent(_element)).Return(null);
+                controller.Expect(x => x.GetParent(element)).Return(null);
 
-                _node.UpdateAvailability(trigger);
+                node.UpdateAvailability(trigger);
             });
         }
     }

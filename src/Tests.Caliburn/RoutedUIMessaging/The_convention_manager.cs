@@ -9,15 +9,15 @@
     [TestFixture]
     public class The_convention_manager : TestBase
     {
-        private IConventionManager _conventionManager;
-        private IMethodFactory _methodFactory;
+        IConventionManager conventionManager;
+        IMethodFactory methodFactory;
 
         protected override void given_the_context_of()
         {
-            _methodFactory = Mock<IMethodFactory>();
+            methodFactory = Mock<IMethodFactory>();
 
-            _conventionManager = new DefaultConventionManager(
-                _methodFactory
+            conventionManager = new DefaultConventionManager(
+                methodFactory
                 );
         }
 
@@ -32,9 +32,9 @@
                 null
                 );
 
-            _conventionManager.AddElementConvention(defaults);
+            conventionManager.AddElementConvention(defaults);
 
-            var found = _conventionManager.GetElementConvention(typeof(TextBox));
+            var found = conventionManager.GetElementConvention(typeof(TextBox));
 
             Assert.That(found, Is.SameAs(defaults));
         }
@@ -50,9 +50,9 @@
                 null
                 );
 
-            _conventionManager.AddElementConvention(defaults);
+            conventionManager.AddElementConvention(defaults);
 
-            var found = _conventionManager.GetElementConvention(typeof(MyButton));
+            var found = conventionManager.GetElementConvention(typeof(MyButton));
 
             Assert.That(found, Is.SameAs(defaults));
         }

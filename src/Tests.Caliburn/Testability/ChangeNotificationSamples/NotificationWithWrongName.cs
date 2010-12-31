@@ -2,14 +2,14 @@ namespace Tests.Caliburn.Testability.ChangeNotificationSamples
 {
     public class NotificationWithWrongName : ChangeNotificationBase
     {
-        private string _string;
+        private string @string;
 
         public string RaisesWrongNotification
         {
-            get { return _string; }
+            get { return @string; }
             set
             {
-                _string = value;
+                @string = value;
                 RaisePropertyChanged("Oops!");
             }
         }
