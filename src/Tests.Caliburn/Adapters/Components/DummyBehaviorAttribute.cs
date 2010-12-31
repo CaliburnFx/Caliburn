@@ -1,16 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using Caliburn.Core.Behaviors;
-
-namespace Tests.Caliburn.Adapters.Components
+﻿namespace Tests.Caliburn.Adapters.Components
 {
-	public class DummyBehaviorAttribute: Attribute, IBehavior
-	{
-		public IEnumerable<Type> GetInterfaces(Type implementation)
-		{
-			yield break;
-		}
-	}
+    using System;
+    using System.Collections.Generic;
+    using global::Caliburn.Core.Behaviors;
+
+    public class DummyBehaviorAttribute : Attribute, IBehavior
+    {
+        public IEnumerable<Type> GetInterfaces(Type implementation)
+        {
+            yield break;
+        }
+    }
 }

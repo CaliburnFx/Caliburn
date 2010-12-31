@@ -1,19 +1,18 @@
-﻿using System.ComponentModel.Composition.Hosting;
-using Caliburn.MEF;
-using NUnit.Framework;
-using Tests.Caliburn.Adapters.Components;
-
-namespace Tests.Caliburn.Adapters.ServiceLocation
+﻿namespace Tests.Caliburn.Adapters.ServiceLocation
 {
-	using System.Collections.Generic;
-	using System.ComponentModel;
-	using System.ComponentModel.Composition;
-	using System.Reflection;
-	using global::Caliburn.Core.InversionOfControl;
-	using global::Caliburn.DynamicProxy;
-	using global::Caliburn.PresentationFramework.Behaviors;
+    using System.Collections.Generic;
+    using System.ComponentModel;
+    using System.ComponentModel.Composition;
+    using System.ComponentModel.Composition.Hosting;
+    using System.Reflection;
+    using Components;
+    using global::Caliburn.Core.InversionOfControl;
+    using global::Caliburn.DynamicProxy;
+    using global::Caliburn.MEF;
+    using global::Caliburn.PresentationFramework.Behaviors;
+    using NUnit.Framework;
 
-	[TestFixture]
+    [TestFixture]
     public class The_MEF_container : ServiceLocatorTests
     {
         protected override IServiceLocator CreateServiceLocator()
@@ -23,225 +22,231 @@ namespace Tests.Caliburn.Adapters.ServiceLocation
             return new MEFAdapter(container);
         }
 
-		[Test]
-		public void proxycatalog_should_replace_parts()
-		{
-			var catalog = new AssemblyCatalog(Assembly.GetAssembly(typeof(ExportedClass)));
-			var proxycatalog = new ProxyCatalog(catalog);
-			var container = new CompositionContainer(proxycatalog);
+        [NotifyPropertyChanged]
+        public class ClassWithBehaviour
+        {
+            [Import]
+            public SharedExportedClass Shared { get; set; }
+        }
 
-			var adapter = new MEFAdapter(container).WithProxyFactory<DynamicProxyFactory>();
+        [Export(typeof(ExportedClass)), NotifyPropertyChanged]
+        public class ExportedClass {}
+
+        [Export(typeof(SharedExportedClass)), NotifyPropertyChanged, PartCreationPolicy(CreationPolicy.Shared)]
+        public class SharedExportedClass {}
+
+        [Export(typeof(ExportedClassWithProperties)), NotifyPropertyChanged, PartCreationPolicy(CreationPolicy.Shared)]
+        public class ExportedClassWithProperties
+        {
+            public ExportedClassWithProperties()
+            {
+                Multiple = new List<ILogger>();
+            }
+
+            [Import]
+            public SharedExportedClass Shared { get; set; }
+
+            [ImportMany]
+            public IList<ILogger> Multiple { get; set; }
+        }
+
+        [Export(typeof(ExportedClassWithoutPolicy)), NotifyPropertyChanged]
+        public class ExportedClassWithoutPolicy {}
+
+        [Test]
+        public void Can_ImportMany()
+        {
+            var catalog = new AssemblyCatalog(Assembly.GetAssembly(typeof(SharedExportedClass)));
+            var container = new CompositionContainer(catalog);
+
+            var adapter = new MEFAdapter(container);
             IoC.Initialize(adapter);
 
-			var vm = container.GetExportedValue<ExportedClass>();
-			Assert.That(vm, Is.InstanceOf<INotifyPropertyChanged>());
-		}
+            var instance1 = adapter.GetInstance<ExportedClassWithProperties>();
 
-		[Test]
-		public void can_register_through_adapter_using_proxyfactory()
-		{
-			var catalog = new AssemblyCatalog(Assembly.GetAssembly(typeof(ClassWithBehaviour)));
-			var proxycatalog = new ProxyCatalog(catalog);
-			var container = new CompositionContainer(proxycatalog);
+            Assert.That(instance1.Multiple.Count, Is.EqualTo(2));
+        }
 
-			var adapter = new MEFAdapter(container).WithProxyFactory<DynamicProxyFactory>();
+        [Test]
+        public void Can_ImportMany_with_ProxyCatalog()
+        {
+            var catalog = new AssemblyCatalog(Assembly.GetAssembly(typeof(SharedExportedClass)));
+            var proxycatalog = new ProxyCatalog(catalog);
+            var container = new CompositionContainer(proxycatalog);
+
+            var adapter = new MEFAdapter(container).WithProxyFactory<DynamicProxyFactory>();
             IoC.Initialize(adapter);
 
-			adapter.Register(new[] { new PerRequest { Service = typeof(ClassWithBehaviour), Implementation = typeof(ClassWithBehaviour) } });
+            var instance = adapter.GetInstance<ExportedClassWithProperties>();
 
-			var vm = container.GetExportedValue<ClassWithBehaviour>();
-			Assert.That(vm, Is.InstanceOf<INotifyPropertyChanged>());
-		}
+            Assert.That(instance.Multiple.Count, Is.EqualTo(2));
+        }
 
-		[Test]
-		public void register_through_adapter_using_proxyfactory_can_resolve_singletons()
-		{
-			var catalog = new AssemblyCatalog(Assembly.GetAssembly(typeof(ClassWithBehaviour)));
-			var proxycatalog = new ProxyCatalog(catalog);
-			var container = new CompositionContainer(proxycatalog);
+        [Test]
+        public void Can_use_setter_injection_with_proxycatalog_register_trough_attributes()
+        {
+            var catalog = new AssemblyCatalog(Assembly.GetAssembly(typeof(SharedExportedClass)));
+            var proxycatalog = new ProxyCatalog(catalog);
+            var container = new CompositionContainer(proxycatalog);
 
-			var adapter = new MEFAdapter(container).WithProxyFactory<DynamicProxyFactory>();
+            var adapter = new MEFAdapter(container).WithProxyFactory<DynamicProxyFactory>();
             IoC.Initialize(adapter);
 
-			adapter.Register(new[] { new Singleton { Service = typeof(ClassWithBehaviour), Implementation = typeof(ClassWithBehaviour) } });
+            var shared = adapter.GetInstance<SharedExportedClass>();
+            var instance1 = adapter.GetInstance<ExportedClassWithProperties>();
+            var instance2 = adapter.GetInstance<ExportedClassWithProperties>();
 
-			var sl = (IServiceLocator) adapter;
-			var instance1 = sl.GetInstance<ClassWithBehaviour>();
-			var instance2 = sl.GetInstance<ClassWithBehaviour>();
+            Assert.AreSame(instance1, instance2);
+            Assert.That(shared, Is.Not.Null);
+            Assert.That(instance1.Shared, Is.SameAs(shared));
+            Assert.That(instance2.Shared, Is.SameAs(shared));
+        }
 
-			Assert.AreSame(instance1, instance2);
-		}
+        [Test]
+        public void Can_use_setter_injection_with_proxycatalog_register_trough_container()
+        {
+            var catalog = new AssemblyCatalog(Assembly.GetAssembly(typeof(SharedExportedClass)));
+            var proxycatalog = new ProxyCatalog(catalog);
+            var container = new CompositionContainer(proxycatalog);
 
-		[Test]
-		public void register_through_adapter_using_proxyfactory_can_resolve_perrequest()
-		{
-			var catalog = new AssemblyCatalog(Assembly.GetAssembly(typeof(ClassWithBehaviour)));
-			var proxycatalog = new ProxyCatalog(catalog);
-			var container = new CompositionContainer(proxycatalog);
-
-			var adapter = new MEFAdapter(container).WithProxyFactory<DynamicProxyFactory>();
+            var adapter = new MEFAdapter(container).WithProxyFactory<DynamicProxyFactory>();
+            adapter.Register(new[] {
+                new Singleton {
+                    Service = typeof(ClassWithBehaviour), Implementation = typeof(ClassWithBehaviour)
+                }
+            });
             IoC.Initialize(adapter);
 
-			adapter.Register(new[] { new PerRequest { Service = typeof(ClassWithBehaviour), Implementation = typeof(ClassWithBehaviour) } });
+            var shared = adapter.GetInstance<SharedExportedClass>();
+            var instance1 = adapter.GetInstance<ClassWithBehaviour>();
+            var instance2 = adapter.GetInstance<ClassWithBehaviour>();
 
-			var sl = (IServiceLocator)adapter;
-			var instance1 = sl.GetInstance<ClassWithBehaviour>();
-			var instance2 = sl.GetInstance<ClassWithBehaviour>();
+            Assert.AreSame(instance1, instance2);
+            Assert.That(shared, Is.Not.Null);
+            Assert.That(instance1.Shared, Is.SameAs(shared));
+            Assert.That(instance2.Shared, Is.SameAs(shared));
+        }
 
-			Assert.AreNotSame(instance1, instance2);
-		}
+        [Test]
+        public void NOproxycatalog_Default_CreationPolicy_is_shared()
+        {
+            var catalog = new AssemblyCatalog(Assembly.GetAssembly(typeof(SharedExportedClass)));
+            var container = new CompositionContainer(catalog);
 
-		[Test]
-		public void ProxyCatalog_NotifyChanging_does_not_throw()
-		{
-			var aggregatecatalog = new AggregateCatalog();
+            var adapter = new MEFAdapter(container);
+            IoC.Initialize(adapter);
 
-			var proxycatalog = new ProxyCatalog(aggregatecatalog);
-			
-			// we didn't access proxycatalog.Parts, so _parts is null and the following throws
-			aggregatecatalog.Catalogs.Add(new AssemblyCatalog(Assembly.GetExecutingAssembly()));			
-		}
+            var instance1 = adapter.GetInstance<ExportedClassWithoutPolicy>();
+            var instance2 = adapter.GetInstance<ExportedClassWithoutPolicy>();
 
-		[Test]
-		public void Can_use_setter_injection_with_proxycatalog_register_trough_container()
-		{
-			var catalog = new AssemblyCatalog(Assembly.GetAssembly(typeof(SharedExportedClass)));
-			var proxycatalog = new ProxyCatalog(catalog);
-			var container = new CompositionContainer(proxycatalog);
+            Assert.AreSame(instance1, instance2);
+        }
 
-			var adapter = new MEFAdapter(container).WithProxyFactory<DynamicProxyFactory>();
-			adapter.Register(new[] { new Singleton { Service = typeof(ClassWithBehaviour), Implementation = typeof(ClassWithBehaviour) } });
-			IoC.Initialize(adapter);
+        [Test]
+        public void ProxyCatalog_NotifyChanging_does_not_throw()
+        {
+            var aggregatecatalog = new AggregateCatalog();
 
-			var shared = adapter.GetInstance<SharedExportedClass>();
-			var instance1 = adapter.GetInstance<ClassWithBehaviour>();
-			var instance2 = adapter.GetInstance<ClassWithBehaviour>();
+            var proxycatalog = new ProxyCatalog(aggregatecatalog);
 
-			Assert.AreSame(instance1, instance2);
-			Assert.That(shared, Is.Not.Null);
-			Assert.That(instance1.Shared, Is.SameAs(shared));
-			Assert.That(instance2.Shared, Is.SameAs(shared));
-		}
+            // we didn't access proxycatalog.Parts, so _parts is null and the following throws
+            aggregatecatalog.Catalogs.Add(new AssemblyCatalog(Assembly.GetExecutingAssembly()));
+        }
 
-		[Test]
-		public void Can_use_setter_injection_with_proxycatalog_register_trough_attributes()
-		{
-			var catalog = new AssemblyCatalog(Assembly.GetAssembly(typeof(SharedExportedClass)));
-			var proxycatalog = new ProxyCatalog(catalog);
-			var container = new CompositionContainer(proxycatalog);
+        [Test]
+        public void can_register_through_adapter_using_proxyfactory()
+        {
+            var catalog = new AssemblyCatalog(Assembly.GetAssembly(typeof(ClassWithBehaviour)));
+            var proxycatalog = new ProxyCatalog(catalog);
+            var container = new CompositionContainer(proxycatalog);
 
-			var adapter = new MEFAdapter(container).WithProxyFactory<DynamicProxyFactory>();
-			IoC.Initialize(adapter);
+            var adapter = new MEFAdapter(container).WithProxyFactory<DynamicProxyFactory>();
+            IoC.Initialize(adapter);
 
-			var shared = adapter.GetInstance<SharedExportedClass>();
-			var instance1 = adapter.GetInstance<ExportedClassWithProperties>();
-			var instance2 = adapter.GetInstance<ExportedClassWithProperties>();
+            adapter.Register(new[] {
+                new PerRequest {
+                    Service = typeof(ClassWithBehaviour), Implementation = typeof(ClassWithBehaviour)
+                }
+            });
 
-			Assert.AreSame(instance1, instance2);
-			Assert.That(shared, Is.Not.Null);
-			Assert.That(instance1.Shared, Is.SameAs(shared));
-			Assert.That(instance2.Shared, Is.SameAs(shared));
-		}
+            var vm = container.GetExportedValue<ClassWithBehaviour>();
+            Assert.That(vm, Is.InstanceOf<INotifyPropertyChanged>());
+        }
 
-		[Test]
-		public void proxycatalog_Default_CreationPolicy_is_shared()
-		{
-			var catalog = new AssemblyCatalog(Assembly.GetAssembly(typeof(SharedExportedClass)));
-			var proxycatalog = new ProxyCatalog(catalog);
-			var container = new CompositionContainer(proxycatalog);
+        [Test]
+        public void proxycatalog_Default_CreationPolicy_is_shared()
+        {
+            var catalog = new AssemblyCatalog(Assembly.GetAssembly(typeof(SharedExportedClass)));
+            var proxycatalog = new ProxyCatalog(catalog);
+            var container = new CompositionContainer(proxycatalog);
 
-			var adapter = new MEFAdapter(container).WithProxyFactory<DynamicProxyFactory>();
-			IoC.Initialize(adapter);
+            var adapter = new MEFAdapter(container).WithProxyFactory<DynamicProxyFactory>();
+            IoC.Initialize(adapter);
 
-			var instance1 = adapter.GetInstance<ExportedClassWithoutPolicy>();
-			var instance2 = adapter.GetInstance<ExportedClassWithoutPolicy>();
+            var instance1 = adapter.GetInstance<ExportedClassWithoutPolicy>();
+            var instance2 = adapter.GetInstance<ExportedClassWithoutPolicy>();
 
-			Assert.AreSame(instance1, instance2);
-		}
+            Assert.AreSame(instance1, instance2);
+        }
 
-		[Test]
-		public void NOproxycatalog_Default_CreationPolicy_is_shared()
-		{
-			var catalog = new AssemblyCatalog(Assembly.GetAssembly(typeof(SharedExportedClass)));
-			var container = new CompositionContainer(catalog);
+        [Test]
+        public void proxycatalog_should_replace_parts()
+        {
+            var catalog = new AssemblyCatalog(Assembly.GetAssembly(typeof(ExportedClass)));
+            var proxycatalog = new ProxyCatalog(catalog);
+            var container = new CompositionContainer(proxycatalog);
 
-			var adapter = new MEFAdapter(container);
-			IoC.Initialize(adapter);
+            var adapter = new MEFAdapter(container).WithProxyFactory<DynamicProxyFactory>();
+            IoC.Initialize(adapter);
 
-			var instance1 = adapter.GetInstance<ExportedClassWithoutPolicy>();
-			var instance2 = adapter.GetInstance<ExportedClassWithoutPolicy>();
+            var vm = container.GetExportedValue<ExportedClass>();
+            Assert.That(vm, Is.InstanceOf<INotifyPropertyChanged>());
+        }
 
-			Assert.AreSame(instance1, instance2);
-		}
+        [Test]
+        public void register_through_adapter_using_proxyfactory_can_resolve_perrequest()
+        {
+            var catalog = new AssemblyCatalog(Assembly.GetAssembly(typeof(ClassWithBehaviour)));
+            var proxycatalog = new ProxyCatalog(catalog);
+            var container = new CompositionContainer(proxycatalog);
 
-		[Test]
-		public void Can_ImportMany()
-		{
-			var catalog = new AssemblyCatalog(Assembly.GetAssembly(typeof(SharedExportedClass)));
-			var container = new CompositionContainer(catalog);
+            var adapter = new MEFAdapter(container).WithProxyFactory<DynamicProxyFactory>();
+            IoC.Initialize(adapter);
 
-			var adapter = new MEFAdapter(container);
-			IoC.Initialize(adapter);
+            adapter.Register(new[] {
+                new PerRequest {
+                    Service = typeof(ClassWithBehaviour), Implementation = typeof(ClassWithBehaviour)
+                }
+            });
 
-			var instance1 = adapter.GetInstance<ExportedClassWithProperties>();
+            var sl = (IServiceLocator)adapter;
+            var instance1 = sl.GetInstance<ClassWithBehaviour>();
+            var instance2 = sl.GetInstance<ClassWithBehaviour>();
 
-			Assert.That(instance1.Multiple.Count, Is.EqualTo(2));
-		}
+            Assert.AreNotSame(instance1, instance2);
+        }
 
-		[Test]
-		public void Can_ImportMany_with_ProxyCatalog()
-		{
-			var catalog = new AssemblyCatalog(Assembly.GetAssembly(typeof(SharedExportedClass)));
-			var proxycatalog = new ProxyCatalog(catalog);
-			var container = new CompositionContainer(proxycatalog);
+        [Test]
+        public void register_through_adapter_using_proxyfactory_can_resolve_singletons()
+        {
+            var catalog = new AssemblyCatalog(Assembly.GetAssembly(typeof(ClassWithBehaviour)));
+            var proxycatalog = new ProxyCatalog(catalog);
+            var container = new CompositionContainer(proxycatalog);
 
-			var adapter = new MEFAdapter(container).WithProxyFactory<DynamicProxyFactory>();
-			IoC.Initialize(adapter);
+            var adapter = new MEFAdapter(container).WithProxyFactory<DynamicProxyFactory>();
+            IoC.Initialize(adapter);
 
-			var instance = adapter.GetInstance<ExportedClassWithProperties>();
+            adapter.Register(new[] {
+                new Singleton {
+                    Service = typeof(ClassWithBehaviour), Implementation = typeof(ClassWithBehaviour)
+                }
+            });
 
-			Assert.That(instance.Multiple.Count, Is.EqualTo(2));
-		}
+            var sl = (IServiceLocator)adapter;
+            var instance1 = sl.GetInstance<ClassWithBehaviour>();
+            var instance2 = sl.GetInstance<ClassWithBehaviour>();
 
-		[NotifyPropertyChanged]
-		public class ClassWithBehaviour
-		{
-			[Import]
-			public SharedExportedClass Shared { get; set; }			
-		}
-
-		[Export(typeof(ExportedClass))]
-		[NotifyPropertyChanged]
-		public class ExportedClass
-		{ }
-
-		[Export(typeof(SharedExportedClass))]
-		[NotifyPropertyChanged]
-		[PartCreationPolicy(CreationPolicy.Shared)]
-		public class SharedExportedClass
-		{ }
-
-		[Export(typeof(ExportedClassWithProperties))]
-		[NotifyPropertyChanged]
-		[PartCreationPolicy(CreationPolicy.Shared)]
-		public class ExportedClassWithProperties
-		{
-			[Import]
-			public SharedExportedClass Shared { get; set; }
-
-			[ImportMany]
-			public IList<ILogger> Multiple { get; set; }
-
-			public ExportedClassWithProperties()
-			{
-				Multiple = new List<ILogger>();
-			}
-		}
-
-		[Export(typeof(ExportedClassWithoutPolicy))]
-		[NotifyPropertyChanged]
-		public class ExportedClassWithoutPolicy
-		{
-		}
-	}
+            Assert.AreSame(instance1, instance2);
+        }
+    }
 }

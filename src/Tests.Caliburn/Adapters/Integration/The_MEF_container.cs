@@ -52,16 +52,14 @@
                 {
                     if(target is SampleCommand)
                         return new SampleCommandProxy();
-                    else
-                        return target;
+                    return target;
                 }
 
                 public object CreateProxy(Type type, IEnumerable<IBehavior> behaviors, IEnumerable<object> constructorArgs)
                 {
                     if(type.Equals(typeof(SampleCommand)))
                         return new SampleCommandProxy();
-                    else
-                        return Activator.CreateInstance(type, constructorArgs.ToArray());
+                    return Activator.CreateInstance(type, constructorArgs.ToArray());
                 }
 
                 public class SampleCommandProxy : SampleCommand {}
@@ -92,7 +90,6 @@
             }
 
             [Test, Ignore("Not applicable with setter injection turned off")]
-			
             public override void can_inject_dependencies_on_public_properties() {}
 
             [Test]

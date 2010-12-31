@@ -55,7 +55,6 @@
             attribute.MakeAwareOf(routedMessageHandler, messageTrigger);
         }
 
-
         internal class MethodHost
         {
             public void Preview(object parmater) {}

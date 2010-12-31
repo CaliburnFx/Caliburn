@@ -13,40 +13,40 @@
     [TestFixture]
     public class The_dependency_observer : TestBase
     {
-        IRoutedMessageHandler _handler;
-        TheNotifierClass _notifier;
-        DependencyObserver _observer;
-        IMessageTrigger _trigger;
-        bool _expectationsWasSet;
+        IRoutedMessageHandler handler;
+        TheNotifierClass notifier;
+        DependencyObserver observer;
+        IMessageTrigger trigger;
+        bool expectationsWasSet;
 
         protected override void given_the_context_of()
         {
-            _expectationsWasSet = false;
+            expectationsWasSet = false;
 
             var methodFactory = new DefaultMethodFactory();
 
-            _handler = StrictMock<IRoutedMessageHandler>();
-            _notifier = new TheNotifierClass();
-            _observer = new DependencyObserver(_handler, methodFactory, _notifier);
-            _trigger = Mock<IMessageTrigger>();
+            handler = StrictMock<IRoutedMessageHandler>();
+            notifier = new TheNotifierClass();
+            observer = new DependencyObserver(handler, methodFactory, notifier);
+            trigger = Mock<IMessageTrigger>();
         }
 
         void ConfigureObserver(IEnumerable<string> dependencies)
         {
-            _observer.MakeAwareOf(_trigger, dependencies);
+            observer.MakeAwareOf(trigger, dependencies);
         }
 
         void ExpectTriggerUpdate(int count)
         {
-            _handler.Expect(x => x.UpdateAvailability(_trigger)).Repeat.Times(count);
-            _expectationsWasSet = true;
+            handler.Expect(x => x.UpdateAvailability(trigger)).Repeat.Times(count);
+            expectationsWasSet = true;
         }
 
         void AssertTriggerUpdateExpectations()
         {
-            if(!_expectationsWasSet)
+            if(!expectationsWasSet)
                 throw new Exception("Expectations was not set");
-            _handler.VerifyAllExpectations();
+            handler.VerifyAllExpectations();
         }
 
         internal class TheNotifierClass : PropertyChangedBase
@@ -112,10 +112,10 @@
         //see also http://caliburn.codeplex.com/Thread/View.aspx?ThreadId=212171
         public void backreferences_should_not_leak_the_observer()
         {
-            var handlerRef = new WeakReference(_handler);
+            var handlerRef = new WeakReference(handler);
 
             //this reference emulates a back pointer to a long-living model
-            var parent = _notifier.Model;
+            var parent = notifier.Model;
 
 
             ConfigureObserver(new[] {
@@ -124,8 +124,8 @@
 
             //emulates the collection of the cluster composed by Screen, View, MessageHandler and ancillary filters 
             //(included Dependecies along with its internal PropertyPathMonitor)
-            _observer = null;
-            _handler = null;
+            observer = null;
+            handler = null;
             GC.Collect();
             GC.WaitForFullGCComplete();
             GC.WaitForPendingFinalizers();
@@ -143,19 +143,18 @@
 
 
         [Test, Ignore("NOTE: to make this test pass, the finalizer of DependencyObserver should be in place")]
-		
         //see http://caliburn.codeplex.com/Thread/View.aspx?ThreadId=212171 for the rationale behind the finalizer removal
         public void backreferences_should_not_leak_the_observer_strict()
         {
-            var handlerRef = new WeakReference(_handler);
-            var parent = _notifier.Model;
+            var handlerRef = new WeakReference(handler);
+            var parent = notifier.Model;
 
             ConfigureObserver(new[] {
                 "Model.SomeModelProperty"
             });
 
-            _observer = null;
-            _handler = null;
+            observer = null;
+            handler = null;
             GC.Collect();
             GC.WaitForFullGCComplete();
             GC.WaitForPendingFinalizers();
@@ -169,12 +168,12 @@
         {
             ExpectTriggerUpdate(1); //strict mock requires expectations
 
-            var disconnectedChainRef = new WeakReference(_notifier.Model);
+            var disconnectedChainRef = new WeakReference(notifier.Model);
 
             ConfigureObserver(new[] {
                 "Model.SomeModelProperty"
             });
-            _notifier.Model = new TheReferencedClass();
+            notifier.Model = new TheReferencedClass();
 
             GC.Collect();
             GC.WaitForFullGCComplete();
@@ -190,7 +189,7 @@
             ConfigureObserver(new[] {
                 "Model.SomeModelProperty"
             });
-            _notifier.Model = new TheReferencedClass();
+            notifier.Model = new TheReferencedClass();
             AssertTriggerUpdateExpectations();
         }
 
@@ -202,7 +201,7 @@
             ConfigureObserver(new[] {
                 "Model.SomeModelProperty"
             });
-            _notifier.Model.NotifyOfPropertyChange("SomeModelProperty");
+            notifier.Model.NotifyOfPropertyChange("SomeModelProperty");
 
             AssertTriggerUpdateExpectations();
         }
@@ -215,7 +214,7 @@
             ConfigureObserver(new[] {
                 "SomeProperty"
             });
-            _notifier.NotifyOfPropertyChange("SomeProperty");
+            notifier.NotifyOfPropertyChange("SomeProperty");
 
             AssertTriggerUpdateExpectations();
         }
@@ -228,8 +227,8 @@
             ConfigureObserver(new[] {
                 "Model.*"
             });
-            _notifier.Model.NotifyOfPropertyChange("SomeModelProperty");
-            _notifier.Model.NotifyOfPropertyChange("AnotherModelProperty");
+            notifier.Model.NotifyOfPropertyChange("SomeModelProperty");
+            notifier.Model.NotifyOfPropertyChange("AnotherModelProperty");
 
             AssertTriggerUpdateExpectations();
         }
@@ -242,8 +241,8 @@
             ConfigureObserver(new[] {
                 "*"
             });
-            _notifier.NotifyOfPropertyChange("SomeProperty");
-            _notifier.NotifyOfPropertyChange("SomeOtherProperty");
+            notifier.NotifyOfPropertyChange("SomeProperty");
+            notifier.NotifyOfPropertyChange("SomeOtherProperty");
 
             AssertTriggerUpdateExpectations();
         }
@@ -256,7 +255,7 @@
             ConfigureObserver(new[] {
                 "Model"
             });
-            _notifier.Model.NotifyOfPropertyChange("SomeModelProperty");
+            notifier.Model.NotifyOfPropertyChange("SomeModelProperty");
 
             AssertTriggerUpdateExpectations();
         }
@@ -266,12 +265,12 @@
         {
             ExpectTriggerUpdate(1); //first call is expected, second it's not
 
-            var disconnectedChain = _notifier.Model;
+            var disconnectedChain = notifier.Model;
 
             ConfigureObserver(new[] {
                 "Model.SomeModelProperty"
             });
-            _notifier.Model = new TheReferencedClass();
+            notifier.Model = new TheReferencedClass();
             disconnectedChain.NotifyOfPropertyChange("SomeModelProperty");
 
             AssertTriggerUpdateExpectations();
@@ -285,7 +284,7 @@
             ConfigureObserver(new[] {
                 "AnotherModel.SomeModelProperty"
             });
-            _notifier.Model.NotifyOfPropertyChange("SomeModelProperty");
+            notifier.Model.NotifyOfPropertyChange("SomeModelProperty");
 
             AssertTriggerUpdateExpectations();
         }
@@ -298,7 +297,7 @@
             ConfigureObserver(new[] {
                 "SomeProperty"
             });
-            _notifier.NotifyOfPropertyChange("SomeOtherProperty");
+            notifier.NotifyOfPropertyChange("SomeOtherProperty");
 
             AssertTriggerUpdateExpectations();
         }
@@ -311,8 +310,8 @@
             ConfigureObserver(new[] {
                 "Model.*", "AnotherModel.SomeModelProperty"
             });
-            _notifier.Model.NotifyOfPropertyChange("AnotherModelProperty");
-            _notifier.AnotherModel.NotifyOfPropertyChange("SomeModelProperty");
+            notifier.Model.NotifyOfPropertyChange("AnotherModelProperty");
+            notifier.AnotherModel.NotifyOfPropertyChange("SomeModelProperty");
 
             AssertTriggerUpdateExpectations();
         }
@@ -325,8 +324,8 @@
             ConfigureObserver(new[] {
                 "Model.SomeModelProperty"
             });
-            _notifier.Model = new TheReferencedClass();
-            _notifier.Model.NotifyOfPropertyChange("SomeModelProperty");
+            notifier.Model = new TheReferencedClass();
+            notifier.Model.NotifyOfPropertyChange("SomeModelProperty");
 
             AssertTriggerUpdateExpectations();
         }
@@ -336,14 +335,14 @@
         {
             ExpectTriggerUpdate(2);
 
-            _notifier.Model = null;
+            notifier.Model = null;
 
             ConfigureObserver(new[] {
                 "Model.SomeModelProperty"
             });
-            _notifier.Model = new TheReferencedClass();
+            notifier.Model = new TheReferencedClass();
 
-            _notifier.Model.NotifyOfPropertyChange("SomeModelProperty");
+            notifier.Model.NotifyOfPropertyChange("SomeModelProperty");
 
             AssertTriggerUpdateExpectations();
         }
