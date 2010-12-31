@@ -24,6 +24,7 @@
 
 #if SILVERLIGHT
     using System.Windows.Controls;
+    using RoutedMessaging.Triggers;
 #endif
 
     /// <summary>
@@ -32,10 +33,10 @@
     public class PresentationFrameworkConfiguration :
         ConventionalModule<PresentationFrameworkConfiguration, IPresentationFrameworkServicesDescription>
     {
-        private bool registerItemsWithSubjects;
-        private bool nameInstances;
+        bool registerItemsWithSubjects;
+        bool nameInstances;
 
-        private static bool? isInDesignMode;
+        static bool? isInDesignMode;
         Func<IEnumerator<IResult>, IResult> parentEnumeratorFactory = results => new SequentialResult(results);
 
         /// <summary>
@@ -94,6 +95,21 @@
             this.parentEnumeratorFactory = parentEnumeratorFactory;
             return this;
         }
+
+#if SILVERLIGHT
+
+        /// <summary>
+        /// Sets the double click interval.
+        /// </summary>
+        /// <param name="interval">The interval.</param>
+        /// <returns>The configuration.</returns>
+        public PresentationFrameworkConfiguration SetDoubleClickInterval(TimeSpan interval)
+        {
+            GestureMessageTrigger.DoubleClickInterval = interval;
+            return this;
+        }
+
+#endif
 
         /// <summary>
         /// Initializes the core.
