@@ -1,4 +1,4 @@
-﻿namespace Tests.Caliburn.MVP.PropertyChanged
+﻿namespace Tests.Caliburn.PresentationFramework.PropertyChanged
 {
     using System;
     using System.IO;
@@ -12,14 +12,14 @@
         [Serializable]
         public class FakeSerializableNotifier : PropertyChangedBase
         {
-            string _FakeProperty;
+            string fakeProperty;
 
             public string FakeProperty
             {
-                get { return _FakeProperty; }
+                get { return fakeProperty; }
                 set
                 {
-                    _FakeProperty = value;
+                    fakeProperty = value;
                     NotifyOfPropertyChange(() => FakeProperty);
                 }
             }
@@ -60,7 +60,6 @@
             Assert.AreNotSame(original, deserialized);
             Assert.AreEqual(original.FakeProperty, deserialized.FakeProperty);
         }
-
 
         [Test]
         public void can_notify_after_deserialization()

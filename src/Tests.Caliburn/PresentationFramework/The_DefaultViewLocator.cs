@@ -1,11 +1,11 @@
-﻿namespace Tests.Caliburn.MVP
+﻿namespace Tests.Caliburn.PresentationFramework
 {
     using System;
     using System.Collections.Generic;
-    using Fakes.Model;
     using global::Caliburn.Core;
     using global::Caliburn.Core.InversionOfControl;
     using global::Caliburn.PresentationFramework.Views;
+    using Fakes.Model;
     using NUnit.Framework;
 
     [TestFixture]
@@ -53,7 +53,6 @@
                 );
         }
     }
-
 
     public class TestFriendlyDefaultViewLocator : DefaultViewLocator
     {

@@ -1,4 +1,4 @@
-﻿namespace Tests.Caliburn.MVP.Presenters
+﻿namespace Tests.Caliburn.PresentationFramework.Screens
 {
     using global::Caliburn.PresentationFramework.Screens;
     using NUnit.Framework;
@@ -6,7 +6,7 @@
     [TestFixture]
     public class A_screen_conductor_with_collection_all_screens_active : A_screen
     {
-        protected Conductor<IScreen>.Collection.AllActive _screenConductor;
+        protected Conductor<IScreen>.Collection.AllActive ScreenConductor;
 
         protected override Screen CreateScreen()
         {
@@ -17,7 +17,7 @@
         {
             base.given_the_context_of();
 
-            _screenConductor = (Conductor<IScreen>.Collection.AllActive)_screen;
+            ScreenConductor = (Conductor<IScreen>.Collection.AllActive)Screen;
         }
     }
 }
