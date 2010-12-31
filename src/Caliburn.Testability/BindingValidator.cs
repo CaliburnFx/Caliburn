@@ -7,8 +7,8 @@
     /// </summary>
     public class BindingValidator
     {
-		private readonly IBoundElement _element;
-        private readonly ElementEnumerator _enumerator;
+		readonly IBoundElement element;
+        readonly ElementEnumerator enumerator;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="BindingValidator"/> class.
@@ -16,8 +16,8 @@
         /// <param name="element">The data bound item.</param>
         public BindingValidator(IBoundElement element)
         {
-			_element = element;
-            _enumerator = new ElementEnumerator(element);
+			this.element = element;
+            enumerator = new ElementEnumerator(element);
         }
 
         /// <summary>
@@ -26,7 +26,7 @@
         /// <value>The settings.</value>
         public ElementEnumeratorSettings Settings
         {
-            get { return _enumerator.Settings; }
+            get { return enumerator.Settings; }
         }
 
 		/// <summary>
@@ -38,7 +38,7 @@
 		/// <returns></returns>
 		public BindingValidator WithHint(string propertyPath, Type hint)
 		{
-			_element.Type.AddHint(propertyPath, hint);
+			element.Type.AddHint(propertyPath, hint);
 			return this;
 		}
 
@@ -50,7 +50,7 @@
         {
             var visitor = new ValidationVisitor();
 
-            _enumerator.Enumerate(visitor);
+            enumerator.Enumerate(visitor);
 
             return visitor.Result;
         }

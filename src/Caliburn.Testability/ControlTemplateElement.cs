@@ -7,7 +7,7 @@
     /// </summary>
     public class ControlTemplateElement : DependencyObjectElement
     {
-        private readonly ControlTemplate _controlTemplate;
+        readonly ControlTemplate controlTemplate;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="DataTemplateElement"/> class.
@@ -26,10 +26,10 @@
         internal ControlTemplateElement(ControlTemplate controlTemplate, BoundType boundType, string baseName)
             : base(controlTemplate.LoadContent(), boundType)
         {
-            _controlTemplate = controlTemplate;
+            this.controlTemplate = controlTemplate;
 
-            if(_controlTemplate.TargetType != null)
-                BaseName = baseName + " [ControlTemplate " + _controlTemplate.TargetType.Name + "] ";
+            if(this.controlTemplate.TargetType != null)
+                BaseName = baseName + " [ControlTemplate " + this.controlTemplate.TargetType.Name + "] ";
 
             else BaseName = baseName + " [ControlTemplate] ";
         }
@@ -40,7 +40,7 @@
         /// <value>The control template.</value>
         public ControlTemplate ControlTemplate
         {
-            get { return _controlTemplate; }
+            get { return controlTemplate; }
         }
 
         /// <summary>

@@ -40,13 +40,12 @@ namespace Caliburn.Testability
         /// <param name="baseName">A base name.</param>
         /// <param name="checkLogicalChildren">Indicate whether this elements children should be checked.</param>
         /// <returns></returns>
-		public static IBoundElement DependencyObject(DependencyObject element, BoundType boundType, string baseName,
-                                                bool checkLogicalChildren)
+		public static IBoundElement DependencyObject(DependencyObject element, BoundType boundType, string baseName, bool checkLogicalChildren)
         {
-            var dependencyObjectElement = new DependencyObjectElement(element, boundType, baseName)
-            {
+            var dependencyObjectElement = new DependencyObjectElement(element, boundType, baseName) {
                 CheckLogicalChildren = checkLogicalChildren
             };
+
             return dependencyObjectElement;
         }
 

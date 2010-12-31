@@ -15,7 +15,7 @@ namespace Caliburn.Testability.Assertions
     public class SinglePropertyAssertion<T, K> : PropertyAssertionBase<T>
         where T : class, INotifyPropertyChanged
     {
-        private readonly Expression<Func<T, K>> _property;
+        readonly Expression<Func<T, K>> property;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="SinglePropertyAssertion&lt;T, K&gt;"/> class.
@@ -25,7 +25,7 @@ namespace Caliburn.Testability.Assertions
         public SinglePropertyAssertion(INotifyPropertyChanged propertyOwner, Expression<Func<T, K>> property)
             : base(propertyOwner)
         {
-            _property = property;
+            this.property = property;
         }
 
         /// <summary>
@@ -34,7 +34,7 @@ namespace Caliburn.Testability.Assertions
         /// <returns></returns>
         protected override IEnumerable<PropertyInfo> GetCandidateProperties()
         {
-            return new[] {_property.GetPropertyInfo()};
+            return new[] {property.GetPropertyInfo()};
         }
 
         /// <summary>

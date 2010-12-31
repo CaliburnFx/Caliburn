@@ -5,7 +5,7 @@ namespace Caliburn.Testability
     /// </summary>
     public class ControlTemplateValidator : DependencyObjectValidator
     {
-        private readonly ControlTemplateElement _element;
+        readonly ControlTemplateElement element;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ControlTemplateValidator"/> class.
@@ -15,7 +15,7 @@ namespace Caliburn.Testability
         public ControlTemplateValidator(ElementEnumeratorSettings settings, ControlTemplateElement element)
             : base(settings, element)
         {
-            _element = element;
+            this.element = element;
         }
 
         /// <summary>
@@ -26,9 +26,9 @@ namespace Caliburn.Testability
         {
             var result = base.ValidateBindings();
 
-            if(_element.Type != null)
+            if(element.Type != null)
             {
-                var triggerValidator = new TriggerValidator(_element.Type, _element, _element.ControlTemplate.Triggers);
+                var triggerValidator = new TriggerValidator(element.Type, element, element.ControlTemplate.Triggers);
                 result.Add(triggerValidator.ValidateBindings());
             }
 

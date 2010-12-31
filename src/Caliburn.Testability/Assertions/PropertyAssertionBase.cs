@@ -13,10 +13,10 @@ namespace Caliburn.Testability.Assertions
     /// <typeparam name="T">A type that implements <see cref="INotifyPropertyChanged"/>.</typeparam>
     public abstract class PropertyAssertionBase<T> where T : class, INotifyPropertyChanged
     {
-        private static readonly Random _random = new Random(DateTime.Now.Millisecond);
+        static readonly Random Random = new Random(DateTime.Now.Millisecond);
 
-        private readonly INotifyPropertyChanged _propertyOwner;
-        private readonly IDictionary<PropertyInfo, object> _values = new Dictionary<PropertyInfo, object>();
+        readonly INotifyPropertyChanged propertyOwner;
+        readonly IDictionary<PropertyInfo, object> values = new Dictionary<PropertyInfo, object>();
 
         /// <summary>
         /// Initializes a new instance of the <see cref="PropertyAssertionBase&lt;T&gt;"/> class.
@@ -24,7 +24,7 @@ namespace Caliburn.Testability.Assertions
         /// <param name="propertyOwner">The property owner.</param>
         protected PropertyAssertionBase(INotifyPropertyChanged propertyOwner)
         {
-            _propertyOwner = propertyOwner;
+            this.propertyOwner = propertyOwner;
         }
 
         /// <summary>
@@ -33,7 +33,7 @@ namespace Caliburn.Testability.Assertions
         /// <value>The values.</value>
         protected IDictionary<PropertyInfo, object> Values
         {
-            get { return _values; }
+            get { return values; }
         }
 
         /// <summary>
@@ -77,7 +77,7 @@ namespace Caliburn.Testability.Assertions
         /// <returns>An enumerable set of <see cref="PropertyInfo"/> instances.</returns>
         protected abstract IEnumerable<PropertyInfo> GetCandidateProperties();
 
-        private static void AssertThatClassHasCandidateProperties(IEnumerable<PropertyInfo> candidates)
+        static void AssertThatClassHasCandidateProperties(IEnumerable<PropertyInfo> candidates)
         {
             if (candidates.Count() > 0) return;
 
@@ -88,39 +88,39 @@ namespace Caliburn.Testability.Assertions
             throw new Exception(msg);
         }
 
-        private bool DoesPropertyRaiseNotification(PropertyInfo propertyInfo)
+        bool DoesPropertyRaiseNotification(PropertyInfo propertyInfo)
         {
             var has_property_changed = false;
 
-            _propertyOwner.PropertyChanged +=
+            propertyOwner.PropertyChanged +=
                 (s, e) => { if (e.PropertyName == propertyInfo.Name) has_property_changed = true; };
 
             var valueToSet = GetSetterValueForProperty(propertyInfo);
-            propertyInfo.SetValue(_propertyOwner, valueToSet, null);
+            propertyInfo.SetValue(propertyOwner, valueToSet, null);
 
             return has_property_changed;
         }
 
-        private object GetSetterValueForProperty(PropertyInfo propertyInfo)
+        object GetSetterValueForProperty(PropertyInfo propertyInfo)
         {
-            return (_values.ContainsKey(propertyInfo))
-                       ? _values[propertyInfo]
+            return (values.ContainsKey(propertyInfo))
+                       ? values[propertyInfo]
                        : Default(propertyInfo);
         }
 
-        private object Default(PropertyInfo propertyInfo)
+        object Default(PropertyInfo propertyInfo)
         {
             if (typeof(bool).IsAssignableFrom(propertyInfo.PropertyType))
-                return !((bool)propertyInfo.GetValue(_propertyOwner, null));
+                return !((bool)propertyInfo.GetValue(propertyOwner, null));
             if (typeof(string).IsAssignableFrom(propertyInfo.PropertyType))
                 return RandomString();
             if (typeof(DateTime).IsAssignableFrom(propertyInfo.PropertyType))
-                return DateTime.Now.Add(TimeSpan.FromMilliseconds(_random.Next()));
+                return DateTime.Now.Add(TimeSpan.FromMilliseconds(Random.Next()));
             if (typeof(IConvertible).IsAssignableFrom(propertyInfo.PropertyType))
             {
                 try
                 {
-                    return Convert.ChangeType(_random.Next(), propertyInfo.PropertyType);
+                    return Convert.ChangeType(Random.Next(), propertyInfo.PropertyType);
                 }
                 catch
                 {
@@ -133,13 +133,13 @@ namespace Caliburn.Testability.Assertions
             return null;
         }
 
-        private static string RandomString()
+        static string RandomString()
         {
             var builder = new StringBuilder();
             char ch;
             for (int i = 0; i < 7; i++)
             {
-                ch = Convert.ToChar(Convert.ToInt32(Math.Floor(26 * _random.NextDouble() + 65)));
+                ch = Convert.ToChar(Convert.ToInt32(Math.Floor(26 * Random.NextDouble() + 65)));
                 builder.Append(ch);
             }
 

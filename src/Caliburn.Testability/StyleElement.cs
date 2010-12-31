@@ -9,9 +9,9 @@
     /// </summary>
 	public class StyleElement : IBoundElement
     {
-        private readonly Style _style;
-        private readonly BoundType _type;
-        private readonly string _name;
+        readonly Style style;
+        readonly BoundType type;
+        readonly string name;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="StyleElement"/> class.
@@ -21,9 +21,9 @@
         /// <param name="name">The name.</param>
         internal StyleElement(Style style, BoundType boundType, string name)
         {
-            _style = style;
-            _type = boundType;
-            _name = name + " [Style] ";
+            this.style = style;
+            type = boundType;
+            this.name = name + " [Style] ";
         }
 
         /// <summary>
@@ -32,7 +32,7 @@
         /// <value>The name.</value>
         public string Name
         {
-            get { return _name; }
+            get { return name; }
         }
 
         /// <summary>
@@ -41,7 +41,7 @@
         /// <value>The type.</value>
         public BoundType Type
         {
-            get { return _type; }
+            get { return type; }
         }
 
         /// <summary>
@@ -50,7 +50,7 @@
         /// <value>The style.</value>
         public Style Style
         {
-            get { return _style; }
+            get { return style; }
         }
 
         /// <summary>
@@ -59,7 +59,7 @@
         /// <value>The children.</value>
         public IEnumerable<IElement> GetChildren(ElementEnumeratorSettings settings)
         {
-            foreach(var setterBase in _style.Setters)
+            foreach(var setterBase in style.Setters)
             {
                 var setter = setterBase as Setter;
 

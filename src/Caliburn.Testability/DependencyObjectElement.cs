@@ -12,10 +12,10 @@ namespace Caliburn.Testability
     /// </summary>
     public class DependencyObjectElement : IBoundElement
     {
-        private readonly DependencyObject _element;
-        private readonly BoundType _type;
-        private readonly BoundType _dataContextCheckType;
-        private bool _checkLogicalChildren = true;
+        readonly DependencyObject element;
+        readonly BoundType type;
+        readonly BoundType dataContextCheckType;
+        bool checkLogicalChildren = true;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="DependencyObjectElement"/> class.
@@ -25,11 +25,11 @@ namespace Caliburn.Testability
         /// <param name="baseName">Name of the base.</param>
         internal DependencyObjectElement(DependencyObject element, BoundType boundType, string baseName)
         {
-            _element = element;
-            _type = EnsureBoundType(boundType);
+            this.element = element;
+            type = EnsureBoundType(boundType);
 
-            if(_type != boundType && _type != null)
-                _dataContextCheckType = boundType;
+            if(type != boundType && type != null)
+                dataContextCheckType = boundType;
 
             BaseName = baseName ?? string.Empty;
         }
@@ -76,7 +76,7 @@ namespace Caliburn.Testability
         /// <value>The element.</value>
         public DependencyObject Element
         {
-            get { return _element; }
+            get { return element; }
         }
 
         /// <summary>
@@ -85,7 +85,7 @@ namespace Caliburn.Testability
         /// <value>The type.</value>
         public BoundType Type
         {
-            get { return _type; }
+            get { return type; }
         }
 
         /// <summary>
@@ -94,7 +94,7 @@ namespace Caliburn.Testability
         /// <value>The type of the data context check.</value>
         public BoundType DataContextCheckType
         {
-            get { return _dataContextCheckType; }
+            get { return dataContextCheckType; }
         }
 
         /// <summary>
@@ -103,8 +103,8 @@ namespace Caliburn.Testability
         /// <value><c>true</c> to check children; otherwise, <c>false</c>.</value>
         public bool CheckLogicalChildren
         {
-            get { return _checkLogicalChildren; }
-            set { _checkLogicalChildren = value; }
+            get { return checkLogicalChildren; }
+            set { checkLogicalChildren = value; }
         }
 
         /// <summary>
@@ -128,13 +128,13 @@ namespace Caliburn.Testability
             }
 
             var logicalChildren = LogicalTreeHelper.GetChildren(Element).Cast<object>().ToList();
-            var enumerator = _element.GetLocalValueEnumerator();
+            var enumerator = element.GetLocalValueEnumerator();
 
             while(enumerator.MoveNext())
             {
                 var entry = enumerator.Current;
 
-                if(BindingOperations.IsDataBound(_element, entry.Property)) continue;
+                if(BindingOperations.IsDataBound(element, entry.Property)) continue;
                 if(checkedProperties.Contains(entry.Property.Name)) continue;
                 if(logicalChildren.Contains(entry.Value)) continue;
 
@@ -175,12 +175,12 @@ namespace Caliburn.Testability
         /// <returns></returns>
         protected BoundType EnsureBoundType(BoundType boundType)
         {
-            var frameworkElement = _element as FrameworkElement;
+            var frameworkElement = element as FrameworkElement;
 
             if(frameworkElement != null)
             {
                 var binding = BindingOperations.GetBinding(
-                    _element,
+                    element,
                     FrameworkElement.DataContextProperty
                     );
 
@@ -194,8 +194,7 @@ namespace Caliburn.Testability
             return boundType;
         }
 
-        private IEnumerable<IElement> CheckContentControl(ICollection<string> checkedProperties,
-                                                          ElementEnumeratorSettings settings)
+        IEnumerable<IElement> CheckContentControl(ICollection<string> checkedProperties, ElementEnumeratorSettings settings)
         {
             if(!settings.IncludeTemplates) yield break;
 
@@ -231,7 +230,7 @@ namespace Caliburn.Testability
             }
         }
 
-        private IEnumerable<IElement> CheckHeaderedContentControl(ICollection<string> checkedProperties)
+        IEnumerable<IElement> CheckHeaderedContentControl(ICollection<string> checkedProperties)
         {
             var headeredContentControl = Element as HeaderedContentControl;
 
@@ -260,8 +259,7 @@ namespace Caliburn.Testability
             }
         }
 
-        private IEnumerable<IElement> CheckItemsControl(ICollection<string> checkedProperties,
-                                                        ElementEnumeratorSettings settings)
+        IEnumerable<IElement> CheckItemsControl(ICollection<string> checkedProperties, ElementEnumeratorSettings settings)
         {
             var itemsControl = Element as ItemsControl;
 
@@ -320,8 +318,7 @@ namespace Caliburn.Testability
             }
         }
 
-        private IEnumerable<IElement> CheckHeaderedItemsControl(ICollection<string> checkedProperties,
-                                                                ElementEnumeratorSettings settings)
+        IEnumerable<IElement> CheckHeaderedItemsControl(ICollection<string> checkedProperties, ElementEnumeratorSettings settings)
         {
             if(!settings.IncludeTemplates) yield break;
 

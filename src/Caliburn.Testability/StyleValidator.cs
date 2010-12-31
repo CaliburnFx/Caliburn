@@ -9,8 +9,8 @@ namespace Caliburn.Testability
     /// </summary>
     public class StyleValidator
     {
-        private readonly ElementEnumeratorSettings _settings;
-        private readonly StyleElement _element;
+        readonly ElementEnumeratorSettings settings;
+        readonly StyleElement element;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="StyleValidator"/> class.
@@ -19,8 +19,8 @@ namespace Caliburn.Testability
         /// <param name="element">The element.</param>
         public StyleValidator(ElementEnumeratorSettings settings, StyleElement element)
         {
-            _settings = settings;
-            _element = element;
+            this.settings = settings;
+            this.element = element;
         }
 
         /// <summary>
@@ -33,11 +33,11 @@ namespace Caliburn.Testability
 
             foreach(var info in GetBindings())
             {
-                var validatedProperty = _element.Type.ValidateAgainst(_element, info.Property, info.Binding);
+                var validatedProperty = element.Type.ValidateAgainst(element, info.Property, info.Binding);
                 result.Add(validatedProperty);
             }
 
-            var triggerValidator = new TriggerValidator(_element.Type, _element, _element.Style.Triggers);
+            var triggerValidator = new TriggerValidator(element.Type, element, element.Style.Triggers);
             result.Add(triggerValidator.ValidateBindings());
 
             return result;
@@ -45,7 +45,7 @@ namespace Caliburn.Testability
 
         private IEnumerable<BindingInfo> GetBindings()
         {
-            foreach(var setterBase in _element.Style.Setters)
+            foreach(var setterBase in element.Style.Setters)
             {
                 var setter = setterBase as Setter;
                 if(setter == null) continue;

@@ -8,11 +8,11 @@ namespace Caliburn.Testability
     /// </summary>
     public class BindingError : IError
     {
-        private readonly IElement _element;
-        private readonly BoundType _type;
-        private readonly DependencyProperty _property;
-        private readonly Binding _binding;
-        private readonly string _message;
+        readonly IElement element;
+        readonly BoundType type;
+        readonly DependencyProperty property;
+        readonly Binding binding;
+        readonly string message;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="BindingError"/> class.
@@ -24,11 +24,11 @@ namespace Caliburn.Testability
         /// <param name="message">The message.</param>
         public BindingError(IElement item, BoundType type, DependencyProperty property, Binding binding, string message)
         {
-            _element = item;
-            _type = type;
-            _property = property;
-            _binding = binding;
-            _message = message;
+            element = item;
+            this.type = type;
+            this.property = property;
+            this.binding = binding;
+            this.message = message;
         }
 
         /// <summary>
@@ -37,7 +37,7 @@ namespace Caliburn.Testability
         /// <value>The item.</value>
         public IElement Element
         {
-            get { return _element; }
+            get { return element; }
         }
 
         /// <summary>
@@ -46,7 +46,7 @@ namespace Caliburn.Testability
         /// <value>The type.</value>
         public BoundType Type
         {
-            get { return _type; }
+            get { return type; }
         }
 
         /// <summary>
@@ -55,7 +55,7 @@ namespace Caliburn.Testability
         /// <value>The property.</value>
         public DependencyProperty Property
         {
-            get { return _property; }
+            get { return property; }
         }
 
         /// <summary>
@@ -64,7 +64,7 @@ namespace Caliburn.Testability
         /// <value>The binding.</value>
         public Binding Binding
         {
-            get { return _binding; }
+            get { return binding; }
         }
 
         /// <summary>
@@ -73,7 +73,7 @@ namespace Caliburn.Testability
         /// <value>The message.</value>
         public string Message
         {
-            get { return _message; }
+            get { return message; }
         }
     }
 }

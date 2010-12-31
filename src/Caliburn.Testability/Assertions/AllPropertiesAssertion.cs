@@ -14,7 +14,7 @@ namespace Caliburn.Testability.Assertions
     /// <typeparam name="T">A type that implements <see cref="INotifyPropertyChanged"/>.</typeparam>
     public class AllPropertiesAssertion<T> : PropertyAssertionBase<T> where T : class, INotifyPropertyChanged
     {
-        private readonly IList<string> ignored = new List<string>();
+        readonly IList<string> ignored = new List<string>();
 
         /// <summary>
         /// Initializes a new instance of the <see cref="AllPropertiesAssertion&lt;T&gt;"/> class.

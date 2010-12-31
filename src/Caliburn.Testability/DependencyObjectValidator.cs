@@ -10,8 +10,8 @@ namespace Caliburn.Testability
     /// </summary>
     public class DependencyObjectValidator
     {
-        private readonly ElementEnumeratorSettings _settings;
-        private readonly DependencyObjectElement _element;
+        readonly ElementEnumeratorSettings settings;
+        readonly DependencyObjectElement element;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="DependencyObjectValidator"/> class.
@@ -20,8 +20,8 @@ namespace Caliburn.Testability
         /// <param name="element">The element.</param>
         public DependencyObjectValidator(ElementEnumeratorSettings settings, DependencyObjectElement element)
         {
-            _settings = settings;
-            _element = element;
+            this.settings = settings;
+            this.element = element;
         }
 
         /// <summary>
@@ -30,7 +30,7 @@ namespace Caliburn.Testability
         /// <value>The settings.</value>
         public ElementEnumeratorSettings Settings
         {
-            get { return _settings; }
+            get { return settings; }
         }
 
         /// <summary>
@@ -43,12 +43,12 @@ namespace Caliburn.Testability
 
             CheckAmbiguities(elementResult);
 
-            if(_element.Type == null)
+            if(element.Type == null)
             {
                 elementResult.Add(
                     Error.BadDataContext(
-                        _element,
-                        _element.Type,
+                        element,
+                        element.Type,
                         FrameworkElement.DataContextProperty
                         )
                     );
@@ -59,9 +59,9 @@ namespace Caliburn.Testability
                 {
                     if(info.Property.Name == "DataContext")
                     {
-                        if(_element.DataContextCheckType != null)
+                        if(element.DataContextCheckType != null)
                         {
-                            var validatedProperty = _element.DataContextCheckType.ValidateAgainst(_element,
+                            var validatedProperty = element.DataContextCheckType.ValidateAgainst(element,
                                                                                                   info.Property,
                                                                                                   info.Binding);
                             elementResult.Add(validatedProperty);
@@ -69,7 +69,7 @@ namespace Caliburn.Testability
                     }
                     else
                     {
-                        var validatedProperty = _element.Type.ValidateAgainst(_element, info.Property, info.Binding);
+                        var validatedProperty = element.Type.ValidateAgainst(element, info.Property, info.Binding);
                         elementResult.Add(validatedProperty);
                     }
                 }
@@ -84,13 +84,13 @@ namespace Caliburn.Testability
         /// <returns></returns>
         protected IEnumerable<BindingInfo> GetBindings()
         {
-            var enumerator = _element.Element.GetLocalValueEnumerator();
+            var enumerator = element.Element.GetLocalValueEnumerator();
 
             while(enumerator.MoveNext())
             {
                 var entry = enumerator.Current;
 
-                if(!BindingOperations.IsDataBound(_element.Element, entry.Property)) continue;
+                if(!BindingOperations.IsDataBound(element.Element, entry.Property)) continue;
 
                 var expression = entry.Value as BindingExpressionBase;
 
@@ -101,42 +101,42 @@ namespace Caliburn.Testability
             }
         }
 
-        private void CheckAmbiguities(ValidationResult result)
+        void CheckAmbiguities(ValidationResult result)
         {
-            if(_element.Element is ContentControl)
+            if(element.Element is ContentControl)
             {
-                var contentControl = (ContentControl)_element.Element;
+                var contentControl = (ContentControl)element.Element;
 
                 if(contentControl.ContentTemplateSelector != null &&
                    contentControl.ContentTemplate != null)
                 {
                     result.Add(
-                        Error.TemplateSelectorAmbiguity(_element, _element.Type, "ContentTemplate")
+                        Error.TemplateSelectorAmbiguity(element, element.Type, "ContentTemplate")
                         );
                 }
 
-                if(_element.Element is HeaderedContentControl)
+                if(element.Element is HeaderedContentControl)
                 {
-                    var headeredContentControl = (HeaderedContentControl)_element.Element;
+                    var headeredContentControl = (HeaderedContentControl)element.Element;
 
                     if(headeredContentControl.HeaderTemplateSelector != null &&
                        headeredContentControl.HeaderTemplate != null)
                     {
                         result.Add(
-                            Error.TemplateSelectorAmbiguity(_element, _element.Type, "HeaderTemplate")
+                            Error.TemplateSelectorAmbiguity(element, element.Type, "HeaderTemplate")
                             );
                     }
                 }
             }
-            else if(_element.Element is ItemsControl)
+            else if(element.Element is ItemsControl)
             {
-                var itemsControl = (ItemsControl)_element.Element;
+                var itemsControl = (ItemsControl)element.Element;
 
                 if(itemsControl.ItemTemplateSelector != null &&
                    itemsControl.ItemTemplate != null)
                 {
                     result.Add(
-                        Error.TemplateSelectorAmbiguity(_element, _element.Type, "ItemTemplate")
+                        Error.TemplateSelectorAmbiguity(element, element.Type, "ItemTemplate")
                         );
                 }
 
@@ -144,7 +144,7 @@ namespace Caliburn.Testability
                    itemsControl.ItemContainerStyleSelector != null)
                 {
                     result.Add(
-                        Error.StyleSelectorAmbiguity(_element, _element.Type, "ItemContainerStyle")
+                        Error.StyleSelectorAmbiguity(element, element.Type, "ItemContainerStyle")
                         );
                 }
 
@@ -152,19 +152,19 @@ namespace Caliburn.Testability
                    itemsControl.GroupStyleSelector != null)
                 {
                     result.Add(
-                        Error.StyleSelectorAmbiguity(_element, _element.Type, "GroupStyle")
+                        Error.StyleSelectorAmbiguity(element, element.Type, "GroupStyle")
                         );
                 }
 
-                if(_element.Element is HeaderedItemsControl)
+                if(element.Element is HeaderedItemsControl)
                 {
-                    var headeredItemsControl = (HeaderedItemsControl)_element.Element;
+                    var headeredItemsControl = (HeaderedItemsControl)element.Element;
 
                     if(headeredItemsControl.HeaderTemplateSelector != null &&
                        headeredItemsControl.HeaderTemplate != null)
                     {
                         result.Add(
-                            Error.TemplateSelectorAmbiguity(_element, _element.Type, "HeaderTemplate")
+                            Error.TemplateSelectorAmbiguity(element, element.Type, "HeaderTemplate")
                             );
                     }
                 }

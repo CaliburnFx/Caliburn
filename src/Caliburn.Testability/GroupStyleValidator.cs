@@ -5,8 +5,8 @@ namespace Caliburn.Testability
     /// </summary>
     public class GroupStyleValidator
     {
-        private readonly ElementEnumeratorSettings _settings;
-        private readonly GroupStyleElement _element;
+        readonly ElementEnumeratorSettings settings;
+        readonly GroupStyleElement element;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="GroupStyleValidator"/> class.
@@ -15,8 +15,8 @@ namespace Caliburn.Testability
         /// <param name="element">The element.</param>
         public GroupStyleValidator(ElementEnumeratorSettings settings, GroupStyleElement element)
         {
-            _settings = settings;
-            _element = element;
+            this.settings = settings;
+            this.element = element;
         }
 
         /// <summary>
@@ -30,21 +30,21 @@ namespace Caliburn.Testability
             return result;
         }
 
-        private void CheckAmbiguities(ValidationResult result)
+        void CheckAmbiguities(ValidationResult result)
         {
-            if(_element.Style.ContainerStyle != null &&
-               _element.Style.ContainerStyleSelector != null)
+            if(element.Style.ContainerStyle != null &&
+               element.Style.ContainerStyleSelector != null)
             {
                 result.Add(
-                    Error.StyleSelectorAmbiguity(_element, _element.Type, "ContainerStyle")
+                    Error.StyleSelectorAmbiguity(element, element.Type, "ContainerStyle")
                     );
             }
 
-            if(_element.Style.HeaderTemplate != null &&
-               _element.Style.HeaderTemplateSelector != null)
+            if(element.Style.HeaderTemplate != null &&
+               element.Style.HeaderTemplateSelector != null)
             {
                 result.Add(
-                    Error.TemplateSelectorAmbiguity(_element, _element.Type, "HeaderTemplate")
+                    Error.TemplateSelectorAmbiguity(element, element.Type, "HeaderTemplate")
                     );
             }
         }

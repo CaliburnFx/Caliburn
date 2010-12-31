@@ -5,7 +5,7 @@ namespace Caliburn.Testability
     /// </summary>
     public class DataTemplateValidator : DependencyObjectValidator
     {
-        private readonly DataTemplateElement _element;
+        readonly DataTemplateElement element;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="DataTemplateValidator"/> class.
@@ -15,7 +15,7 @@ namespace Caliburn.Testability
         public DataTemplateValidator(ElementEnumeratorSettings settings, DataTemplateElement element)
             : base(settings, element)
         {
-            _element = element;
+            this.element = element;
         }
 
         /// <summary>
@@ -26,9 +26,9 @@ namespace Caliburn.Testability
         {
             var result = base.ValidateBindings();
 
-            if(_element.Type != null)
+            if(element.Type != null)
             {
-                var triggerValidator = new TriggerValidator(_element.Type, _element, _element.DataTemplate.Triggers);
+                var triggerValidator = new TriggerValidator(element.Type, element, element.DataTemplate.Triggers);
                 result.Add(triggerValidator.ValidateBindings());
             }
 

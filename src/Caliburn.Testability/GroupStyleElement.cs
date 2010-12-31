@@ -9,9 +9,9 @@
     /// </summary>
 	public class GroupStyleElement : IBoundElement
     {
-        private readonly GroupStyle _style;
-        private readonly BoundType _type;
-        private readonly string _name;
+        readonly GroupStyle style;
+        readonly BoundType type;
+        readonly string name;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="StyleElement"/> class.
@@ -21,9 +21,9 @@
         /// <param name="name">The name.</param>
         internal GroupStyleElement(GroupStyle style, BoundType boundType, string name)
         {
-            _style = style;
-            _type = boundType;
-            _name = name + " [GroupStyle] ";
+            this.style = style;
+            type = boundType;
+            this.name = name + " [GroupStyle] ";
         }
 
         /// <summary>
@@ -32,7 +32,7 @@
         /// <value>The name.</value>
         public string Name
         {
-            get { return _name; }
+            get { return name; }
         }
 
         /// <summary>
@@ -41,7 +41,7 @@
         /// <value>The type.</value>
         public BoundType Type
         {
-            get { return _type; }
+            get { return type; }
         }
 
         /// <summary>
@@ -50,7 +50,7 @@
         /// <value>The style.</value>
         public GroupStyle Style
         {
-            get { return _style; }
+            get { return style; }
         }
 
         /// <summary>
@@ -61,22 +61,22 @@
         {
             if(Type == null) yield break;
 
-            if(_style.ContainerStyle != null)
+            if(style.ContainerStyle != null)
             {
-                var target = _style.ContainerStyle.TargetType != null
-                                 ? new BoundType(_style.ContainerStyle.TargetType)
+                var target = style.ContainerStyle.TargetType != null
+                                 ? new BoundType(style.ContainerStyle.TargetType)
                                  : new BoundType(typeof(GroupItem));
 
-                yield return Bound.Style(_style.ContainerStyle, target, Name);
+                yield return Bound.Style(style.ContainerStyle, target, Name);
             }
 
-            if(_style.HeaderTemplate != null)
+            if(style.HeaderTemplate != null)
             {
-                var target = _style.HeaderTemplate.DataType as Type != null
-                                 ? new BoundType(_style.HeaderTemplate.DataType as Type)
+                var target = style.HeaderTemplate.DataType as Type != null
+                                 ? new BoundType(style.HeaderTemplate.DataType as Type)
                                  : new BoundType(typeof(GroupItem));
 
-                yield return Bound.DataTemplate(_style.HeaderTemplate, target, Name);
+                yield return Bound.DataTemplate(style.HeaderTemplate, target, Name);
             }
         }
 

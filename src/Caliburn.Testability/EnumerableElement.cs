@@ -8,9 +8,9 @@
     /// </summary>
 	public class EnumerableElement : IBoundElement
     {
-        private readonly IEnumerable _enumerable;
-        private readonly BoundType _type;
-        private readonly string _name;
+        readonly IEnumerable enumerable;
+        readonly BoundType type;
+        readonly string name;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="EnumerableElement"/> class.
@@ -20,9 +20,9 @@
         /// <param name="name">The name.</param>
         internal EnumerableElement(IEnumerable enumerable, BoundType boundType, string name)
         {
-            _enumerable = enumerable;
-            _type = boundType;
-            _name = name;
+            this.enumerable = enumerable;
+            type = boundType;
+            this.name = name;
         }
 
         /// <summary>
@@ -31,7 +31,7 @@
         /// <value>The name.</value>
         public string Name
         {
-            get { return _name; }
+            get { return name; }
         }
 
         /// <summary>
@@ -40,7 +40,7 @@
         /// <value>The type.</value>
         public BoundType Type
         {
-            get { return _type; }
+            get { return type; }
         }
 
         /// <summary>
@@ -51,7 +51,7 @@
         /// <value>The children.</value>
         public IEnumerable<IElement> GetChildren(ElementEnumeratorSettings settings)
         {
-            foreach(var item in _enumerable)
+            foreach(var item in enumerable)
             {
                 var element = settings.GetBoundProperty(item, Type, Name);
                 if(element != null) yield return element;

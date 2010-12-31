@@ -5,9 +5,9 @@ namespace Caliburn.Testability
     /// </summary>
     public class ValidationVisitor : IElementVisitor
     {
-        private ElementEnumeratorSettings _settings;
-        private ValidationResult _result;
-        private bool _shouldStopVisiting;
+        ElementEnumeratorSettings settings;
+        ValidationResult result;
+        bool shouldStopVisiting;
 
         /// <summary>
         /// Prepares the specified settings.
@@ -15,8 +15,8 @@ namespace Caliburn.Testability
         /// <param name="settings">The settings.</param>
         public void Prepare(ElementEnumeratorSettings settings)
         {
-            _settings = settings;
-            _result = new ValidationResult();
+            this.settings = settings;
+            result = new ValidationResult();
         }
 
         /// <summary>
@@ -25,7 +25,7 @@ namespace Caliburn.Testability
         /// <value><c>true</c> if visiting should stop; otherwise, <c>false</c>.</value>
         public bool ShouldStopVisiting
         {
-            get { return _shouldStopVisiting; }
+            get { return shouldStopVisiting; }
         }
 
         /// <summary>
@@ -34,7 +34,7 @@ namespace Caliburn.Testability
         /// <value>The result.</value>
         public ValidationResult Result
         {
-            get { return _result; }
+            get { return result; }
         }
 
         /// <summary>
@@ -44,7 +44,7 @@ namespace Caliburn.Testability
         public void Visit(DependencyObjectElement element)
         {
             HandleResult(
-                new DependencyObjectValidator(_settings, element)
+                new DependencyObjectValidator(settings, element)
                     .ValidateBindings()
                 );
         }
@@ -56,7 +56,7 @@ namespace Caliburn.Testability
         public void Visit(StyleElement element)
         {
             HandleResult(
-                new StyleValidator(_settings, element)
+                new StyleValidator(settings, element)
                     .ValidateBindings()
                 );
         }
@@ -68,7 +68,7 @@ namespace Caliburn.Testability
         public void Visit(GroupStyleElement element)
         {
             HandleResult(
-                new GroupStyleValidator(_settings, element)
+                new GroupStyleValidator(settings, element)
                     .ValidateBindings()
                 );
         }
@@ -80,7 +80,7 @@ namespace Caliburn.Testability
         public void Visit(DataTemplateElement element)
         {
             HandleResult(
-                new DataTemplateValidator(_settings, element)
+                new DataTemplateValidator(settings, element)
                     .ValidateBindings()
                 );
         }
@@ -92,17 +92,17 @@ namespace Caliburn.Testability
         public void Visit(ControlTemplateElement element)
         {
             HandleResult(
-                new ControlTemplateValidator(_settings, element)
+                new ControlTemplateValidator(settings, element)
                     .ValidateBindings()
                 );
         }
 
-        private void HandleResult(ValidationResult validationResult)
+        void HandleResult(ValidationResult validationResult)
         {
-            _result.Add(validationResult);
+            result.Add(validationResult);
 
-            if(_settings.StopAfterFirstError && _result.HasErrors)
-                _shouldStopVisiting = true;
+            if(settings.StopAfterFirstError && result.HasErrors)
+                shouldStopVisiting = true;
         }
     }
 }

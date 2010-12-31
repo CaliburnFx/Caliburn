@@ -8,8 +8,8 @@
     /// </summary>
     public class ValidationResult
     {
-        private readonly List<ValidatedProperty> _validatedProperties = new List<ValidatedProperty>();
-        private readonly List<IError> _errors = new List<IError>();
+        readonly List<ValidatedProperty> validatedProperties = new List<ValidatedProperty>();
+        readonly List<IError> errors = new List<IError>();
 
         /// <summary>
         /// Gets a value indicating whether this instance has errors.
@@ -30,9 +30,9 @@
         {
             get
             {
-                return (from prop in _validatedProperties
+                return (from prop in validatedProperties
                         where prop.HasError
-                        select prop.Error).Concat(_errors);
+                        select prop.Error).Concat(errors);
             }
         }
 
@@ -53,7 +53,7 @@
         {
             get
             {
-                return from prop in _validatedProperties
+                return from prop in validatedProperties
                        where !prop.HasError && !string.IsNullOrEmpty(prop.FullPath)
                        select prop.FullPath;
             }
@@ -65,7 +65,7 @@
         /// <param name="validatedProperty">The validated property.</param>
         public void Add(ValidatedProperty validatedProperty)
         {
-            _validatedProperties.Add(validatedProperty);
+            validatedProperties.Add(validatedProperty);
         }
 
         /// <summary>
@@ -74,8 +74,8 @@
         /// <param name="validationResult">The validation result.</param>
         public void Add(ValidationResult validationResult)
         {
-            _validatedProperties.AddRange(validationResult._validatedProperties);
-            _errors.AddRange(validationResult._errors);
+            validatedProperties.AddRange(validationResult.validatedProperties);
+            errors.AddRange(validationResult.errors);
         }
 
         /// <summary>
@@ -84,7 +84,7 @@
         /// <param name="error">The error.</param>
         public void Add(IError error)
         {
-            _errors.Add(error);
+            errors.Add(error);
         }
 
         /// <summary>

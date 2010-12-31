@@ -7,7 +7,7 @@ namespace Caliburn.Testability
     /// </summary>
     public class DataTemplateElement : DependencyObjectElement
     {
-        private readonly DataTemplate _dataTemplate;
+        readonly DataTemplate dataTemplate;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="DataTemplateElement"/> class.
@@ -26,10 +26,10 @@ namespace Caliburn.Testability
         internal DataTemplateElement(DataTemplate dataTemplate, BoundType boundType, string baseName)
             : base(dataTemplate.LoadContent(), boundType)
         {
-            _dataTemplate = dataTemplate;
+            this.dataTemplate = dataTemplate;
 
-            if(_dataTemplate.DataTemplateKey != null)
-                BaseName = baseName + " [DataTemplate " + _dataTemplate.DataTemplateKey + "] ";
+            if(this.dataTemplate.DataTemplateKey != null)
+                BaseName = baseName + " [DataTemplate " + this.dataTemplate.DataTemplateKey + "] ";
 
             else BaseName = baseName + " [DataTemplate] ";
         }
@@ -40,7 +40,7 @@ namespace Caliburn.Testability
         /// <value>The data template.</value>
         public DataTemplate DataTemplate
         {
-            get { return _dataTemplate; }
+            get { return dataTemplate; }
         }
 
         /// <summary>

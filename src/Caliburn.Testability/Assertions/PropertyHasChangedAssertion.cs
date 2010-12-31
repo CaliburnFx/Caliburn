@@ -15,20 +15,19 @@
     public class PropertyHasChangedAssertion<T, K>
         where T : INotifyPropertyChanged
     {
-        private readonly T _owner;
-        private readonly Expression<Func<T, K>> _property;
-        private bool _isValidAssertion;
+        readonly T owner;
+        readonly Expression<Func<T, K>> property;
+        bool isValidAssertion;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="PropertyHasChangedAssertion&lt;T, K&gt;"/> class.
         /// </summary>
         /// <param name="owner">The owner.</param>
         /// <param name="property">The property.</param>
-        public PropertyHasChangedAssertion(T owner,
-                                           Expression<Func<T, K>> property)
+        public PropertyHasChangedAssertion(T owner, Expression<Func<T, K>> property)
         {
-            _owner = owner;
-            _property = property;
+            this.owner = owner;
+            this.property = property;
         }
 
         /// <summary>
@@ -37,12 +36,12 @@
         /// <param name="affectProperty">The affect property.</param>
         public void When(Action affectProperty)
         {
-            _isValidAssertion = true;
+            isValidAssertion = true;
             bool notification_was_raised = false;
 
-            PropertyInfo property_info = _property.GetPropertyInfo();
+            PropertyInfo property_info = property.GetPropertyInfo();
 
-            _owner.PropertyChanged += (s, e) =>{
+            owner.PropertyChanged += (s, e) =>{
                 if(e.PropertyName == property_info.Name)
                     notification_was_raised = true;
             };
@@ -62,7 +61,7 @@
         /// </summary>
         ~PropertyHasChangedAssertion()
         {
-            if(!_isValidAssertion)
+            if(!isValidAssertion)
                 throw new Exception(
                     "No context was provided to test the notification, use When(Action affectProperty) to provide a context.");
         }

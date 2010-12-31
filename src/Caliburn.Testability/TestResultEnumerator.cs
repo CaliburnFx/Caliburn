@@ -8,7 +8,7 @@
     /// </summary>
     public class TestResultEnumerator
     {
-        private readonly IEnumerator<IResult> _enumerator;
+        readonly IEnumerator<IResult> enumerator;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="TestResultEnumerator"/> class.
@@ -16,7 +16,7 @@
         /// <param name="enumerator">The enumerator.</param>
         public TestResultEnumerator(IEnumerable<IResult> enumerator)
         {
-            _enumerator = enumerator.GetEnumerator();
+            this.enumerator = enumerator.GetEnumerator();
         }
 
         /// <summary>
@@ -27,8 +27,8 @@
         public T Next<T>()
             where T : IResult
         {
-            if(_enumerator.MoveNext())
-                return (T)_enumerator.Current;
+            if(enumerator.MoveNext())
+                return (T)enumerator.Current;
             return default(T);
         }
     }

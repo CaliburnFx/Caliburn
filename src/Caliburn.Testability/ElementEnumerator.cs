@@ -7,8 +7,8 @@ namespace Caliburn.Testability
     /// </summary>
     public class ElementEnumerator
     {
-        private readonly IElement _element;
-        private readonly ElementEnumeratorSettings _settings;
+        readonly IElement element;
+        readonly ElementEnumeratorSettings settings;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ElementEnumerator"/> class.
@@ -16,8 +16,8 @@ namespace Caliburn.Testability
         /// <param name="element">The element.</param>
         public ElementEnumerator(IElement element)
         {
-            _element = element;
-            _settings = new ElementEnumeratorSettings();
+            this.element = element;
+            settings = new ElementEnumeratorSettings();
         }
 
         /// <summary>
@@ -26,7 +26,7 @@ namespace Caliburn.Testability
         /// <value>The settings.</value>
         public ElementEnumeratorSettings Settings
         {
-            get { return _settings; }
+            get { return settings; }
         }
 
         /// <summary>
@@ -35,10 +35,10 @@ namespace Caliburn.Testability
         /// <param name="visitor">The visitor.</param>
         public void Enumerate(IElementVisitor visitor)
         {
-            visitor.Prepare(_settings);
+            visitor.Prepare(settings);
 
             var queue = new Queue<IElement>();
-            queue.Enqueue(_element);
+            queue.Enqueue(element);
 
             while(queue.Count > 0)
             {
@@ -48,7 +48,7 @@ namespace Caliburn.Testability
 
                 if(visitor.ShouldStopVisiting) break;
 
-                foreach(var dataBound in current.GetChildren(_settings))
+                foreach(var dataBound in current.GetChildren(settings))
                 {
                     queue.Enqueue(dataBound);
                 }

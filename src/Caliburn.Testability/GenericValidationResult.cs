@@ -17,7 +17,7 @@ namespace Caliburn.Testability
         /// <returns></returns>
         public bool WasBoundTo<K>(Expression<Func<T, K>> property)
         {
-			string propertyPath = ExpressionHelper.GetPathFromExpression(property);
+			var propertyPath = ExpressionHelper.GetPathFromExpression(property);
             return WasBoundTo(propertyPath);
         }
 
@@ -76,7 +76,5 @@ namespace Caliburn.Testability
                     )
                 );
         }
-
-      
     }
 }

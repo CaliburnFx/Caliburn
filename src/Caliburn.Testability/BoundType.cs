@@ -13,9 +13,9 @@ namespace Caliburn.Testability
 	/// </summary>
 	public class BoundType
 	{
-		private Type _type;
-		private string _basePath;
-		private IDictionary<string, Type> _hints;
+		Type type;
+		string basePath;
+	    readonly IDictionary<string, Type> hints;
 
 		/// <summary>
 		/// Initializes a new instance of the <see cref="BoundType"/> class.
@@ -41,9 +41,9 @@ namespace Caliburn.Testability
 		/// /// <param name="hints">Hints propagated from parent.</param>
 		public BoundType(Type type, string basePath, IDictionary<string, Type> hints)
 		{
-			_type = type;
-			_basePath = basePath;
-			_hints = hints;
+			this.type = type;
+			this.basePath = basePath;
+			this.hints = hints;
 		}
 
 		/// <summary>
@@ -52,7 +52,7 @@ namespace Caliburn.Testability
 		/// <value>The type.</value>
 		public Type Type
 		{
-			get { return _type; }
+			get { return type; }
 		}
 
         /// <summary>
@@ -61,13 +61,13 @@ namespace Caliburn.Testability
         /// <param name="propertyPath">The property path.</param>
         /// <param name="hint">The hint.</param>
 		public void AddHint(string propertyPath, Type hint) {
-			if (_hints.ContainsKey(propertyPath))
-				throw new Caliburn.Core.CaliburnException(string.Format("Hint for path '{0}' was already added", propertyPath));
+			if (hints.ContainsKey(propertyPath))
+				throw new Core.CaliburnException(string.Format("Hint for path '{0}' was already added", propertyPath));
 
 			//TODO: validate path part names
 			//TODO: validate hint congruency with reflected property type 
 
-			_hints.Add(propertyPath, hint);
+			hints.Add(propertyPath, hint);
 		}
 
 		/// <summary>
@@ -84,15 +84,15 @@ namespace Caliburn.Testability
 			if (PathIsBinding(propertyPath))
 			{
 				return new ValidatedProperty(
-					AreCompatibleTypes(element, boundProperty, _type, binding),
+					AreCompatibleTypes(element, boundProperty, type, binding),
 					GetFullPath(propertyPath)
 					);
 			}
 
 			if (propertyPath == "/")
 			{
-				_type = DeriveTypeOfCollection(_type);
-				_basePath += "/";
+				type = DeriveTypeOfCollection(type);
+				basePath += "/";
 
 				return new ValidatedProperty(
 					null,
@@ -130,8 +130,8 @@ namespace Caliburn.Testability
 			return associationType != null ? new BoundType(associationType, propertyPath, GetHintsToPropagate()) : null;
 		}
 
-		private IDictionary<string, Type> GetHintsToPropagate() {
-			return _hints
+		IDictionary<string, Type> GetHintsToPropagate() {
+			return hints
 				.Select(pair => new KeyValuePair<string, Type>(
 						StripLeadingPathPart(pair.Key),
 						pair.Value
@@ -139,7 +139,8 @@ namespace Caliburn.Testability
 				.Where(pair => !string.IsNullOrEmpty(pair.Key))
 				.ToDictionary(pair => pair.Key, pair => pair.Value); 
 		}
-		private string StripLeadingPathPart(string propertyPath) {
+
+		string StripLeadingPathPart(string propertyPath) {
 			var dotIndex = propertyPath.IndexOf('.');
 			if (dotIndex < 0) return null;
 			return propertyPath.Substring(dotIndex + 1);
@@ -152,7 +153,7 @@ namespace Caliburn.Testability
 		/// <returns></returns>
 		public Type GetPropertyType(string propertyPath) 
 		{
-			var currentType = _type;
+			var currentType = type;
 			var currentPrefixForHintLookup = string.Empty;
 		 
 			for (int i = 0; i < propertyPath.Length; i++)
@@ -186,7 +187,7 @@ namespace Caliburn.Testability
 					}
 
 					Type hint;
-					if (_hints.TryGetValue(currentPrefixForHintLookup + propertyName, out hint))
+					if (hints.TryGetValue(currentPrefixForHintLookup + propertyName, out hint))
 					{
 						currentType = hint;
 					}
@@ -212,7 +213,7 @@ namespace Caliburn.Testability
 			return currentType;
 		}
 
-		private static bool IsCharValidInPropertyName(char c)
+		static bool IsCharValidInPropertyName(char c)
 		{
 			return Char.IsLetterOrDigit(c) || c == '_';
 		}
@@ -222,7 +223,7 @@ namespace Caliburn.Testability
 		/// </summary>
 		/// <param name="collection">The collection.</param>
 		/// <returns></returns>
-		private static Type DeriveTypeOfCollection(Type collection)
+		static Type DeriveTypeOfCollection(Type collection)
 		{
 			return (from i in collection.GetInterfaces()
 					where typeof(IEnumerable).IsAssignableFrom(i)
@@ -236,7 +237,7 @@ namespace Caliburn.Testability
 		/// <param name="propertyName">Name of the property.</param>
 		/// <param name="type">The type.</param>
 		/// <returns></returns>
-		private static PropertyInfo GetInterfaceProperty(string propertyName, Type type)
+		static PropertyInfo GetInterfaceProperty(string propertyName, Type type)
 		{
 			var interfaces = type.GetInterfaces();
 			foreach (var t in interfaces)
@@ -248,24 +249,23 @@ namespace Caliburn.Testability
 			return null;
 		}
 
-		private string GetFullPath(string propertyPath)
+		string GetFullPath(string propertyPath)
 		{
-			if (string.IsNullOrEmpty(_basePath))
+			if (string.IsNullOrEmpty(basePath))
 				return propertyPath;
 
-			if (_basePath.EndsWith("/") || propertyPath.StartsWith("/"))
-				return (_basePath + propertyPath).Replace("//", "/");
+			if (basePath.EndsWith("/") || propertyPath.StartsWith("/"))
+				return (basePath + propertyPath).Replace("//", "/");
 
-			return _basePath + "." + propertyPath;
+			return basePath + "." + propertyPath;
 		}
 
-		private bool PathIsBinding(string propertyPath)
+		bool PathIsBinding(string propertyPath)
 		{
 			return string.IsNullOrEmpty(propertyPath) || propertyPath == ".";
 		}
 
-		private IError AreCompatibleTypes(IElement element, DependencyProperty boundProperty, Type propertyType,
-										  Binding binding)
+		IError AreCompatibleTypes(IElement element, DependencyProperty boundProperty, Type propertyType, Binding binding)
 		{
 			if (boundProperty == null) return null;
 
@@ -277,7 +277,4 @@ namespace Caliburn.Testability
 			return null;
 		}
 	}
-
-
- 
 }

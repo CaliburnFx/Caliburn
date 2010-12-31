@@ -19,8 +19,7 @@
         /// <param name="propertyOwner">The property owner.</param>
         /// <param name="property">The property.</param>
         /// <returns></returns>
-        public static SinglePropertyAssertion<T, K> AssertThatProperty<T, K>(this T propertyOwner,
-                                                                             Expression<Func<T, K>> property)
+        public static SinglePropertyAssertion<T, K> AssertThatProperty<T, K>(this T propertyOwner, Expression<Func<T, K>> property)
             where T : class, INotifyPropertyChanged
         {
             return new SinglePropertyAssertion<T, K>(propertyOwner, property);
@@ -61,9 +60,7 @@
         /// <param name="propertyOwner">The property owner.</param>
         /// <param name="property">The property of interest.</param>
         /// <returns></returns>
-        public static PropertyHasChangedAssertion<T, K> AssertThatChangeNotificationIsRaisedBy<T, K>(
-            this T propertyOwner,
-            Expression<Func<T, K>> property)
+        public static PropertyHasChangedAssertion<T, K> AssertThatChangeNotificationIsRaisedBy<T, K>(this T propertyOwner, Expression<Func<T, K>> property)
             where T : INotifyPropertyChanged
         {
             return new PropertyHasChangedAssertion<T, K>(propertyOwner, property);

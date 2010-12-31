@@ -8,9 +8,9 @@ namespace Caliburn.Testability
     /// </summary>
     public class TriggerValidator
     {
-        private readonly IElement item;
-        private readonly BoundType _type;
-        private readonly TriggerCollection _triggers;
+        readonly IElement item;
+        readonly BoundType type;
+        readonly TriggerCollection triggers;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="TriggerValidator"/> class.
@@ -21,8 +21,8 @@ namespace Caliburn.Testability
         public TriggerValidator(BoundType type, IElement item, TriggerCollection triggers)
         {
             this.item = item;
-            _type = type;
-            _triggers = triggers;
+            this.type = type;
+            this.triggers = triggers;
         }
 
         /// <summary>
@@ -31,7 +31,7 @@ namespace Caliburn.Testability
         /// <value>The type.</value>
         public BoundType Type
         {
-            get { return _type; }
+            get { return type; }
         }
 
         /// <summary>
@@ -49,7 +49,7 @@ namespace Caliburn.Testability
         /// <value>The triggers.</value>
         public TriggerCollection Triggers
         {
-            get { return _triggers; }
+            get { return triggers; }
         }
 
         /// <summary>
@@ -69,9 +69,9 @@ namespace Caliburn.Testability
             return result;
         }
 
-        private IEnumerable<BindingInfo> GetBindings()
+        IEnumerable<BindingInfo> GetBindings()
         {
-            foreach(var trigger in _triggers)
+            foreach(var trigger in triggers)
             {
                 var dataTrigger = trigger as DataTrigger;
 
