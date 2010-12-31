@@ -12,15 +12,15 @@
     /// </summary>
     public class FilterManager : IFilterManager
     {
-        private readonly Type targetType;
-        private readonly MemberInfo memberInfo;
-        private readonly IServiceLocator serviceLocator;
+        readonly Type targetType;
+        readonly MemberInfo memberInfo;
+        readonly IServiceLocator serviceLocator;
 
-        private IPreProcessor[] preExecute;
-        private IPreProcessor[] triggerEffects;
-        private IPostProcessor[] postExecute;
-        private IHandlerAware[] handlerAware;
-        private IRescue[] rescues;
+        IPreProcessor[] preExecute;
+        IPreProcessor[] triggerEffects;
+        IPostProcessor[] postExecute;
+        IHandlerAware[] handlerAware;
+        IRescue[] rescues;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="FilterManager"/> class.
@@ -135,19 +135,19 @@
             if (initializable != null)
                 initializable.Initialize(targetType, memberInfo, serviceLocator);
 
-            TryAdd(ref this.preExecute, filter);
+            TryAdd(ref preExecute, filter);
             TryAdd(ref postExecute, filter);
             TryAdd(ref handlerAware, filter);
             TryAdd(ref rescues, filter);
 
-            var preExecute = filter as IPreProcessor;
-            if(preExecute == null) return;
+            var pre = filter as IPreProcessor;
+            if(pre == null) return;
 
-            if(preExecute.AffectsTriggers)
+            if(pre.AffectsTriggers)
                 TryAdd(ref triggerEffects, filter);
         }
 
-        private static void TryAdd<T>(ref T[] array, IFilter filter)
+        static void TryAdd<T>(ref T[] array, IFilter filter)
         {
             if(!(filter is T)) return;
 

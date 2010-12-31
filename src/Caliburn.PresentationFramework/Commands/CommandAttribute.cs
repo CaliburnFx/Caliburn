@@ -8,13 +8,10 @@
     /// </summary>
     public class CommandAttribute : Attribute, IComponentMetadata
     {
-        /// <summary>
-        /// The suffix that is removed from the class name when registering by Key with the container.
-        /// </summary>
-        public static string CommandNameSuffix = "Command";
+        internal static string CommandNameSuffix = "Command";
 
-        private readonly string _name;
-        private string _executeMethod = "Execute";
+        readonly string name;
+        string executeMethod = "Execute";
 
         /// <summary>
         /// Initializes a new instance of the <see cref="CommandAttribute"/> class.
@@ -27,7 +24,7 @@
         /// <param name="name">The name to use when registering the command with the container.</param>
         public CommandAttribute(string name)
         {
-            _name = name;
+            this.name = name;
         }
 
         /// <summary>
@@ -36,8 +33,8 @@
         /// <value>The execute method.</value>
         public string ExecuteMethod
         {
-            get { return _executeMethod; }
-            set { _executeMethod = value; }
+            get { return executeMethod; }
+            set { executeMethod = value; }
         }
 
         /// <summary>
@@ -56,7 +53,7 @@
         /// <param name="commandType">The command type.</param>
         /// <returns>The command name.</returns>
 		public string GetCommandName(Type commandType) {
-			return _name ?? InferCommandName(commandType);
+			return name ?? InferCommandName(commandType);
 		}
 
         /// <summary>

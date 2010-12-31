@@ -12,11 +12,11 @@ namespace Caliburn.PresentationFramework.Conventions
     public class DefaultElementConvention<T> : IElementConvention
         where T : DependencyObject
     {
-        private readonly string defaultEventName;
-        private readonly Action<T, object> setter;
-        private readonly Func<T, object> getter;
-        private readonly DependencyProperty bindableProperty;
-        private readonly Func<T, DependencyProperty, DependencyProperty> ensureBindableProperty;
+        readonly string defaultEventName;
+        readonly Action<T, object> setter;
+        readonly Func<T, object> getter;
+        readonly DependencyProperty bindableProperty;
+        readonly Func<T, DependencyProperty, DependencyProperty> ensureBindableProperty;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="DefaultElementConvention&lt;T&gt;"/> class.

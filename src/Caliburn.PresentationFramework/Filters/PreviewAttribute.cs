@@ -14,7 +14,7 @@
 	[AttributeUsage(AttributeTargets.Method, AllowMultiple = true)]
 	public class PreviewAttribute : MethodCallFilterBase, IPreProcessor, IHandlerAware
 	{
-		private IMethodFactory methodFactory;
+		IMethodFactory methodFactory;
 
 		/// <summary>
 		/// Initializes a new instance of the <see cref="PreviewAttribute"/> class.

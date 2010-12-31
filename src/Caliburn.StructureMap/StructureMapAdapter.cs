@@ -30,6 +30,7 @@
             this.container.Configure(reg => reg.For<IServiceLocator>().Add(this));
             this.container.Configure(reg => reg.For<IRegistry>().Add(this));
             this.container.Configure(reg => reg.For<IContainer>().Add(this));
+            this.container.Configure(reg => reg.For<IBuilder>().Add(this));
             this.container.Configure(reg => reg.For<global::StructureMap.IContainer>().Add(this.container));
 
             AddRegistrationHandler<Singleton>(HandleSingleton);

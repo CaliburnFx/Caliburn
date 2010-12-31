@@ -17,13 +17,13 @@ namespace Caliburn.PresentationFramework.Conventions
     /// </summary>
     public class ItemsControlBindingConvention : ViewConventionBase<PropertyInfo>
     {
-        private static readonly ILog Log = LogManager.GetLog(typeof(ItemsControlBindingConvention));
+        static readonly ILog Log = LogManager.GetLog(typeof(ItemsControlBindingConvention));
 
-        private static readonly Type ItemsControlType = typeof(ItemsControl);
-        private static readonly Type SelectorControlType = typeof(Selector);
+        static readonly Type ItemsControlType = typeof(ItemsControl);
+        static readonly Type SelectorControlType = typeof(Selector);
 
 #if !SILVERLIGHT
-        private static readonly Type HeaderedItemsControlType = typeof(HeaderedItemsControl);
+        static readonly Type HeaderedItemsControlType = typeof(HeaderedItemsControl);
 #endif
         /// <summary>
         /// Creates the application of the convention.
@@ -106,7 +106,7 @@ namespace Caliburn.PresentationFramework.Conventions
                 );
         }
 
-        private static bool ShouldCheckTemplate(PropertyInfo property)
+        static bool ShouldCheckTemplate(PropertyInfo property)
         {
             return !property.PropertyType.IsValueType &&
                 !typeof(string).IsAssignableFrom(property.PropertyType);

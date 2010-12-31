@@ -12,8 +12,8 @@
     /// </summary>
     public class EventMonitor
     {
-        readonly IRoutedMessageHandler _messageHandler;
-        readonly IList<IMessageTrigger> _triggersToNotify;
+        readonly IRoutedMessageHandler messageHandler;
+        readonly IList<IMessageTrigger> triggersToNotify;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="EventMonitor"/> class.
@@ -22,8 +22,8 @@
         /// <param name="eventInfo">The event info.</param>
         internal EventMonitor(IRoutedMessageHandler messageHandler, EventInfo eventInfo)
         {
-            _messageHandler = messageHandler;
-            _triggersToNotify = new List<IMessageTrigger>();
+            this.messageHandler = messageHandler;
+            triggersToNotify = new List<IMessageTrigger>();
 
             EventHelper.WireEvent(messageHandler.Unwrap(), eventInfo, ChangedEventHandler);
         }
@@ -51,17 +51,17 @@
         public void ChangedEventHandler(object sender, EventArgs e)
         {
             Execute.OnUIThread(() =>{
-                foreach(var messageTrigger in _triggersToNotify)
+                foreach(var messageTrigger in triggersToNotify)
                 {
-                    _messageHandler.UpdateAvailability(messageTrigger);
+                    messageHandler.UpdateAvailability(messageTrigger);
                 }
             });
         }
 
         internal void MakeAwareOf(IMessageTrigger trigger)
         {
-            if(!_triggersToNotify.Contains(trigger))
-                _triggersToNotify.Add(trigger);
+            if(!triggersToNotify.Contains(trigger))
+                triggersToNotify.Add(trigger);
         }
     }
 }

@@ -22,7 +22,7 @@ namespace Caliburn.PresentationFramework.Commands
     [ContentProperty("Parameters")]
     public class CommandMessage : Freezable, IRoutedMessageWithOutcome, IRoutedMessageHandler
     {
-        private static readonly ILog Log = LogManager.GetLog(typeof(CommandMessage));
+        static readonly ILog Log = LogManager.GetLog(typeof(CommandMessage));
 
         /// <summary>
         /// Represents the parameters of a command message.
@@ -75,7 +75,7 @@ namespace Caliburn.PresentationFramework.Commands
                 typeof(CommandMessage)
                 );
 
-        private static void CommandChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        static void CommandChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
             if(e.NewValue != e.OldValue && e.NewValue != null)
             {
@@ -84,12 +84,12 @@ namespace Caliburn.PresentationFramework.Commands
             }
         }
 
-        private IInteractionNode source;
-        private readonly IViewModelDescriptionFactory factory;
+        IInteractionNode source;
+        readonly IViewModelDescriptionFactory factory;
 
-        private ActionMessage actionMessage;
-        private IAction action;
-        private IList<object> metadata;
+        ActionMessage actionMessage;
+        IAction action;
+        IList<object> metadata;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="CommandMessage"/> class.
@@ -142,7 +142,7 @@ namespace Caliburn.PresentationFramework.Commands
         /// </summary>
         public event EventHandler Completed = delegate { };
 
-        private void OnCompleted()
+        void OnCompleted()
         {
             Completed(this, EventArgs.Empty);
         }
@@ -329,7 +329,7 @@ namespace Caliburn.PresentationFramework.Commands
             return ReferenceEquals(this, other);
         }
 
-        private void TryUpdateParentAvailability(bool isAvailable)
+        void TryUpdateParentAvailability(bool isAvailable)
         {
             var parent = ParentCommand ?? Commands.Command.GetParent(Source.UIElement);
             if(parent != null)
@@ -339,7 +339,7 @@ namespace Caliburn.PresentationFramework.Commands
             }
         }
 
-        private void CreateActionMessage()
+        void CreateActionMessage()
         {
             string methodName = "Execute";
 
@@ -365,7 +365,7 @@ namespace Caliburn.PresentationFramework.Commands
             }
         }
 
-        private void CreateAction()
+        void CreateAction()
         {
             var host = factory.Create(Command.GetType());
 

@@ -13,7 +13,7 @@
     /// </summary>
     public class GestureTriggerParser : ITriggerParser
     {
-        private static readonly ILog Log = LogManager.GetLog(typeof(GestureMessageTrigger));
+        static readonly ILog Log = LogManager.GetLog(typeof(GestureMessageTrigger));
 
         /// <summary>
         /// Parses the specified trigger text.

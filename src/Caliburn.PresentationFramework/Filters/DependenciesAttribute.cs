@@ -17,9 +17,9 @@
     [AttributeUsage(AttributeTargets.Method | AttributeTargets.Property, AllowMultiple = false)]
     public class DependenciesAttribute : Attribute, IHandlerAware, IInitializable
     {
-        private readonly string[] dependencies;
-        private MemberInfo target;
-        private IMethodFactory methodFactory;
+        readonly string[] dependencies;
+        MemberInfo target;
+        IMethodFactory methodFactory;
 
         /// <summary>
         /// Gets the priority used to order filters.

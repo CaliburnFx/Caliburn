@@ -10,10 +10,10 @@ namespace Caliburn.PresentationFramework.Filters
 	/// </summary>
 	public class DependencyObserver
 	{
-		private readonly IRoutedMessageHandler _messageHandler;
-		private readonly IMethodFactory _methodFactory;
-		private readonly INotifyPropertyChanged _notifier;
-		private readonly IDictionary<string, SinglePropertyPathObserver> _singlePathObservers;
+		readonly IRoutedMessageHandler messageHandler;
+		readonly IMethodFactory methodFactory;
+		readonly INotifyPropertyChanged notifier;
+		readonly IDictionary<string, SinglePropertyPathObserver> singlePathObservers;
 
 		/// <summary>
 		/// Initializes a new instance of the <see cref="DependencyObserver"/> class.
@@ -23,10 +23,10 @@ namespace Caliburn.PresentationFramework.Filters
 		/// <param name="notifier">The notifier.</param>
 		public DependencyObserver(IRoutedMessageHandler messageHandler, IMethodFactory methodFactory, INotifyPropertyChanged notifier)
 		{
-			_messageHandler = messageHandler;
-			_methodFactory = methodFactory;
-			_notifier = notifier;
-			_singlePathObservers = new Dictionary<string, SinglePropertyPathObserver>();
+			this.messageHandler = messageHandler;
+			this.methodFactory = methodFactory;
+			this.notifier = notifier;
+			singlePathObservers = new Dictionary<string, SinglePropertyPathObserver>();
 		}
 
 		/// <summary>
@@ -44,14 +44,14 @@ namespace Caliburn.PresentationFramework.Filters
 			}
 		}
 
-		private SinglePropertyPathObserver GetSinglePathObserver(string propertyPath)
+		SinglePropertyPathObserver GetSinglePathObserver(string propertyPath)
 		{
 			SinglePropertyPathObserver pathObserver;
 
-			if (!_singlePathObservers.TryGetValue(propertyPath, out pathObserver))
+			if (!singlePathObservers.TryGetValue(propertyPath, out pathObserver))
 			{
-				pathObserver = new SinglePropertyPathObserver(_messageHandler, _methodFactory, _notifier, propertyPath);
-				_singlePathObservers[propertyPath] = pathObserver;
+				pathObserver = new SinglePropertyPathObserver(messageHandler, methodFactory, notifier, propertyPath);
+				singlePathObservers[propertyPath] = pathObserver;
 			}
 
 			return pathObserver;

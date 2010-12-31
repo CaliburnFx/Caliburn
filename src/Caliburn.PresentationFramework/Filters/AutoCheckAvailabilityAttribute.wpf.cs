@@ -49,34 +49,34 @@ namespace Caliburn.PresentationFramework.Filters
 
         private class AutoCheckAvailabilityHelper
         {
-            private readonly IRoutedMessageHandler _messageHandler;
-            private readonly IList<IMessageTrigger> _triggersToNotify;
+            readonly IRoutedMessageHandler messageHandler;
+            readonly IList<IMessageTrigger> triggersToNotify;
 
             //HACK: prevents the handler being garbage collected
             //see: http://msdn.microsoft.com/en-us/library/system.windows.input.commandmanager.requerysuggested.aspx
-            private readonly EventHandler _handlerReference;
+            readonly EventHandler handlerReference;
 
             internal AutoCheckAvailabilityHelper(IRoutedMessageHandler messageHandler)
             {
-                _messageHandler = messageHandler;
-                _triggersToNotify = new List<IMessageTrigger>();
-                _handlerReference = CommandManagerRequerySuggested;
+                this.messageHandler = messageHandler;
+                triggersToNotify = new List<IMessageTrigger>();
+                handlerReference = CommandManagerRequerySuggested;
 
-                CommandManager.RequerySuggested += _handlerReference;
+                CommandManager.RequerySuggested += handlerReference;
             }
 
-            private void CommandManagerRequerySuggested(object sender, EventArgs e)
+            void CommandManagerRequerySuggested(object sender, EventArgs e)
             {
-                foreach(var messageTrigger in _triggersToNotify)
+                foreach(var messageTrigger in triggersToNotify)
                 {
-                    _messageHandler.UpdateAvailability(messageTrigger);
+                    messageHandler.UpdateAvailability(messageTrigger);
                 }
             }
 
             internal void MakeAwareOf(IMessageTrigger trigger)
             {
-                if(!_triggersToNotify.Contains(trigger))
-                    _triggersToNotify.Add(trigger);
+                if(!triggersToNotify.Contains(trigger))
+                    triggersToNotify.Add(trigger);
             }
         }
     }

@@ -14,9 +14,9 @@
     /// </summary>
     public class CommandMessageParser : MessageParserBase<CommandMessage>
     {
-        private static readonly ILog Log = LogManager.GetLog(typeof(CommandMessageParser));
+        static readonly ILog Log = LogManager.GetLog(typeof(CommandMessageParser));
 
-        private readonly CommandSource commandSource;
+        readonly CommandSource commandSource;
 
 #if !SILVERLIGHT
 

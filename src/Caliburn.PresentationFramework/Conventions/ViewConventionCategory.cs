@@ -12,8 +12,8 @@ namespace Caliburn.PresentationFramework.Conventions
     /// <typeparam name="T"></typeparam>
     public class ViewConventionCategory<T> : IViewConventionCategory
     {
-        private readonly Func<IViewModelDescription, IEnumerable<T>> getTargets;
-        private readonly List<IViewConvention<T>> conventions = new List<IViewConvention<T>>();
+        readonly Func<IViewModelDescription, IEnumerable<T>> getTargets;
+        readonly List<IViewConvention<T>> conventions = new List<IViewConvention<T>>();
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ViewConventionCategory{T}"/> class.

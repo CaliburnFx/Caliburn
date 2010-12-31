@@ -39,6 +39,7 @@
                 new Instance{ Service = typeof(IRegistry), Implementation = this },
                 new Instance{ Service = typeof(Core.InversionOfControl.IContainer), Implementation = this },
                 new Instance{ Service = typeof(IContainer), Implementation = this.container },
+                new Instance{ Service = typeof(IBuilder), Implementation = this }
             });
         }
 

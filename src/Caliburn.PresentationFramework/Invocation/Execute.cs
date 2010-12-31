@@ -10,7 +10,7 @@
     /// </summary>
     public static class Execute
     {
-        private static IDispatcher _dispatcher = new FakeDispatcher();
+        static IDispatcher dispatcher = new FakeDispatcher();
 
         /// <summary>
         /// Initializes for execution.
@@ -18,7 +18,7 @@
         /// <param name="dispatcher">The dispatcher.</param>
         public static void Initialize(IDispatcher dispatcher)
         {
-            _dispatcher = dispatcher ?? new FakeDispatcher();
+            Execute.dispatcher = dispatcher ?? new FakeDispatcher();
         }
 
         /// <summary>
@@ -27,7 +27,7 @@
         /// <param name="backgroundAction">The action.</param>
         public static IBackgroundTask OnBackgroundThread(Action backgroundAction)
         {
-            return _dispatcher.ExecuteOnBackgroundThread(backgroundAction, null, null);
+            return dispatcher.ExecuteOnBackgroundThread(backgroundAction, null, null);
         }
 
         /// <summary>
@@ -37,7 +37,7 @@
         /// <param name="uiCallback">The UI callback.</param>
         public static IBackgroundTask OnBackgroundThread(Action backgroundAction, RunWorkerCompletedEventHandler uiCallback)
         {
-            return _dispatcher.ExecuteOnBackgroundThread(backgroundAction, uiCallback, null);
+            return dispatcher.ExecuteOnBackgroundThread(backgroundAction, uiCallback, null);
         }
 
         /// <summary>
@@ -48,7 +48,7 @@
         /// <param name="progressChanged">The progress change callback.</param>
         public static IBackgroundTask OnBackgroundThread(Action backgroundAction, RunWorkerCompletedEventHandler uiCallback, ProgressChangedEventHandler progressChanged)
         {
-            return _dispatcher.ExecuteOnBackgroundThread(backgroundAction, uiCallback, progressChanged);
+            return dispatcher.ExecuteOnBackgroundThread(backgroundAction, uiCallback, progressChanged);
         }
 
         /// <summary>
@@ -58,7 +58,7 @@
         /// <param name="progressChanged">The progress change callback.</param>
         public static IBackgroundTask OnBackgroundThread(Action backgroundAction, ProgressChangedEventHandler progressChanged)
         {
-            return _dispatcher.ExecuteOnBackgroundThread(backgroundAction, null, progressChanged);
+            return dispatcher.ExecuteOnBackgroundThread(backgroundAction, null, progressChanged);
         }
 
         /// <summary>
@@ -67,7 +67,7 @@
         /// <param name="action">The action.</param>
         public static void OnUIThread(Action action)
         {
-            _dispatcher.ExecuteOnUIThread(action);
+            dispatcher.ExecuteOnUIThread(action);
         }
 
         /// <summary>
@@ -76,7 +76,7 @@
         /// <param name="action">The action.</param>
         public static IDispatcherOperation OnUIThreadAsync(Action action)
         {
-            return _dispatcher.BeginExecuteOnUIThread(action);
+            return dispatcher.BeginExecuteOnUIThread(action);
         }
 
         private class FakeDispatcher : IDispatcher
@@ -112,11 +112,11 @@
 
             private class ForegroundTask : IBackgroundTask
             {
-                private readonly Action _delegate;
+                readonly Action @delegate;
 
                 public ForegroundTask(Action @delegate)
                 {
-                    _delegate = @delegate;
+                    this.@delegate = @delegate;
                 }
 
                 public void Start(object userState)
@@ -124,7 +124,7 @@
                     if (Starting != null)
                         Starting(this, EventArgs.Empty);
 
-                    _delegate();
+                    @delegate();
 
                     if (ProgressChanged != null)
                         ProgressChanged(
@@ -160,11 +160,11 @@
 
             private class FakeDispatcherOperation : IDispatcherOperation
             {
-                private readonly Action _action;
+                readonly Action action;
 
                 public FakeDispatcherOperation(Action action)
                 {
-                    _action = action;
+                    this.action = action;
                 }
 
                 public bool Abort()
@@ -175,7 +175,7 @@
 
                 public void Wait()
                 {
-                    _action();
+                    action();
                     Completed(this, EventArgs.Empty);
                 }
 

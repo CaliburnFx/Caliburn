@@ -12,7 +12,7 @@
     /// </summary>
     public class SubActionConvention : ViewConventionBase<PropertyInfo>
     {
-        private static readonly ILog Log = LogManager.GetLog(typeof(SubActionConvention));
+        static readonly ILog Log = LogManager.GetLog(typeof(SubActionConvention));
 
         /// <summary>
         /// Tries to creates the application of the convention.

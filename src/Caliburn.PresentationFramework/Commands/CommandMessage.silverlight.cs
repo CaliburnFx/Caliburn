@@ -25,7 +25,7 @@ namespace Caliburn.PresentationFramework.Commands
     [ContentProperty("Parameters")]
     public class CommandMessage : Control, IRoutedMessageWithOutcome, IRoutedMessageHandler
     {
-        private static readonly ILog Log = LogManager.GetLog(typeof(CommandMessage));
+        static readonly ILog Log = LogManager.GetLog(typeof(CommandMessage));
 
         /// <summary>
         /// Represents the command tied to the message.
@@ -71,7 +71,7 @@ namespace Caliburn.PresentationFramework.Commands
                 null
                 );
 
-        private static void CommandChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        static void CommandChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
             if(e.OldValue != e.NewValue && e.NewValue != null)
             {
@@ -89,14 +89,14 @@ namespace Caliburn.PresentationFramework.Commands
             }
         }
 
-        private bool isSetting;
-        private IInteractionNode source;
-        private readonly IViewModelDescriptionFactory factory;
+        bool isSetting;
+        IInteractionNode source;
+        readonly IViewModelDescriptionFactory factory;
 
-        private ActionMessage actionMessage;
-        private IAction action;
-        private readonly List<Parameter> parameters = new List<Parameter>();
-        private IList<object> metadata;
+        ActionMessage actionMessage;
+        IAction action;
+        readonly List<Parameter> parameters = new List<Parameter>();
+        IList<object> metadata;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="CommandMessage"/> class.
@@ -147,7 +147,7 @@ namespace Caliburn.PresentationFramework.Commands
         /// </summary>
         public event EventHandler Completed = delegate { };
 
-        private void OnCompleted()
+        void OnCompleted()
         {
             Completed(this, EventArgs.Empty);
         }
@@ -325,7 +325,7 @@ namespace Caliburn.PresentationFramework.Commands
             return ReferenceEquals(this, other);
         }
 
-        private void TryUpdateParentAvailability(bool isAvailable)
+        void TryUpdateParentAvailability(bool isAvailable)
         {
             var parent = ParentCommand ?? Commands.Command.GetParent(Source.UIElement);
             if(parent != null)
@@ -335,7 +335,7 @@ namespace Caliburn.PresentationFramework.Commands
             }
         }
 
-        private void CreateActionMessage()
+        void CreateActionMessage()
         {
             string methodName = "Execute";
 
@@ -361,7 +361,7 @@ namespace Caliburn.PresentationFramework.Commands
             }
         }
 
-        private void CreateAction(bool forceRecreate)
+        void CreateAction(bool forceRecreate)
         {
             if(action != null && !forceRecreate)
                 return;

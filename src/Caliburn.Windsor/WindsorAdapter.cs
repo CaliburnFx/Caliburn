@@ -23,7 +23,12 @@
         {
             this.container = container;
         	this.container.Register(
-				Component.For(typeof(IServiceLocator), typeof(IRegistry), typeof(IContainer), typeof(IContainerAccessor)).Instance(this),
+				Component.For(
+                    typeof(IServiceLocator), 
+                    typeof(IRegistry), 
+                    typeof(IContainer), 
+                    typeof(IBuilder), 
+                    typeof(IContainerAccessor)).Instance(this),
 				Component.For<IWindsorContainer>().Instance(this.container)
 				);
 

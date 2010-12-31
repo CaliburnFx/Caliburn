@@ -12,15 +12,15 @@
     /// </summary>
     public class ApplicableBinding : IViewApplicable
     {
-        private static readonly ILog Log = LogManager.GetLog(typeof(ApplicableBinding));
+        static readonly ILog Log = LogManager.GetLog(typeof(ApplicableBinding));
 
-        private readonly ElementDescription elementDescription;
-        private readonly DependencyProperty dependencyProperty;
-        private readonly string path;
-        private readonly BindingMode mode;
-        private readonly bool validate;
-        private readonly bool checkTemplate;
-        private readonly IValueConverter converter;
+        readonly ElementDescription elementDescription;
+        readonly DependencyProperty dependencyProperty;
+        readonly string path;
+        readonly BindingMode mode;
+        readonly bool validate;
+        readonly bool checkTemplate;
+        readonly IValueConverter converter;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ApplicableBinding"/> class.
@@ -165,7 +165,7 @@
 #endif
         }
 
-        private const string TemplateCore =
+        const string TemplateCore =
             "<DataTemplate xmlns='http://schemas.microsoft.com/winfx/2006/xaml/presentation' " +
                           "xmlns:x='http://schemas.microsoft.com/winfx/2006/xaml' " +
                           "xmlns:v='clr-namespace:Caliburn.PresentationFramework.Views;assembly=Caliburn.PresentationFramework'> " +

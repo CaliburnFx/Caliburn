@@ -11,7 +11,7 @@ namespace Caliburn.PresentationFramework.Conventions
     /// </summary>
     public class DefaultBindingConvention : ViewConventionBase<PropertyInfo>
     {
-        private static readonly ILog Log = LogManager.GetLog(typeof(DefaultBindingConvention));
+        static readonly ILog Log = LogManager.GetLog(typeof(DefaultBindingConvention));
 
         /// <summary>
         /// Creates the application of the convention.

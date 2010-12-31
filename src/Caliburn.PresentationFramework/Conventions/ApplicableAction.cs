@@ -12,11 +12,11 @@
     /// </summary>
     public class ApplicableAction : IViewApplicable
     {
-        private static readonly ILog Log = LogManager.GetLog(typeof(ApplicableAction));
+        static readonly ILog Log = LogManager.GetLog(typeof(ApplicableAction));
 
-        private readonly string elementName;
-        private readonly string message;
-        private readonly string actionTargetPath;
+        readonly string elementName;
+        readonly string message;
+        readonly string actionTargetPath;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ApplicableAction"/> class.

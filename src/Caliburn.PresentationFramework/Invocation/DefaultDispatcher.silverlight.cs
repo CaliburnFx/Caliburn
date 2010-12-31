@@ -16,14 +16,14 @@ namespace Caliburn.PresentationFramework.Invocation
     /// </summary>
     public class DefaultDispatcher : IDispatcher
     {
-        private readonly Dispatcher _dispatcher;
+        readonly Dispatcher dispatcher;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="DefaultDispatcher"/> class.
         /// </summary>
         public DefaultDispatcher()
         {
-            _dispatcher = GetDispatcher();
+            dispatcher = GetDispatcher();
         }
 
         /// <summary>
@@ -66,13 +66,13 @@ namespace Caliburn.PresentationFramework.Invocation
         /// <param name="uiAction">The UI action.</param>
         public void ExecuteOnUIThread(Action uiAction)
         {
-            if (_dispatcher.CheckAccess())
+            if (dispatcher.CheckAccess())
                 uiAction();
             else
             {
                 var waitHandle = new ManualResetEvent(false);
                 Exception exception = null;
-                _dispatcher.BeginInvoke(() => {
+                dispatcher.BeginInvoke(() => {
                     try
                     {
                         uiAction();
@@ -95,7 +95,7 @@ namespace Caliburn.PresentationFramework.Invocation
         /// <param name="uiAction">The UI action.</param>
         public IDispatcherOperation BeginExecuteOnUIThread(Action uiAction)
         {
-            var operation = _dispatcher.BeginInvoke(uiAction);
+            var operation = dispatcher.BeginInvoke(uiAction);
             return new DispatcherOperationProxy(operation);
         }
     }

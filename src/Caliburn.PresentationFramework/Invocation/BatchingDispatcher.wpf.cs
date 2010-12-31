@@ -15,16 +15,16 @@ namespace Caliburn.PresentationFramework.Invocation
     /// </summary>
     public class BatchingDispatcher : IDispatcher
     {
-        private readonly Dispatcher _dispatcher;
-        private readonly List<Action> queuedActions = new List<Action>();
-        private readonly object locker = new object();
+        readonly Dispatcher dispatcher;
+        readonly List<Action> queuedActions = new List<Action>();
+        readonly object locker = new object();
 
         /// <summary>
         /// Initializes a new instance of the <see cref="BatchingDispatcher"/> class.
         /// </summary>
         public BatchingDispatcher()
         {
-            _dispatcher = Dispatcher.CurrentDispatcher;
+            dispatcher = Dispatcher.CurrentDispatcher;
             DefaultPriority = DispatcherPriority.Normal;
 
             new Thread(SendBatchOfUpdates)
@@ -70,7 +70,7 @@ namespace Caliburn.PresentationFramework.Invocation
         /// <param name="uiAction">The UI action.</param>
         public void ExecuteOnUIThread(Action uiAction)
         {
-            if (_dispatcher.CheckAccess())
+            if (dispatcher.CheckAccess())
                 uiAction();
             else
             {
@@ -86,7 +86,7 @@ namespace Caliburn.PresentationFramework.Invocation
         /// <param name="uiAction">The UI action.</param>
         public IDispatcherOperation BeginExecuteOnUIThread(Action uiAction)
         {
-            var operation = _dispatcher.BeginInvoke(
+            var operation = dispatcher.BeginInvoke(
                 uiAction,
                 DefaultPriority
                 );
@@ -94,7 +94,7 @@ namespace Caliburn.PresentationFramework.Invocation
             return new DispatcherOperationProxy(operation);
         }
 
-        private void SendBatchOfUpdates()
+        void SendBatchOfUpdates()
         {
             while (true)
             {
@@ -117,10 +117,10 @@ namespace Caliburn.PresentationFramework.Invocation
                     continue;
                 }
 
-                _dispatcher.Invoke(
+                dispatcher.Invoke(
                     (Action)delegate
                 {
-                    using (_dispatcher.DisableProcessing())
+                    using (dispatcher.DisableProcessing())
                     {
                         foreach (var action in actions)
                         {

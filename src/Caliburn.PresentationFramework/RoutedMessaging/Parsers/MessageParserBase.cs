@@ -1,12 +1,13 @@
 ﻿using System.Text.RegularExpressions;
 
-namespace Caliburn.PresentationFramework.Parsers
+namespace Caliburn.PresentationFramework.RoutedMessaging.Parsers
 {
     using System;
     using System.Linq;
     using System.Windows;
     using System.Windows.Data;
     using Conventions;
+    using RoutedMessaging;
 
     /// <summary>
     /// An base implementation of <see cref="IMessageParser"/>.
@@ -14,13 +15,13 @@ namespace Caliburn.PresentationFramework.Parsers
     public abstract class MessageParserBase<T> : IMessageParser
         where T : IRoutedMessage, new()
     {
-        private static readonly Regex _regex = new Regex(@",(?=(?:[^']*'[^']*')*(?![^']*'))");
-        private readonly IConventionManager _conventionManager;
-        private readonly IMessageBinder _messageBinder;
+        static readonly Regex Regex = new Regex(@",(?=(?:[^']*'[^']*')*(?![^']*'))");
+        readonly IConventionManager conventionManager;
+        readonly IMessageBinder messageBinder;
 
 #if !SILVERLIGHT
 
-        private readonly UpdateSourceTrigger _defaultTrigger;
+        private readonly UpdateSourceTrigger defaultTrigger;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="MessageParserBase{T}"/> class.
@@ -36,9 +37,9 @@ namespace Caliburn.PresentationFramework.Parsers
         /// <param name="defaultTrigger">The default trigger.</param>
         protected MessageParserBase(IConventionManager conventionManager, IMessageBinder messageBinder, UpdateSourceTrigger defaultTrigger)
         {
-            _conventionManager = conventionManager;
-            _messageBinder = messageBinder;
-            _defaultTrigger = defaultTrigger;
+            this.conventionManager = conventionManager;
+            this.messageBinder = messageBinder;
+            this.defaultTrigger = defaultTrigger;
         }
 
 #else
@@ -48,8 +49,8 @@ namespace Caliburn.PresentationFramework.Parsers
         /// <param name="messageBinder">The message binder.</param>
         protected MessageParserBase(IConventionManager conventionManager, IMessageBinder messageBinder)
         {
-            _conventionManager = conventionManager;
-            _messageBinder = messageBinder;
+            this.conventionManager = conventionManager;
+            this.messageBinder = messageBinder;
         }
 #endif
 
@@ -79,7 +80,7 @@ namespace Caliburn.PresentationFramework.Parsers
                 var paramString = headAndTail[0].Substring(openingParenthesisIndex + 1,
                     closingParenthesisIndex - openingParenthesisIndex - 1);
 
-                var parameters = _regex.Split(paramString);
+                var parameters = Regex.Split(paramString);
 
                 foreach (var parameter in parameters)
                 {
@@ -128,13 +129,13 @@ namespace Caliburn.PresentationFramework.Parsers
             };
         }
 
-        private Parameter CreateParameter(DependencyObject target, string parameter)
+        Parameter CreateParameter(DependencyObject target, string parameter)
         {
             var actualParameter = new Parameter();
 
             if (parameter.StartsWith("'") && parameter.EndsWith("'"))
                 actualParameter.Value = parameter.Substring(1, parameter.Length - 2);
-            else if (_messageBinder.IsSpecialValue(parameter) || char.IsNumber(parameter[0]))
+            else if (messageBinder.IsSpecialValue(parameter) || char.IsNumber(parameter[0]))
                 actualParameter.Value = parameter;
             else
             {
@@ -156,13 +157,13 @@ namespace Caliburn.PresentationFramework.Parsers
                                       {
                                           Path = path,
                                           Source = target,
-                                          UpdateSourceTrigger = _defaultTrigger
+                                          UpdateSourceTrigger = defaultTrigger
                                       }
                                       : new Binding
                                       {
                                           Path = path,
                                           ElementName = elementName,
-                                          UpdateSourceTrigger = _defaultTrigger
+                                          UpdateSourceTrigger = defaultTrigger
                                       };
 
                     if(nameAndBindingMode.Length == 2)

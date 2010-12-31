@@ -17,8 +17,8 @@ namespace Caliburn.PresentationFramework.RoutedMessaging.Parsers
     /// </summary>
     public class AttachedEventTriggerParser : ITriggerParser
     {
-        private static readonly ILog Log = LogManager.GetLog(typeof(AttachedEventTriggerParser));
-        private static readonly Type _dependencyObjectType = typeof(DependencyObject);
+        static readonly ILog Log = LogManager.GetLog(typeof(AttachedEventTriggerParser));
+        static readonly Type DependencyObjectType = typeof(DependencyObject);
 
         /// <summary>
         /// Parses the specified trigger text.
@@ -47,7 +47,7 @@ namespace Caliburn.PresentationFramework.RoutedMessaging.Parsers
                 triggerText = triggerText.Substring(ownerTypeName.Length + 1);
 
                 var types = GetSearchableAssemblies().SelectMany(a => a.GetExportedTypes())
-                    .Where(x => _dependencyObjectType.IsAssignableFrom(x) || (x.IsAbstract && x.IsSealed));
+                    .Where(x => DependencyObjectType.IsAssignableFrom(x) || (x.IsAbstract && x.IsSealed));
 
                 eventOwner = types.Where(t => t.FullName.Equals(ownerTypeName)).FirstOrDefault()
                     ?? types.Where(t => t.Name.Equals(ownerTypeName)).FirstOrDefault();
@@ -102,12 +102,12 @@ namespace Caliburn.PresentationFramework.RoutedMessaging.Parsers
 			return IsNet35DynamicAssembly(test) || IsNet40DynamicAssembly(test);
 		}
 
-		private bool IsNet35DynamicAssembly(Assembly test)
+		bool IsNet35DynamicAssembly(Assembly test)
 		{
 			return test is AssemblyBuilder;
 		}
 
-		private bool IsNet40DynamicAssembly(Assembly test)
+		bool IsNet40DynamicAssembly(Assembly test)
 		{
 			var type = test.GetType();
 			while (!type.Equals(typeof(Assembly)))

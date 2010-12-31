@@ -8,7 +8,7 @@
     /// </summary>
     public class DispatcherOperationProxy : IDispatcherOperation
     {
-        private readonly DispatcherOperation _operation;
+        readonly DispatcherOperation operation;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="DispatcherOperationProxy"/> class.
@@ -16,7 +16,7 @@
         /// <param name="operation">The operation.</param>
         public DispatcherOperationProxy(DispatcherOperation operation)
         {
-            _operation = operation;
+            this.operation = operation;
         }
 
 #if !SILVERLIGHT
@@ -27,7 +27,7 @@
         /// <returns></returns>
         public bool Abort()
         {
-            return _operation.Abort();
+            return operation.Abort();
         }
 
         /// <summary>
@@ -35,7 +35,7 @@
         /// </summary>
         public void Wait()
         {
-            _operation.Wait();
+            operation.Wait();
         }
 
         /// <summary>
@@ -44,7 +44,7 @@
         /// <value>The result.</value>
         public object Result
         {
-            get { return _operation.Result; }
+            get { return operation.Result; }
         }
 
         /// <summary>
@@ -52,8 +52,8 @@
         /// </summary>
         public event EventHandler Aborted
         {
-            add { _operation.Aborted += value; }
-            remove { _operation.Aborted -= value; }
+            add { operation.Aborted += value; }
+            remove { operation.Aborted -= value; }
         }
 
         /// <summary>
@@ -61,8 +61,8 @@
         /// </summary>
         public event EventHandler Completed
         {
-            add { _operation.Completed += value; }
-            remove { _operation.Completed -= value; }
+            add { operation.Completed += value; }
+            remove { operation.Completed -= value; }
         }
 
 #endif

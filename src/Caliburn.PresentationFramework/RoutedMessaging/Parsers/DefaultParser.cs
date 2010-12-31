@@ -18,20 +18,20 @@
     /// </summary>
     public class DefaultParser : IParser
     {
-        private static readonly ILog Log = LogManager.GetLog(typeof(DefaultParser));
+        static readonly ILog Log = LogManager.GetLog(typeof(DefaultParser));
 
-        private readonly IConventionManager _conventionManager;
-        private readonly Dictionary<string, ITriggerParser> _triggerParsers = new Dictionary<string, ITriggerParser>();
-        private readonly Dictionary<string, IMessageParser> _messageParsers = new Dictionary<string, IMessageParser>();
-        private string _defaultMessageParserKey = "Action";
-        private string _messageDelimiter = ";";
+        readonly IConventionManager conventionManager;
+        readonly Dictionary<string, ITriggerParser> triggerParsers = new Dictionary<string, ITriggerParser>();
+        readonly Dictionary<string, IMessageParser> messageParsers = new Dictionary<string, IMessageParser>();
+        string defaultMessageParserKey = "Action";
+        string messageDelimiter = ";";
 
         /// <summary>
         /// Initializes a new instance of the <see cref="DefaultParser"/> class.
         /// </summary>
         public DefaultParser(IConventionManager conventionManager)
         {
-            _conventionManager = conventionManager;
+            this.conventionManager = conventionManager;
 
             RegisterTriggerParser("Event", new EventTriggerParser());
             RegisterTriggerParser("Gesture", new GestureTriggerParser());
@@ -48,8 +48,8 @@
         /// <value>The message delimiter.</value>
         public string MessageDelimiter
         {
-            get { return _messageDelimiter; }
-            set { _messageDelimiter = value; }
+            get { return messageDelimiter; }
+            set { messageDelimiter = value; }
         }
 
         /// <summary>
@@ -58,7 +58,7 @@
         /// <param name="key">The key.</param>
         public void SetDefaultMessageParser(string key)
         {
-            _defaultMessageParserKey = key;
+            defaultMessageParserKey = key;
         }
 
         /// <summary>
@@ -68,7 +68,7 @@
         /// <param name="parser">The parser.</param>
         public void RegisterTriggerParser(string key, ITriggerParser parser)
         {
-            _triggerParsers[key] = parser;
+            triggerParsers[key] = parser;
             Log.Info("Registered {0} as {1}.", parser, key);
         }
 
@@ -79,7 +79,7 @@
         /// <param name="parser">The parser.</param>
         public void RegisterMessageParser(string key, IMessageParser parser)
         {
-            _messageParsers[key] = parser;
+            messageParsers[key] = parser;
         }
 
         /// <summary>
@@ -90,7 +90,7 @@
         /// <returns>The triggers parsed from the text.</returns>
         public IEnumerable<IMessageTrigger> Parse(DependencyObject target, string messageText)
         {
-            var messages = messageText.Split(new[] { _messageDelimiter }, StringSplitOptions.RemoveEmptyEntries);
+            var messages = messageText.Split(new[] { messageDelimiter }, StringSplitOptions.RemoveEmptyEntries);
 
             foreach (var message in messages)
             {
@@ -114,7 +114,7 @@
 
             IRoutedMessage message = null;
 
-            foreach (var keyValuePair in _messageParsers)
+            foreach (var keyValuePair in messageParsers)
             {
                 if (messageDetail.StartsWith(keyValuePair.Key, StringComparison.CurrentCultureIgnoreCase))
                 {
@@ -126,16 +126,16 @@
 
             if (message == null)
             {
-                message = _messageParsers[_defaultMessageParserKey]
+                message = messageParsers[defaultMessageParserKey]
                     .Parse(target, messageDetail);
-                Log.Info("Using default parser {0} for {1} on {2}.", _defaultMessageParserKey, messageText, target);
+                Log.Info("Using default parser {0} for {1} on {2}.", defaultMessageParserKey, messageText, target);
             }
 
             IMessageTrigger trigger = null;
 
             if (triggerPlusMessage.Length == 1)
             {
-                var defaults = _conventionManager.FindElementConventionOrFail(target);
+                var defaults = conventionManager.FindElementConventionOrFail(target);
                 trigger = defaults.CreateTrigger();
                 Log.Info("Using default trigger {0} for {1} on {2}.", trigger, messageText, target);
             }
@@ -146,7 +146,7 @@
                     .Replace("]", string.Empty)
                     .Trim();
 
-                foreach (var keyValuePair in _triggerParsers)
+                foreach (var keyValuePair in triggerParsers)
                 {
                     if (triggerDetail.StartsWith(keyValuePair.Key, StringComparison.CurrentCultureIgnoreCase))
                     {

@@ -44,6 +44,7 @@
 			batch.AddExportedValue<IServiceLocator>(this);
 			batch.AddExportedValue<IRegistry>(this);
 			batch.AddExportedValue<IContainer>(this);
+			batch.AddExportedValue<IBuilder>(this);
 			batch.AddExportedValue<CompositionContainer>(this.container);
 
 			this.container.Compose(batch);

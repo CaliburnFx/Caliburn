@@ -24,6 +24,7 @@
             this.container.RegisterInstance<IServiceLocator>(this);
             this.container.RegisterInstance<IRegistry>(this);
             this.container.RegisterInstance<IContainer>(this);
+            this.container.RegisterInstance<IBuilder>(this);
             this.container.RegisterInstance(this.container);
 
             AddRegistrationHandler<Singleton>(HandleSingleton);

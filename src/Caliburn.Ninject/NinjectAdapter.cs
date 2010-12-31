@@ -29,6 +29,7 @@
             Kernel.Bind<IServiceLocator>().ToConstant(this);
             Kernel.Bind<IRegistry>().ToConstant(this);
             Kernel.Bind<IContainer>().ToConstant(this);
+            Kernel.Bind<IBuilder>().ToConstant(this);
             Kernel.Bind<IKernel>().ToConstant(Kernel);
 
             AddRegistrationHandler<Singleton>(HandleSingleton);

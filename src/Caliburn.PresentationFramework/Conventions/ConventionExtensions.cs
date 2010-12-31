@@ -19,10 +19,7 @@
     /// </summary>
     public static class ConventionExtensions
     {
-        /// <summary>
-        /// The overridable implemenation of GetNamedElements.
-        /// </summary>
-        public static Func<IConventionManager, DependencyObject, IEnumerable<ElementDescription>> SelectElementsToInspect = DefaultSelectElementsToInspectImplementation;
+        internal static Func<IConventionManager, DependencyObject, IEnumerable<ElementDescription>> SelectElementsToInspect = DefaultSelectElementsToInspectImplementation;
 
         /// <summary>
         /// Determines if the provided dependency property has a binding on the dependency object.

@@ -11,7 +11,7 @@ namespace Caliburn.PresentationFramework.Conventions
     /// </summary>
     public class DefaultActionConvention : ViewConventionBase<IAction>
     {
-        private static readonly ILog Log = LogManager.GetLog(typeof(DefaultActionConvention));
+        static readonly ILog Log = LogManager.GetLog(typeof(DefaultActionConvention));
 
         /// <summary>
         /// Creates the application of the convention.

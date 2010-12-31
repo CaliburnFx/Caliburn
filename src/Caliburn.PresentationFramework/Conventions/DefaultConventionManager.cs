@@ -26,7 +26,7 @@ namespace Caliburn.PresentationFramework.Conventions
     /// </summary>
     public class DefaultConventionManager : IConventionManager
     {
-        private static readonly ILog Log = LogManager.GetLog(typeof(DefaultConventionManager));
+        static readonly ILog Log = LogManager.GetLog(typeof(DefaultConventionManager));
 
         private class ConverterConvention
         {
@@ -35,11 +35,11 @@ namespace Caliburn.PresentationFramework.Conventions
             public IValueConverter Converter;
         }
 
-        private readonly IMethodFactory methodFactory;
+        readonly IMethodFactory methodFactory;
 
-        private readonly Dictionary<Type, IElementConvention> elementConventions = new Dictionary<Type, IElementConvention>();
-        private readonly List<IViewConventionCategory> viewConventions = new List<IViewConventionCategory>();
-        private readonly List<ConverterConvention> converters = new List<ConverterConvention>();
+        readonly Dictionary<Type, IElementConvention> elementConventions = new Dictionary<Type, IElementConvention>();
+        readonly List<IViewConventionCategory> viewConventions = new List<IViewConventionCategory>();
+        readonly List<ConverterConvention> converters = new List<ConverterConvention>();
         
         /// <summary>
         /// Initializes a new instance of the <see cref="DefaultConventionManager"/> class.

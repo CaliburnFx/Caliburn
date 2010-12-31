@@ -8,6 +8,7 @@
     using System.Reflection;
     using System.Windows;
     using Actions;
+    using Behaviors;
     using Commands;
     using Conventions;
     using Core;
@@ -96,6 +97,37 @@
             return this;
         }
 
+        /// <summary>
+        /// Customizes the logic used to select elements for convention application.
+        /// </summary>
+        /// <param name="selector">The selector.</param>
+        /// <returns>The configuration.</returns>
+        public PresentationFrameworkConfiguration SelectElementsWith(Func<IConventionManager, DependencyObject, IEnumerable<ElementDescription>> selector)
+        {
+            ConventionExtensions.SelectElementsToInspect = selector;
+            return this;
+        }
+
+        /// <summary>
+        /// Customize the suffix that is removed from the class name when registering commands by Key with the container.
+        /// </summary>
+        public PresentationFrameworkConfiguration UseCommandNameSuffix(string suffix)
+        {
+            CommandAttribute.CommandNameSuffix = suffix;
+            return this;
+        }
+
+        /// <summary>
+        /// Sets the default dependency mode for INPC proxies.
+        /// </summary>
+        /// <param name="mode">The mode.</param>
+        /// <returns>The configuration.</returns>
+        public PresentationFrameworkConfiguration SetDefaultDependencyMode(DependencyMode mode)
+        {
+            NotifyPropertyChangedAttribute.DefaultDependencyMode = mode;
+            return this;
+        }
+
 #if SILVERLIGHT
 
         /// <summary>
@@ -176,7 +208,7 @@
             assemblySource.AssemblyAdded += assembly => RegisterItemsWithSubjects(registry, assembly);
         }
 
-        private void RegisterItemsWithSubjects(IRegistry registry, Assembly assembly)
+        void RegisterItemsWithSubjects(IRegistry registry, Assembly assembly)
         {
             var matches = from type in CoreExtensions.GetInspectableTypes(assembly)
                           let service = type.FindInterfaceThatCloses(typeof(IHaveSubject<>))

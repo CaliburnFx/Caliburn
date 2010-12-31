@@ -11,14 +11,15 @@ namespace Caliburn.PresentationFramework.Filters
     /// </summary>
     public class MethodCallFilterBase : Attribute, IInitializable
     {
-        private static readonly ILog Log = LogManager.GetLog(typeof(MethodCallFilterBase));
+        static readonly ILog Log = LogManager.GetLog(typeof(MethodCallFilterBase));
 
         /// <summary>
         /// The method.
         /// </summary>
         protected IMethod Method;
-        private readonly string methodName;
-        private MemberInfo member;
+
+        readonly string methodName;
+        MemberInfo member;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="MethodCallFilterBase"/> class.

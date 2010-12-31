@@ -11,9 +11,9 @@
     /// </summary>
     public class SinglePropertyPathObserver : IChangeMonitorNode
     {
-        private IRoutedMessageHandler _messageHandler;
-        private IList<IMessageTrigger> _triggersToNotify = new List<IMessageTrigger>();
-        private PropertyPathMonitor _monitor;
+        readonly IRoutedMessageHandler messageHandler;
+        readonly IList<IMessageTrigger> triggersToNotify = new List<IMessageTrigger>();
+        readonly PropertyPathMonitor monitor;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="SinglePropertyPathObserver"/> class.
@@ -24,8 +24,8 @@
         /// <param name="propertyPath">The property path.</param>
         public SinglePropertyPathObserver(IRoutedMessageHandler messageHandler, IMethodFactory methodFactory, INotifyPropertyChanged notifier, string propertyPath)
         {
-            _messageHandler = messageHandler;
-            _monitor = new PropertyPathMonitor(methodFactory, notifier, propertyPath, this);
+            this.messageHandler = messageHandler;
+            monitor = new PropertyPathMonitor(methodFactory, notifier, propertyPath, this);
         }
 
         /// <summary>
@@ -34,8 +34,8 @@
         /// <param name="trigger">The trigger.</param>
         public void RegisterTrigger(IMessageTrigger trigger)
         {
-            if (!_triggersToNotify.Contains(trigger))
-                _triggersToNotify.Add(trigger);
+            if (!triggersToNotify.Contains(trigger))
+                triggersToNotify.Add(trigger);
         }
 
         /// <summary>
@@ -43,7 +43,7 @@
         /// </summary>
         public void NotifyChange()
         {
-            _triggersToNotify.Apply(x => _messageHandler.UpdateAvailability(x));
+            triggersToNotify.Apply(x => messageHandler.UpdateAvailability(x));
         }
 
         /// <summary>
@@ -69,8 +69,8 @@
         /// </summary>
         public void Dispose()
         {
-            if (_monitor != null)
-                _monitor.Dispose();
+            if (monitor != null)
+                monitor.Dispose();
         } 
     }
 }
