@@ -19,9 +19,9 @@ namespace Caliburn.PresentationFramework.ApplicationModel
     /// </summary>
     public partial class DefaultInputManager : IInputManager
     {
-        private static readonly ILog Log = LogManager.GetLog(typeof(DefaultInputManager));
+        static readonly ILog Log = LogManager.GetLog(typeof(DefaultInputManager));
 
-        private readonly List<IShortcut> _shortcuts = new List<IShortcut>();
+        readonly List<IShortcut> shortcuts = new List<IShortcut>();
 
         /// <summary>
         /// Focuses the view bound to the view model.
@@ -73,7 +73,7 @@ namespace Caliburn.PresentationFramework.ApplicationModel
             Log.Warn("Element for {0} not found on {1}.", propertyPath, view);
         }
 
-        private void ElementToFocusEnabled(object sender, DependencyPropertyChangedEventArgs e)
+        void ElementToFocusEnabled(object sender, DependencyPropertyChangedEventArgs e)
         {
             if(!((bool)e.NewValue))
                 return;
@@ -93,7 +93,7 @@ namespace Caliburn.PresentationFramework.ApplicationModel
         /// <returns></returns>
         public IEnumerable<IShortcut> GetAllShortcuts()
         {
-            return _shortcuts;
+            return shortcuts;
         }
 
         /// <summary>
@@ -102,7 +102,7 @@ namespace Caliburn.PresentationFramework.ApplicationModel
         /// <param name="shortcut">The shortcut.</param>
         public void AddShortcut(IShortcut shortcut)
         {
-            _shortcuts.Add(shortcut);
+            shortcuts.Add(shortcut);
         }
 
         /// <summary>
@@ -111,7 +111,7 @@ namespace Caliburn.PresentationFramework.ApplicationModel
         /// <param name="shortcut">The shortcut.</param>
         public void RemoveShortcut(IShortcut shortcut)
         {
-            _shortcuts.Remove(shortcut);
+            shortcuts.Remove(shortcut);
         }
 
         /// <summary>
@@ -151,7 +151,7 @@ namespace Caliburn.PresentationFramework.ApplicationModel
 
 #if SILVERLIGHT
 
-        private string CreateGestureText(Key key, ModifierKeys modifierKeys)
+        string CreateGestureText(Key key, ModifierKeys modifierKeys)
         {
             if (key == Key.None)
                 return string.Empty;
@@ -172,7 +172,7 @@ namespace Caliburn.PresentationFramework.ApplicationModel
             return gestureText;
         }
 
-        private string CreateKeyText(Key key)
+        string CreateKeyText(Key key)
         {
             if (key == Key.None)
                 return string.Empty;
@@ -191,7 +191,7 @@ namespace Caliburn.PresentationFramework.ApplicationModel
             return key.ToString();
         }
 
-        private string CreateModifierText(ModifierKeys modifiers)
+        string CreateModifierText(ModifierKeys modifiers)
         {
             string str = "";
 
@@ -221,7 +221,7 @@ namespace Caliburn.PresentationFramework.ApplicationModel
             return (str + Abbreviate(ModifierKeys.Shift));
         }
 
-        private static string Abbreviate(ModifierKeys modifierKeys)
+        static string Abbreviate(ModifierKeys modifierKeys)
         {
             string str = string.Empty;
 
@@ -246,7 +246,7 @@ namespace Caliburn.PresentationFramework.ApplicationModel
             return str;
         }
 
-        //private static string Abbreviate(Key key)
+        //static string Abbreviate(Key key)
         //{
         //    switch (key)
         //    {
@@ -265,9 +265,9 @@ namespace Caliburn.PresentationFramework.ApplicationModel
 
 #endif
 
-        private void OnKeyUp(object s, KeyEventArgs e)
+        void OnKeyUp(object s, KeyEventArgs e)
         {
-            foreach (var shortcut in _shortcuts)
+            foreach (var shortcut in shortcuts)
             {
                 if (e.Key == shortcut.Key && Keyboard.Modifiers == shortcut.Modifers)
                 {
@@ -291,7 +291,7 @@ namespace Caliburn.PresentationFramework.ApplicationModel
             return viewAware.GetView(null);
         }
 
-        private static IEnumerable<string> GetBindingPaths(DependencyObject element)
+        static IEnumerable<string> GetBindingPaths(DependencyObject element)
         {
             var properties = GetDependencyProperties(element);
 
@@ -306,7 +306,7 @@ namespace Caliburn.PresentationFramework.ApplicationModel
             }
         }
 
-        private static IEnumerable<DependencyProperty> GetDependencyProperties(DependencyObject element)
+        static IEnumerable<DependencyProperty> GetDependencyProperties(DependencyObject element)
         {
             return from prop in element.GetType().GetFields(BindingFlags.Public | BindingFlags.Static| BindingFlags.FlattenHierarchy)
                    where typeof(DependencyProperty).IsAssignableFrom(prop.FieldType)

@@ -12,9 +12,9 @@
     /// </summary>
     public class SynchronousAction : ActionBase
     {
-        private static readonly ILog Log = LogManager.GetLog(typeof(SynchronousAction));
+        static readonly ILog Log = LogManager.GetLog(typeof(SynchronousAction));
 
-        private readonly IServiceLocator serviceLocator;
+        readonly IServiceLocator serviceLocator;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="SynchronousAction"/> class.
@@ -40,16 +40,16 @@
         {
             try
             {
-                var parameters = _messageBinder.DetermineParameters(
+                var parameters = MessageBinder.DetermineParameters(
                     actionMessage,
-                    _requirements,
+                    UnderlyingRequirements,
                     handlingNode,
                     context
                     );
 
                 TryUpdateTrigger(actionMessage, handlingNode, true);
 
-                foreach (var filter in _filters.PreProcessors)
+                foreach (var filter in UnderlyingFilters.PreProcessors)
                 {
                     if (filter.Execute(actionMessage, handlingNode, parameters))
                         continue;
@@ -59,12 +59,12 @@
                 }
 
                 var outcome = new MessageProcessingOutcome(
-                    _method.Invoke(handlingNode.MessageHandler.Unwrap(), parameters),
-                    _method.Info.ReturnType,
+                    UnderlyingMethod.Invoke(handlingNode.MessageHandler.Unwrap(), parameters),
+                    UnderlyingMethod.Info.ReturnType,
                     false
                     );
 
-                foreach (var filter in _filters.PostProcessors)
+                foreach (var filter in UnderlyingFilters.PostProcessors)
                 {
                     filter.Execute(actionMessage, handlingNode, outcome);
                 }
@@ -85,7 +85,7 @@
 
         private void HandleOutcome(ActionMessage message, IInteractionNode handlingNode, MessageProcessingOutcome outcome)
         {
-            var result = _messageBinder.CreateResult(outcome);
+            var result = MessageBinder.CreateResult(outcome);
 
             result.Completed += (s, e) =>{
                 TryUpdateTrigger(message, handlingNode, false);

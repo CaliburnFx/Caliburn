@@ -15,11 +15,11 @@ namespace Caliburn.PresentationFramework.ApplicationModel
     /// </summary>
     public class DeepLinkStateManager : PropertyChangedBase, IStateManager
     {
-        private static readonly ILog Log = LogManager.GetLog(typeof(DeepLinkStateManager));
+        static readonly ILog Log = LogManager.GetLog(typeof(DeepLinkStateManager));
 
-        private readonly Dictionary<string, string> state = new Dictionary<string, string>();
-        private string stateName;
-        private bool isLoadingState, isSavingState, isInitialized;
+        readonly Dictionary<string, string> state = new Dictionary<string, string>();
+        string stateName;
+        bool isLoadingState, isSavingState, isInitialized;
 
         /// <summary>
         /// Occurs after the state was loaded from the backing store.

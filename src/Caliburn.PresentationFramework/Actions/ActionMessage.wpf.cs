@@ -17,7 +17,7 @@ namespace Caliburn.PresentationFramework.Actions
     [ContentProperty("Parameters")]
     public class ActionMessage : Freezable, IRoutedMessageWithOutcome
     {
-        private static readonly ILog Log = LogManager.GetLog(typeof(ActionMessage));
+        static readonly ILog Log = LogManager.GetLog(typeof(ActionMessage));
 
         /// <summary>
         /// Represents the parameters of an action message.
@@ -59,7 +59,7 @@ namespace Caliburn.PresentationFramework.Actions
                 typeof(ActionMessage)
                 );
 
-        private IInteractionNode _source;
+        IInteractionNode source;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ActionMessage"/> class.
@@ -123,7 +123,7 @@ namespace Caliburn.PresentationFramework.Actions
         /// <value>The source.</value>
         public IInteractionNode Source
         {
-            get { return _source; }
+            get { return source; }
         }
 
         /// <summary>
@@ -132,7 +132,7 @@ namespace Caliburn.PresentationFramework.Actions
         /// <param name="node">The node.</param>
         public void Initialize(IInteractionNode node)
         {
-            _source = node;
+            source = node;
 
             foreach(var parameter in Parameters)
             {

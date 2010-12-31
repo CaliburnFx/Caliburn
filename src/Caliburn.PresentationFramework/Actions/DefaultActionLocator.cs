@@ -16,10 +16,10 @@
     /// </summary>
     public class DefaultActionLocator : IActionLocator
     {
-        private readonly IServiceLocator serviceLocator;
-        private readonly IMethodFactory methodFactory;
-        private readonly IMessageBinder messageBinder;
-        private readonly IConventionManager conventionManager;
+        readonly IServiceLocator serviceLocator;
+        readonly IMethodFactory methodFactory;
+        readonly IMessageBinder messageBinder;
+        readonly IConventionManager conventionManager;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="DefaultActionLocator"/> class.

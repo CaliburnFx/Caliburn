@@ -13,11 +13,11 @@
     /// </summary>
     public class AsynchronousAction : ActionBase
     {
-        private static readonly ILog Log = LogManager.GetLog(typeof(AsynchronousAction));
-        private readonly IServiceLocator serviceLocator;
+        static readonly ILog Log = LogManager.GetLog(typeof(AsynchronousAction));
+        readonly IServiceLocator serviceLocator;
 
         [ThreadStatic]
-        private static IBackgroundTask currentTask;
+        static IBackgroundTask currentTask;
 
         /// <summary>
         /// Gets or sets the current background task.
@@ -29,7 +29,7 @@
             set { currentTask = value; }
         }
 
-		private int runningCount;
+		int runningCount;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="AsynchronousAction"/> class.
@@ -55,18 +55,18 @@
         {
             try
             {
-                var parameters = _messageBinder.DetermineParameters(
+                var parameters = MessageBinder.DetermineParameters(
                     actionMessage,
-                    _requirements,
+                    UnderlyingRequirements,
                     handlingNode,
                     context
                     );
 
                 TryUpdateTrigger(actionMessage, handlingNode, true);
 
-                CurrentTask = _method.CreateBackgroundTask(handlingNode.MessageHandler.Unwrap(), parameters);
+                CurrentTask = UnderlyingMethod.CreateBackgroundTask(handlingNode.MessageHandler.Unwrap(), parameters);
 
-                foreach (var filter in _filters.PreProcessors)
+                foreach (var filter in UnderlyingFilters.PreProcessors)
                 {
                     if(filter.Execute(actionMessage, handlingNode, parameters)) 
                         continue;
@@ -117,16 +117,16 @@
                                       {
                                           var outcome = new MessageProcessingOutcome(
                                               e.Cancelled ? null : e.Result,
-                                              _method.Info.ReturnType,
+                                              UnderlyingMethod.Info.ReturnType,
                                               e.Cancelled
                                               );
 
-                                          foreach(var filter in _filters.PostProcessors)
+                                          foreach(var filter in UnderlyingFilters.PostProcessors)
                                           {
                                               filter.Execute(actionMessage, handlingNode, outcome);
                                           }
 
-                                          var result = _messageBinder.CreateResult(outcome);
+                                          var result = MessageBinder.CreateResult(outcome);
 
                                           result.Completed += (r, arg) =>{
                                               TryUpdateTrigger(actionMessage, handlingNode, false);

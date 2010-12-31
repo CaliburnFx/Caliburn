@@ -13,7 +13,7 @@ namespace Caliburn.PresentationFramework.Actions
     [AttributeUsage(AttributeTargets.Method, AllowMultiple = false)]
     public class AsyncActionAttribute : Attribute, IInitializable, IPostProcessor, IActionFactory
     {
-        private IMethod callback;
+        IMethod callback;
 
         /// <summary>
         /// Gets or sets a value indicating whether to block interaction with the trigger during asynchronous execution.

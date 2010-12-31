@@ -13,9 +13,9 @@ namespace Caliburn.PresentationFramework.ApplicationModel
     /// </summary>
     public class IsolatedStorageStateManager : PropertyChangedBase, IStateManager
     {
-        private static readonly ILog Log = LogManager.GetLog(typeof(IsolatedStorageStateManager));
-        private readonly Dictionary<string, string> _state = new Dictionary<string, string>();
-        private string _stateName;
+        static readonly ILog Log = LogManager.GetLog(typeof(IsolatedStorageStateManager));
+        readonly Dictionary<string, string> state = new Dictionary<string, string>();
+        string stateName;
 
         /// <summary>
         /// Occurs after the state was loaded from the backing store.
@@ -41,19 +41,19 @@ namespace Caliburn.PresentationFramework.ApplicationModel
                 throw ex;
             }
 
-            _stateName = stateName;
+            this.stateName = stateName;
 
             return LoadState();
         }
 
-        private bool LoadState()
+        bool LoadState()
         {
             try
             {
                 Log.Info("Loading state.");
 
                 using(var store = GetStorageFile())
-                using(var stream = new IsolatedStorageFileStream(_stateName, FileMode.Open, store))
+                using(var stream = new IsolatedStorageFileStream(stateName, FileMode.Open, store))
                 using(var reader = XmlReader.Create(stream))
                 {
                     if(reader.ReadToFollowing("State"))
@@ -66,7 +66,7 @@ namespace Caliburn.PresentationFramework.ApplicationModel
                             var key = reader.GetAttribute("Key");
                             var value = reader.ReadElementContentAsString();
 
-                            _state[key] = value;
+                            state[key] = value;
                         }
                     }
                 }
@@ -90,20 +90,20 @@ namespace Caliburn.PresentationFramework.ApplicationModel
         {
             BeforeStateCommit(this, EventArgs.Empty);
 
-            _stateName = stateName ?? _stateName;
+            this.stateName = stateName ?? this.stateName;
 
             try
             {
                 Log.Info("Committing state.");
 
                 using(var store = GetStorageFile())
-                using(var stream = new IsolatedStorageFileStream(_stateName, FileMode.OpenOrCreate, store))
+                using(var stream = new IsolatedStorageFileStream(this.stateName, FileMode.OpenOrCreate, store))
                 using(var writer = XmlWriter.Create(stream))
                 {
                     writer.WriteStartDocument();
                     writer.WriteStartElement("State");
 
-                    foreach(var pair in _state)
+                    foreach(var pair in state)
                     {
                         writer.WriteStartElement("Item");
                         writer.WriteAttributeString("Key", pair.Key);
@@ -143,7 +143,7 @@ namespace Caliburn.PresentationFramework.ApplicationModel
         /// <param name="value">The value.</param>
         public virtual void InsertOrUpdate(string key, string value)
         {
-            _state[key] = value;
+            state[key] = value;
         }
 
         /// <summary>
@@ -154,7 +154,7 @@ namespace Caliburn.PresentationFramework.ApplicationModel
         public virtual string Get(string key)
         {
             string value;
-            _state.TryGetValue(key, out value);
+            state.TryGetValue(key, out value);
             return value;
         }
 
@@ -165,7 +165,7 @@ namespace Caliburn.PresentationFramework.ApplicationModel
         /// <returns></returns>
         public virtual bool Remove(string key)
         {
-            return _state.Remove(key);
+            return state.Remove(key);
         }
     }
 }

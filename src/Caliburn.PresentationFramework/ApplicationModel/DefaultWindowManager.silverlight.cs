@@ -19,8 +19,8 @@ namespace Caliburn.PresentationFramework.ApplicationModel
     /// </summary>
     public class DefaultWindowManager : IWindowManager
     {
-        protected readonly IViewLocator viewLocator;
-        protected readonly IViewModelBinder binder;
+        protected readonly IViewLocator ViewLocator;
+        protected readonly IViewModelBinder Binder;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="DefaultWindowManager"/> class.
@@ -29,8 +29,8 @@ namespace Caliburn.PresentationFramework.ApplicationModel
         /// <param name="binder">The binder.</param>
         public DefaultWindowManager(IViewLocator viewLocator, IViewModelBinder binder)
         {
-            this.viewLocator = viewLocator;
-            this.binder = binder;
+            ViewLocator = viewLocator;
+            Binder = binder;
         }
 
         /// <summary>
@@ -40,8 +40,8 @@ namespace Caliburn.PresentationFramework.ApplicationModel
         /// <param name="context">The context.</param>
         public virtual void ShowDialog(object rootModel, object context)
         {
-            var view = EnsureWindow(rootModel, viewLocator.LocateForModel(rootModel, null, context));
-            binder.Bind(rootModel, view, context);
+            var view = EnsureWindow(rootModel, ViewLocator.LocateForModel(rootModel, null, context));
+            Binder.Bind(rootModel, view, context);
 
             var haveDisplayName = rootModel as IHaveDisplayName;
             if (haveDisplayName != null && !view.HasBinding(ChildWindow.TitleProperty))

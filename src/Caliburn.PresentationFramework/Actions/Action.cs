@@ -10,9 +10,9 @@
     /// </summary>
     public static class Action
     {
-        private static IRoutedMessageController controller;
-        private static IViewModelDescriptionFactory viewModelDescriptionFactory;
-        private static IServiceLocator serviceLocator;
+        static IRoutedMessageController controller;
+        static IViewModelDescriptionFactory viewModelDescriptionFactory;
+        static IServiceLocator serviceLocator;
 
         /// <summary>
         /// A property definition representing the target of an <see cref="ActionMessage"/>.  
@@ -93,17 +93,17 @@
             return d.GetValue(TargetWithoutContextProperty);
         }
 
-        private static void OnTargetWithoutContextChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        static void OnTargetWithoutContextChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
             SetTargetCore(e, d, false);
         }
 
-        private static void OnTargetChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        static void OnTargetChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
             SetTargetCore(e, d, true);
         }
 
-        private static void SetTargetCore(DependencyPropertyChangedEventArgs e, DependencyObject d, bool setContext)
+        static void SetTargetCore(DependencyPropertyChangedEventArgs e, DependencyObject d, bool setContext)
         {
             if(controller == null) return;
 

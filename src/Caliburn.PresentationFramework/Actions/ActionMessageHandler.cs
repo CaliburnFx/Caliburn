@@ -11,12 +11,12 @@
     /// </summary>
     public class ActionMessageHandler : IRoutedMessageHandler
     {
-        private static readonly ILog Log = LogManager.GetLog(typeof(ActionMessageHandler));
+        static readonly ILog Log = LogManager.GetLog(typeof(ActionMessageHandler));
 
-        private readonly object _target;
-        private readonly IActionHost _host;
-        private IInteractionNode _node;
-        private List<object> _metadata;
+        readonly object target;
+        readonly IActionHost host;
+        IInteractionNode node;
+        List<object> metadata;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ActionMessageHandler"/> class.
@@ -25,11 +25,11 @@
         /// <param name="target">The target.</param>
         public ActionMessageHandler(IActionHost host, object target)
         {
-            _target = target;
-            _host = host;
+            this.target = target;
+            this.host = host;
 
-            _host.Actions.SelectMany(x => x.Filters.HandlerAware)
-                .Union(_host.Filters.HandlerAware)
+            this.host.Actions.SelectMany(x => x.Filters.HandlerAware)
+                .Union(this.host.Filters.HandlerAware)
                 .Apply(x => x.MakeAwareOf(this));
         }
 
@@ -39,7 +39,7 @@
         /// <value>The host.</value>
         public IActionHost Host
         {
-            get { return _host; }
+            get { return host; }
         }
 
         /// <summary>
@@ -50,10 +50,10 @@
         {
             get
             {
-                if (_metadata == null)
-                    _metadata = new List<object>();
+                if (metadata == null)
+                    metadata = new List<object>();
 
-                return _metadata;
+                return metadata;
             }
         }
 
@@ -63,7 +63,7 @@
         /// <param name="node">The node.</param>
         public void Initialize(IInteractionNode node)
         {
-            _node = node;
+            this.node = node;
         }
 
         /// <summary>
@@ -72,7 +72,7 @@
         /// <returns></returns>
         public object Unwrap()
         {
-            return _target;
+            return target;
         }
 
         /// <summary>
@@ -97,7 +97,7 @@
 
             if (actionMessage != null)
             {
-                FindActionHandler(actionMessage).Execute(actionMessage, _node, context);
+                FindActionHandler(actionMessage).Execute(actionMessage, node, context);
                 Log.Info("Processed message {0}.", actionMessage);
             }
             else
@@ -126,7 +126,7 @@
             Log.Info("Requesting update avaiability for {0}.", actionMessage);
 
             var action = FindActionHandler(actionMessage);
-            bool isAvailable = action.ShouldTriggerBeAvailable(actionMessage, _node);
+            bool isAvailable = action.ShouldTriggerBeAvailable(actionMessage, node);
             trigger.UpdateAvailabilty(isAvailable);
         }
 
@@ -140,7 +140,7 @@
             if(actionMessage == null) return;
 
             var handler = FindActionHandler(actionMessage);
-            bool isAvailable = handler.ShouldTriggerBeAvailable(actionMessage, _node);
+            bool isAvailable = handler.ShouldTriggerBeAvailable(actionMessage, node);
             trigger.UpdateAvailabilty(isAvailable);
 
             Log.Info("Making handlers aware of {0}.", trigger);
@@ -150,9 +150,9 @@
                 action.Filters.HandlerAware.Apply(x => x.MakeAwareOf(this, trigger));
         }
 
-        private IActionHandler FindActionHandler(ActionMessage message)
+        IActionHandler FindActionHandler(ActionMessage message)
         {
-            return _host.GetAction(message) ?? _target as IActionHandler;
+            return host.GetAction(message) ?? target as IActionHandler;
         }
     }
 }

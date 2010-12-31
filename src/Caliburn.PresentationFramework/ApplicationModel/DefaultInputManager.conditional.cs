@@ -8,7 +8,7 @@
 #if !SILVERLIGHT
     public partial class DefaultInputManager
     {
-        private static IEnumerable<UIElement> GetAllElements(DependencyObject root)
+        static IEnumerable<UIElement> GetAllElements(DependencyObject root)
         {
             var queue = new Queue<DependencyObject>();
             queue.Enqueue(root);
@@ -33,7 +33,7 @@
 #else
     public partial class DefaultInputManager
     {
-        private static IEnumerable<Control> GetAllElements(DependencyObject root)
+        static IEnumerable<Control> GetAllElements(DependencyObject root)
         {
             var queue = new Queue<DependencyObject>();
             queue.Enqueue(root);

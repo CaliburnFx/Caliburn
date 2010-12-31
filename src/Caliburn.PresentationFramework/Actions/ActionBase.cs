@@ -13,26 +13,29 @@ namespace Caliburn.PresentationFramework.Actions
     /// </summary>
     public abstract class ActionBase : IAction
     {
-        private static readonly ILog Log = LogManager.GetLog(typeof(ActionBase));
+        static readonly ILog Log = LogManager.GetLog(typeof(ActionBase));
 
         /// <summary>
         /// The method.
         /// </summary>
-        protected readonly IMethod _method;
+        protected readonly IMethod UnderlyingMethod;
+
         /// <summary>
         /// The binder.
         /// </summary>
-        protected readonly IMessageBinder _messageBinder;
+        protected readonly IMessageBinder MessageBinder;
+
         /// <summary>
         /// The filters.
         /// </summary>
-        protected readonly IFilterManager _filters;
+        protected readonly IFilterManager UnderlyingFilters;
+
         /// <summary>
         /// The required parameters.
         /// </summary>
-        protected IList<RequiredParameter> _requirements;
+        protected IList<RequiredParameter> UnderlyingRequirements;
 
-        private readonly bool _blockInteraction;
+        readonly bool blockInteraction;
 
         /// <summary>
         /// Gets a value indicating whether to block intaction with the trigger during async execution.
@@ -40,7 +43,7 @@ namespace Caliburn.PresentationFramework.Actions
         /// <value><c>true</c> if should block; otherwise, <c>false</c>.</value>
         public bool BlockInteraction
         {
-            get { return _blockInteraction; }
+            get { return blockInteraction; }
         }
 
         /// <summary>
@@ -52,12 +55,12 @@ namespace Caliburn.PresentationFramework.Actions
         /// <param name="blockInteraction">if set to <c>true</c> blocks interaction.</param>
         protected ActionBase(IMethod method, IMessageBinder messageBinder, IFilterManager filters, bool blockInteraction)
         {
-            _method = method;
-            _messageBinder = messageBinder;
-            _filters = filters;
-            _blockInteraction = blockInteraction;
+            UnderlyingMethod = method;
+            MessageBinder = messageBinder;
+            UnderlyingFilters = filters;
+            this.blockInteraction = blockInteraction;
 
-            _requirements = _method.Info.GetParameters()
+            UnderlyingRequirements = UnderlyingMethod.Info.GetParameters()
                 .Select(x => new RequiredParameter(x.Name, x.ParameterType))
                 .ToList();
         }
@@ -68,7 +71,7 @@ namespace Caliburn.PresentationFramework.Actions
         /// <value>The name.</value>
         public string Name
         {
-            get { return _method.Info.Name; }
+            get { return UnderlyingMethod.Info.Name; }
         }
 
         /// <summary>
@@ -77,7 +80,7 @@ namespace Caliburn.PresentationFramework.Actions
         /// <value>The requirements.</value>
         public IList<RequiredParameter> Requirements
         {
-            get { return _requirements; }
+            get { return UnderlyingRequirements; }
         }
 
         /// <summary>
@@ -91,7 +94,7 @@ namespace Caliburn.PresentationFramework.Actions
         /// <value>The filters.</value>
         public IFilterManager Filters
         {
-            get { return _filters; }
+            get { return UnderlyingFilters; }
         }
 
         /// <summary>
@@ -100,7 +103,7 @@ namespace Caliburn.PresentationFramework.Actions
         /// <value>The method.</value>
         public IMethod Method
         {
-            get { return _method; }
+            get { return UnderlyingMethod; }
         }
 
         /// <summary>
@@ -110,13 +113,13 @@ namespace Caliburn.PresentationFramework.Actions
         /// <returns></returns>
         public bool Matches(ActionMessage message)
         {
-            if (_requirements.Count == message.Parameters.Count)
+            if (UnderlyingRequirements.Count == message.Parameters.Count)
             {
                 bool isMatch = true;
 
                 for (int i = 0; i < message.Parameters.Count; i++)
                 {
-                    var expectedType = _requirements[i].Type;
+                    var expectedType = UnderlyingRequirements[i].Type;
                     var value = message.Parameters[i].Value;
 
                     if (value == null)
@@ -154,16 +157,16 @@ namespace Caliburn.PresentationFramework.Actions
             if (!HasTriggerEffects())
                 return true;
 
-            var parameters = _messageBinder.DetermineParameters(
+            var parameters = MessageBinder.DetermineParameters(
                 actionMessage,
-                _requirements,
+                UnderlyingRequirements,
                 handlingNode,
                 null
                 );
 
             Log.Info("Evaluating trigger effects for {0}.", this);
 
-            foreach (var filter in _filters.TriggerEffects)
+            foreach (var filter in UnderlyingFilters.TriggerEffects)
             {
                 if (!filter.Execute(actionMessage, handlingNode, parameters)) 
                     return false;
@@ -199,7 +202,7 @@ namespace Caliburn.PresentationFramework.Actions
         /// <param name="ex">The exception.</param>
         protected virtual bool TryApplyRescue(IRoutedMessage message, IInteractionNode handlingNode, Exception ex)
         {
-            foreach (var rescue in _filters.Rescues)
+            foreach (var rescue in UnderlyingFilters.Rescues)
             {
                 if (rescue.Handle(message, handlingNode, ex))
                 {

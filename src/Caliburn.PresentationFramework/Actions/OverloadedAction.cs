@@ -14,10 +14,10 @@
     /// </summary>
     public class OverloadedAction : IAction, IEnumerable<IAction>
     {
-        private static readonly ILog Log = LogManager.GetLog(typeof(OverloadedAction));
+        static readonly ILog Log = LogManager.GetLog(typeof(OverloadedAction));
 
-        private readonly string _name;
-        private readonly List<IAction> _overloads = new List<IAction>();
+        readonly string name;
+        readonly List<IAction> overloads = new List<IAction>();
 
         /// <summary>
         /// Initializes a new instance of the <see cref="OverloadedAction"/> class.
@@ -25,7 +25,7 @@
         /// <param name="name">The name.</param>
         public OverloadedAction(string name)
         {
-            _name = name;
+            this.name = name;
         }
 
         /// <summary>
@@ -34,7 +34,7 @@
         /// <value>The name.</value>
         public string Name
         {
-            get { return _name; }
+            get { return name; }
         }
 
         /// <summary>
@@ -59,12 +59,12 @@
         {
             get
             {
-                var currentManager = _overloads[0].Filters;
+                var currentManager = overloads[0].Filters;
 
-                for(int i = 1; i < _overloads.Count; i++)
+                for(int i = 1; i < overloads.Count; i++)
                 {
                     currentManager = currentManager.Combine(
-                        _overloads[i].Filters
+                        overloads[i].Filters
                         );
                 }
 
@@ -79,7 +79,7 @@
         /// <returns></returns>
         public bool Matches(ActionMessage message)
         {
-            foreach(var overload in _overloads)
+            foreach(var overload in overloads)
             {
                 if(overload.Matches(message))
                     return true;
@@ -95,7 +95,7 @@
         public void AddOverload(IAction action)
         {
             action.Completed += delegate { OnCompleted(); };
-            _overloads.Add(action);
+            overloads.Add(action);
         }
 
         /// <summary>
@@ -105,7 +105,7 @@
         /// <returns></returns>
         public IAction DetermineOverloadOrFail(ActionMessage message)
         {
-            foreach(var overload in _overloads)
+            foreach(var overload in overloads)
             {
                 if(overload.Matches(message))
                     return overload;
@@ -170,7 +170,7 @@
         /// </returns>
         public IEnumerator<IAction> GetEnumerator()
         {
-            return _overloads.GetEnumerator();
+            return overloads.GetEnumerator();
         }
 
         /// <summary>

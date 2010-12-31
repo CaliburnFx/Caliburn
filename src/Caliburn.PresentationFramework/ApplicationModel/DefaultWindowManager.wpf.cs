@@ -20,8 +20,8 @@ namespace Caliburn.PresentationFramework.ApplicationModel
 	/// </summary>
 	public class DefaultWindowManager : IWindowManager
 	{
-		protected readonly IViewLocator viewLocator;
-		protected readonly IViewModelBinder viewModelBinder;
+		protected readonly IViewLocator ViewLocator;
+		protected readonly IViewModelBinder ViewModelBinder;
 
 		/// <summary>
 		/// Initializes a new instance of the <see cref="DefaultWindowManager"/> class.
@@ -30,8 +30,8 @@ namespace Caliburn.PresentationFramework.ApplicationModel
 		/// <param name="viewModelBinder">The view model binder.</param>
 		public DefaultWindowManager(IViewLocator viewLocator, IViewModelBinder viewModelBinder)
 		{
-			this.viewLocator = viewLocator;
-			this.viewModelBinder = viewModelBinder;
+			ViewLocator = viewLocator;
+			ViewModelBinder = viewModelBinder;
 		}
 
 		/// <summary>
@@ -76,8 +76,8 @@ namespace Caliburn.PresentationFramework.ApplicationModel
 		/// <returns>The window.</returns>
 		protected virtual Window CreateWindow(object rootModel, bool isDialog, object context)
 		{
-			var view = EnsureWindow(rootModel, viewLocator.LocateForModel(rootModel, null, context), isDialog);
-			viewModelBinder.Bind(rootModel, view, context);
+			var view = EnsureWindow(rootModel, ViewLocator.LocateForModel(rootModel, null, context), isDialog);
+			ViewModelBinder.Bind(rootModel, view, context);
 
 			var haveDisplayName = rootModel as IHaveDisplayName;
 			if (haveDisplayName != null && !view.HasBinding(Window.TitleProperty))
@@ -158,8 +158,8 @@ namespace Caliburn.PresentationFramework.ApplicationModel
 		/// <returns></returns>
 		public virtual Page CreatePage(object rootModel, object context)
 		{
-			var view = EnsurePage(rootModel, viewLocator.LocateForModel(rootModel, null, context));
-			viewModelBinder.Bind(rootModel, view, context);
+			var view = EnsurePage(rootModel, ViewLocator.LocateForModel(rootModel, null, context));
+			ViewModelBinder.Bind(rootModel, view, context);
 
 			var haveDisplayName = rootModel as IHaveDisplayName;
 			if (haveDisplayName != null)

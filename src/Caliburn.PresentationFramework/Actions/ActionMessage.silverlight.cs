@@ -21,10 +21,10 @@ namespace Caliburn.PresentationFramework.Actions
     [ContentProperty("Parameters")]
     public class ActionMessage : IRoutedMessageWithOutcome
     {
-        private static readonly ILog Log = LogManager.GetLog(typeof(ActionMessage));
+        static readonly ILog Log = LogManager.GetLog(typeof(ActionMessage));
 
-        private IInteractionNode source;
-        private readonly List<Parameter> parameters = new List<Parameter>();
+        IInteractionNode source;
+        readonly List<Parameter> parameters = new List<Parameter>();
 
         /// <summary>
         /// Gets or sets the availability effect.
