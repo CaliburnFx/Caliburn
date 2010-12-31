@@ -80,6 +80,29 @@
             return manager.ShowDialog(rootModel, null);
         }
 
+#else
+        /// <summary>
+        /// Shows the dialog for the model.
+        /// </summary>
+        /// <param name="manager">The manager.</param>
+        /// <param name="rootModel">The root model.</param>
+        public static void ShowDialog(this IWindowManager manager, object rootModel)
+        {
+            manager.ShowDialog(rootModel, null);
+        }
+#endif
+
+#if SILVERLIGHT_40
+        /// <summary>
+        /// Shows a toast notification for the specified model.
+        /// </summary>
+        /// <param name="manager">The manager.</param>
+        /// <param name="rootModel">The root model.</param>
+        /// <param name="durationInMilliseconds">How long the notification should appear for.</param>
+        public static void ShowNotification(this IWindowManager manager, object rootModel, int durationInMilliseconds)
+        {
+            manager.ShowNotification(rootModel, durationInMilliseconds, null);
+        }
 #endif
     }
 }

@@ -55,6 +55,41 @@ namespace Caliburn.PresentationFramework.ApplicationModel
             view.Show();
         }
 
+#if SILVERLIGHT_40
+
+        /// <summary>
+        /// Shows a toast notification for the specified model.
+        /// </summary>
+        /// <param name="rootModel">The root model.</param>
+        /// <param name="durationInMilliseconds">How long the notification should appear for.</param>
+        /// <param name="context">The context.</param>
+        public virtual void ShowNotification(object rootModel, int durationInMilliseconds, object context)
+        {
+            var window = new NotificationWindow();
+            var view = ViewLocator.LocateForModel(rootModel, window, null);
+
+            Binder.Bind(rootModel, view, null);
+            window.Content = (FrameworkElement)view;
+
+            var activator = rootModel as IActivate;
+            if (activator != null)
+                activator.Activate();
+
+            var deactivator = rootModel as IDeactivate;
+            if(deactivator != null) {
+                EventHandler handler = null;
+                handler = delegate {
+                    window.Closed -= handler;
+                    deactivator.Deactivate(true);
+                };
+                window.Closed += handler;
+            }
+
+            window.Show(durationInMilliseconds);
+        }
+
+#endif
+
         /// <summary>
         /// Ensures that the view is a ChildWindow.
         /// </summary>
