@@ -17,13 +17,13 @@ namespace Caliburn.PresentationFramework.ViewModels
     /// </summary>
     public class DefaultViewModelDescription : IViewModelDescription
     {
-        private static readonly ILog Log = LogManager.GetLog(typeof(DefaultViewModelDescription));
+        static readonly ILog Log = LogManager.GetLog(typeof(DefaultViewModelDescription));
 
-        private readonly IConventionManager conventionManager;
-        private readonly Type targetType;
-        private readonly Dictionary<string, IAction> actions = new Dictionary<string, IAction>();
-        private readonly Dictionary<Type, IViewApplicable[]> viewConventions = new Dictionary<Type, IViewApplicable[]>();
-        private readonly PropertyInfo[] properties;
+        readonly IConventionManager conventionManager;
+        readonly Type targetType;
+        readonly Dictionary<string, IAction> actions = new Dictionary<string, IAction>();
+        readonly Dictionary<Type, IViewApplicable[]> viewConventions = new Dictionary<Type, IViewApplicable[]>();
+        readonly PropertyInfo[] properties;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="DefaultViewModelDescription"/> class.

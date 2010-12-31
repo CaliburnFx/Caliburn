@@ -9,7 +9,7 @@ namespace Caliburn.PresentationFramework.Screens
     /// <typeparam name="T">The screen subject's type.</typeparam>
     public class SubjectSpecification<T> : ISubjectSpecification
     {
-        private readonly T subject;
+        readonly T subject;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="SubjectSpecification{T}"/> class.
@@ -30,9 +30,7 @@ namespace Caliburn.PresentationFramework.Screens
         public bool Matches(IHaveSubject itemWithSubject)
         {
             var specific = itemWithSubject as IHaveSubject<T>;
-            if (specific == null) return false;
-
-            return specific.Subject.Equals(subject);
+            return specific != null && specific.Subject.Equals(subject);
         }
 
         /// <summary>
@@ -53,8 +51,7 @@ namespace Caliburn.PresentationFramework.Screens
         public bool Equals(SubjectSpecification<T> other)
         {
             if (ReferenceEquals(null, other)) return false;
-            if (ReferenceEquals(this, other)) return true;
-            return Equals(other.subject, subject);
+            return ReferenceEquals(this, other) || Equals(other.subject, subject);
         }
 
         /// <summary>
@@ -71,8 +68,7 @@ namespace Caliburn.PresentationFramework.Screens
         {
             if (ReferenceEquals(null, obj)) return false;
             if (ReferenceEquals(this, obj)) return true;
-            if (obj.GetType() != typeof(SubjectSpecification<T>)) return false;
-            return Equals((SubjectSpecification<T>)obj);
+            return obj.GetType() == typeof(SubjectSpecification<T>) && Equals((SubjectSpecification<T>)obj);
         }
 
         /// <summary>

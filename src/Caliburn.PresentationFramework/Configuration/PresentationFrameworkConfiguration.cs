@@ -1,6 +1,7 @@
 ﻿namespace Caliburn.PresentationFramework.Configuration
 {
     using System;
+    using System.Collections.Generic;
     using System.ComponentModel;
     using System.Diagnostics;
     using System.Linq;
@@ -35,6 +36,7 @@
         private bool nameInstances;
 
         private static bool? isInDesignMode;
+        Func<IEnumerator<IResult>, IResult> parentEnumeratorFactory = results => new SequentialResult(results);
 
         /// <summary>
         /// Gets a value indicating whether the framework is in design mode.
@@ -79,6 +81,17 @@
         {
             registerItemsWithSubjects = true;
             this.nameInstances = nameInstances;
+            return this;
+        }
+
+        /// <summary>
+        /// Customizes the enumerator factory that is used for coroutines.
+        /// </summary>
+        /// <param name="parentEnumeratorFactory">The parent enumerator factory.</param>
+        /// <returns>The configuration.</returns>
+        public PresentationFrameworkConfiguration UseEnumeratorFactory(Func<IEnumerator<IResult>, IResult> parentEnumeratorFactory)
+        {
+            this.parentEnumeratorFactory = parentEnumeratorFactory;
             return this;
         }
 
@@ -131,7 +144,11 @@
                 );
 
             Bind.Initialize(viewModelBinder);
-            Coroutine.Initialize(serviceLocator);
+            Coroutine.Initialize(
+                serviceLocator,
+                serviceLocator.GetInstance<IBuilder>(),
+                parentEnumeratorFactory
+                );
 
             if (!registerItemsWithSubjects)
                 return;

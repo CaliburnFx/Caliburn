@@ -127,6 +127,7 @@
     <Compile Include="Screens\IScreen.cs" />
     <Compile Include="Screens\ISubjectSpecification.cs" />
     <Compile Include="Screens\Screen.cs" />
+    <Compile Include="Screens\ScreenWithSubject.cs" />
     <Compile Include="Screens\SubjectSpecification.cs" />
     <Compile Include="ViewModels\Bind.cs" />
     <Compile Include="ViewModels\BindableEnum.cs" />

@@ -2,7 +2,6 @@ namespace Caliburn.PresentationFramework.ViewModels
 {
     using System;
     using System.Windows;
-    using ApplicationModel;
     using Core;
     using Core.Logging;
     using Views;
@@ -13,10 +12,10 @@ namespace Caliburn.PresentationFramework.ViewModels
     /// </summary>
     public class DefaultViewModelBinder : IViewModelBinder
     {
-        private static readonly ILog Log = LogManager.GetLog(typeof(DefaultViewModelBinder));
+        static readonly ILog Log = LogManager.GetLog(typeof(DefaultViewModelBinder));
 
-        private readonly IViewModelDescriptionFactory viewModelDescriptionFactory;
-        private bool applyConventionsByDefault = true;
+        readonly IViewModelDescriptionFactory viewModelDescriptionFactory;
+        bool applyConventionsByDefault = true;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="DefaultViewModelBinder"/> class.

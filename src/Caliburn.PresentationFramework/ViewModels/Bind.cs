@@ -7,7 +7,7 @@
     /// </summary>
     public static class Bind
     {
-        private static IViewModelBinder binder;
+        static IViewModelBinder binder;
 
         /// <summary>
         /// Initializes the binder attached properties.
@@ -49,7 +49,7 @@
             dependencyObject.SetValue(ModelProperty, value);
         }
 
-        private static void ModelChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        static void ModelChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
             if(e.NewValue == null || e.NewValue == e.OldValue)
                 return;

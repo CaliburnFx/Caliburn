@@ -15,12 +15,12 @@ namespace Caliburn.PresentationFramework.ViewModels
     /// </summary>
     public class DefaultViewModelDescriptionFactory : IViewModelDescriptionFactory
     {
-        private static readonly ILog Log = LogManager.GetLog(typeof(DefaultViewModelDescriptionFactory));
+        static readonly ILog Log = LogManager.GetLog(typeof(DefaultViewModelDescriptionFactory));
 
-        private readonly IServiceLocator serviceLocator;
-        private readonly IActionLocator actionLocator;
-        private readonly IConventionManager conventionManager;
-        private readonly Dictionary<Type, IViewModelDescription> cache = new Dictionary<Type, IViewModelDescription>();
+        readonly IServiceLocator serviceLocator;
+        readonly IActionLocator actionLocator;
+        readonly IConventionManager conventionManager;
+        readonly Dictionary<Type, IViewModelDescription> cache = new Dictionary<Type, IViewModelDescription>();
 
         /// <summary>
         /// Initializes a new instance of the <see cref="DefaultViewModelDescriptionFactory"/> class.

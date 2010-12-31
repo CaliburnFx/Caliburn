@@ -13,19 +13,20 @@
     {
         static readonly ILog Log = LogManager.GetLog(typeof(Coroutine));
         static IServiceLocator serviceLocator;
-
-        /// <summary>
-        /// Creates the parent enumerator.
-        /// </summary>
-        public static Func<IEnumerator<IResult>, IResult> CreateParentEnumerator = inner => new SequentialResult(inner);
+        static IBuilder builder;
+        static Func<IEnumerator<IResult>, IResult> createParentEnumerator;
 
         /// <summary>
         /// Initializes the helper with the service locator.
         /// </summary>
         /// <param name="serviceLocator">The service locator.</param>
-        public static void Initialize(IServiceLocator serviceLocator)
+        /// <param name="builder">The builder.</param>
+        /// <param name="parentEnumeratorFactory">Creates the parent enumerator.</param>
+        public static void Initialize(IServiceLocator serviceLocator, IBuilder builder, Func<IEnumerator<IResult>, IResult> parentEnumeratorFactory)
         {
             Coroutine.serviceLocator = serviceLocator;
+            Coroutine.builder = builder;
+            createParentEnumerator = parentEnumeratorFactory;
         }
 
         /// <summary>
@@ -96,8 +97,8 @@
         {
             Log.Info("Executing coroutine.");
 
-            var enumerator = CreateParentEnumerator(coroutine);
-            IoC.BuildUp(enumerator);
+            var enumerator = createParentEnumerator(coroutine);
+            builder.BuildUp(enumerator);
 
             enumerator.Completed += Completed;
             enumerator.Execute(context);
