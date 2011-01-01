@@ -4,7 +4,6 @@
     using Core.InversionOfControl;
     using PresentationFramework.ApplicationModel;
     using PresentationFramework.RoutedMessaging;
-    using PresentationFramework.Screens;
     using Questions;
 
     /// <summary>
@@ -13,8 +12,8 @@
     public class MessageBoxResult : IResult
     {
         readonly string text;
-        readonly string caption = "Info";
-        readonly Answer[] possibleAnswers = new[] {Answer.Ok};
+        readonly string caption;
+        readonly Answer[] possibleAnswers;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="MessageBoxResult"/> class.
@@ -88,30 +87,19 @@
         /// <param name="context">The context.</param>
         public void Execute(ResultExecutionContext context)
         {
-            var questionDialog = context.ServiceLocator.GetInstance<IQuestionDialog>();
-            var question = new Question(Text, possibleAnswers);
-            questionDialog.Setup(Caption, new[]{question});
+            var windowManager = context.ServiceLocator.GetInstance<IWindowManager>();
 
-            EventHandler<DeactivationEventArgs> handler = null;
-            handler = (s, e) =>{
-                if(!e.WasClosed)
-                    return;
+            windowManager.ShowMessageBox(Text, Caption, answer =>{
+                Answer = answer;
 
-                questionDialog.Deactivated -= handler;
-                Answer = question.Answer;
-
-                if (question.Answer == Answer.No || question.Answer == Answer.Cancel)
+                if(answer == Answer.No || answer == Answer.Cancel)
                 {
                     Completed(this, new ResultCompletionEventArgs { WasCancelled = true });
                     return;
                 }
 
                 Completed(this, new ResultCompletionEventArgs());
-            };
-            questionDialog.Deactivated += handler;
-
-            var windowManager = context.ServiceLocator.GetInstance<IWindowManager>();
-            windowManager.ShowDialog(questionDialog, null);
+            }, possibleAnswers);
         }
 
         /// <summary>

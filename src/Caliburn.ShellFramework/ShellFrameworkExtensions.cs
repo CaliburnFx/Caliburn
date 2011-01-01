@@ -1,16 +1,87 @@
 ﻿namespace Caliburn.ShellFramework
 {
+    using System;
     using System.Collections.Generic;
     using Configuration;
     using Core;
     using Core.Configuration;
+    using Core.InversionOfControl;
+    using PresentationFramework.ApplicationModel;
     using PresentationFramework.Screens;
+    using Questions;
 
     /// <summary>
     /// General extension methods related to the shell framework.
     /// </summary>
     public static class ShellFrameworkExtensions
     {
+        static Func<IQuestionDialog> createQuestionDialog = () => IoC.Get<IQuestionDialog>();
+
+        /// <summary>
+        /// Initializes the specified dialog factory.
+        /// </summary>
+        /// <param name="dialogFactory">The dialog factory.</param>
+        /// <remarks>Useful during unit testing.</remarks>
+        public static void Initialize(Func<IQuestionDialog> dialogFactory)
+        {
+            createQuestionDialog = dialogFactory;
+        }
+
+        /// <summary>
+        /// Shows the message box.
+        /// </summary>
+        /// <param name="windowManager">The window manager.</param>
+        /// <param name="text">The text.</param>
+        public static void ShowMessageBox(this IWindowManager windowManager, string text)
+        {
+            windowManager.ShowMessageBox(text, "Info", null, null);
+        }
+
+        /// <summary>
+        /// Shows the message box.
+        /// </summary>
+        /// <param name="windowManager">The window manager.</param>
+        /// <param name="text">The text.</param>
+        /// <param name="caption">The caption.</param>
+        public static void ShowMessageBox(this IWindowManager windowManager, string text, string caption)
+        {
+            windowManager.ShowMessageBox(text, caption, null, null);
+        }
+
+        /// <summary>
+        /// Shows the message box.
+        /// </summary>
+        /// <param name="windowManager">The window manager.</param>
+        /// <param name="text">The text.</param>
+        /// <param name="caption">The caption.</param>
+        /// <param name="callback">The answer callback.</param>
+        /// <param name="possibleAnswers">The possible answers.</param>
+        public static void ShowMessageBox(this IWindowManager windowManager, string text, string caption, Action<Answer> callback, params Answer[] possibleAnswers)
+        {
+            if (possibleAnswers == null || possibleAnswers.Length < 1)
+                possibleAnswers = new[] { Answer.Ok };
+
+            var questionDialog = createQuestionDialog();
+            var question = new Question(text, possibleAnswers);
+
+            questionDialog.Setup(caption, new[]{question});
+
+            if(callback != null)
+            {
+                EventHandler<DeactivationEventArgs> handler = null;
+                handler = (s, e) =>{
+                    if(!e.WasClosed)
+                        return;
+
+                    questionDialog.Deactivated -= handler;
+                    callback(question.Answer);
+                };
+                questionDialog.Deactivated += handler;
+            }
+
+            windowManager.ShowDialog(questionDialog, null);
+        }
+
         /// <summary>
         /// Adds the shell framework module's configuration to the system.
         /// </summary>
