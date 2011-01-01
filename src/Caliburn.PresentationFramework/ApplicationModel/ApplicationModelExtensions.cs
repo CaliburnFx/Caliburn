@@ -64,9 +64,9 @@
         /// </summary>
         /// <param name="manager">The manager.</param>
         /// <param name="rootModel">The root model.</param>
-        public static void Show(this IWindowManager manager, object rootModel)
+        public static void ShowWindow(this IWindowManager manager, object rootModel)
         {
-            manager.Show(rootModel, null);
+            manager.ShowWindow(rootModel, null);
         }
 
         /// <summary>

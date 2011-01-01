@@ -195,7 +195,7 @@
             Application.RootVisual = (UIElement)view;
 #else
             Container.GetInstance<IWindowManager>()
-                .Show(viewModel);
+                .ShowWindow(viewModel);
 #endif
         }
     }

@@ -11,7 +11,7 @@ namespace Caliburn.PresentationFramework.ApplicationModel
         /// </summary>
         /// <param name="rootModel">The root model.</param>
         /// <param name="context">The context.</param>
-        void Show(object rootModel, object context);
+        void ShowWindow(object rootModel, object context);
 
         /// <summary>
         /// Shows a modal dialog for the specified model.

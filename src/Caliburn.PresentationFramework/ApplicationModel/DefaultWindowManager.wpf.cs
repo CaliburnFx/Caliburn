@@ -51,7 +51,7 @@ namespace Caliburn.PresentationFramework.ApplicationModel
 		/// </summary>
 		/// <param name="rootModel">The root model.</param>
 		/// <param name="context">The context.</param>
-		public virtual void Show(object rootModel, object context)
+		public virtual void ShowWindow(object rootModel, object context)
 		{
 			var navWindow = Application.Current.MainWindow as NavigationWindow;
 
