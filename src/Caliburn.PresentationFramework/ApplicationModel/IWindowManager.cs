@@ -5,6 +5,13 @@ namespace Caliburn.PresentationFramework.ApplicationModel
     /// </summary>
     public interface IWindowManager
     {
+        /// <summary>
+        /// Shows a popup at the current mouse position.
+        /// </summary>
+        /// <param name="rootModel">The root model.</param>
+        /// <param name="context">The view context or optional popup target.</param>
+        void ShowPopup(object rootModel, object context);
+
 #if !SILVERLIGHT
         /// <summary>
         /// Shows a window for the specified model.

@@ -2,12 +2,11 @@
 {
     using System;
     using System.Windows;
-    using System.Windows.Controls.Primitives;
     using Core.InversionOfControl;
+    using PresentationFramework.ApplicationModel;
     using PresentationFramework.RoutedMessaging;
     using PresentationFramework.Screens;
     using PresentationFramework.ViewModels;
-    using PresentationFramework.Views;
 
     /// <summary>
     /// An <see cref="IResult"/> for showing popups.
@@ -15,7 +14,7 @@
     /// <typeparam name="TPopup">The type of the popup.</typeparam>
     public class PopupResult<TPopup> : OpenResultBase<TPopup>
     {
-        readonly Func<ResultExecutionContext, TPopup> locateModal = 
+        readonly Func<ResultExecutionContext, TPopup> locateModel = 
             c => c.ServiceLocator.GetInstance<IViewModelFactory>().Create<TPopup>();
 
         /// <summary>
@@ -26,10 +25,10 @@
         /// <summary>
         /// Initializes a new instance of the <see cref="PopupResult&lt;TPopup&gt;"/> class.
         /// </summary>
-        /// <param name="child">The child.</param>
-        public PopupResult(TPopup child)
+        /// <param name="viewModel">The ViewModel.</param>
+        public PopupResult(TPopup viewModel)
         {
-            locateModal = c => child;
+            locateModel = c => viewModel;
         }
 
         /// <summary>
@@ -38,46 +37,30 @@
         /// <param name="context">The context.</param>
         public override void Execute(ResultExecutionContext context)
         {
-            var child = locateModal(context);
+            var viewModel = locateModel(context);
 
             if (onConfigure != null)
-                onConfigure(child);
+                onConfigure(viewModel);
 
-            var deactivator = child as IDeactivate;
+            var deactivator = viewModel as IDeactivate;
             if (deactivator != null && onClose != null)
             {
                 EventHandler<DeactivationEventArgs> handler = null;
-                handler = (s2, e2) =>
-                {
+                handler = (s2, e2) =>{
                     if(!e2.WasClosed)
                         return;
 
                     deactivator.Deactivated -= handler;
-                    onClose(child);
+                    onClose(viewModel);
                 };
 
                 deactivator.Deactivated += handler;
             }
 
             var target = (UIElement)context.Message.Source.UIElement;
-            var view = context.ServiceLocator.GetInstance<IViewLocator>().LocateForModel(child, null, null);
-            var popup = view as Popup;
-            
-            if(popup == null)
-            {
-                popup = PopupConfiguration.FindOrCreatePopupFor(target);
+            var windowManager = context.ServiceLocator.GetInstance<IWindowManager>();
 
-                if(popup.Child == null)
-                    popup.Child = (UIElement)view;
-            }
-#if !SILVERLIGHT
-            else popup.PlacementTarget = target;
-#endif
-
-            context.ServiceLocator.GetInstance<IViewModelBinder>().Bind(child, popup, null);
-
-            popup.IsOpen = true;
-            popup.CaptureMouse();
+            windowManager.ShowPopup(viewModel, target);
 
             OnCompleted(null, false);
         }

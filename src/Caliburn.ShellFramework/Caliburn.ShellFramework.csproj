@@ -81,7 +81,6 @@
     <Compile Include="Results\DialogScreenSubjectResult.cs" />
     <Compile Include="Results\FocusResult.cs" />
     <Compile Include="Results\NotificationResult.silverlight.cs" />
-    <Compile Include="Results\PopupConfiguration.cs" />
     <Compile Include="Results\PopupResult.cs" />
     <Compile Include="Results\ResultExtensions.cs" />
     <Compile Include="Results\IOpenResult.cs" />

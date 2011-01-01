@@ -70,6 +70,7 @@ V2 Alpha
 -Replaced Doxygen with Sandcastle.
 -Removed direct support for Prism.
 -Ranamed IWindowManager.Show to IWindowManager.ShowWindow.
+-Added a ShowPopup method to IWindowManager.
 
 V1.1 Release
 -Fixed an issue in the WPF version of InteractionNode.
