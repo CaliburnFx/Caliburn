@@ -32,6 +32,7 @@
 			AddHandler(typeof(SimpleContainer), () => this);
 			AddHandler(typeof(IContainer), () => this);
 			AddHandler(typeof(IRegistry), () => this);
+			AddHandler(typeof(IBuilder), () => this);
 
 			AddRegistrationHandler<Singleton>(HandleSingleton);
 			AddRegistrationHandler<PerRequest>(HandlePerRequest);
