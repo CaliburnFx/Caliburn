@@ -1,6 +1,9 @@
 ﻿namespace Caliburn.PresentationFramework.ViewModels
 {
     using System.Windows;
+    using Configuration;
+    using Core.InversionOfControl;
+    using Views;
 
     /// <summary>
     /// Hosts dependency properties for binding.
@@ -51,10 +54,28 @@
 
         static void ModelChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
-            if(e.NewValue == null || e.NewValue == e.OldValue)
+            if (PresentationFrameworkConfiguration.IsInDesignMode || e.NewValue == null || e.NewValue == e.OldValue)
                 return;
 
-            binder.Bind(e.NewValue, d, null);
+            var fe = d as FrameworkElement;
+            if (fe == null)
+                return;
+
+            RoutedEventHandler handler = null;
+            handler = delegate
+            {
+                var target = e.NewValue;
+                var containerKey = e.NewValue as string;
+
+                if (containerKey != null)
+                    target = IoC.GetInstance(null, containerKey);
+
+                d.SetValue(View.IsLoadedProperty, true);
+                binder.Bind(target, d, null);
+                fe.Loaded -= handler;
+            };
+
+            fe.Loaded += handler;
         }
     }
 }

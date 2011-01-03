@@ -35,9 +35,11 @@
         /// Applies the behavior to the specified view.
         /// </summary>
         /// <param name="view">The view.</param>
-        public void ApplyTo(DependencyObject view)
+        /// <param name="isLoaded">Indicates whether the view element should be marked as loaded.</param>
+        public void ApplyTo(DependencyObject view, object isLoaded)
         {
             var element = view.FindName(elementName);
+            element.SetValue(View.IsLoadedProperty, isLoaded);
 
             if(!string.IsNullOrEmpty(actionTargetPath))
             {

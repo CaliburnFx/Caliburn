@@ -8,6 +8,7 @@ namespace Caliburn.PresentationFramework.RoutedMessaging.Parsers
     using System.Windows.Data;
     using Conventions;
     using RoutedMessaging;
+    using Views;
 
     /// <summary>
     /// An base implementation of <see cref="IMessageParser"/>.
@@ -139,51 +140,89 @@ namespace Caliburn.PresentationFramework.RoutedMessaging.Parsers
                 actualParameter.Value = parameter;
             else
             {
+                var fe = target as FrameworkElement;
+                if (fe != null)
+                {
+                    RoutedEventHandler handler = null;
+                    handler = (s, e) =>{
+                        BindParameter(fe, parameter, actualParameter);
+                        fe.Loaded -= handler;
+                    };
 #if !SILVERLIGHT
-                var nameAndBindingMode = parameter.Split(':')
-                    .Select(x => x.Trim()).ToArray();
-
-                var index = nameAndBindingMode[0].IndexOf('.');
-
-                if (index == -1)
-                    actualParameter.Bind(target, parameter, null);
+                    if(fe.IsLoaded || (bool)fe.GetValue(View.IsLoadedProperty))
+#else
+                    if((bool)fe.GetValue(View.IsLoadedProperty))
+#endif
+                        handler(null, null);
+                    else fe.Loaded += handler;
+                }
+#if !SILVERLIGHT
                 else
                 {
-                    var elementName = nameAndBindingMode[0].Substring(0, index);
-                    var path = new PropertyPath(nameAndBindingMode[0].Substring(index + 1));
+                    var fce = target as FrameworkContentElement;
+                    if (fce != null)
+                    {
+                        RoutedEventHandler handler = null;
+                        handler = (s, e) =>{
+                            BindParameter(fce, parameter, actualParameter);
+                            fce.Loaded -= handler;
+                        };
 
-                    var binding = elementName == "$this"
-                                      ? new Binding
-                                      {
-                                          Path = path,
-                                          Source = target,
-                                          UpdateSourceTrigger = defaultTrigger
-                                      }
-                                      : new Binding
-                                      {
-                                          Path = path,
-                                          ElementName = elementName,
-                                          UpdateSourceTrigger = defaultTrigger
-                                      };
-
-                    if(nameAndBindingMode.Length == 2)
-                        binding.Mode = (BindingMode)Enum.Parse(typeof(BindingMode), nameAndBindingMode[1]);
-
-                    BindingOperations.SetBinding(actualParameter, Parameter.ValueProperty, binding);
+                        if (fce.IsLoaded || (bool)fce.GetValue(View.IsLoadedProperty))
+                            handler(null, null);
+                        else fce.Loaded += handler;
+                    }
                 }
-#else
-                var index = parameter.IndexOf('.');
-
-                if(index > 0)
-                {
-                    actualParameter.ElementName = parameter.Substring(0, index);
-                    actualParameter.Path = parameter.Substring(index + 1);
-                }
-                else actualParameter.ElementName = parameter;
 #endif
             }
 
             return actualParameter;
+        }
+
+        void BindParameter(DependencyObject target, string parameter, Parameter actualParameter)
+        {
+#if !SILVERLIGHT
+            var nameAndBindingMode = parameter.Split(':')
+                .Select(x => x.Trim()).ToArray();
+
+            var index = nameAndBindingMode[0].IndexOf('.');
+
+            if (index == -1)
+                actualParameter.Bind(target, parameter, null);
+            else
+            {
+                var elementName = nameAndBindingMode[0].Substring(0, index);
+                var path = new PropertyPath(nameAndBindingMode[0].Substring(index + 1));
+
+                var binding = elementName == "$this"
+                                  ? new Binding
+                                  {
+                                      Path = path,
+                                      Source = target,
+                                      UpdateSourceTrigger = defaultTrigger
+                                  }
+                                  : new Binding
+                                  {
+                                      Path = path,
+                                      ElementName = elementName,
+                                      UpdateSourceTrigger = defaultTrigger
+                                  };
+
+                if (nameAndBindingMode.Length == 2)
+                    binding.Mode = (BindingMode)Enum.Parse(typeof(BindingMode), nameAndBindingMode[1]);
+
+                BindingOperations.SetBinding(actualParameter, Parameter.ValueProperty, binding);
+            }
+#else
+            var index = parameter.IndexOf('.');
+
+            if(index > 0)
+            {
+                actualParameter.ElementName = parameter.Substring(0, index);
+                actualParameter.Path = parameter.Substring(index + 1);
+            }
+            else actualParameter.ElementName = parameter;
+#endif
         }
     }
 }

@@ -54,6 +54,17 @@
             };
 
         /// <summary>
+        /// A dependency property which allows the framework to track whether a certain element has already been loaded in certain scenarios.
+        /// </summary>
+        public static readonly DependencyProperty IsLoadedProperty =
+            DependencyProperty.RegisterAttached(
+                "IsLoaded",
+                typeof(bool),
+                typeof(View),
+                new PropertyMetadata(false)
+                );
+
+        /// <summary>
         /// Indicates whether or not the conventions have already been applied to the view.
         /// </summary>
         public static readonly DependencyProperty ConventionsAppliedProperty =

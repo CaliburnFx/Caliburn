@@ -11,6 +11,7 @@ namespace Caliburn.PresentationFramework.Views
         /// Applies the behavior to the specified view.
         /// </summary>
         /// <param name="view">The view.</param>
-        void ApplyTo(DependencyObject view);
+        /// <param name="isLoaded">Indicates whether the view element should be marked as loaded.</param>
+        void ApplyTo(DependencyObject view, object isLoaded);
     }
 }

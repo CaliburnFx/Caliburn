@@ -98,9 +98,10 @@ namespace Caliburn.PresentationFramework.ViewModels
         {
             var modelType = GetModelType(viewModel);
             var description = viewModelDescriptionFactory.Create(modelType);
+            var isLoaded = view.GetValue(View.IsLoadedProperty);
 
             description.GetConventionsFor(view)
-                .Apply(x => x.ApplyTo(view));
+                .Apply(x => x.ApplyTo(view, isLoaded));
 
             view.SetValue(View.ConventionsAppliedProperty, true);
 
