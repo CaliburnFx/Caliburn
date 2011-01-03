@@ -192,6 +192,7 @@
             if (activator != null)
                 activator.Activate();
 
+            Mouse.Initialize((UIElement)view);
             Application.RootVisual = (UIElement)view;
 #else
             Container.GetInstance<IWindowManager>()
