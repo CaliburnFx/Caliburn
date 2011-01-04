@@ -34,11 +34,19 @@ namespace Caliburn.MEF
 			this.registration = registration;
 
 			var implementation = GetImplementation(registration);
+			
+			var instanceReg = registration as Instance;
+			if (instanceReg != null)
+			{
+				cachedInstance = instanceReg.Implementation;
+			}
+			else
+			{
+				greedyConstructor = implementation
+					.SelectEligibleConstructor();
+				ConfigureImportDefinitions();
+			}
 
-			greedyConstructor = implementation
-				.SelectEligibleConstructor();
-
-			ConfigureImportDefinitions();
 			ConfigureExportDefinitions(implementation, registration.Service);
 		}
 
@@ -92,8 +100,7 @@ namespace Caliburn.MEF
 		{
 			if (targetType.IsArray)
 				return ImportCardinality.ZeroOrMore;
-			else
-				return ImportCardinality.ExactlyOne;
+			return ImportCardinality.ExactlyOne;
 		}
 
 		/// <summary>
@@ -124,16 +131,13 @@ namespace Caliburn.MEF
 		/// </exception>
 		public override object GetExportedValue(ExportDefinition definition)
 		{
-			if (registration is PerRequest)
+		    if (registration is PerRequest)
 				return CreateInstance(definition);
 
-			if (cachedInstance == null)
-				cachedInstance = CreateInstance(definition);
-
-			return cachedInstance;
+		    return cachedInstance ?? (cachedInstance = CreateInstance(definition));
 		}
 
-		/// <summary>
+	    /// <summary>
 		/// Creates the instance.
 		/// </summary>
 		/// <param name="definition">The definition.</param>
@@ -282,6 +286,9 @@ namespace Caliburn.MEF
 			var perRequest = registration as PerRequest;
 			if (perRequest != null) return perRequest.Implementation;
 
+			var instance = registration as Instance;
+			if (instance != null && instance.Implementation != null) return instance.Implementation.GetType();
+			
 			throw new NotSupportedException();
 		}
 	}

@@ -117,6 +117,7 @@
     <Compile Include="Actions\Filters\The_dependency_observer.cs" />
     <Compile Include="Actions\Filters\The_preview_filter.cs" />
     <Compile Include="Adapters\Components\AdvancedLogger.cs" />
+    <Compile Include="Adapters\Components\Component.cs" />
     <Compile Include="Adapters\Components\DummyBehaviorAttribute.cs" />
     <Compile Include="Adapters\Components\ILogger.cs" />
     <Compile Include="Adapters\Components\IMailer.cs" />
@@ -124,6 +125,7 @@
     <Compile Include="Adapters\Components\SampleCommand.cs" />
     <Compile Include="Adapters\Components\SimpleLogger.cs" />
     <Compile Include="Adapters\Components\SimpleMailer.cs" />
+    <Compile Include="Adapters\Components\User.cs" />
     <Compile Include="Adapters\Integration\The_Windsor_container.cs" />
     <Compile Include="Adapters\Integration\The_Unity_container.cs" />
     <Compile Include="Adapters\Integration\The_StructureMap_container.cs" />

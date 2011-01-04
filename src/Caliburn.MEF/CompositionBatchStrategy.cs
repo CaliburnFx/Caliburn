@@ -1,6 +1,5 @@
 namespace Caliburn.MEF
 {
-	using System.ComponentModel.Composition;
 	using System.ComponentModel.Composition.Hosting;
 	using System.ComponentModel.Composition.Primitives;
 	using Core.InversionOfControl;
@@ -37,9 +36,7 @@ namespace Caliburn.MEF
         /// <param name="instance">The instance.</param>
 		public virtual void HandleInstance(CompositionBatch batch, Instance instance)
 		{
-			if (!instance.HasName())
-				batch.AddExportedValue(AttributedModelServices.GetContractName(instance.Service), instance.Implementation);
-			else batch.AddExportedValue(instance.Name, instance.Implementation);
+			batch.AddPart(new ComponentPart(instance));
 		}
 
         /// <summary>
