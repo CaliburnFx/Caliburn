@@ -6,7 +6,6 @@
     using System.ComponentModel.Composition.Hosting;
     using System.ComponentModel.Composition.ReflectionModel;
     using System.Linq;
-    using System.Threading;
     using Core;
     using PresentationFramework.RoutedMessaging;
 
