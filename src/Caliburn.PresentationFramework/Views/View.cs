@@ -99,7 +99,17 @@
         public static Func<DependencyObject, DependencyObject> GetFirstNonGeneratedView = view =>
         {
             if ((bool)view.GetValue(IsGeneratedProperty))
-                return (DependencyObject)((ContentControl)view).Content;
+            {
+                if (view is ContentControl)
+                    return (DependencyObject)((ContentControl)view).Content;
+
+                var type = view.GetType();
+                var contentProperty = type.GetAttributes<ContentPropertyAttribute>(true)
+                    .FirstOrDefault() ?? new ContentPropertyAttribute("Content");
+
+                return (DependencyObject)type.GetProperty(contentProperty.Name)
+                    .GetValue(view, null);
+            }
 
             return view;
         };
