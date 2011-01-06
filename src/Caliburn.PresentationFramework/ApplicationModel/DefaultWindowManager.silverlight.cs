@@ -194,9 +194,12 @@ namespace Caliburn.PresentationFramework.ApplicationModel
             }
 
             void Deactivated(object sender, DeactivationEventArgs e) {
+                if(!e.WasClosed)
+                    return;
+
                 ((IDeactivate)model).Deactivated -= Deactivated;
 
-                if(!e.WasClosed || deactivatingFromView)
+                if (deactivatingFromView)
                     return;
 
                 deactivateFromViewModel = true;

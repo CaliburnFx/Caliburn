@@ -301,10 +301,13 @@ namespace Caliburn.PresentationFramework.ApplicationModel
 
 			void Deactivated(object sender, DeactivationEventArgs e)
 			{
-				((IDeactivate)model).Deactivated -= Deactivated;
+                if (!e.WasClosed)
+                    return;
 
-				if (!e.WasClosed || deactivatingFromView)
-					return;
+                ((IDeactivate)model).Deactivated -= Deactivated;
+
+                if (deactivatingFromView)
+                    return;
 
 				deactivateFromViewModel = true;
 				actuallyClosing = true;
