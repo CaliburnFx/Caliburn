@@ -104,15 +104,15 @@ namespace Caliburn.PresentationFramework.ApplicationModel
         protected Popup CreatePopup(object rootModel, UIElement popupTarget)
         {
             if (popupTarget == null) {
-                var position = Mouse.GetPosition(null);
                 return new Popup {
-                    HorizontalOffset = position.X,
-                    VerticalOffset = position.Y
+                    Placement = PlacementMode.MousePoint,
+                    AllowsTransparency = true
                 };
             }
 
             return new Popup {
-                PlacementTarget = popupTarget
+                PlacementTarget = popupTarget,
+                AllowsTransparency = true
             };
         }
 
