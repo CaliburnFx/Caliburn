@@ -92,11 +92,7 @@ namespace Caliburn.PresentationFramework.ApplicationModel
                 popup.Closed += delegate { deactivator.Deactivate(true); };
 
             popup.IsOpen = true;
-
-            var capture = view as UIElement;
-            if (capture != null)
-                capture.CaptureMouse();
-            else popup.CaptureMouse();
+            popup.CaptureMouse();
         }
 
         /// <summary>
