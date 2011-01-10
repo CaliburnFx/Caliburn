@@ -82,6 +82,7 @@
     <Compile Include="ApplicationModel\IEventAggregator.cs" />
     <Compile Include="ApplicationModel\IHandle.cs" />
     <Compile Include="ApplicationModel\IInputManager.cs" />
+    <Compile Include="ApplicationModel\IParent.cs" />
     <Compile Include="ApplicationModel\IShortcut.cs" />
     <Compile Include="ApplicationModel\Mouse.silverlight.cs" />
     <Compile Include="Behaviors\DependencyMode.cs" />
@@ -111,6 +112,7 @@
     <Compile Include="RoutedMessaging\ResultExecutionContext.cs" />
     <Compile Include="Screens\ActivationEventArgs.cs" />
     <Compile Include="Screens\ActivationProcessedEventArgs.cs" />
+    <Compile Include="Screens\ConductorBaseWithActiveItem.cs" />
     <Compile Include="Screens\DeactivationEventArgs.cs" />
     <Compile Include="Screens\DefaultCloseStrategy.cs" />
     <Compile Include="Screens\Conductor.cs" />
@@ -120,13 +122,15 @@
     <Compile Include="Screens\IActivate.cs" />
     <Compile Include="Screens\IClose.cs" />
     <Compile Include="Screens\ICloseStrategy.cs" />
+    <Compile Include="Screens\IConductActiveItem.cs" />
     <Compile Include="Screens\IConductor.cs" />
     <Compile Include="Screens\IDeactivate.cs" />
     <Compile Include="Screens\IGuardClose.cs" />
-    <Compile Include="Screens\IHaveDisplayName.cs" />
+    <Compile Include="Screens\IHaveActiveItem.cs" />
+    <Compile Include="ApplicationModel\IHaveDisplayName.cs" />
     <Compile Include="Screens\IHaveSubject.cs" />
     <Compile Include="Screens\ScreenExtensions.cs" />
-    <Compile Include="Screens\IChild.cs" />
+    <Compile Include="ApplicationModel\IChild.cs" />
     <Compile Include="Screens\IScreen.cs" />
     <Compile Include="Screens\ISubjectSpecification.cs" />
     <Compile Include="Screens\Screen.cs" />

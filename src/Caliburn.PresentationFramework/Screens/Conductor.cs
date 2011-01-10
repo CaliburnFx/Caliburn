@@ -6,7 +6,7 @@
     /// <summary>
     /// An implementation of <see cref="IConductor"/> that holds on to and activates only one item at a time.
     /// </summary>
-    public partial class Conductor<T> : ConductorBase<T>
+    public partial class Conductor<T> : ConductorBaseWithActiveItem<T>
     {
         /// <summary>
         /// Activates the specified item.
@@ -28,17 +28,18 @@
         }
 
         /// <summary>
-        /// Closes the specified item.
+        /// Deactivates the specified item.
         /// </summary>
         /// <param name="item">The item to close.</param>
-        public override void CloseItem(T item)
+        /// <param name="close">Indicates whether or not to close the item after deactivating it.</param>
+        public override void DeactivateItem(T item, bool close)
         {
             if(item == null || !item.Equals(ActiveItem))
                 return;
 
             CloseStrategy.Execute(new[] { ActiveItem }, (canClose, items) => {
                 if(canClose)
-                    ChangeActiveItem(default(T), true);
+                    ChangeActiveItem(default(T), close);
             });
         }
 
@@ -56,9 +57,7 @@
         /// </summary>
         protected override void OnActivate()
         {
-            var activator = ActiveItem as IActivate;
-            if(activator != null)
-                activator.Activate();
+            ScreenExtensions.TryActivate(ActiveItem);
         }
 
         /// <summary>
@@ -67,18 +66,16 @@
         /// <param name="close">Inidicates whether this instance will be closed.</param>
         protected override void OnDeactivate(bool close)
         {
-            var deactivator = ActiveItem as IDeactivate;
-            if(deactivator != null)
-                deactivator.Deactivate(close);
+            ScreenExtensions.TryDeactivate(ActiveItem, close);
         }
 
         /// <summary>
-        /// Gets all the items currently being conducted.
+        /// Gets the children.
         /// </summary>
-        /// <returns></returns>
-        protected override IEnumerable<T> GetConductedItems()
+        /// <returns>The collection of children.</returns>
+        public override IEnumerable<T> GetChildren()
         {
-            yield return ActiveItem;
+            return new[] { ActiveItem };
         }
     }
 }

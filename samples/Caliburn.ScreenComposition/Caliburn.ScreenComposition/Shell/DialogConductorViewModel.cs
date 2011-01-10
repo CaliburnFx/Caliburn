@@ -4,10 +4,11 @@
     using System.ComponentModel.Composition;
     using Framework;
     using PresentationFramework;
+    using PresentationFramework.ApplicationModel;
     using PresentationFramework.Screens;
 
     [Export(typeof(IDialogManager)), PartCreationPolicy(CreationPolicy.NonShared)]
-    public class DialogConductorViewModel : PropertyChangedBase, IDialogManager, IConductor {
+    public class DialogConductorViewModel : PropertyChangedBase, IDialogManager, IConductActiveItem {
         readonly Func<IMessageBox> createMessageBox;
 
         [ImportingConstructor]
@@ -17,7 +18,7 @@
 
         public IScreen ActiveItem { get; private set; }
 
-        public IEnumerable GetConductedItems() {
+        public IEnumerable GetChildren() {
             return ActiveItem != null ? new[] { ActiveItem } : new object[0];
         }
 
@@ -35,7 +36,7 @@
             ActivationProcessed(this, new ActivationProcessedEventArgs { Item = ActiveItem, Success = true });
         }
 
-        public void CloseItem(object item) {
+        public void DeactivateItem(object item, bool close) {
             var guard = item as IGuardClose;
             if(guard != null) {
                 guard.CanClose(result => {
@@ -46,7 +47,7 @@
             else CloseActiveItemCore();
         }
 
-        object IConductor.ActiveItem {
+        object IHaveActiveItem.ActiveItem {
             get { return ActiveItem; }
             set { ActivateItem(value); }
         }

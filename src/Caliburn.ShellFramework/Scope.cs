@@ -3,6 +3,7 @@ namespace Caliburn.ShellFramework
     using System;
     using System.Collections.Generic;
     using Core.Logging;
+    using PresentationFramework.ApplicationModel;
     using PresentationFramework.Screens;
 
     /// <summary>

@@ -4,6 +4,7 @@
     using System.Collections.Generic;
     using System.Collections.Specialized;
     using System.Linq;
+    using ApplicationModel;
     using Core;
 
     public partial class Conductor<T>
@@ -16,7 +17,7 @@
             /// <summary>
             /// An implementation of <see cref="IConductor"/> that holds on many items but only activates on at a time.
             /// </summary>
-            public class OneActive : ConductorBase<T>
+            public class OneActive : ConductorBaseWithActiveItem<T>
             {
                 readonly BindableCollection<T> items = new BindableCollection<T>();
 
@@ -48,10 +49,10 @@
                 }
 
                 /// <summary>
-                /// Gets all the items currently being conducted.
+                /// Gets the children.
                 /// </summary>
-                /// <returns></returns>
-                protected override IEnumerable<T> GetConductedItems()
+                /// <returns>The collection of children.</returns>
+                public override IEnumerable<T> GetChildren()
                 {
                     return items;
                 }
@@ -72,16 +73,19 @@
                 }
 
                 /// <summary>
-                /// Closes the specified item.
+                /// Deactivates the specified item.
                 /// </summary>
                 /// <param name="item">The item to close.</param>
-                public override void CloseItem(T item)
+                /// <param name="close">Indicates whether or not to close the item after deactivating it.</param>
+                public override void DeactivateItem(T item, bool close)
                 {
                     if(item == null)
                         return;
 
-                    CloseStrategy.Execute(new[] { item }, (canClose, closable) => {
-                        if(canClose)
+                    if (!close)
+                        ScreenExtensions.TryDeactivate(item, false);
+                    else CloseStrategy.Execute(new[] { item }, (canClose, closable) => {
+                        if (canClose)
                             CloseItemCore(item);
                     });
                 }
@@ -95,12 +99,7 @@
 
                         ChangeActiveItem(next, true);
                     }
-                    else
-                    {
-                        var deactivator = item as IDeactivate;
-                        if(deactivator != null)
-                            deactivator.Deactivate(true);
-                    }
+                    else ScreenExtensions.TryDeactivate(item, true);
 
                     items.Remove(item);
                 }
@@ -139,9 +138,7 @@
                 /// </summary>
                 protected override void OnActivate()
                 {
-                    var activator = ActiveItem as IActivate;
-                    if(activator != null)
-                        activator.Activate();
+                    ScreenExtensions.TryActivate(ActiveItem);
                 }
 
                 /// <summary>
@@ -152,12 +149,7 @@
                 {
                     if(close)
                         items.OfType<IDeactivate>().Apply(x => x.Deactivate(true));
-                    else
-                    {
-                        var deactivator = ActiveItem as IDeactivate;
-                        if(deactivator != null)
-                            deactivator.Deactivate(false);
-                    }
+                    else ScreenExtensions.TryDeactivate(ActiveItem, false);
                 }
 
                 /// <summary>

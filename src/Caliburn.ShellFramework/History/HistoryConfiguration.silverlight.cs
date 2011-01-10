@@ -30,7 +30,7 @@ namespace Caliburn.ShellFramework.History
         /// Gets or sets the conductor being coordinated.
         /// </summary>
         /// <value>The conductor.</value>
-        public IConductor Conductor { get; set; }
+        public IConductActiveItem Conductor { get; set; }
 
         /// <summary>
         /// Gets or sets the history key used to persist values.

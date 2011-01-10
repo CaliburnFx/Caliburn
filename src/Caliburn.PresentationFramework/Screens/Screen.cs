@@ -4,6 +4,7 @@
     using System.Collections.Generic;
     using System.Linq;
     using System.Windows;
+    using ApplicationModel;
     using Behaviors;
     using Core.Logging;
     using Invocation;

@@ -1,24 +1,14 @@
 namespace Caliburn.PresentationFramework.Screens
 {
     using System;
-    using System.Collections;
+    using ApplicationModel;
 
     /// <summary>
     /// Denotes an instance which conducts other objects by managing an ActiveItem and maintaining a strict lifecycle.
     /// </summary>
     /// <remarks>Conducted instances can optin to the lifecycle by impelenting any of the follosing <see cref="IActivate"/>, <see cref="IDeactivate"/>, <see cref="IGuardClose"/>.</remarks>
-    public interface IConductor : INotifyPropertyChangedEx
+    public interface IConductor : IParent, INotifyPropertyChangedEx
     {
-        /// <summary>
-        /// The currently active item.
-        /// </summary>
-        object ActiveItem { get; set; }
-
-        /// <summary>
-        /// Gets all the items that are being conducted.
-        /// </summary>
-        IEnumerable GetConductedItems();
-
         /// <summary>
         /// Activates the specified item.
         /// </summary>
@@ -26,10 +16,11 @@ namespace Caliburn.PresentationFramework.Screens
         void ActivateItem(object item);
 
         /// <summary>
-        /// Closes the specified item.
+        /// Deactivates the specified item.
         /// </summary>
         /// <param name="item">The item to close.</param>
-        void CloseItem(object item);
+        /// <param name="close">Indicates whether or not to close the item after deactivating it.</param>
+        void DeactivateItem(object item, bool close);
 
         /// <summary>
         /// Occurs when an activation request is processed.

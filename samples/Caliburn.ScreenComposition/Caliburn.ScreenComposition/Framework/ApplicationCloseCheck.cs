@@ -1,6 +1,7 @@
 ﻿namespace Caliburn.ScreenComposition.Framework {
     using System;
     using System.ComponentModel.Composition;
+    using PresentationFramework.ApplicationModel;
     using PresentationFramework.RoutedMessaging;
     using PresentationFramework.Screens;
 

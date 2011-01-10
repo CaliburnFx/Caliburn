@@ -61,7 +61,7 @@
                 if(success)
                 {
                     var child = parent
-                        .GetConductedItems()
+                        .GetChildren()
                         .OfType<IHaveSubject>()
                         .FirstOrDefault(subjectSpecification.Matches);
 

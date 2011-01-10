@@ -3,15 +3,14 @@
     using System;
     using System.Collections;
     using System.Collections.Generic;
-    using Behaviors;
+    using ApplicationModel;
 
     /// <summary>
     /// A base class for various implementations of <see cref="IConductor"/>.
     /// </summary>
     /// <typeparam name="T">The type that is being conducted.</typeparam>
-    public abstract class ConductorBase<T> : Screen, IConductor
+    public abstract class ConductorBase<T> : Screen, IConductor, IParent<T>
     {
-        T activeItem;
         ICloseStrategy<T> closeStrategy;
 
         /// <summary>
@@ -24,48 +23,31 @@
             set { closeStrategy = value; }
         }
 
-        /// <summary>
-        /// The currently active item.
-        /// </summary>
-        [DoNotNotify]
-        public T ActiveItem
-        {
-            get { return activeItem; }
-            set { ActivateItem(value); }
-        }
-
-        [DoNotNotify]
-        object IConductor.ActiveItem
-        {
-            get { return ActiveItem; }
-            set { ActiveItem = (T)value; }
-        }
-
-        IEnumerable IConductor.GetConductedItems()
-        {
-            return GetConductedItems();
-        }
-
         void IConductor.ActivateItem(object item)
         {
             ActivateItem((T)item);
         }
 
-        void IConductor.CloseItem(object item)
+        void IConductor.DeactivateItem(object item, bool close)
         {
-            CloseItem((T)item);
+            DeactivateItem((T)item, close);
         }
+
+        IEnumerable IParent.GetChildren()
+        {
+            return GetChildren();
+        }
+
+        /// <summary>
+        /// Gets the children.
+        /// </summary>
+        /// <returns>The collection of children.</returns>
+        public abstract IEnumerable<T> GetChildren();
 
         /// <summary>
         /// Occurs when an activation request is processed.
         /// </summary>
         public event EventHandler<ActivationProcessedEventArgs> ActivationProcessed = delegate { };
-
-        /// <summary>
-        /// Gets all the items currently being conducted.
-        /// </summary>
-        /// <returns></returns>
-        protected abstract IEnumerable<T> GetConductedItems();
 
         /// <summary>
         /// Activates the specified item.
@@ -74,10 +56,11 @@
         public abstract void ActivateItem(T item);
 
         /// <summary>
-        /// Closes the specified item.
+        /// Deactivates the specified item.
         /// </summary>
         /// <param name="item">The item to close.</param>
-        public abstract void CloseItem(T item);
+        /// <param name="close">Indicates whether or not to close the item after deactivating it.</param>
+        public abstract void DeactivateItem(T item, bool close);
 
         /// <summary>
         /// Called by a subclass when an activation needs processing.
@@ -93,31 +76,6 @@
                 Item = item,
                 Success = success
             });
-        }
-
-        /// <summary>
-        /// Changes the active item.
-        /// </summary>
-        /// <param name="newItem">The new item to activate.</param>
-        /// <param name="closePrevious">Indicates whether or not to close the previous active item.</param>
-        protected virtual void ChangeActiveItem(T newItem, bool closePrevious)
-        {
-            var deactivator = activeItem as IDeactivate;
-            if(deactivator != null)
-                deactivator.Deactivate(closePrevious);
-
-            newItem = EnsureItem(newItem);
-
-            if(IsActive)
-            {
-                var activator = newItem as IActivate;
-                if(activator != null)
-                    activator.Activate();
-            }
-
-            activeItem = newItem;
-            NotifyOfPropertyChange("ActiveItem");
-            OnActivationProcessed(activeItem, true);
         }
 
         /// <summary>

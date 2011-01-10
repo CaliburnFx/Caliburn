@@ -1,5 +1,6 @@
 ﻿namespace Caliburn.ScreenComposition.Framework {
     using System.ComponentModel;
+    using PresentationFramework.ApplicationModel;
     using PresentationFramework.Screens;
 
     public abstract class DocumentWorkspace<TDocument> : Conductor<TDocument>.Collection.OneActive, IDocumentWorkspace
@@ -30,7 +31,8 @@
         }
 
         public void Show() {
-            if(Parent.ActiveItem == this) {
+            var haveActive = Parent as IHaveActiveItem;
+            if (haveActive != null && haveActive.ActiveItem == this) {
                 DisplayName = IconName;
                 State = DocumentWorkspaceState.Master;
             }
@@ -42,9 +44,7 @@
         }
 
         public void Edit(TDocument child) {
-            if(Parent.ActiveItem != this)
-                Parent.ActivateItem(this);
-
+            Parent.ActivateItem(this);
             State = DocumentWorkspaceState.Detail;
             DisplayName = child.DisplayName;
             ActivateItem(child);

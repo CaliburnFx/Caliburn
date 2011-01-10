@@ -1,4 +1,4 @@
-namespace Caliburn.PresentationFramework.Screens
+namespace Caliburn.PresentationFramework.ApplicationModel
 {
     /// <summary>
     /// Denotes an instance which has a display name.

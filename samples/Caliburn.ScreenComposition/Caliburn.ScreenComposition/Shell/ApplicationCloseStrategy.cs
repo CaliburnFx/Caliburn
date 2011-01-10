@@ -32,7 +32,7 @@
                 var conductor = current as IConductor;
                 if (conductor != null)
                 {
-                    var tasks = conductor.GetConductedItems()
+                    var tasks = conductor.GetChildren()
                         .OfType<IHaveShutdownTask>()
                         .Select(x => x.GetShutdownTask())
                         .Where(x => x != null);

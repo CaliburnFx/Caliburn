@@ -1,4 +1,4 @@
-namespace Caliburn.PresentationFramework.Screens
+namespace Caliburn.PresentationFramework.ApplicationModel
 {
     /// <summary>
     /// Denotes a node within a parent/child hierarchy.

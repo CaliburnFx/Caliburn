@@ -2,6 +2,7 @@ namespace Caliburn.ShellFramework.Menus
 {
     using System.Collections.Generic;
     using System.ComponentModel;
+    using PresentationFramework.ApplicationModel;
     using PresentationFramework.Screens;
 
     /// <summary>
