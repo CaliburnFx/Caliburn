@@ -60,11 +60,6 @@
                 }
 
                 /// <summary>
-                /// Occurs when an activation request is processed.
-                /// </summary>
-                public event EventHandler<ActivationProcessedEventArgs> ActivationProcessed = delegate { };
-
-                /// <summary>
                 /// Called when activating.
                 /// </summary>
                 protected override void OnActivate()
