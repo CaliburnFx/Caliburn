@@ -3,13 +3,12 @@
     using System.ComponentModel.Composition;
     using PresentationFramework.ApplicationModel;
     using PresentationFramework.RoutedMessaging;
-    using PresentationFramework.Screens;
 
     public class ApplicationCloseCheck : IResult {
         readonly Action<IDialogManager, Action<bool>> closeCheck;
-        readonly IChild<IConductor> screen;
+        readonly IChild screen;
 
-        public ApplicationCloseCheck(IChild<IConductor> screen, Action<IDialogManager, Action<bool>> closeCheck) {
+        public ApplicationCloseCheck(IChild screen, Action<IDialogManager, Action<bool>> closeCheck) {
             this.screen = screen;
             this.closeCheck = closeCheck;
         }

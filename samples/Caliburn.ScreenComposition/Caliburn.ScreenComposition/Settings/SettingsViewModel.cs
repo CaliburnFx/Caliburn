@@ -23,7 +23,7 @@
         }
 
         public void Show() {
-            Parent.ActivateItem(this);
+            ((IConductor)Parent).ActivateItem(this);
         }
     }
 }

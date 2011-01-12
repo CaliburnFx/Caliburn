@@ -12,6 +12,10 @@
             DisplayName = IconName;
         }
 
+        protected IConductor Conductor {
+            get { return (IConductor)Parent; }
+        }
+
         public DocumentWorkspaceState State {
             get { return state; }
             set {
@@ -36,7 +40,7 @@
                 DisplayName = IconName;
                 State = DocumentWorkspaceState.Master;
             }
-            else Parent.ActivateItem(this);
+            else Conductor.ActivateItem(this);
         }
 
         void IDocumentWorkspace.Edit(object document) {
@@ -44,7 +48,7 @@
         }
 
         public void Edit(TDocument child) {
-            Parent.ActivateItem(this);
+            Conductor.ActivateItem(this);
             State = DocumentWorkspaceState.Detail;
             DisplayName = child.DisplayName;
             ActivateItem(child);

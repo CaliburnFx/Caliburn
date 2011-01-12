@@ -42,10 +42,10 @@
                         {
                             case NotifyCollectionChangedAction.Add:
                             case NotifyCollectionChangedAction.Replace:
-                                e.NewItems.OfType<IChild<IConductor>>().Apply(x => x.Parent = this);
+                                e.NewItems.OfType<IChild>().Apply(x => x.Parent = this);
                                 break;
                             case NotifyCollectionChangedAction.Reset:
-                                items.OfType<IChild<IConductor>>().Apply(x => x.Parent = this);
+                                items.OfType<IChild>().Apply(x => x.Parent = this);
                                 break;
                         }
                     };

@@ -23,9 +23,9 @@
         }
 
         public void ActivateItem(object item) {
-            ActiveItem = item as IScreen;
+            ActiveItem = (IScreen)item;
 
-            var child = ActiveItem as IChild<IConductor>;
+            var child = ActiveItem as IChild;
             if(child != null)
                 child.Parent = this;
 
@@ -58,10 +58,10 @@
             ActivateItem(dialogModel);
         }
 
-        public void ShowMessageBox(string message, string title = null, MessageBoxOptions options = MessageBoxOptions.Ok, Action<IMessageBox> callback = null) {
+        public void ShowMessageBox(string message, string title = "Hello Screens", MessageBoxOptions options = MessageBoxOptions.Ok, Action<IMessageBox> callback = null) {
             var box = createMessageBox();
 
-            box.DisplayName = title ?? "Hello Screens";
+            box.DisplayName = title;
             box.Options = options;
             box.Message = message;
 

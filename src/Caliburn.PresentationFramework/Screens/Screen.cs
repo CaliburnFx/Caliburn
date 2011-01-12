@@ -13,13 +13,13 @@
     /// <summary>
     /// A base implementation of <see cref="IScreen"/>.
     /// </summary>
-    public class Screen : PropertyChangedBase, IScreen, IChild<IConductor>, IViewAware
+    public class Screen : PropertyChangedBase, IScreen, IChild, IViewAware
     {
         protected static readonly ILog Log = LogManager.GetLog(typeof(Screen));
 
         bool isActive;
         bool isInitialized;
-        IConductor parent;
+        object parent;
         string displayName;
         readonly Dictionary<object, object> views = new Dictionary<object, object>();
 
@@ -32,10 +32,10 @@
         }
 
         /// <summary>
-        /// Gets or Sets the Parent <see cref="IConductor"/>
+        /// Gets or Sets the Parent
         /// </summary>
         [DoNotNotify]
-        public IConductor Parent
+        public virtual object Parent
         {
             get { return parent; }
             set
@@ -46,20 +46,10 @@
         }
 
         /// <summary>
-        /// Gets or Sets the Parent
-        /// </summary>
-        [DoNotNotify]
-        object IChild.Parent
-        {
-            get { return Parent; }
-            set { Parent = (IConductor)value; }
-        }
-
-        /// <summary>
         /// Gets or Sets the Display Name
         /// </summary>
         [DoNotNotify]
-        public string DisplayName
+        public virtual string DisplayName
         {
             get { return displayName; }
             set
@@ -227,8 +217,9 @@
         public void TryClose()
         {
             Execute.OnUIThread(() =>{
-                if(Parent != null)
-                    Parent.CloseItem(this);
+                var conductor = Parent as IConductor;
+                if (conductor != null)
+                    conductor.CloseItem(this);
                 else
                 {
                     var view = GetView(null);
