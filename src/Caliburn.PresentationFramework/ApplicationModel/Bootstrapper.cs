@@ -22,18 +22,28 @@
     /// </summary>
     public class Bootstrapper
     {
-        readonly IServiceLocator container;
+        IServiceLocator container;
 
         /// <summary>
         /// Creates an instance of the bootstrapper.
         /// </summary>
         public Bootstrapper()
         {
-            if(PresentationFrameworkConfiguration.IsInDesignMode)
-                return;
+            if (PresentationFrameworkConfiguration.IsInDesignMode)
+                StartDesignTime();
+            else StartRuntime();
+        }
 
-            BeforeConfiguration();
+        /// <summary>
+        /// Called by the bootstrapper's constructor at design time to start the framework.
+        /// </summary>
+        protected virtual void StartDesignTime() { }
 
+        /// <summary>
+        /// Called by the bootstrapper's constructor at runtime to start the framework.
+        /// </summary>
+        protected virtual void StartRuntime()
+        {
             container = CreateContainer();
             var builder = CaliburnFramework
                 .Configure(container, Register);
@@ -73,11 +83,6 @@
 #endif
             Application.Exit += OnExit;
         }
-
-        /// <summary>
-        /// Called before the Caliburn initialization phase. 
-        /// </summary>
-        protected virtual void BeforeConfiguration() {}
 
         /// <summary>
         /// Creates the container.
