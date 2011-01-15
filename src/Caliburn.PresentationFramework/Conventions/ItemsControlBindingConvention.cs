@@ -1,6 +1,7 @@
 namespace Caliburn.PresentationFramework.Conventions
 {
     using System;
+    using System.Linq;
     using System.Reflection;
     using System.Windows;
     using System.Windows.Controls;
@@ -45,7 +46,7 @@ namespace Caliburn.PresentationFramework.Conventions
             string path = null;
             DependencyProperty bindableProperty = null;
             BindingMode mode = BindingMode.OneWay;
-            bool checkTemplate = true;
+            bool checkTemplate = ShouldCheckTemplate(property);
             IValueConverter converter = null;
 
             if (SelectorControlType.IsAssignableFrom(element.Type))
@@ -64,7 +65,6 @@ namespace Caliburn.PresentationFramework.Conventions
                     path = selectionPath;
                     bindableProperty = Selector.SelectedItemProperty;
                     mode = selectionProperty.CanWrite ? BindingMode.TwoWay : BindingMode.OneWay;
-                    checkTemplate = ShouldCheckTemplate(selectionProperty);
                     converter = conventionManager.GetValueConverter(bindableProperty, boundProperty.PropertyType);
 
                     Log.Info("Selector binding convention added to {0}.", element.Name);
@@ -86,7 +86,6 @@ namespace Caliburn.PresentationFramework.Conventions
                     path = headerPath;
                     bindableProperty = HeaderedItemsControl.HeaderProperty;
                     mode = headerProperty.CanWrite ? BindingMode.TwoWay : BindingMode.OneWay;
-                    checkTemplate = ShouldCheckTemplate(headerProperty);
                     converter = conventionManager.GetValueConverter(bindableProperty, headerProperty.PropertyType);
 
                     Log.Info("Header binding convention added to {0}.", element.Name);
@@ -108,8 +107,11 @@ namespace Caliburn.PresentationFramework.Conventions
 
         static bool ShouldCheckTemplate(PropertyInfo property)
         {
-            return !property.PropertyType.IsValueType &&
-                !typeof(string).IsAssignableFrom(property.PropertyType);
+            if (!property.PropertyType.IsGenericType)
+                return false;
+
+            var itemType = property.PropertyType.GetGenericArguments().First();
+            return !itemType.IsValueType && !typeof(string).IsAssignableFrom(itemType);
         }
     }
 }

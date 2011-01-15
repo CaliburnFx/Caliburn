@@ -1,5 +1,7 @@
 ﻿namespace Caliburn.PresentationFramework.Conventions
 {
+    using System.Linq;
+    using System.Reflection;
     using System.Windows;
     using System.Windows.Controls;
     using System.Windows.Data;
@@ -158,13 +160,14 @@
         /// <returns></returns>
         protected virtual bool NeedsItemTemplate(ItemsControl control)
         {
+            if (control.ItemTemplate != null || !string.IsNullOrEmpty(control.DisplayMemberPath))
+                return false;
+
 #if !SILVERLIGHT
-            return control.ItemTemplate == null
-                   && control.ItemTemplateSelector == null
-                   && string.IsNullOrEmpty(control.DisplayMemberPath);
-#else
-            return control.ItemTemplate == null && string.IsNullOrEmpty(control.DisplayMemberPath);
+            if(control.ItemTemplateSelector != null)
+                return false;
 #endif
+            return true;
         }
 
         const string TemplateCore =
