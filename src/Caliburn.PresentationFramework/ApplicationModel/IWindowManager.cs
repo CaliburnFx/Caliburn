@@ -1,5 +1,7 @@
 namespace Caliburn.PresentationFramework.ApplicationModel
 {
+    using System.Collections.Generic;
+
     /// <summary>
     /// A service that manages windows.
     /// </summary>
@@ -9,8 +11,9 @@ namespace Caliburn.PresentationFramework.ApplicationModel
         /// Shows a popup at the current mouse position.
         /// </summary>
         /// <param name="rootModel">The root model.</param>
-        /// <param name="context">The view context or optional popup target.</param>
-        void ShowPopup(object rootModel, object context);
+        /// <param name="context">The view context.</param>
+        /// <param name="settings">The optional popup settings.</param>
+        void ShowPopup(object rootModel, object context, IDictionary<string, object> settings);
 
 #if !SILVERLIGHT
         /// <summary>

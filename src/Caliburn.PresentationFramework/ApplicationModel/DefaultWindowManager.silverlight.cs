@@ -3,6 +3,7 @@
 namespace Caliburn.PresentationFramework.ApplicationModel
 {
     using System;
+    using System.Collections.Generic;
     using System.ComponentModel;
     using System.Windows;
     using System.Windows.Controls;
@@ -60,10 +61,11 @@ namespace Caliburn.PresentationFramework.ApplicationModel
         /// Shows a popup at the current mouse position.
         /// </summary>
         /// <param name="rootModel">The root model.</param>
-        /// <param name="context">The view context or optional popup target.</param>
-        public virtual void ShowPopup(object rootModel, object context) {
-            var popup = CreatePopup(rootModel, (context is UIElement) ? (UIElement)context : null);
-            var view = ViewLocator.LocateForModel(rootModel, popup, (context is UIElement) ? null : context);
+        /// <param name="context">The view context.</param>
+        /// <param name="settings">The optional popup settings.</param>
+        public virtual void ShowPopup(object rootModel, object context, IDictionary<string, object> settings) {
+            var popup = CreatePopup(rootModel, settings);
+            var view = ViewLocator.LocateForModel(rootModel, popup, context);
 
             popup.Child = (UIElement)view;
             popup.SetValue(View.IsGeneratedProperty, true);
@@ -86,13 +88,28 @@ namespace Caliburn.PresentationFramework.ApplicationModel
         /// Creates a popup for hosting a popup window.
         /// </summary>
         /// <param name="rootModel">The model.</param>
-        /// <param name="popupTarget">The optional popup target.</param>
+        /// <param name="settings">The optional popup settings.</param>
         /// <returns>The popup.</returns>
-        protected Popup CreatePopup(object rootModel, UIElement popupTarget) {
-            return new Popup {
+        protected virtual Popup CreatePopup(object rootModel, IDictionary<string, object> settings)
+        {
+            var popup = new Popup {
                 HorizontalOffset = Mouse.Position.X,
                 VerticalOffset = Mouse.Position.Y
             };
+
+            if (settings != null) {
+                var type = popup.GetType();
+
+                foreach (var pair in settings)
+                {
+                    var propertyInfo = type.GetProperty(pair.Key);
+
+                    if(propertyInfo != null)
+                        propertyInfo.SetValue(popup, pair.Value, null);
+                }
+            }
+
+            return popup;
         }
 
 #if SILVERLIGHT_40

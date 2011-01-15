@@ -64,7 +64,18 @@
         /// <param name="rootModel">The root model.</param>
         public static void ShowPopup(this IWindowManager manager, object rootModel)
         {
-            manager.ShowPopup(rootModel, null);
+            manager.ShowPopup(rootModel, null, null);
+        }
+
+        /// <summary>
+        /// Shows a popup at the current mouse position.
+        /// </summary>
+        /// <param name="manager">The manager.</param>
+        /// <param name="rootModel">The root model.</param>
+        /// <param name="context">The view context.</param>
+        public static void ShowPopup(this IWindowManager manager, object rootModel, object context)
+        {
+            manager.ShowPopup(rootModel, context, null);
         }
 
 #if !SILVERLIGHT

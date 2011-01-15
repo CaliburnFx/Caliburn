@@ -1,6 +1,7 @@
 ﻿namespace Caliburn.ShellFramework.Results
 {
     using System;
+    using System.Collections.Generic;
     using System.Windows;
     using Core.InversionOfControl;
     using PresentationFramework.ApplicationModel;
@@ -14,19 +15,26 @@
     /// <typeparam name="TPopup">The type of the popup.</typeparam>
     public class PopupResult<TPopup> : OpenResultBase<TPopup>
     {
+        IDictionary<string, object> settings;
         readonly Func<ResultExecutionContext, TPopup> locateModel = 
             c => c.ServiceLocator.GetInstance<IViewModelFactory>().Create<TPopup>();
 
         /// <summary>
         /// Initializes a new instance of the <see cref="PopupResult&lt;TPopup&gt;"/> class.
         /// </summary>
-        public PopupResult() {}
+        /// <param name="settings">The optional popup settings.</param>
+        public PopupResult(IDictionary<string, object> settings)
+        {
+            this.settings = settings;
+        }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="PopupResult&lt;TPopup&gt;"/> class.
         /// </summary>
         /// <param name="viewModel">The ViewModel.</param>
-        public PopupResult(TPopup viewModel)
+        /// <param name="settings">The optional popup settings.</param>
+        public PopupResult(TPopup viewModel, IDictionary<string, object> settings)
+            : this(settings)
         {
             locateModel = c => viewModel;
         }
@@ -57,10 +65,13 @@
                 deactivator.Deactivated += handler;
             }
 
-            var target = (UIElement)context.Message.Source.UIElement;
-            var windowManager = context.ServiceLocator.GetInstance<IWindowManager>();
+            if(settings == null)
+                settings = new Dictionary<string, object>();
+            if (!settings.ContainsKey("PlacementTarget"))
+                settings.Add("PlacementTarget", context.Message.Source.UIElement);
 
-            windowManager.ShowPopup(viewModel, target);
+            var windowManager = context.ServiceLocator.GetInstance<IWindowManager>();
+            windowManager.ShowPopup(viewModel, null, settings);
 
             OnCompleted(null, false);
         }

@@ -1,6 +1,7 @@
 ﻿namespace Caliburn.ShellFramework.Results
 {
     using System;
+    using System.Collections.Generic;
     using System.Linq.Expressions;
     using Core;
     using Microsoft.Win32;
@@ -112,7 +113,7 @@
         /// <returns>The result.</returns>
         public static PopupResult<TModel> Popup<TModel>()
         {
-            return new PopupResult<TModel>();
+            return new PopupResult<TModel>(new Dictionary<string, object>());
         }
 
         /// <summary>
@@ -123,7 +124,7 @@
         /// <returns>The result.</returns>
         public static PopupResult<TModel> Popup<TModel>(TModel model)
         {
-            return new PopupResult<TModel>(model);
+            return new PopupResult<TModel>(model, new Dictionary<string, object>());
         }
 
 #if SILVERLIGHT

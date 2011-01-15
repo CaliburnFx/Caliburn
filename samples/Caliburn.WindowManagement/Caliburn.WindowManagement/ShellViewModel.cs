@@ -1,9 +1,12 @@
 ﻿namespace Caliburn.WindowManagement {
     using System.ComponentModel.Composition;
+    using System.Dynamic;
+    using System.Windows.Controls.Primitives;
     using PresentationFramework.ApplicationModel;
+    using PresentationFramework.Screens;
 
     [Export(typeof(IShell))]
-    public class ShellViewModel : IShell {
+    public class ShellViewModel : Screen, IShell {
         readonly IWindowManager windowManager;
 
         [ImportingConstructor]
@@ -20,7 +23,11 @@
         }
 
         public void OpenPopup() {
-            windowManager.ShowPopup(new DialogViewModel(), "Popup");
+            dynamic settings = new ExpandoObject();
+            settings.Placement = PlacementMode.Center;
+            settings.PlacementTarget = GetView(null);
+
+            windowManager.ShowPopup(new DialogViewModel(), "Popup", settings);
         }
     }
 }
