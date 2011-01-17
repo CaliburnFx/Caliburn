@@ -94,8 +94,7 @@
     <Compile Include="InversionOfControl\SimpleContainer.cs" />
     <Compile Include="TypeDescriptor.silverlight.cs" />
     <Compile Include="Validation\DefaultError.cs" />
-    <Compile Include="Validation\DefaultValidator.silverlight.cs" />
-    <Compile Include="Validation\DefaultValidator.wpf.cs" />
+    <Compile Include="Validation\DefaultValidator.cs" />
     <Compile Include="Validation\IError.cs" />
     <Compile Include="Validation\IValidator.cs" />
   </ItemGroup>

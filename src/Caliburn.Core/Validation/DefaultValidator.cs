@@ -1,6 +1,4 @@
-﻿#if SILVERLIGHT
-
-namespace Caliburn.Core.Validation
+﻿namespace Caliburn.Core.Validation
 {
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
@@ -8,7 +6,7 @@ namespace Caliburn.Core.Validation
     using System.Reflection;
 
     /// <summary>
-    /// The default implementation of <see cref="IValidator"/>.
+    /// The default implemenation of <see cref="IValidator"/>.
     /// </summary>
     public class DefaultValidator : IValidator
     {
@@ -48,6 +46,7 @@ namespace Caliburn.Core.Validation
             return GetValidationErrors(instance, property);
         }
 
+#if NET_40 || SILVERLIGHT
         private IEnumerable<IError> GetValidationErrors(object instance, PropertyInfo property)
         {
             var context = new ValidationContext(instance, null, null);
@@ -61,7 +60,19 @@ namespace Caliburn.Core.Validation
 
             return validators.OfType<IError>();
         }
+#else
+        private static IEnumerable<IError> GetValidationErrors(object instance, PropertyInfo property)
+        {
+            var validators = from attribute in property.GetAttributes<ValidationAttribute>(true)
+                             where !attribute.IsValid(property.GetValue(instance, null))
+                             select new DefaultError(
+                                 instance,
+                                 property.Name,
+                                 attribute.FormatErrorMessage(property.Name)
+                                 );
+
+            return validators.OfType<IError>();
+        }
+#endif
     }
 }
-
-#endif
