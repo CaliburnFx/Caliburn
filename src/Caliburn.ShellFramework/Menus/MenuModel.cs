@@ -9,7 +9,6 @@ namespace Caliburn.ShellFramework.Menus
     using PresentationFramework;
     using PresentationFramework.ApplicationModel;
     using PresentationFramework.RoutedMessaging;
-    using PresentationFramework.Screens;
     using Resources;
 
     /// <summary>
@@ -205,9 +204,9 @@ namespace Caliburn.ShellFramework.Menus
         /// </summary>
         /// <param name="index">The index to set the item at.</param>
         /// <param name="item">The item to set.</param>
-        protected override void SetItem(int index, IMenu item)
+        protected override void SetItemBase(int index, IMenu item)
         {
-            base.SetItem(index, item);
+            base.SetItemBase(index, item);
             item.Parent = this;
         }
 
@@ -216,9 +215,9 @@ namespace Caliburn.ShellFramework.Menus
         /// </summary>
         /// <param name="index">The index to insert at.</param>
         /// <param name="item">The item to be inserted.</param>
-        protected override void InsertItem(int index, IMenu item)
+        protected override void InsertItemBase(int index, IMenu item)
         {
-            base.InsertItem(index, item);
+            base.InsertItemBase(index, item);
             item.Parent = this;
         }
 
