@@ -30,21 +30,12 @@
         }
 
         /// <summary>
-        /// Executes the specified results.
-        /// </summary>
-        /// <param name="results">The results.</param>
-        public static void Execute(IEnumerable<IResult> results)
-        {
-            Execute(results.GetEnumerator());
-        }
-
-        /// <summary>
         /// Executes the specified result.
         /// </summary>
         /// <param name="result">The result.</param>
-        public static void Execute(IResult result)
+        public static void BeginExecute(IResult result)
         {
-            Execute(new[] { result });
+            BeginExecute(new[] { result });
         }
 
         /// <summary>
@@ -52,9 +43,28 @@
         /// </summary>
         /// <param name="result">The result.</param>
         /// <param name="model">The model.</param>
-        public static void ExecuteFor(IResult result, object model)
+        public static void BeginExecuteFor(IResult result, object model)
         {
-            ExecuteFor(new[] { result }, model);
+            BeginExecuteFor(new[] { result }, model);
+        }
+
+        /// <summary>
+        /// Executes the specified results.
+        /// </summary>
+        /// <param name="results">The results.</param>
+        public static void BeginExecute(IEnumerable<IResult> results)
+        {
+            BeginExecute(results.GetEnumerator());
+        }
+
+        /// <summary>
+        /// Executes the specified results.
+        /// </summary>
+        /// <param name="results">The results.</param>
+        /// <param name="callback">The completion callback.</param>
+        public static void BeginExecute(IEnumerable<IResult> results, EventHandler<ResultCompletionEventArgs> callback)
+        {
+            BeginExecute(results.GetEnumerator(), callback);
         }
 
         /// <summary>
@@ -62,30 +72,61 @@
         /// </summary>
         /// <param name="results">The results.</param>
         /// <param name="model">The model.</param>
-        public static void ExecuteFor(IEnumerable<IResult> results, object model)
+        public static void BeginExecuteFor(IEnumerable<IResult> results, object model)
         {
-            ExecuteFor(results.GetEnumerator(), model);
+            BeginExecuteFor(results.GetEnumerator(), model);
+        }
+
+        /// <summary>
+        /// Executes the results for the model.
+        /// </summary>
+        /// <param name="results">The results.</param>
+        /// <param name="model">The model.</param>
+        /// <param name="callback">The completion callback.</param>
+        public static void BeginExecuteFor(IEnumerable<IResult> results, object model, EventHandler<ResultCompletionEventArgs> callback)
+        {
+            BeginExecuteFor(results.GetEnumerator(), model, callback);
         }
 
         /// <summary>
         /// Executes a coroutine.
         /// </summary>
         /// <param name="coroutine">The coroutine to execute.</param>
-        public static void ExecuteFor(IEnumerator<IResult> coroutine, object model)
+        public static void BeginExecuteFor(IEnumerator<IResult> coroutine, object model)
+        {
+            BeginExecuteFor(coroutine, model, null);
+        }
+
+        /// <summary>
+        /// Executes a coroutine.
+        /// </summary>
+        /// <param name="coroutine">The coroutine to execute.</param>
+        /// <param name="callback">The completion callback.</param>
+        public static void BeginExecuteFor(IEnumerator<IResult> coroutine, object model, EventHandler<ResultCompletionEventArgs> callback)
         {
             var view = View.GetViewInstanceFromModel(model, null);
             var node = View.GetInteractionNode(view);
 
-            Execute(coroutine, new ResultExecutionContext(serviceLocator, null, node));
+            BeginExecute(coroutine, new ResultExecutionContext(serviceLocator, null, node), callback);
         }
 
         /// <summary>
         /// Executes a coroutine.
         /// </summary>
         /// <param name="coroutine">The coroutine to execute.</param>
-        public static void Execute(IEnumerator<IResult> coroutine)
+        public static void BeginExecute(IEnumerator<IResult> coroutine)
         {
-            Execute(coroutine, new ResultExecutionContext(serviceLocator, null, null));
+            BeginExecute(coroutine, new ResultExecutionContext(serviceLocator, null, null));
+        }
+
+        /// <summary>
+        /// Executes a coroutine.
+        /// </summary>
+        /// <param name="coroutine">The coroutine to execute.</param>
+        /// <param name="callback">The completion callback.</param>
+        public static void BeginExecute(IEnumerator<IResult> coroutine, EventHandler<ResultCompletionEventArgs> callback)
+        {
+            BeginExecute(coroutine, new ResultExecutionContext(serviceLocator, null, null), callback);
         }
 
         /// <summary>
@@ -93,14 +134,28 @@
         /// </summary>
         /// <param name="coroutine">The coroutine to execute.</param>
         /// <param name="context">The context to execute the coroutine within.</param>
-        public static void Execute(IEnumerator<IResult> coroutine, ResultExecutionContext context)
+        public static void BeginExecute(IEnumerator<IResult> coroutine, ResultExecutionContext context)
+        {
+            BeginExecute(coroutine, context, null);
+        }
+
+        /// <summary>
+        /// Executes a coroutine.
+        /// </summary>
+        /// <param name="coroutine">The coroutine to execute.</param>
+        /// <param name="context">The context to execute the coroutine within.</param>
+        /// <param name="callback">The completion callback.</param>
+        public static void BeginExecute(IEnumerator<IResult> coroutine, ResultExecutionContext context, EventHandler<ResultCompletionEventArgs> callback)
         {
             Log.Info("Executing coroutine.");
 
             var enumerator = createParentEnumerator(coroutine);
             builder.BuildUp(enumerator);
 
+            if (callback != null)
+                enumerator.Completed += callback;
             enumerator.Completed += Completed;
+
             enumerator.Execute(context);
         }
 

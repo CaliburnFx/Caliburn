@@ -272,7 +272,7 @@ namespace Caliburn.PresentationFramework.ApplicationModel
                 if (e.Key == shortcut.Key && Keyboard.Modifiers == shortcut.Modifers)
                 {
                     if (shortcut.CanExecute)
-                        Coroutine.Execute(shortcut.Execute());
+                        Coroutine.BeginExecute(shortcut.Execute());
                     break;
                 }
             }
