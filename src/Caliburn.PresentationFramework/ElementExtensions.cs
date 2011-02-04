@@ -50,6 +50,24 @@
             return null;
         }
 
+        /// <summary>
+        /// Determines whether the specified element is loaded.
+        /// </summary>
+        /// <param name="element">The element.</param>
+        /// <returns></returns>
+        public static bool IsLoaded(this DependencyObject element){
+            var fe = element as FrameworkElement;
+            if (fe != null)
+                return fe.IsLoaded;
+            else
+            {
+                var fce = element as FrameworkContentElement;
+                if (fce != null)
+                    return fce.IsLoaded;
+            }
+            return false;
+        }
+
 #endif
 
         /// <summary>

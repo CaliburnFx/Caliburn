@@ -98,7 +98,11 @@ namespace Caliburn.PresentationFramework.ViewModels
         {
             var modelType = GetModelType(viewModel);
             var description = viewModelDescriptionFactory.Create(modelType);
+#if !SILVERLIGHT
+            var isLoaded = view.IsLoaded() || (bool)view.GetValue(View.IsLoadedProperty);
+#else
             var isLoaded = view.GetValue(View.IsLoadedProperty);
+#endif
 
             description.GetConventionsFor(view)
                 .Apply(x => x.ApplyTo(view, isLoaded));

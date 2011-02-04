@@ -71,17 +71,23 @@
                     target = IoC.GetInstance(null, containerKey);
 
                 d.SetValue(View.IsLoadedProperty, true);
-                binder.Bind(target, d, null);
+
+                string context = string.IsNullOrEmpty(fe.Name)
+                    ? fe.GetHashCode().ToString()
+                    : fe.Name;
+
+                binder.Bind(target, d, context);
+
                 fe.Loaded -= handler;
             };
 
 #if !SILVERLIGHT
-            if(fe.IsLoaded)
-                handler(fe, new RoutedEventArgs());
-            else fe.Loaded += handler;
+            if(fe.IsLoaded || (bool)fe.GetValue(View.IsLoadedProperty))
 #else
-            fe.Loaded += handler;
+            if ((bool)fe.GetValue(View.IsLoadedProperty))
 #endif
+                handler(null, null);
+            else fe.Loaded += handler;
         }
     }
 }
