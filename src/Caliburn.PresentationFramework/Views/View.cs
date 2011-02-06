@@ -89,6 +89,66 @@
                 );
 
         /// <summary>
+        /// Executes the handler immediately if the element is loaded, otherwise wires it to the Loaded event.
+        /// </summary>
+        /// <param name="element">The element.</param>
+        /// <param name="handler">The handler.</param>
+        /// <returns>true if the handler was executed immediately; false otherwise</returns>
+        public static bool ExecuteOnLoad(DependencyObject element, RoutedEventHandler handler)
+        {
+            var fe = element as FrameworkElement;
+            if(fe != null){
+#if SILVERLIGHT
+                if((bool)fe.GetValue(IsLoadedProperty))
+#else
+                if(fe.IsLoaded)
+#endif
+                {
+                    handler(fe, new RoutedEventArgs());
+                    return true;
+                }
+                else {
+                    RoutedEventHandler loaded = null;
+                    loaded = (s, e) => {
+#if SILVERLIGHT
+                        fe.SetValue(IsLoadedProperty, true);
+#endif
+                        handler(s, e);
+                        fe.Loaded -= loaded;
+                    };
+
+                    fe.Loaded += loaded;
+                    return false;
+                }
+            }
+#if !SILVERLIGHT
+            else
+            {
+                var fce = element as FrameworkContentElement;
+                if (fce != null)
+                {
+                    if (fce.IsLoaded) {
+                        handler(fce, new RoutedEventArgs());
+                        return true;
+                    }
+                    else {
+                        RoutedEventHandler loaded = null;
+                        loaded = (s, e) =>
+                        {
+                            handler(s, e);
+                            fce.Loaded -= loaded;
+                        };
+
+                        fce.Loaded += loaded;
+                        return false;
+                    }                    
+                }
+            }
+#endif
+            return false;
+        }
+
+        /// <summary>
         /// Used to retrieve the root, non-framework-created view.
         /// </summary>
         /// <param name="view">The view to search.</param>

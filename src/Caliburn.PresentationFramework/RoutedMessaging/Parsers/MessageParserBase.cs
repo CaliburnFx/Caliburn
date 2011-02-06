@@ -140,40 +140,9 @@ namespace Caliburn.PresentationFramework.RoutedMessaging.Parsers
                 actualParameter.Value = parameter;
             else
             {
-                var fe = target as FrameworkElement;
-                if (fe != null)
-                {
-                    RoutedEventHandler handler = null;
-                    handler = (s, e) =>{
-                        BindParameter(fe, parameter, actualParameter);
-                        fe.Loaded -= handler;
-                    };
-#if !SILVERLIGHT
-                    if(fe.IsLoaded || (bool)fe.GetValue(View.IsLoadedProperty))
-#else
-                    if((bool)fe.GetValue(View.IsLoadedProperty))
-#endif
-                        handler(null, null);
-                    else fe.Loaded += handler;
-                }
-#if !SILVERLIGHT
-                else
-                {
-                    var fce = target as FrameworkContentElement;
-                    if (fce != null)
-                    {
-                        RoutedEventHandler handler = null;
-                        handler = (s, e) =>{
-                            BindParameter(fce, parameter, actualParameter);
-                            fce.Loaded -= handler;
-                        };
-
-                        if (fce.IsLoaded || (bool)fce.GetValue(View.IsLoadedProperty))
-                            handler(null, null);
-                        else fce.Loaded += handler;
-                    }
-                }
-#endif
+                View.ExecuteOnLoad(target, delegate {
+                    BindParameter(target, parameter, actualParameter);
+                });
             }
 
             return actualParameter;

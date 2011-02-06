@@ -8,6 +8,7 @@
     using Core.Logging;
     using RoutedMessaging;
     using RoutedMessaging.Parsers;
+    using Caliburn.PresentationFramework.Views;
 
     /// <summary>
     /// An implementation of <see cref="IMessageParser"/> for commands.
@@ -83,7 +84,7 @@
             switch(commandSource)
             {
                 case CommandSource.Resource:
-                    target.OnLoad(delegate{
+                    View.ExecuteOnLoad(target, delegate{
                         message.Command = target.GetResource<object>(coreOfMessage);
                     });
                     break;
@@ -94,16 +95,12 @@
                     var binding = new Binding(coreOfMessage);
                     message.SetBinding(CommandMessage.CommandProperty, binding);
 #if SILVERLIGHT
-                    var frameworkElement = target as FrameworkElement;
+                    View.ExecuteOnLoad(target, delegate{
+                        var fe = (FrameworkElement)target;
 
-                    if (frameworkElement != null)
-                    {
-                        frameworkElement.Loaded +=
-                            delegate {
-                                if (frameworkElement.DataContext != null)
-                                    message.DataContext = frameworkElement.DataContext;
-                            };
-                    }
+                        if (fe.DataContext != null)
+                            message.DataContext = fe.DataContext;
+                    });     
 #endif
                     break;
                 default:

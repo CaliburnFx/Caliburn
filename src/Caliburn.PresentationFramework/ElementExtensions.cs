@@ -117,37 +117,6 @@
         }
 
         /// <summary>
-        /// Wires the delegate to the Loaded event of the element.
-        /// </summary>
-        /// <param name="dependencyObject">The dependency object.</param>
-        /// <param name="callback">The callback.</param>
-        public static void OnLoad(this DependencyObject dependencyObject, RoutedEventHandler callback)
-        {
-            var fe = dependencyObject as FrameworkElement;
-            if (fe != null) {
-#if !SILVERLIGHT
-                if(fe.IsLoaded || (bool)fe.GetValue(View.IsLoadedProperty))
-#else
-                if((bool)fe.GetValue(View.IsLoadedProperty))
-#endif
-                    callback(fe, new RoutedEventArgs());
-                else fe.Loaded += callback;
-            }
-#if !SILVERLIGHT
-            else
-            {
-                var fce = dependencyObject as FrameworkContentElement;
-                if (fce != null)
-                {
-                    if (fce.IsLoaded || (bool)fce.GetValue(View.IsLoadedProperty))
-                        callback(fce, new RoutedEventArgs());
-                    else fce.Loaded += callback;                    
-                }
-            }
-#endif
-        }
-
-        /// <summary>
         /// Sets the binding on the dependency object.
         /// </summary>
         /// <param name="dependencyObject">The dependency object.</param>

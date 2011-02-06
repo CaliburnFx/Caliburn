@@ -54,7 +54,10 @@
         public void ApplyTo(DependencyObject view, object isLoaded)
         {
             var element = view.FindName(elementDescription.Name);
+
+#if SILVERLIGHT
             element.SetValue(View.IsLoadedProperty, isLoaded);
+#endif
 
             if (dependencyProperty != null && !element.HasBinding(dependencyProperty))
             {

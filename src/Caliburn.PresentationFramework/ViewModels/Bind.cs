@@ -57,37 +57,20 @@
             if (PresentationFrameworkConfiguration.IsInDesignMode || e.NewValue == null || e.NewValue == e.OldValue)
                 return;
 
-            var fe = d as FrameworkElement;
-            if (fe == null)
-                return;
-
-            RoutedEventHandler handler = null;
-            handler = delegate
-            {
+            View.ExecuteOnLoad(d, delegate {
                 var target = e.NewValue;
                 var containerKey = e.NewValue as string;
 
                 if (containerKey != null)
                     target = IoC.GetInstance(null, containerKey);
 
-                d.SetValue(View.IsLoadedProperty, true);
-
-                string context = string.IsNullOrEmpty(fe.Name)
-                    ? fe.GetHashCode().ToString()
-                    : fe.Name;
+                var name = d.GetName();
+                string context = string.IsNullOrEmpty(name)
+                    ? d.GetHashCode().ToString()
+                    : name;
 
                 binder.Bind(target, d, context);
-
-                fe.Loaded -= handler;
-            };
-
-#if !SILVERLIGHT
-            if(fe.IsLoaded || (bool)fe.GetValue(View.IsLoadedProperty))
-#else
-            if ((bool)fe.GetValue(View.IsLoadedProperty))
-#endif
-                handler(null, null);
-            else fe.Loaded += handler;
+            });
         }
     }
 }

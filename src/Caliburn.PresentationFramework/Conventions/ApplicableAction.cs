@@ -39,7 +39,10 @@
         public void ApplyTo(DependencyObject view, object isLoaded)
         {
             var element = view.FindName(elementName);
+
+#if SILVERLIGHT
             element.SetValue(View.IsLoadedProperty, isLoaded);
+#endif
 
             if(!string.IsNullOrEmpty(actionTargetPath))
             {
