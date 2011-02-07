@@ -316,9 +316,8 @@
                 var context = GetContext(d);
                 var view = locator.LocateForModel(e.NewValue, d, context);
 
-                viewModelBinder.Bind(e.NewValue, view, context);
-
                 SetContentProperty(d, view);
+                viewModelBinder.Bind(e.NewValue, view, context);
             }
             else SetContentProperty(d, e.NewValue);
         }
@@ -339,9 +338,8 @@
 
             var view = locator.LocateForModel(model, d, e.NewValue);
 
-            viewModelBinder.Bind(model, view, e.NewValue);
-
             SetContentProperty(d, view);
+            viewModelBinder.Bind(model, view, e.NewValue);
         }
 
         private static void OnStrategyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
@@ -361,8 +359,8 @@
             var context = GetContext(d);
             var view = locator.LocateForModel(model, d, context);
 
-            viewModelBinder.Bind(model, view, context);
             SetContentProperty(d, view);
+            viewModelBinder.Bind(model, view, context);
         }
 
         private static void SetContentProperty(object targetLocation, object view)
