@@ -142,6 +142,8 @@
     <Compile Include="Adapters\ServiceLocation\The_Unity_container.cs" />
     <Compile Include="Adapters\ServiceLocation\The_Windsor_container.cs" />
     <Compile Include="Core\A_bindable_collection.cs" />
+    <Compile Include="Fakes\FakeEnums.cs" />
+    <Compile Include="PresentationFramework\A_BindableEnumCollection.cs" />
     <Compile Include="Core\The_resolve_markup_extension.cs" />
     <Compile Include="Fakes\FakeScreen.cs" />
     <Compile Include="Fakes\Model\Address.cs" />
@@ -199,6 +201,7 @@
     <Compile Include="MVP\PropertyChanged\A_Serializable_PropertyChangedBase_subclass.cs" />
     <Compile Include="MVP\PropertyChanged\A_DataContract_PropertyChangedBase_subclass.cs" />
     <Compile Include="MVP\The_DefaultViewLocator.cs" />
+    <Compile Include="PresentationFramework\An_EnumConverter.cs" />
     <Compile Include="RoutedUIMessaging\Parsers\The_action_message_parser.cs" />
     <Compile Include="RoutedUIMessaging\Parsers\The_event_trigger_parser.cs" />
     <Compile Include="RoutedUIMessaging\Parsers\The_gesture_trigger_parser.cs" />

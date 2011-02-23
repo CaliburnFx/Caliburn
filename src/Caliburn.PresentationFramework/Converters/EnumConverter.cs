@@ -23,12 +23,15 @@
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
             if(typeof(int).IsAssignableFrom(targetType))
-                return (int)value;
+                return System.Convert.ToInt32(value);
+
+			if (typeof(byte).IsAssignableFrom(targetType))
+				return System.Convert.ToByte(value);
 
             return new BindableEnum
             {
                 Value = value,
-                UnderlyingValue = (int)value,
+				UnderlyingValue = System.Convert.ToInt32(value),
                 DisplayName = Enum.GetName(value.GetType(), value)
             };
         }

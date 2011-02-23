@@ -46,7 +46,7 @@
                 var bindableEnum = new BindableEnum
                 {
                     Value = field.GetValue(null),
-                    UnderlyingValue = (int)field.GetValue(null),
+					UnderlyingValue = Convert.ToInt32(field.GetValue(null)),
                     DisplayName = att != null ? att.Description : field.Name
                 };
 
