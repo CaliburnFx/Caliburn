@@ -1,8 +1,9 @@
 ﻿#if !SILVERLIGHT
 
-namespace Caliburn.PresentationFramework.Parsers
+namespace Caliburn.PresentationFramework.RoutedMessaging.Parsers
 {
     using System.Windows;
+    using RoutedMessaging;
     using Triggers;
 
     /// <summary>

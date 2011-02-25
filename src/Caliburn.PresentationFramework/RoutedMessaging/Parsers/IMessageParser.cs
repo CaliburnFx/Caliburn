@@ -1,6 +1,7 @@
-namespace Caliburn.PresentationFramework.Parsers
+namespace Caliburn.PresentationFramework.RoutedMessaging.Parsers
 {
     using System.Windows;
+    using RoutedMessaging;
 
     /// <summary>
     /// Parses an <see cref="IRoutedMessage"/> from text.

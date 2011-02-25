@@ -1,6 +1,7 @@
-namespace Caliburn.PresentationFramework.Parsers
+namespace Caliburn.PresentationFramework.RoutedMessaging.Parsers
 {
     using System.Windows;
+    using RoutedMessaging;
 
     /// <summary>
     /// Parses the trigger specific aspects of an <see cref="IMessageTrigger"/>.

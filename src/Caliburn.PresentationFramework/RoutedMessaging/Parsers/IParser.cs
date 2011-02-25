@@ -1,7 +1,8 @@
-namespace Caliburn.PresentationFramework.Parsers
+namespace Caliburn.PresentationFramework.RoutedMessaging.Parsers
 {
     using System.Collections.Generic;
     using System.Windows;
+    using RoutedMessaging;
 
     /// <summary>
     /// Parses text into a fully functional <see cref="IMessageTrigger"/>.
