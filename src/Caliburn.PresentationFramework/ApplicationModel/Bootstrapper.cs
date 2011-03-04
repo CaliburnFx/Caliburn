@@ -22,7 +22,10 @@
     /// </summary>
     public class Bootstrapper
     {
-        IServiceLocator container;
+        /// <summary>
+        /// The container.
+        /// </summary>
+        protected IServiceLocator container;
 
         /// <summary>
         /// Creates an instance of the bootstrapper.
