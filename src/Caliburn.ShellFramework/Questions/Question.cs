@@ -62,7 +62,7 @@
             set
             {
                 answer = value;
-                NotifyOfPropertyChange("Answer");
+                NotifyOfPropertyChange(() => Answer);
             }
         }
 
