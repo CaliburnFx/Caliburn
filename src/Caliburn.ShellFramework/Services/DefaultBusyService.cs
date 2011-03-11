@@ -60,7 +60,15 @@ namespace Caliburn.ShellFramework.Services
             if(Indicators.ContainsKey(sourceViewModel))
             {
                 var info = Indicators[sourceViewModel];
+
                 info.BusyViewModel = busyViewModel;
+                var indicator = TryFindBusyIndicator(sourceViewModel);
+
+                if(info.BusyIndicator != indicator) {
+                    info.BusyIndicator = indicator;
+                    ToggleBusyIndicator(info, true);
+                }
+
                 UpdateIndicator(info);
             }
             else
