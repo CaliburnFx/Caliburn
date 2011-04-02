@@ -1,19 +1,15 @@
 ﻿namespace Caliburn.PresentationFramework.Screens
 {
     using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Windows;
     using ApplicationModel;
     using Behaviors;
     using Core.Logging;
     using Invocation;
-    using Views;
 
     /// <summary>
     /// A base implementation of <see cref="IScreen"/>.
     /// </summary>
-    public class Screen : PropertyChangedBase, IScreen, IChild, IViewAware
+    public class Screen : ViewAware, IScreen, IChild
     {
         protected static readonly ILog Log = LogManager.GetLog(typeof(Screen));
 
@@ -21,7 +17,6 @@
         bool isInitialized;
         object parent;
         string displayName;
-        readonly Dictionary<object, object> views = new Dictionary<object, object>();
 
         /// <summary>
         /// Creates an instance of the screen.
@@ -152,7 +147,7 @@
             });
 
             if (close) {
-                views.Clear();
+                Views.Clear();
                 Log.Info("Closed {0}.", this);
             }
         }
@@ -172,54 +167,13 @@
             callback(true);
         }
 
-        /// <summary>
-        /// Attaches a view to this instance.
-        /// </summary>
-        /// <param name="view">The view.</param>
-        /// <param name="context">The context in which the view appears.</param>
-        public virtual void AttachView(object view, object context)
-        {
-            var loadWired = views.Values.Contains(view);
-            views[context ?? View.DefaultContext] = view;
-
-            var element = view as FrameworkElement;
-            if (!loadWired && element != null)
-                element.Loaded += delegate { OnViewLoaded(view); };
-
-            if (!loadWired)
-                ViewAttached(this, new ViewAttachedEventArgs { View = view, Context = context });
-        }
-
-        /// <summary>
-        /// Called when an attached view's Loaded event fires.
-        /// </summary>
-        /// <param name="view"></param>
-        protected virtual void OnViewLoaded(object view) {}
-
-        /// <summary>
-        /// Gets a view previously attached to this instance.
-        /// </summary>
-        /// <param name="context">The context denoting which view to retrieve.</param>
-        /// <returns>The view.</returns>
-        public virtual object GetView(object context)
-        {
-            object view;
-            views.TryGetValue(context ?? View.DefaultContext, out view);
-            return view;
-        }
-
-        /// <summary>
-        /// Raised when a view is attached.
-        /// </summary>
-        public event EventHandler<ViewAttachedEventArgs> ViewAttached = delegate { };
-
         Action GetViewCloseAction(bool? dialogResult)
         {
             var conductor = Parent as IConductor;
             if (conductor != null)
                 return () => conductor.CloseItem(this);
 
-            foreach (var contextualView in views.Values) {
+            foreach (var contextualView in Views.Values) {
                 var viewType = contextualView.GetType();
 
                 var closeMethod = viewType.GetMethod("Close");

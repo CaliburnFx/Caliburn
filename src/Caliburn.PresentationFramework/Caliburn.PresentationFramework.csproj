@@ -157,6 +157,7 @@
     <Compile Include="Screens\Screen.cs" />
     <Compile Include="Screens\ScreenWithSubject.cs" />
     <Compile Include="Screens\SubjectSpecification.cs" />
+    <Compile Include="Screens\ViewAware.cs" />
     <Compile Include="ViewModels\Bind.cs" />
     <Compile Include="ViewModels\BindableEnum.cs" />
     <Compile Include="ViewModels\BindableEnumCollection.cs" />
