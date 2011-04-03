@@ -63,18 +63,30 @@
         /// </summary>
         /// <param name = "view">The view.</param>
         /// <param name = "context">The context in which the view appears.</param>
-        public virtual void AttachView(object view, object context) {
-            if(CacheViews)
+        void IViewAware.AttachView(object view, object context)
+        {
+            if (CacheViews)
                 Views[context ?? View.DefaultContext] = view;
 
-            var element = view as DependencyObject;
-            if(element != null && !(bool)element.GetValue(PreviouslyAttachedProperty)) {
+            var nonGeneratedView = View.GetFirstNonGeneratedView(view);
+
+            var element = nonGeneratedView as FrameworkElement;
+            if (element != null && !(bool)element.GetValue(PreviouslyAttachedProperty))
+            {
                 element.SetValue(PreviouslyAttachedProperty, true);
                 View.ExecuteOnLoad(element, (s, e) => OnViewLoaded(s));
             }
 
-            ViewAttached(this, new ViewAttachedEventArgs { View = view, Context = context });
+            OnViewAttached(nonGeneratedView, context);
+            ViewAttached(this, new ViewAttachedEventArgs { View = nonGeneratedView, Context = context });
         }
+
+        /// <summary>
+        /// Called when a view is attached.
+        /// </summary>
+        /// <param name="view">The view.</param>
+        /// <param name="context">The context in which the view appears.</param>
+        protected virtual void OnViewAttached(object view, object context) { }
 
         /// <summary>
         ///   Called when an attached view's Loaded event fires.

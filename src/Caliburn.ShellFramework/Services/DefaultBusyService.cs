@@ -246,7 +246,7 @@ namespace Caliburn.ShellFramework.Services
                 return null;
             }
 
-            view = View.GetFirstNonGeneratedView(view);
+            view = (DependencyObject)View.GetFirstNonGeneratedView(view);
             return FindBusyIndicatorCore(view);
         }
 

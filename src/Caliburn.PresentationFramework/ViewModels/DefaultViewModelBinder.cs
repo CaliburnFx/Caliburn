@@ -51,7 +51,7 @@ namespace Caliburn.PresentationFramework.ViewModels
             if ((bool)view.GetValue(View.ConventionsAppliedProperty))
                 return;
 
-            var significantView = View.GetFirstNonGeneratedView(view);
+            var significantView = (DependencyObject)View.GetFirstNonGeneratedView(view);
 
             if (ShouldApplyConventions(viewModel, significantView, context))
                 ApplyConventions(viewModel, significantView);

@@ -158,22 +158,26 @@
         /// The WindowManager marks that element as a framework-created element so that it can determine what it created vs. what was intended by the developer.
         /// Calling GetFirstNonGeneratedView allows the framework to discover what the original element was. 
         /// </remarks>
-        public static Func<DependencyObject, DependencyObject> GetFirstNonGeneratedView = view =>
+        public static Func<object, object> GetFirstNonGeneratedView = view =>
         {
-            if ((bool)view.GetValue(IsGeneratedProperty))
+            var dependencyObject = view as DependencyObject;
+            if (dependencyObject == null)
+                return view;
+
+            if ((bool)dependencyObject.GetValue(IsGeneratedProperty))
             {
-                if (view is ContentControl)
-                    return (DependencyObject)((ContentControl)view).Content;
+                if (dependencyObject is ContentControl)
+                    return ((ContentControl)dependencyObject).Content;
 
-                var type = view.GetType();
+                var type = dependencyObject.GetType();
                 var contentProperty = type.GetAttributes<ContentPropertyAttribute>(true)
-                    .FirstOrDefault() ?? new ContentPropertyAttribute("Content");
+                                          .FirstOrDefault() ?? new ContentPropertyAttribute("Content");
 
-                return (DependencyObject)type.GetProperty(contentProperty.Name)
-                    .GetValue(view, null);
+                return type.GetProperty(contentProperty.Name)
+                    .GetValue(dependencyObject, null);
             }
 
-            return view;
+            return dependencyObject;
         };
 
         /// <summary>
