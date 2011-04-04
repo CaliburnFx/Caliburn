@@ -27,6 +27,10 @@
         /// </summary>
         protected readonly Dictionary<object, object> Views = new Dictionary<object, object>();
 
+        static ViewAware() {
+            CacheViewsByDefault = true;
+        }
+
         ///<summary>
         ///  Creates an instance of <see cref = "ViewAware" />.
         ///</summary>
