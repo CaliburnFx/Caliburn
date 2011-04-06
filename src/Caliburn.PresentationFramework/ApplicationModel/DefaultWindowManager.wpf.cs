@@ -227,7 +227,7 @@ namespace Caliburn.PresentationFramework.ApplicationModel
 			ViewModelBinder.Bind(rootModel, view, context);
 
 			var haveDisplayName = rootModel as IHaveDisplayName;
-			if (haveDisplayName != null)
+            if (haveDisplayName != null && !view.HasBinding(Page.TitleProperty))
 			{
 				var binding = new Binding("DisplayName") { Mode = BindingMode.TwoWay };
 				view.SetBinding(Page.TitleProperty, binding);
