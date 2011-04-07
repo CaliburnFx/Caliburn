@@ -95,7 +95,7 @@
                     if(item.Equals(ActiveItem))
                     {
                         var index = items.IndexOf(item);
-                        var next = DetermineNextItemToActivate(index);
+                        var next = DetermineNextItemToActivate(items, index);
 
                         ChangeActiveItem(next, true);
                     }
@@ -107,17 +107,17 @@
                 /// <summary>
                 /// Determines the next item to activate based on the last active index.
                 /// </summary>
+                /// <param name="list">The list of possible active items.</param>
                 /// <param name="lastIndex">The index of the last active item.</param>
                 /// <returns>The next item to activate.</returns>
                 /// <remarks>Called after an active item is closed.</remarks>
-                protected virtual T DetermineNextItemToActivate(int lastIndex)
-                {
+                protected virtual T DetermineNextItemToActivate(IList<T> list, int lastIndex) {
                     var toRemoveAt = lastIndex - 1;
 
-                    if(toRemoveAt == -1 && items.Count > 1)
-                        return items[1];
-                    if(toRemoveAt > -1 && toRemoveAt < items.Count - 1)
-                        return items[toRemoveAt];
+                    if(toRemoveAt == -1 && list.Count > 1)
+                        return list[1];
+                    if(toRemoveAt > -1 && toRemoveAt < list.Count - 1)
+                        return list[toRemoveAt];
                     return default(T);
                 }
 
@@ -125,10 +125,31 @@
                 /// Called to check whether or not this instance can close.
                 /// </summary>
                 /// <param name="callback">The implementor calls this action with the result of the close check.</param>
-                public override void CanClose(Action<bool> callback)
-                {
-                    CloseStrategy.Execute(items, (canClose, closable) =>{
-                        closable.Apply(CloseItemCore);
+                public override void CanClose(Action<bool> callback) {
+                    CloseStrategy.Execute(items, (canClose, closable) => {
+                        if(!canClose && closable.Any()) {
+                            if(closable.Contains(ActiveItem)) {
+                                var list = items.ToList();
+                                var next = ActiveItem;
+                                do {
+                                    var previous = next;
+                                    next = DetermineNextItemToActivate(list, list.IndexOf(previous));
+                                    list.Remove(previous);
+                                } while(closable.Contains(next));
+
+                                var previousActive = ActiveItem;
+                                ChangeActiveItem(next, true);
+                                items.Remove(previousActive);
+
+                                var stillToClose = closable.ToList();
+                                stillToClose.Remove(previousActive);
+                                closable = stillToClose;
+                            }
+
+                            closable.OfType<IDeactivate>().Apply(x => x.Deactivate(true));
+                            items.RemoveRange(closable);
+                        }
+
                         callback(canClose);
                     });
                 }
@@ -145,10 +166,11 @@
                 /// Called when deactivating.
                 /// </summary>
                 /// <param name="close">Inidicates whether this instance will be closed.</param>
-                protected override void OnDeactivate(bool close)
-                {
-                    if(close)
+                protected override void OnDeactivate(bool close) {
+                    if(close) {
                         items.OfType<IDeactivate>().Apply(x => x.Deactivate(true));
+                        items.Clear();
+                    }
                     else ScreenExtensions.TryDeactivate(ActiveItem, false);
                 }
 
@@ -160,7 +182,7 @@
                 protected override T EnsureItem(T newItem)
                 {
                     if(newItem == null)
-                        newItem = DetermineNextItemToActivate(ActiveItem != null ? items.IndexOf(ActiveItem) : 0);
+                        newItem = DetermineNextItemToActivate(items, ActiveItem != null ? items.IndexOf(ActiveItem) : 0);
                     else
                     {
                         var index = items.IndexOf(newItem);
