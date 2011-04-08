@@ -5,6 +5,7 @@
     using Core.Behaviors;
     using Core.InversionOfControl;
     using global::Spring.Context.Support;
+    using global::Spring.Objects.Factory;
     using global::Spring.Objects.Factory.Config;
     using global::Spring.Objects.Factory.Support;
 
@@ -84,7 +85,7 @@
                            ? context.GetObject(key)
                            : context.GetObject(key, serviceType);
             }
-            catch(Exception)
+            catch(NoSuchObjectDefinitionException)
             {
                 return null;
             }
