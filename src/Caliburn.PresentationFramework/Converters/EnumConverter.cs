@@ -28,12 +28,7 @@
 			if (typeof(byte).IsAssignableFrom(targetType))
 				return System.Convert.ToByte(value);
 
-            return new BindableEnum
-            {
-                Value = value,
-				UnderlyingValue = System.Convert.ToInt32(value),
-                DisplayName = Enum.GetName(value.GetType(), value)
-            };
+            return BindableEnum.Create(value);
         }
 
         /// <summary>

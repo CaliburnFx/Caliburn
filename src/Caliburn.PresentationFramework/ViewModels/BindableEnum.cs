@@ -1,5 +1,11 @@
 ﻿namespace Caliburn.PresentationFramework.ViewModels
 {
+    using System;
+    using System.ComponentModel;
+    using System.Linq;
+    using System.Reflection;
+    using Core;
+
     /// <summary>
     /// A databindable enum with a display name.
     /// </summary>
@@ -66,6 +72,47 @@
         public override int GetHashCode()
         {
             return UnderlyingValue.GetHashCode();
+        }
+
+        /// <summary>
+        /// Creates a <see cref="BindableEnum"/> from the provided enum value.
+        /// </summary>
+        /// <param name="value">The enum value.</param>
+        /// <returns>The <see cref="BindableEnum"/>.</returns>
+        public static BindableEnum Create(object value)
+        {
+            var fields = value.GetType()
+                .GetFields(BindingFlags.Static | BindingFlags.Public);
+
+            foreach (var fieldInfo in fields)
+            {
+                var fieldValue = fieldInfo.GetValue(null);
+                if (fieldValue.Equals(value))
+                {
+                    return Create(fieldInfo);
+                }
+            }
+
+            return null;
+        }
+
+        /// <summary>
+        /// Creates a <see cref="BindableEnum"/> from the <see cref="FieldInfo"/>.
+        /// </summary>
+        /// <param name="field">The <see cref="FieldInfo"/>.</param>
+        /// <returns>The <see cref="BindableEnum"/>.</returns>
+        public static BindableEnum Create(FieldInfo field)
+        {
+            var att = field.GetAttributes<DescriptionAttribute>(false)
+                    .FirstOrDefault();
+            var value = field.GetValue(null);
+
+            return new BindableEnum
+            {
+                Value = value,
+                UnderlyingValue = Convert.ToInt32(value),
+                DisplayName = att != null ? att.Description : field.Name
+            };
         }
     }
 }

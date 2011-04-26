@@ -1,7 +1,6 @@
 ﻿namespace Caliburn.PresentationFramework.ViewModels
 {
     using System;
-    using System.ComponentModel;
     using System.Linq;
     using System.Reflection;
     using Core;
@@ -38,19 +37,9 @@
 
             var fields = typeof(T).GetFields(BindingFlags.Static | BindingFlags.Public);
 
-            foreach(var field in fields)
+            foreach (var field in fields)
             {
-                var att = field.GetAttributes<DescriptionAttribute>(false)
-                    .FirstOrDefault();
-
-                var bindableEnum = new BindableEnum
-                {
-                    Value = field.GetValue(null),
-					UnderlyingValue = Convert.ToInt32(field.GetValue(null)),
-                    DisplayName = att != null ? att.Description : field.Name
-                };
-
-                Add(bindableEnum);
+                Add(BindableEnum.Create(field));
             }
         }
     }
