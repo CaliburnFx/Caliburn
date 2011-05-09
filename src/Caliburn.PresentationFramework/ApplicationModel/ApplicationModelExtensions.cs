@@ -11,6 +11,15 @@
     public static class ApplicationModelExtensions
     {
         /// <summary>
+        ///   Publishes a message.
+        /// </summary>
+        /// <param name="events">The event aggregator.</param>
+        /// <param name = "message">The message instance.</param>
+        public static void Publish(this IEventAggregator events, object message) {
+            events.Publish(message, null);
+        }
+
+        /// <summary>
         /// Focuses the control bound to the property on the view model.
         /// </summary>
         /// <param name="inputManager">The input manager.</param>

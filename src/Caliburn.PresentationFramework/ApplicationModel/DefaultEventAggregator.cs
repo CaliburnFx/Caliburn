@@ -45,16 +45,22 @@
         ///   Publishes a message.
         /// </summary>
         /// <param name = "message">The message instance.</param>
-        public void Publish(object message) {
+        /// <param name="marshall">Allows the publisher to provide a custom thread marshaller for the message publication. The default uses the UI thread marshaller.</param>
+        public void Publish(object message, Action<Action> marshall) {
             Handler[] toNotify;
             lock(handlers)
                 toNotify = handlers.ToArray();
 
-            Execute.OnUIThread(() => {
+            if(marshall == null)
+                marshall = Execute.OnUIThread;
+
+            marshall(() => {
                 Log.Info("Publishing {0}.", message);
                 var messageType = message.GetType();
 
-                var dead = toNotify.Where(handler => !handler.Handle(messageType, message));
+                var dead = toNotify
+                    .Where(handler => !handler.Handle(messageType, message))
+                    .ToList();
 
                 if(dead.Any()) {
                     lock(handlers)

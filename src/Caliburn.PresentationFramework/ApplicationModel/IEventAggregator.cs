@@ -1,8 +1,11 @@
 namespace Caliburn.PresentationFramework.ApplicationModel {
+    using System;
+
     /// <summary>
     ///   Enables loosely-coupled publication of and subscription to events.
     /// </summary>
-    public interface IEventAggregator {
+    public interface IEventAggregator
+    {
         /// <summary>
         ///   Subscribes an instance to all events declared through implementations of <see cref = "IHandle{T}" />
         /// </summary>
@@ -19,6 +22,7 @@ namespace Caliburn.PresentationFramework.ApplicationModel {
         ///   Publishes a message.
         /// </summary>
         /// <param name = "message">The message instance.</param>
-        void Publish(object message);
+        /// <param name="marshall">Allows the publisher to provide a custom thread marshaller for the message publication. The default uses the UI thread marshaller.</param>
+        void Publish(object message, Action<Action> marshall);
     }
 }
