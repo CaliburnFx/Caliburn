@@ -14,14 +14,16 @@
         /// <param name="item">The item to activate.</param>
         public override void ActivateItem(T item)
         {
-            if(item != null && item.Equals(ActiveItem))
-            {
-                OnActivationProcessed(item, true);
+            if (item != null && item.Equals(ActiveItem)) {
+                if (IsActive) {
+                    ScreenExtensions.TryActivate(item);
+                    OnActivationProcessed(item, true);
+                }
                 return;
             }
 
             CloseStrategy.Execute(new[] { ActiveItem }, (canClose, items) => {
-                if(canClose)
+                if (canClose)
                     ChangeActiveItem(item, true);
                 else OnActivationProcessed(item, false);
             });
