@@ -102,7 +102,7 @@ namespace Caliburn.PresentationFramework.ApplicationModel
         /// <param name="rootModel">The model.</param>
         /// <param name="settings">The optional popup settings.</param>
         /// <returns>The popup.</returns>
-        protected Popup CreatePopup(object rootModel, IDictionary<string, object> settings)
+        protected virtual Popup CreatePopup(object rootModel, IDictionary<string, object> settings)
         {
             var popup = new Popup();
 
