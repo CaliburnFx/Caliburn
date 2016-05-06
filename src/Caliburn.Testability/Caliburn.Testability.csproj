@@ -120,16 +120,6 @@
     <Compile Include="Validator.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Caliburn.Core\Caliburn.Core.csproj">
-      <Project>{D7357C4C-BFFF-4EE4-8D40-0803FAAFF38A}</Project>
-      <Name>Caliburn.Core</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Caliburn.PresentationFramework\Caliburn.PresentationFramework.csproj">
-      <Project>{4B343291-DB03-4ADA-96CD-3CFFA3C838D7}</Project>
-      <Name>Caliburn.PresentationFramework</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
     <BootstrapperPackage Include="Microsoft.Net.Client.3.5">
       <Visible>False</Visible>
       <ProductName>.NET Framework 3.5 SP1 Client Profile</ProductName>
@@ -145,6 +135,12 @@
       <ProductName>Windows Installer 3.1</ProductName>
       <Install>true</Install>
     </BootstrapperPackage>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Caliburn\Caliburn.csproj">
+      <Project>{646ecea5-6c89-42f2-8be2-e335b0fac4c9}</Project>
+      <Name>Caliburn</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

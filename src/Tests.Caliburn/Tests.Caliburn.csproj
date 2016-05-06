@@ -60,33 +60,9 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\lib\net-3.5\Castle.Core.dll</HintPath>
     </Reference>
-    <Reference Include="Castle.Windsor, Version=2.0.0.0, Culture=neutral, PublicKeyToken=407dd0808d44fbdc, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\lib\net-3.5\Castle.Windsor.dll</HintPath>
-    </Reference>
     <Reference Include="Common.Logging, Version=1.2.0.0, Culture=neutral, PublicKeyToken=af08829b84f0328e">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\lib\net-3.5\Common.Logging.dll</HintPath>
-    </Reference>
-    <Reference Include="Microsoft.Practices.Unity, Version=1.2.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\lib\net-3.5\Microsoft.Practices.Unity.dll</HintPath>
-    </Reference>
-    <Reference Include="Microsoft.Practices.Unity.Configuration, Version=1.2.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\lib\net-3.5\Microsoft.Practices.Unity.Configuration.dll</HintPath>
-    </Reference>
-    <Reference Include="Microsoft.Practices.Unity.Interception, Version=1.2.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\lib\net-3.5\Microsoft.Practices.Unity.Interception.dll</HintPath>
-    </Reference>
-    <Reference Include="Microsoft.Practices.Unity.Interception.Configuration, Version=1.2.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\lib\net-3.5\Microsoft.Practices.Unity.Interception.Configuration.dll</HintPath>
-    </Reference>
-    <Reference Include="Ninject, Version=2.0.0.152, Culture=neutral, PublicKeyToken=c7192dc5380945e7, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\lib\net-3.5\Ninject.dll</HintPath>
     </Reference>
     <Reference Include="nunit.framework, Version=2.4.7.0, Culture=neutral, PublicKeyToken=96d09a1eb7f44a77, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -101,14 +77,6 @@
     <Reference Include="Rhino.Mocks, Version=3.5.0.2, Culture=neutral, PublicKeyToken=0b3305902db7183f, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\tools\Rhino.Mocks\Rhino.Mocks.dll</HintPath>
-    </Reference>
-    <Reference Include="Spring.Core, Version=1.1.0.2, Culture=neutral, PublicKeyToken=65e474d141e25e07, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\lib\net-3.5\Spring.Core.dll</HintPath>
-    </Reference>
-    <Reference Include="StructureMap, Version=2.5.3.0, Culture=neutral, PublicKeyToken=e60ad81abae3c223, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\lib\net-3.5\StructureMap.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.Composition, Version=2009.1.23.0, Culture=neutral, processorArchitecture=MSIL">
@@ -147,23 +115,9 @@
     <Compile Include="Adapters\Components\SimpleLogger.cs" />
     <Compile Include="Adapters\Components\SimpleMailer.cs" />
     <Compile Include="Adapters\Components\User.cs" />
-    <Compile Include="Adapters\Integration\The_Windsor_container.cs" />
-    <Compile Include="Adapters\Integration\The_Unity_container.cs" />
-    <Compile Include="Adapters\Integration\The_StructureMap_container.cs" />
-    <Compile Include="Adapters\Integration\The_Spring_container.cs" />
-    <Compile Include="Adapters\Integration\The_Ninject_container.cs" />
-    <Compile Include="Adapters\Integration\The_MEF_container.cs" />
-    <Compile Include="Adapters\Integration\The_Autofac_container.cs" />
     <Compile Include="Adapters\Integration\ContainerIntegrationTestBase.cs" />
     <Compile Include="Adapters\Integration\The_Simple_Container.cs" />
     <Compile Include="Adapters\ServiceLocation\ServiceLocatorTests.cs" />
-    <Compile Include="Adapters\ServiceLocation\The_Autofac_container.cs" />
-    <Compile Include="Adapters\ServiceLocation\The_MEF_container.cs" />
-    <Compile Include="Adapters\ServiceLocation\The_Ninject_container.cs" />
-    <Compile Include="Adapters\ServiceLocation\The_Spring_container.cs" />
-    <Compile Include="Adapters\ServiceLocation\The_StructureMap_container.cs" />
-    <Compile Include="Adapters\ServiceLocation\The_Unity_container.cs" />
-    <Compile Include="Adapters\ServiceLocation\The_Windsor_container.cs" />
     <Compile Include="Core\A_bindable_collection.cs" />
     <Compile Include="Fakes\FakeEnums.cs" />
     <Compile Include="PresentationFramework\A_BindableEnumCollection.cs" />
@@ -271,53 +225,13 @@
     <Compile Include="TestBase.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Caliburn.Autofac\Caliburn.Autofac.csproj">
-      <Project>{AFBDDB74-139F-4C7D-AC94-99C5173F76C7}</Project>
-      <Name>Caliburn.Autofac</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Caliburn.DynamicProxy\Caliburn.DynamicProxy.csproj">
-      <Project>{7FF13E8A-FA3B-432B-A79B-78B5B82DEC4F}</Project>
-      <Name>Caliburn.DynamicProxy</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Caliburn.ShellFramework\Caliburn.ShellFramework.csproj">
-      <Project>{1A4EFC27-E9C2-41D5-A801-58854CA50F86}</Project>
-      <Name>Caliburn.ShellFramework</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Caliburn.Windsor\Caliburn.Windsor.csproj">
-      <Project>{1E9926A2-E544-44AE-A602-2F9EC3D069A8}</Project>
-      <Name>Caliburn.Windsor</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Caliburn.Core\Caliburn.Core.csproj">
-      <Project>{D7357C4C-BFFF-4EE4-8D40-0803FAAFF38A}</Project>
-      <Name>Caliburn.Core</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Caliburn.MEF\Caliburn.MEF.csproj">
-      <Project>{F350C4CB-48AE-4A1F-9BAE-C836D6C7C0E4}</Project>
-      <Name>Caliburn.MEF</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Caliburn.Ninject\Caliburn.Ninject.csproj">
-      <Project>{05109A0A-D27D-472A-9FE3-9896DEF1FD4C}</Project>
-      <Name>Caliburn.Ninject</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Caliburn.PresentationFramework\Caliburn.PresentationFramework.csproj">
-      <Project>{4B343291-DB03-4ADA-96CD-3CFFA3C838D7}</Project>
-      <Name>Caliburn.PresentationFramework</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Caliburn.Spring\Caliburn.Spring.csproj">
-      <Project>{7A1B748A-3BE7-4C62-B904-F61680D98278}</Project>
-      <Name>Caliburn.Spring</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Caliburn.StructureMap\Caliburn.StructureMap.csproj">
-      <Project>{6B2CEB23-6A5C-4DE7-93EF-BCA3221412E7}</Project>
-      <Name>Caliburn.StructureMap</Name>
-    </ProjectReference>
     <ProjectReference Include="..\Caliburn.Testability\Caliburn.Testability.csproj">
       <Project>{88B9DA1A-E26F-423F-A051-77CF03A62077}</Project>
       <Name>Caliburn.Testability</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Caliburn.Unity\Caliburn.Unity.csproj">
-      <Project>{CDA47C74-FAC2-4E4F-B7D8-0F59008927AD}</Project>
-      <Name>Caliburn.Unity</Name>
+    <ProjectReference Include="..\Caliburn\Caliburn.csproj">
+      <Project>{646ecea5-6c89-42f2-8be2-e335b0fac4c9}</Project>
+      <Name>Caliburn</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
