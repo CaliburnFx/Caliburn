@@ -1,3 +1,4 @@
+using System.Threading.Tasks;
 using Shouldly;
 
 namespace Tests.Caliburn.RoutedUIMessaging
@@ -106,6 +107,17 @@ namespace Tests.Caliburn.RoutedUIMessaging
             {
                 return 5;
             }
+
+            public Task MethodWithTask()
+            {
+                return Task.Run(() => { });
+            }
+
+            public async Task<int> MethodWithTaskOfT()
+            {
+                await Task.Delay(10);
+                return 5;
+            }
         }
 
         [WpfFact]
@@ -151,6 +163,48 @@ namespace Tests.Caliburn.RoutedUIMessaging
                 );
 
             result.ShouldNotBeNull();
+        }
+
+        [WpfFact]
+        public void methods_with_task_return_type_return_TaskResult()
+        {
+            var method = factory.CreateFrom(typeof(MethodHost).GetMethod("MethodWithTask"));
+
+            var result = binder.CreateResult(
+                new MessageProcessingOutcome(
+                    null,
+                    method.Info.ReturnType,
+                    false
+                    )
+                );
+
+            result.ShouldNotBeNull();
+            result.ShouldBeOfType<TaskResult>();
+        }
+
+        [WpfFact]
+        public async Task methods_with_task_of_T_uses_return_path()
+        {
+            var method = factory.CreateFrom(typeof(MethodHost).GetMethod("MethodWithTaskOfT"));
+            var returnValue = Task.FromResult(5);
+
+            var result = binder.CreateResult(
+                new MessageProcessingOutcome(
+                    returnValue,
+                    method.Info.ReturnType,
+                    false
+                    )
+                );
+
+            await result.ExecuteAsync(
+                new ResultExecutionContext(
+                    Stub<IServiceLocator>(),
+                    new FakeMessage(sourceNode, method, "param1.Text"),
+                    handlingNode
+                    )
+                );
+
+            host.Param1.Text.ShouldBe("5");
         }
 
         [WpfFact]
