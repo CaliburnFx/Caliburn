@@ -1,4 +1,6 @@
-﻿namespace Tests.Caliburn.Actions
+﻿using Shouldly;
+
+namespace Tests.Caliburn.Actions
 {
     using System;
     using global::Caliburn.Core.Invocation;
@@ -6,10 +8,10 @@
     using global::Caliburn.PresentationFramework.Actions;
     using global::Caliburn.PresentationFramework.Filters;
     using global::Caliburn.PresentationFramework.RoutedMessaging;
-    using NUnit.Framework;
+    using Xunit;
     using Rhino.Mocks;
 
-    [TestFixture]
+    
     public class A_synchronous_action : TestBase
     {
         SynchronousAction action;
@@ -34,7 +36,7 @@
                 );
         }
 
-        [Test]
+        [Fact]
         public void alters_return_with_post_execute_filters()
         {
             var handlingNode = Stub<IInteractionNode>();
@@ -83,7 +85,7 @@
             action.Execute(message, handlingNode, context);
         }
 
-        [Test]
+        [Fact]
         public void can_determine_negative_trigger_effect()
         {
             var filter1 = Mock<IPreProcessor>();
@@ -115,10 +117,10 @@
 
             var result = action.ShouldTriggerBeAvailable(message, handlingNode);
 
-            Assert.That(result, Is.False);
+            result.ShouldBeFalse();
         }
 
-        [Test]
+        [Fact]
         public void can_determine_positive_trigger_effect()
         {
             var filter = Mock<IPreProcessor>();
@@ -147,10 +149,10 @@
 
             var result = action.ShouldTriggerBeAvailable(message, handlingNode);
 
-            Assert.That(result, Is.True);
+            result.ShouldBeTrue();
         }
 
-        [Test]
+        [Fact]
         public void can_execute()
         {
             var handlingNode = Stub<IInteractionNode>();
@@ -194,7 +196,7 @@
             action.Execute(message, handlingNode, context);
         }
 
-        [Test]
+        [Fact]
         public void can_throw_exception_on_execute()
         {
             var handlingNode = Stub<IInteractionNode>();
@@ -241,14 +243,14 @@
             }
             catch(InvalidOperationException inex)
             {
-                Assert.That(inex.StackTrace.Contains("Rhino.Mocks.Expectations.AbstractExpectation.ReturnOrThrow"));
+                inex.StackTrace.Contains("Rhino.Mocks.Expectations.AbstractExpectation.ReturnOrThrow").ShouldBeTrue();
                 return;
             }
 
-            Assert.Fail("The test exception was not fired");
+            true.ShouldBeFalse();
         }
 
-        [Test]
+        [Fact]
         public void reports_has_trigger_affects_if_has_trigger_affecting_filters()
         {
             filterManager.Stub(x => x.TriggerEffects).Return(new[] {
@@ -257,20 +259,20 @@
 
             var result = action.HasTriggerEffects();
 
-            Assert.That(result, Is.True);
+            result.ShouldBeTrue();
         }
 
-        [Test]
+        [Fact]
         public void reports_not_having_trigger_affects_if_no_trigger_affecting_filters()
         {
             filterManager.Stub(x => x.TriggerEffects).Return(new IPreProcessor[] {});
 
             var result = action.HasTriggerEffects();
 
-            Assert.That(result, Is.False);
+            result.ShouldBeFalse();
         }
 
-        [Test]
+        [Fact]
         public void when_executing_pre_filters_can_cancel()
         {
             var filter1 = Mock<IPreProcessor>();

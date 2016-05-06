@@ -1,13 +1,15 @@
+using Shouldly;
+
 namespace Tests.Caliburn.RoutedUIMessaging.Parsers
 {
     using global::Caliburn.Core.InversionOfControl;
     using global::Caliburn.PresentationFramework.Actions;
     using global::Caliburn.PresentationFramework.Conventions;
     using global::Caliburn.PresentationFramework.RoutedMessaging;
-    using NUnit.Framework;
+    using Xunit;
     using Rhino.Mocks;
 
-    [TestFixture]
+    
     public class The_action_message_parser : TestBase
     {
         ActionMessageParser parser;
@@ -23,74 +25,74 @@ namespace Tests.Caliburn.RoutedUIMessaging.Parsers
             IoC.Initialize(container);
         }
 
-        [Test]
+        [Fact]
         public void can_parse_message_with_no_parameters()
         {
             var result = parser.Parse(null, "Foo");
-            Assert.That(result.Parameters.Count, Is.EqualTo(0));
+            result.Parameters.Count.ShouldBe(0);
         }
 
-        [Test]
+        [Fact]
         public void can_parse_message_with_no_parameters_but_parenthesis()
         {
             var result = parser.Parse(null, "Foo()");
-            Assert.That(result.Parameters.Count, Is.EqualTo(0));
+            result.Parameters.Count.ShouldBe(0);
         }
 
-        [Test]
+        [Fact]
         public void can_parse_quoted_string_literals()
         {
             var result = parser.Parse(null, "Foo('a','abc')");
-            Assert.That(result.Parameters.Count, Is.EqualTo(2));
-            Assert.That(result.Parameters[0].Value, Is.EqualTo("a"));
-            Assert.That(result.Parameters[1].Value, Is.EqualTo("abc"));
+            result.Parameters.Count.ShouldBe(2);
+            result.Parameters[0].Value.ShouldBe("a");
+            result.Parameters[1].Value.ShouldBe("abc");
         }
 
-        [Test]
+        [Fact]
         public void can_parse_quoted_string_literals_containing_commas()
         {
             var result = parser.Parse(null, "Foo(',','a,',',a','a,b')");
-            Assert.That(result.Parameters.Count, Is.EqualTo(4));
-            Assert.That(result.Parameters[0].Value, Is.EqualTo(","));
-            Assert.That(result.Parameters[1].Value, Is.EqualTo("a,"));
-            Assert.That(result.Parameters[2].Value, Is.EqualTo(",a"));
-            Assert.That(result.Parameters[3].Value, Is.EqualTo("a,b"));
+            result.Parameters.Count.ShouldBe(4);
+            result.Parameters[0].Value.ShouldBe(",");
+            result.Parameters[1].Value.ShouldBe("a,");
+            result.Parameters[2].Value.ShouldBe(",a");
+            result.Parameters[3].Value.ShouldBe("a,b");
         }
 
-        [Test]
+        [Fact]
         public void can_parse_quoted_string_literals_containing_parenthesis()
         {
             var result = parser.Parse(null, "Foo('a(bc)d')");
-            Assert.That(result.Parameters.Count, Is.EqualTo(1));
-            Assert.That(result.Parameters[0].Value, Is.EqualTo("a(bc)d"));
+            result.Parameters.Count.ShouldBe(1);
+            result.Parameters[0].Value.ShouldBe("a(bc)d");
         }
 
-        [Test]
+        [Fact]
         public void can_parse_quoted_string_literals_containing_single_quotes()
         {
             var result = parser.Parse(null, @"Foo('The answer is: '42'')");
-            Assert.That(result.Parameters.Count, Is.EqualTo(1));
-            Assert.That(result.Parameters[0].Value, Is.EqualTo("The answer is: '42'"));
+            result.Parameters.Count.ShouldBe(1);
+            result.Parameters[0].Value.ShouldBe("The answer is: '42'");
         }
 
-        [Test]
+        [Fact]
         public void can_parse_unquoted_number_literals()
         {
             var result = parser.Parse(null, "Foo(1,123,12.34)");
-            Assert.That(result.Parameters.Count, Is.EqualTo(3));
-            Assert.That(result.Parameters[0].Value, Is.EqualTo("1"));
-            Assert.That(result.Parameters[1].Value, Is.EqualTo("123"));
-            Assert.That(result.Parameters[2].Value, Is.EqualTo("12.34"));
+            result.Parameters.Count.ShouldBe(3);
+            result.Parameters[0].Value.ShouldBe("1");
+            result.Parameters[1].Value.ShouldBe("123");
+            result.Parameters[2].Value.ShouldBe("12.34");
         }
 
-        [Test]
+        [Fact]
         public void ignores_whitespace_between_parameters()
         {
             var result = parser.Parse(null, "Foo('abc',   'def',   'ghi')");
-            Assert.That(result.Parameters.Count, Is.EqualTo(3));
-            Assert.That(result.Parameters[0].Value, Is.EqualTo("abc"));
-            Assert.That(result.Parameters[1].Value, Is.EqualTo("def"));
-            Assert.That(result.Parameters[2].Value, Is.EqualTo("ghi"));
+            result.Parameters.Count.ShouldBe(3);
+            result.Parameters[0].Value.ShouldBe("abc");
+            result.Parameters[1].Value.ShouldBe("def");
+            result.Parameters[2].Value.ShouldBe("ghi");
         }
     }
 }

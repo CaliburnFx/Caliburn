@@ -1,3 +1,6 @@
+using System.Linq;
+using Shouldly;
+
 namespace Tests.Caliburn.RoutedUIMessaging
 {
     using System;
@@ -8,10 +11,10 @@ namespace Tests.Caliburn.RoutedUIMessaging
     using Fakes.UI;
     using global::Caliburn.PresentationFramework.Conventions;
     using global::Caliburn.PresentationFramework.RoutedMessaging;
-    using NUnit.Framework;
+    using Xunit;
     using Rhino.Mocks;
 
-    [TestFixture]
+    
     public class When_determining_method_parameters : TestBase
     {
         DefaultMessageBinder binder;
@@ -27,17 +30,17 @@ namespace Tests.Caliburn.RoutedUIMessaging
             sourceNode = Stub<IInteractionNode>();
         }
 
-        [Test]
+        [WpfFact]
         public void methods_with_no_parameters_should_yield_an_empty_array()
         {
             var result = binder.DetermineParameters(
                 new FakeMessage(), null, handlingNode, null
                 );
 
-            Assert.That(result, Has.Length.EqualTo(0));
+            result.Length.ShouldBe(0);
         }
 
-        [Test]
+        [WpfFact]
         public void methods_with_parameters_equal_to_those_provided_should_yield_provided()
         {
             const string param1 = "a string";
@@ -64,12 +67,12 @@ namespace Tests.Caliburn.RoutedUIMessaging
                 message, requirements, handlingNode, null
                 );
 
-            Assert.That(result, Has.Length.EqualTo(2));
-            Assert.That(result, Has.Member(param1));
-            Assert.That(result, Has.Member(param2));
+            result.Length.ShouldBe(2);
+            result.Contains(param1).ShouldBeTrue();
+            result.Contains(param2).ShouldBeTrue();
         }
 
-        [Test]
+        [WpfFact]
         public void parameters_should_be_coerced_to_the_proper_type()
         {
             const int param1 = 56;
@@ -96,12 +99,12 @@ namespace Tests.Caliburn.RoutedUIMessaging
                 message, requirements, handlingNode, null
                 );
 
-            Assert.That(result, Has.Length.EqualTo(2));
-            Assert.That(result, Has.Member(param1.ToString()));
-            Assert.That(result, Has.Member(Convert.ToInt32(param2)));
+            result.Length.ShouldBe(2);
+            result.Contains(param1.ToString()).ShouldBeTrue();
+            result.Contains(Convert.ToInt32(param2)).ShouldBeTrue();
         }
 
-        [Test]
+        [WpfFact]
         public void should_resolve_special_parameter_eventArgs()
         {
             const string param1 = "$eventArgs";
@@ -126,11 +129,11 @@ namespace Tests.Caliburn.RoutedUIMessaging
                 message, requirements, handlingNode, context
                 );
 
-            Assert.That(result, Has.Length.EqualTo(1));
-            Assert.That(result, Has.Member(context));
+            result.Length.ShouldBe(1);
+            result.Contains(context).ShouldBeTrue();
         }
 
-        [Test]
+        [WpfFact]
         public void should_resolve_special_parameter_parameter()
         {
             const string param1 = "$parameter";
@@ -155,11 +158,11 @@ namespace Tests.Caliburn.RoutedUIMessaging
                 message, requirements, handlingNode, context
                 );
 
-            Assert.That(result, Has.Length.EqualTo(1));
-            Assert.That(result, Has.Member(context));
+            result.Length.ShouldBe(1);
+            result.Contains(context).ShouldBeTrue();
         }
 
-        [Test]
+        [WpfFact]
         public void should_resolve_special_parameter_source()
         {
             const string param1 = "$source";
@@ -185,11 +188,11 @@ namespace Tests.Caliburn.RoutedUIMessaging
                 message, requirements, handlingNode, null
                 );
 
-            Assert.That(result, Has.Length.EqualTo(1));
-            Assert.That(result, Has.Member(source));
+            result.Length.ShouldBe(1);
+            result.Contains(source).ShouldBeTrue();
         }
 
-        [Test]
+        [WpfFact]
         public void should_resolve_special_parameter_dataContext()
         {
             const string param1 = "$dataContext";
@@ -215,11 +218,11 @@ namespace Tests.Caliburn.RoutedUIMessaging
                 message, requirements, handlingNode, null
                 );
 
-            Assert.That(result, Has.Length.EqualTo(1));
-            Assert.That(result, Has.Member(source.DataContext));
+            result.Length.ShouldBe(1);
+            result.Contains(source.DataContext).ShouldBeTrue();
         }
 
-        [Test]
+        [WpfFact]
         public void should_resolve_special_parameter_value()
         {
             const string param1 = "$value";
@@ -250,11 +253,11 @@ namespace Tests.Caliburn.RoutedUIMessaging
                 message, requirements, handlingNode, null
                 );
 
-            Assert.That(result, Has.Length.EqualTo(1));
-            Assert.That(result, Has.Member(source.Text));
+            result.Length.ShouldBe(1);
+            result.Contains(source.Text).ShouldBeTrue();
         }
 
-        [Test]
+        [WpfFact]
         public void if_none_are_provided_should_search_the_UI()
         {
             const int param1 = 56;
@@ -270,9 +273,11 @@ namespace Tests.Caliburn.RoutedUIMessaging
 
             conventionManager.Expect(x => x.GetElementConvention(typeof(TextBox)))
                 .Return(defaults).Repeat.Twice();
-
-            defaults.Expect(x => x.GetValue(Arg<DependencyObject>.Is.Anything)).Return(param1);
-            defaults.Expect(x => x.GetValue(Arg<DependencyObject>.Is.Anything)).Return(param2);
+            var stack = new Stack<object>();
+            stack.Push(param1);
+            stack.Push(param2);
+            defaults.Expect(x => x.GetValue(Arg<DependencyObject>.Is.Anything)).Return(param1).Repeat.Once();
+            defaults.Expect(x => x.GetValue(Arg<DependencyObject>.Is.Anything)).Return(param2).Repeat.Once();
 
             var message = new FakeMessage();
 
@@ -288,12 +293,12 @@ namespace Tests.Caliburn.RoutedUIMessaging
                 message, requirements, handlingNode, null
                 );
 
-            Assert.That(result, Has.Length.EqualTo(2));
-            Assert.That(result, Has.Member(param1.ToString()));
-            Assert.That(result, Has.Member(Convert.ToInt32(param2)));
+            result.Length.ShouldBe(2);
+            result.Contains(param1.ToString()).ShouldBeTrue();
+            result.Contains(Convert.ToInt32(param2)).ShouldBeTrue();
         }
 
-        [Test]
+        [WpfFact]
         public void if_none_are_provided_check_for_eventArgs()
         {
             var context = EventArgs.Empty;
@@ -313,11 +318,11 @@ namespace Tests.Caliburn.RoutedUIMessaging
                 message, requirements, handlingNode, context
                 );
 
-            Assert.That(result, Has.Length.EqualTo(1));
-            Assert.That(result, Has.Member(context));
+            result.Length.ShouldBe(1);
+            result.Contains(context).ShouldBeTrue();
         }
 
-        [Test]
+        [WpfFact]
         public void if_none_are_provided_check_for_special_parameter()
         {
             var context = new object();
@@ -337,11 +342,11 @@ namespace Tests.Caliburn.RoutedUIMessaging
                 message, requirements, handlingNode, context
                 );
 
-            Assert.That(result, Has.Length.EqualTo(1));
-            Assert.That(result, Has.Member(context));
+            result.Length.ShouldBe(1);
+            result.Contains(context).ShouldBeTrue();
         }
 
-        [Test]
+        [WpfFact]
         public void if_none_are_provided_check_for_source()
         {
             var source = new Button();
@@ -363,11 +368,11 @@ namespace Tests.Caliburn.RoutedUIMessaging
                 message, requirements, handlingNode, null
                 );
 
-            Assert.That(result, Has.Length.EqualTo(1));
-            Assert.That(result, Has.Member(source));
+            result.Length.ShouldBe(1);
+            result.Contains(source).ShouldBeTrue();
         }
 
-        [Test]
+        [WpfFact]
         public void if_none_are_provided_check_for_dataContext()
         {
             var source = new Button { DataContext = new object() };
@@ -389,11 +394,12 @@ namespace Tests.Caliburn.RoutedUIMessaging
                 message, requirements, handlingNode, null
                 );
 
-            Assert.That(result, Has.Length.EqualTo(1));
-            Assert.That(result, Has.Member(source.DataContext));
+
+            result.Length.ShouldBe(1);
+            result.Contains(source.DataContext).ShouldBeTrue();
         }
 
-        [Test]
+        [WpfFact]
         public void if_none_are_provided_check_for_value()
         {
             var source = new TextBox { Text = "the text" };
@@ -422,8 +428,8 @@ namespace Tests.Caliburn.RoutedUIMessaging
                 message, requirements, handlingNode, null
                 );
 
-            Assert.That(result, Has.Length.EqualTo(1));
-            Assert.That(result, Has.Member(source.Text));
+            result.Length.ShouldBe(1);
+            result.Contains(source.Text).ShouldBeTrue();
         }
     }
 }

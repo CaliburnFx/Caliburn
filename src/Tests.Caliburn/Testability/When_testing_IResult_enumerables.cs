@@ -1,34 +1,36 @@
-﻿namespace Tests.Caliburn.Testability
+﻿using Shouldly;
+
+namespace Tests.Caliburn.Testability
 {
     using System.Collections.Generic;
     using global::Caliburn.PresentationFramework.RoutedMessaging;
     using global::Caliburn.PresentationFramework.Screens;
     using global::Caliburn.ShellFramework.Results;
     using global::Caliburn.Testability;
-    using NUnit.Framework;
+    using Xunit;
 
-    [TestFixture]
+    
     public class When_testing_IResult_enumerables : TestBase
     {
-        [Test]
+        [Fact]
         public void can_enumerate_results_without_executing()
         {
             var results = new TestResultEnumerator(DoAnimation());
             var animation = results.Next<AnimationResult>();
 
-            Assert.That(animation.Key, Is.EqualTo("4"));
+            animation.Key.ShouldBe("4");
         }
 
-        [Test]
+        [Fact]
         public void can_enumerate_multiple_results_without_executing()
         {
             var results = new TestResultEnumerator(DoSeveralThings());
 
             var animation = results.Next<AnimationResult>();
-            Assert.That(animation.Key, Is.EqualTo("4"));
+            animation.Key.ShouldBe("4");
 
             var showChild = results.Next<OpenChildResult<FakeScreen>>();
-            Assert.That(showChild, Is.Not.Null);
+            showChild.ShouldNotBeNull();
         }
 
         IEnumerable<IResult> DoAnimation()

@@ -7,10 +7,10 @@
     using global::Caliburn.Core.InversionOfControl;
     using global::Caliburn.PresentationFramework.Filters;
     using global::Caliburn.PresentationFramework.RoutedMessaging;
-    using NUnit.Framework;
+    using Xunit;
     using Rhino.Mocks;
 
-    [TestFixture]
+    
     public class Rescue_filter : TestBase
     {
         RescueAttribute attribute;
@@ -24,7 +24,7 @@
             info = typeof(MethodHost).GetMethod("Rescue");
             attribute = new RescueAttribute("Rescue");
             container = Stub<IServiceLocator>();
-            container.Stub(x => x.GetInstance<IMethodFactory>()).Return(methodFactory).Repeat.Any();
+            container.Stub(x => x.GetInstance(typeof(IMethodFactory), null)).Return(methodFactory).Repeat.Any();
         }
 
         internal class MethodHost
@@ -32,7 +32,7 @@
             public void Rescue(Exception ex) {}
         }
 
-        [Test]
+        [WpfFact]
         public void can_handle_an_exception()
         {
             var method = Mock<IMethod>();
@@ -61,7 +61,7 @@
             method.AssertWasCalled(x => x.Invoke(target, exception));
         }
 
-        [Test]
+        [Fact]
         public void initializes_its_method()
         {
             attribute.Initialize(typeof(MethodHost), null, container);

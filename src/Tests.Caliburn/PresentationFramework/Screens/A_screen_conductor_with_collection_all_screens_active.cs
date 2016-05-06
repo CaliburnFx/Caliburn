@@ -1,9 +1,9 @@
 ﻿namespace Tests.Caliburn.PresentationFramework.Screens
 {
     using global::Caliburn.PresentationFramework.Screens;
-    using NUnit.Framework;
+    using Xunit;
 
-    [TestFixture]
+    
     public class A_screen_conductor_with_collection_all_screens_active : A_screen
     {
         protected Conductor<IScreen>.Collection.AllActive ScreenConductor;

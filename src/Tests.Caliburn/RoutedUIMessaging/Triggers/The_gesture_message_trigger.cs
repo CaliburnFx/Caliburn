@@ -1,3 +1,5 @@
+using Shouldly;
+
 namespace Tests.Caliburn.RoutedUIMessaging.Triggers
 {
     using System.Windows;
@@ -8,10 +10,10 @@ namespace Tests.Caliburn.RoutedUIMessaging.Triggers
     using global::Caliburn.PresentationFramework.RoutedMessaging;
     using global::Caliburn.PresentationFramework.RoutedMessaging.Triggers;
     using global::Caliburn.PresentationFramework.RoutedMessaging.Triggers.Support;
-    using NUnit.Framework;
+    using Xunit;
     using Rhino.Mocks;
 
-    [TestFixture]
+    
     public class The_gesture_message_trigger : TestBase
     {
         IInteractionNode node;
@@ -26,7 +28,7 @@ namespace Tests.Caliburn.RoutedUIMessaging.Triggers
             message = new FakeMessage {AvailabilityEffect = Mock<IAvailabilityEffect>()};
         }
 
-        [Test]
+        [Fact]
         public void can_attach_itself_to_an_element_using_a_mouse_gesture()
         {
             var trigger = new GestureMessageTrigger
@@ -41,19 +43,19 @@ namespace Tests.Caliburn.RoutedUIMessaging.Triggers
 
             trigger.Attach(node);
 
-            Assert.That(trigger.Node, Is.EqualTo(node));
-            Assert.That(message.InvalidatedHandler, Is.Not.Null);
-            Assert.That(message.InitializeCalledWith, Is.EqualTo(node));
+            trigger.Node.ShouldBe(node);
+            message.InvalidatedHandler.ShouldNotBeNull();
+            message.InitializeCalledWith.ShouldBe(node);
 
             var binding = element.InputBindings[0];
             var gesture = binding.Gesture as MouseGesture;
 
-            Assert.That(binding.Command, Is.EqualTo(new GestureMessageTrigger.GestureCommand(binding.Gesture)));
-            Assert.That(gesture.MouseAction, Is.EqualTo(MouseAction.LeftDoubleClick));
-            Assert.That(gesture.Modifiers, Is.EqualTo(ModifierKeys.Control));
+            binding.Command.ShouldBe(new GestureMessageTrigger.GestureCommand(binding.Gesture));
+            gesture.MouseAction.ShouldBe(MouseAction.LeftDoubleClick);
+            gesture.Modifiers.ShouldBe(ModifierKeys.Control);
         }
 
-        [Test]
+        [Fact]
         public void can_attach_itself_to_an_element_using_a_key_gesture()
         {
             var trigger = new GestureMessageTrigger
@@ -68,19 +70,19 @@ namespace Tests.Caliburn.RoutedUIMessaging.Triggers
 
             trigger.Attach(node);
 
-            Assert.That(trigger.Node, Is.EqualTo(node));
-            Assert.That(message.InvalidatedHandler, Is.Not.Null);
-            Assert.That(message.InitializeCalledWith, Is.EqualTo(node));
+            trigger.Node.ShouldBe(node);
+            message.InvalidatedHandler.ShouldNotBeNull();
+            message.InitializeCalledWith.ShouldBe(node);
 
             var binding = element.InputBindings[0];
             var gesture = binding.Gesture as UnrestrictedKeyGesture;
 
-            Assert.That(binding.Command, Is.EqualTo(new GestureMessageTrigger.GestureCommand(binding.Gesture)));
-            Assert.That(gesture.Key, Is.EqualTo(Key.S));
-            Assert.That(gesture.Modifiers, Is.EqualTo(ModifierKeys.Alt));
+            binding.Command.ShouldBe(new GestureMessageTrigger.GestureCommand(binding.Gesture));
+            gesture.Key.ShouldBe(Key.S);
+            gesture.Modifiers.ShouldBe(ModifierKeys.Alt);
         }
 
-        [Test]
+        [Fact]
         public void throws_exception_if_attempt_to_attach_to_non_UIElement()
         {
             Assert.Throws<CaliburnException>(() =>{
@@ -97,7 +99,7 @@ namespace Tests.Caliburn.RoutedUIMessaging.Triggers
             });
         }
 
-        [Test]
+        [Fact]
         public void can_trigger_message_processing()
         {
             var trigger = new GestureMessageTrigger
@@ -117,7 +119,7 @@ namespace Tests.Caliburn.RoutedUIMessaging.Triggers
             element.InputBindings[0].Command.Execute(parameter);
         }
 
-        [Test]
+        [Fact]
         public void can_update_availability()
         {
             var trigger = new GestureMessageTrigger
@@ -137,7 +139,7 @@ namespace Tests.Caliburn.RoutedUIMessaging.Triggers
             trigger.UpdateAvailabilty(false);
         }
 
-        [Test]
+        [WpfFact]
         public void represents_availability_consistently_through_ICommand_for_disable_availability_when_not_available()
         {
             message = new FakeMessage {AvailabilityEffect = AvailabilityEffect.Disable};
@@ -156,10 +158,10 @@ namespace Tests.Caliburn.RoutedUIMessaging.Triggers
             trigger.Attach(node);
             trigger.UpdateAvailabilty(false);
 
-            Assert.That(element.IsEnabled, Is.False);
+            element.IsEnabled.ShouldBeFalse();
         }
 
-        [Test]
+        [Fact]
         public void represents_availability_consistently_through_ICommand_for_disable_availability_when_available()
         {
             message = new FakeMessage {AvailabilityEffect = AvailabilityEffect.Disable};
@@ -178,10 +180,10 @@ namespace Tests.Caliburn.RoutedUIMessaging.Triggers
             trigger.Attach(node);
             trigger.UpdateAvailabilty(true);
 
-            Assert.That(element.IsEnabled);
+            element.IsEnabled.ShouldBeTrue();
         }
 
-        [Test]
+        [Fact]
         public void
             represents_availability_consistently_through_ICommand_for_non_disable_availability_when_not_available()
         {
@@ -201,10 +203,10 @@ namespace Tests.Caliburn.RoutedUIMessaging.Triggers
             trigger.Attach(node);
             trigger.UpdateAvailabilty(false);
 
-            Assert.That(element.IsEnabled);
+            element.IsEnabled.ShouldBeTrue();
         }
 
-        [Test]
+        [Fact]
         public void represents_availability_consistently_through_ICommand_for_non_disable_availability_when_available()
         {
             message = new FakeMessage {AvailabilityEffect = AvailabilityEffect.Hide};
@@ -223,7 +225,7 @@ namespace Tests.Caliburn.RoutedUIMessaging.Triggers
             trigger.Attach(node);
             trigger.UpdateAvailabilty(true);
 
-            Assert.That(element.IsEnabled);
+            element.IsEnabled.ShouldBeTrue();
         }
     }
 }

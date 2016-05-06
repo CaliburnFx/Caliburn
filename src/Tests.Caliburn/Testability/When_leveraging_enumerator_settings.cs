@@ -1,15 +1,17 @@
-﻿namespace Tests.Caliburn.Testability
+﻿using Shouldly;
+
+namespace Tests.Caliburn.Testability
 {
     using System.Linq;
     using Fakes.Model;
     using Fakes.UI;
     using global::Caliburn.Testability;
-    using NUnit.Framework;
+    using Xunit;
 
-    [TestFixture]
+    
     public class When_leveraging_enumerator_settings : TestBase
     {
-        [Test]
+        [WpfFact]
         public void can_exclude_content_control_templates()
         {
             var validator = Validator.For<UIBoundToCustomerWithContentControl, Customer>();
@@ -18,10 +20,10 @@
 
             var result = validator.Validate();
 
-            Assert.That(result.Errors.Count(), Is.EqualTo(0));
+            result.Errors.Count().ShouldBe(0);
         }
 
-        [Test]
+        [WpfFact]
         public void can_exclude_group_styles()
         {
             var validator = Validator.For<UIWithItemsControlGroupStyleTemplate, Customer>();
@@ -30,10 +32,10 @@
 
             var result = validator.Validate();
 
-            Assert.That(result.Errors.Count(), Is.EqualTo(0));
+            result.Errors.Count().ShouldBe(0);
         }
 
-        [Test]
+        [WpfFact]
         public void can_exclude_items_control_templates()
         {
             var validator = Validator.For<UIBoundToCustomerWithItemsControl, Customer>();
@@ -42,11 +44,11 @@
 
             var result = validator.Validate();
 
-            Assert.That(result.Errors.Count(), Is.EqualTo(2));
+            result.Errors.Count().ShouldBe(2);
         }
 
-        [Test]
-        public void can_execlude_styles()
+        [WpfFact]
+        public void can_exclude_styles()
         {
             var validator = Validator.For<UIBoundToCustomerWithStyle, Customer>();
 
@@ -54,10 +56,10 @@
 
             var result = validator.Validate();
 
-            Assert.That(result.Errors.Count(), Is.EqualTo(0));
+            result.Errors.Count().ShouldBe(0);
         }
 
-        [Test]
+        [WpfFact]
         public void can_include_child_user_controls()
         {
             var validator = Validator.For<SimpleUIBoundToCustomer, Customer>();
@@ -66,10 +68,10 @@
 
             var result = validator.Validate();
 
-            Assert.That(result.Errors.Count(), Is.EqualTo(3));
+            result.Errors.Count().ShouldBe(3);
         }
 
-        [Test]
+        [WpfFact]
         public void can_include_collections()
         {
             var validator = Validator.For<UIWithBoundBrush, StopModel>();
@@ -78,10 +80,10 @@
 
             var result = validator.Validate();
 
-            Assert.That(result.Errors.Count(), Is.EqualTo(1));
+            result.Errors.Count().ShouldBe(1);
         }
 
-        [Test]
+        [WpfFact]
         public void can_include_properties_with_dependency_object_values()
         {
             var validator = Validator.For<SimpleUIBoundToCustomer, Customer>();
@@ -90,10 +92,10 @@
 
             var result = validator.Validate();
 
-            Assert.That(result.Errors.Count(), Is.EqualTo(3));
+            result.Errors.Count().ShouldBe(3);
         }
 
-        [Test]
+        [WpfFact]
         public void can_stop_after_first_error()
         {
             var validator = Validator.For<SimpleUIBoundToCustomer, Customer>();
@@ -102,7 +104,7 @@
 
             var result = validator.Validate();
 
-            Assert.That(result.Errors.Count(), Is.EqualTo(1));
+            result.Errors.Count().ShouldBe(1);
         }
     }
 }

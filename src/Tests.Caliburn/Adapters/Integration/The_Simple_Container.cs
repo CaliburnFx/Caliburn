@@ -1,9 +1,9 @@
 ﻿namespace Tests.Caliburn.Adapters.Integration
 {
     using global::Caliburn.Core.InversionOfControl;
-    using NUnit.Framework;
+    using Xunit;
 
-    [TestFixture]
+    
     public class The_Simple_Container : ContainerIntegrationTestBase
     {
         protected override IContainer CreateContainerAdapter()

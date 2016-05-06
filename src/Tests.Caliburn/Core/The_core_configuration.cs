@@ -1,4 +1,6 @@
-﻿namespace Tests.Caliburn.Core
+﻿using Shouldly;
+
+namespace Tests.Caliburn.Core
 {
     using System;
     using System.Linq;
@@ -7,9 +9,9 @@
     using global::Caliburn.Core.Configuration;
     using global::Caliburn.Core.Invocation;
     using global::Caliburn.Core.InversionOfControl;
-    using NUnit.Framework;
+    using Xunit;
 
-    [TestFixture]
+    
     public class The_core_configuration : TestBase
     {
         CoreConfiguration config;
@@ -21,7 +23,7 @@
             module = config;
         }
 
-        [Test]
+        [Fact]
         public void when_started_configures_required_components_and_children()
         {
             var registrations = module.GetComponents();
@@ -30,18 +32,18 @@
                          where reg.Service == typeof(IMethodFactory)
                          select reg).FirstOrDefault();
 
-            Assert.That(found, Is.Not.Null);
-            Assert.That(found.Implementation, Is.Not.Null);
+            found.ShouldNotBeNull();
+            found.Implementation.ShouldNotBeNull();
 
             found = (from reg in registrations.OfType<Singleton>()
                      where reg.Service == typeof(IAssemblySource)
                      select reg).FirstOrDefault();
 
-            Assert.That(found, Is.Not.Null);
-            Assert.That(found.Implementation, Is.Not.Null);
+            found.ShouldNotBeNull();
+            found.Implementation.ShouldNotBeNull();
         }
 
-        [Test]
+        [Fact]
         public void can_provide_a_custom_method_factory()
         {
             config.Using(x => x.MethodFactory<FakeMethodFactory>());
@@ -52,7 +54,7 @@
                          where reg.Service == typeof(IMethodFactory)
                          select reg).FirstOrDefault();
 
-            Assert.That(found.Implementation, Is.EqualTo(typeof(FakeMethodFactory)));
+            found.Implementation.ShouldBe(typeof(FakeMethodFactory));
         }
 
         class FakeMethodFactory : IMethodFactory

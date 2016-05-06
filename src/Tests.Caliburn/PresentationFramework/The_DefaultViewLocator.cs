@@ -1,4 +1,6 @@
-﻿namespace Tests.Caliburn.PresentationFramework
+﻿using Shouldly;
+
+namespace Tests.Caliburn.PresentationFramework
 {
     using System;
     using System.Collections.Generic;
@@ -6,9 +8,9 @@
     using global::Caliburn.Core.InversionOfControl;
     using global::Caliburn.PresentationFramework.Views;
     using Fakes.Model;
-    using NUnit.Framework;
+    using Xunit;
 
-    [TestFixture]
+    
     public class The_DefaultViewLocator : TestBase
     {
         TestFriendlyDefaultViewLocator defaultViewLocator;
@@ -25,7 +27,7 @@
         void AssertMakeInterface(string part, string expected)
         {
             var interfaceName = defaultViewLocator.MakeInterface(part);
-            Assert.That(interfaceName, Is.EqualTo(expected));
+            interfaceName.ShouldBe(expected);
         }
 
         void AssertMakeInterface<T>(string expected)
@@ -33,7 +35,7 @@
             AssertMakeInterface(typeof(T).FullName, expected);
         }
 
-        [Test]
+        [Fact]
         public void should_make_an_interface_name_from_a_name_part()
         {
             AssertMakeInterface("A.Simple.Full.Name", "A.Simple.Full.IName");

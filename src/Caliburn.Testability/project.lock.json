@@ -1,0 +1,60 @@
+{
+  "locked": false,
+  "version": 2,
+  "targets": {
+    ".NETFramework,Version=v4.5": {
+      "Caliburn/3.0.0-rc1": {
+        "type": "project",
+        "framework": ".NETFramework,Version=v4.5",
+        "frameworkAssemblies": [
+          "PresentationCore",
+          "PresentationFramework",
+          "System.ComponentModel.DataAnnotations",
+          "System.Xaml",
+          "System.XML",
+          "WindowsBase"
+        ]
+      }
+    },
+    ".NETFramework,Version=v4.5/win7-x86": {
+      "Caliburn/3.0.0-rc1": {
+        "type": "project",
+        "framework": ".NETFramework,Version=v4.5",
+        "frameworkAssemblies": [
+          "PresentationCore",
+          "PresentationFramework",
+          "System.ComponentModel.DataAnnotations",
+          "System.Xaml",
+          "System.XML",
+          "WindowsBase"
+        ]
+      }
+    },
+    ".NETFramework,Version=v4.5/win7-x64": {
+      "Caliburn/3.0.0-rc1": {
+        "type": "project",
+        "framework": ".NETFramework,Version=v4.5",
+        "frameworkAssemblies": [
+          "PresentationCore",
+          "PresentationFramework",
+          "System.ComponentModel.DataAnnotations",
+          "System.Xaml",
+          "System.XML",
+          "WindowsBase"
+        ]
+      }
+    }
+  },
+  "libraries": {
+    "Caliburn/3.0.0-rc1": {
+      "type": "project",
+      "path": "../Caliburn/project.json"
+    }
+  },
+  "projectFileDependencyGroups": {
+    "": [
+      "Caliburn >= 3.0.0-*"
+    ],
+    ".NETFramework,Version=v4.5": []
+  }
+}

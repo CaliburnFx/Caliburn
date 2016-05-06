@@ -1,0 +1,21 @@
+{
+  "locked": false,
+  "version": 2,
+  "targets": {
+    ".NETFramework,Version=v4.5": {},
+    ".NETFramework,Version=v4.5/win7-x86": {},
+    ".NETFramework,Version=v4.5/win7-x64": {}
+  },
+  "libraries": {},
+  "projectFileDependencyGroups": {
+    "": [],
+    ".NETFramework,Version=v4.5": [
+      "fx/PresentationCore ",
+      "fx/PresentationFramework ",
+      "fx/System.ComponentModel.DataAnnotations ",
+      "fx/System.Xaml ",
+      "fx/System.XML ",
+      "fx/WindowsBase "
+    ]
+  }
+}

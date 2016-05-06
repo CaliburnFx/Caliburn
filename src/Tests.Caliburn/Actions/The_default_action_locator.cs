@@ -1,4 +1,6 @@
-﻿namespace Tests.Caliburn.Actions
+﻿using Shouldly;
+
+namespace Tests.Caliburn.Actions
 {
     using System;
     using System.Linq;
@@ -9,10 +11,10 @@
     using global::Caliburn.PresentationFramework.Conventions;
     using global::Caliburn.PresentationFramework.Filters;
     using global::Caliburn.PresentationFramework.RoutedMessaging;
-    using NUnit.Framework;
+    using Xunit;
     using Rhino.Mocks;
 
-    [TestFixture]
+    
     public class The_default_action_locator : TestBase
     {
         DefaultActionLocator locator;
@@ -69,7 +71,7 @@
             public void ProcOne() {}
         }
 
-        [Test]
+        [Fact]
         public void builds_synchronous_actions_by_default()
         {
             ExpectActionCreated<SimpleActionTarget>();
@@ -78,15 +80,15 @@
             var result = locator.Locate(CreateContext(typeof(SimpleActionTarget)))
                 .ToList();
 
-            Assert.That(result.Count, Is.EqualTo(2));
+            result.Count.ShouldBe(2);
 
             foreach(var action in result)
             {
-                Assert.That(action, Is.AssignableFrom(typeof(SynchronousAction)));
+                action.ShouldBeAssignableTo<SynchronousAction>();
             }
         }
 
-        [Test]
+        [Fact]
         public void bundles_overloads()
         {
             ExpectActionCreated<ActionTargetWithOverloads>();
@@ -96,19 +98,19 @@
             var result = locator.Locate(CreateContext(typeof(ActionTargetWithOverloads)))
                 .ToList();
 
-            Assert.That(result.Count, Is.EqualTo(1));
+            result.Count.ShouldBe(1);
 
             var overloadAction = result[0] as OverloadedAction;
 
-            Assert.That(overloadAction, Is.Not.Null);
+            overloadAction.ShouldNotBeNull();
 
             foreach(var action in overloadAction)
             {
-                Assert.That(action, Is.AssignableFrom(typeof(SynchronousAction)));
+                action.ShouldBeAssignableTo<SynchronousAction>();
             }
         }
 
-        [Test]
+        [Fact]
         public void determines_async_actions_from_attributes()
         {
             ExpectActionCreated<ActionTargetWithAsync>();
@@ -116,17 +118,17 @@
             var result = locator.Locate(CreateContext(typeof(ActionTargetWithAsync)))
                 .ToList();
 
-            Assert.That(result.Count, Is.EqualTo(1));
-            Assert.That(result[0], Is.InstanceOf<AsynchronousAction>());
+            result.Count.ShouldBe(1);
+            result[0].ShouldBeOfType<AsynchronousAction>();
         }
 
-        [Test]
+        [Fact]
         public void ignores_object_methods()
         {
             var actions = locator.Locate(CreateContext(typeof(object)))
                 .ToList();
 
-            Assert.That(actions.Count, Is.EqualTo(0));
+            actions.Count.ShouldBe(0);
         }
     }
 }

@@ -1,4 +1,6 @@
-﻿namespace Tests.Caliburn.Actions.Filters
+﻿using Shouldly;
+
+namespace Tests.Caliburn.Actions.Filters
 {
     using System;
     using System.Collections.Generic;
@@ -10,10 +12,10 @@
     using global::Caliburn.Core.InversionOfControl;
     using global::Caliburn.PresentationFramework.Filters;
     using global::Caliburn.PresentationFramework.RoutedMessaging;
-    using NUnit.Framework;
+    using Xunit;
     using Rhino.Mocks;
 
-    [TestFixture]
+    
     public class The_preview_filter : TestBase
     {
         PreviewAttribute attribute;
@@ -28,7 +30,7 @@
             info = typeof(MethodHost).GetMethod("Preview");
             attribute = new PreviewAttribute("Preview");
             container = Stub<IServiceLocator>();
-            container.Stub(x => x.GetInstance<IMethodFactory>()).Return(methodFactory).Repeat.Any();
+            container.Stub(x => x.GetInstance(typeof(IMethodFactory), null)).Return(methodFactory).Repeat.Any();
 
             routedMessageHandler = Mock<IRoutedMessageHandler>();
             var metadata = new List<object>();
@@ -90,48 +92,48 @@
             public event EventHandler APropertyChanged = delegate { };
         }
 
-        [Test]
+        [Fact]
         public void can_be_made_aware_of_a_message_handler_with_a_method_guard()
         {
             SetupForMakeAwareOf("AMethod", typeof(NotifyingMethodHost).GetMethod("AMethod"), new NotifyingMethodHost());
-            Assert.IsNull(routedMessageHandler.Metadata.FirstOrDefaultOfType<DependencyObserver>());
-            Assert.IsNull(routedMessageHandler.Metadata.FirstOrDefaultOfType<EventMonitor>());
+            routedMessageHandler.Metadata.FirstOrDefaultOfType<DependencyObserver>().ShouldBeNull();
+            routedMessageHandler.Metadata.FirstOrDefaultOfType<EventMonitor>().ShouldBeNull();
         }
 
-        [Test]
+        [Fact]
         public void can_be_made_aware_of_a_message_handler_with_a_property_guard()
         {
             SetupForMakeAwareOf("AProperty", typeof(NotifyingMethodHost).GetMethod("get_AProperty"), new NotifyingMethodHost());
-            Assert.IsNotNull(routedMessageHandler.Metadata.FirstOrDefaultOfType<DependencyObserver>());
-            Assert.IsNull(routedMessageHandler.Metadata.FirstOrDefaultOfType<EventMonitor>());
+            routedMessageHandler.Metadata.FirstOrDefaultOfType<DependencyObserver>().ShouldNotBeNull();
+            routedMessageHandler.Metadata.FirstOrDefaultOfType<EventMonitor>().ShouldBeNull();
         }
 
-        [Test]
+        [Fact]
         public void can_be_made_aware_of_a_message_handler_with_a_property_guard_with_ChangedEvent()
         {
             SetupForMakeAwareOf("AProperty", typeof(MethodHostWithEvent).GetMethod("get_AProperty"), new MethodHostWithEvent());
-            Assert.IsNull(routedMessageHandler.Metadata.FirstOrDefaultOfType<DependencyObserver>());
-            Assert.IsNotNull(routedMessageHandler.Metadata.FirstOrDefaultOfType<EventMonitor>());
+            routedMessageHandler.Metadata.FirstOrDefaultOfType<DependencyObserver>().ShouldBeNull();
+            routedMessageHandler.Metadata.FirstOrDefaultOfType<EventMonitor>().ShouldNotBeNull();
         }
 
-        [Test]
+        [Fact]
         public void can_be_made_aware_of_a_message_handler_with_a_property_guard_with_mismatching_ChangedEvent()
         {
             SetupForMakeAwareOf("AnotherProperty", typeof(MethodHostWithEvent).GetMethod("get_AnotherProperty"), new MethodHostWithEvent());
-            Assert.IsNull(routedMessageHandler.Metadata.FirstOrDefaultOfType<DependencyObserver>());
-            Assert.IsNull(routedMessageHandler.Metadata.FirstOrDefaultOfType<EventMonitor>());
+            routedMessageHandler.Metadata.FirstOrDefaultOfType<DependencyObserver>().ShouldBeNull();
+            routedMessageHandler.Metadata.FirstOrDefaultOfType<EventMonitor>().ShouldBeNull();
         }
 
-        [Test]
+        [Fact]
         public void can_be_made_aware_of_a_message_handler_with_both_a_property_and_a_method_guard()
         {
             SetupForMakeAwareOf("AProperty", typeof(NotifyingMethodHost).GetMethod("get_AProperty"), new NotifyingMethodHost());
             SetupForMakeAwareOf("AMethod", typeof(NotifyingMethodHost).GetMethod("AMethod"), new NotifyingMethodHost());
-            Assert.IsNotNull(routedMessageHandler.Metadata.FirstOrDefaultOfType<DependencyObserver>());
-            Assert.IsNull(routedMessageHandler.Metadata.FirstOrDefaultOfType<EventMonitor>());
+            routedMessageHandler.Metadata.FirstOrDefaultOfType<DependencyObserver>().ShouldNotBeNull();
+            routedMessageHandler.Metadata.FirstOrDefaultOfType<EventMonitor>().ShouldBeNull();
         }
 
-        [Test]
+        [WpfFact]
         public void can_execute_a_preview()
         {
             var method = Mock<IMethod>();
@@ -162,7 +164,7 @@
             method.AssertWasCalled(x => x.Invoke(target, parameter));
         }
 
-        [Test]
+        [Fact]
         public void initializes_its_method()
         {
             attribute.Initialize(typeof(MethodHost), null, container);

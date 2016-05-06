@@ -1,14 +1,18 @@
-﻿namespace Tests.Caliburn.RoutedUIMessaging
+﻿using System.Reflection;
+using System.Windows;
+using Shouldly;
+
+namespace Tests.Caliburn.RoutedUIMessaging
 {
     using System.Linq;
     using System.Windows.Controls;
     using Fakes;
     using global::Caliburn.Core;
     using global::Caliburn.PresentationFramework.RoutedMessaging;
-    using NUnit.Framework;
+    using Xunit;
     using Rhino.Mocks;
 
-    [TestFixture]
+    
     public class An_interaction_node : TestBase
     {
         private IRoutedMessageController controller;
@@ -22,29 +26,30 @@
             controller = Mock<IRoutedMessageController>();
             parent = new StackPanel();
             element = new Button();
+            element.Focus();
             parentNode = new InteractionNode(parent, controller);
             node = new InteractionNode(element, controller);
 
             parent.Children.Add(element);
         }
 
-        [Test]
+        [WpfFact]
         public void declares_the_ui_element()
         {
-            Assert.That(node.UIElement, Is.EqualTo(element));
+            node.UIElement.ShouldBe(element);
         }
 
-        [Test]
+        [WpfFact]
         public void can_find_parent_node()
         {
             controller.Expect(x => x.GetParent(element)).Return(parentNode);
 
             var found = node.FindParent();
 
-            Assert.That(found, Is.EqualTo(parentNode));
+            found.ShouldBe(parentNode);
         }
 
-        [Test]
+        [WpfFact]
         public void can_add_a_trigger()
         {
             var trigger = Mock<IMessageTrigger>();
@@ -53,20 +58,20 @@
 
             node.AddTrigger(trigger);
 
-            Assert.That(node.Triggers.Contains(trigger));
+            node.Triggers.Contains(trigger).ShouldBeTrue();
         }
 
-        [Test]
+        [WpfFact]
         public void can_have_a_message_handler()
         {
             var handler = Mock<IRoutedMessageHandler>();
 
             node.RegisterHandler(handler);
 
-            Assert.That(node.MessageHandler, Is.EqualTo(handler));
+            node.MessageHandler.ShouldBe(handler);
         }
 
-        [Test]
+        [WpfFact]
         public void can_determine_if_a_message_is_handled()
         {
             var message = new FakeMessage();
@@ -79,10 +84,10 @@
 
             bool result = node.Handles(message);
 
-            Assert.That(result, Is.True);
+            result.ShouldBeTrue();
         }
 
-        [Test]
+        [WpfFact]
         public void can_process_message_if_node_has_handler()
         {
             var context = new object();
@@ -97,7 +102,7 @@
             node.ProcessMessage(message, context);
         }
 
-        [Test]
+        [WpfFact]
         public void can_process_message_if_parent_node_has_handler()
         {
             var context = new object();
@@ -117,7 +122,7 @@
             node.ProcessMessage(message, context);
         }
 
-        [Test]
+        [WpfFact]
         public void will_throw_exception_if_processing_node_is_not_found()
         {
             Assert.Throws<CaliburnException>(() =>{
@@ -134,7 +139,7 @@
             });
         }
 
-        [Test]
+        [WpfFact]
         public void can_update_availability_if_node_has_handler()
         {
             var message = new FakeMessage();
@@ -151,7 +156,7 @@
             node.UpdateAvailability(trigger);
         }
 
-        [Test]
+        [WpfFact]
         public void can_update_availability_if_parent_node_has_handler()
         {
             var message = new FakeMessage();
@@ -171,10 +176,10 @@
             node.UpdateAvailability(trigger);
         }
 
-        [Test]
-        [Ignore]
+        [WpfFact]
         public void will_throw_exception_if_trigger_update_node_is_not_found()
         {
+            RaiseLoadedEvent(element);
             Assert.Throws<CaliburnException>(() =>{
                 var trigger = Mock<IMessageTrigger>();
                 var message = new FakeMessage();
@@ -188,6 +193,13 @@
 
                 node.UpdateAvailability(trigger);
             });
+        }
+
+        private static void RaiseLoadedEvent(FrameworkElement element)
+        {
+            var eventMethod = typeof(FrameworkElement).GetMethod("OnLoaded", BindingFlags.Instance | BindingFlags.NonPublic);
+            var args = new RoutedEventArgs(FrameworkElement.LoadedEvent);
+            eventMethod.Invoke(element, new object[] { args });
         }
     }
 }

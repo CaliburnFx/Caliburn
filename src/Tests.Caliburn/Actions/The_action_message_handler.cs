@@ -1,7 +1,8 @@
 ﻿using System.Collections.Generic;
 using Caliburn.Core;
-using NUnit.Framework;
+using Xunit;
 using Rhino.Mocks;
+using Shouldly;
 using Tests.Caliburn.Fakes;
 
 namespace Tests.Caliburn.Actions
@@ -10,7 +11,7 @@ namespace Tests.Caliburn.Actions
     using global::Caliburn.PresentationFramework.Filters;
     using global::Caliburn.PresentationFramework.RoutedMessaging;
 
-    [TestFixture]
+    
     public class The_action_message_handler : TestBase
     {
         const string MethodName = "MyAction";
@@ -40,13 +41,13 @@ namespace Tests.Caliburn.Actions
             handler = new ActionMessageHandler(host, target);
         }
 
-        [Test]
+        [Fact]
         public void can_get_default_data_context_value()
         {
-            Assert.That(handler.Unwrap(), Is.EqualTo(target));
+            handler.Unwrap().ShouldBe(target);
         }
 
-        [Test]
+        [Fact]
         public void can_handle_an_action_message_with_approriate_name()
         {
             var message = new ActionMessage {MethodName = MethodName};
@@ -54,10 +55,10 @@ namespace Tests.Caliburn.Actions
             host.Expect(x => x.GetAction(message)).Return(Stub<IAction>());
 
             var result = handler.Handles(message);
-            Assert.That(result, Is.True);
+            result.ShouldBeTrue();
         }
 
-        [Test]
+        [Fact]
         public void cannot_handle_an_action_message_with_invalid_name()
         {
             var message = new ActionMessage {MethodName = MethodName};
@@ -65,18 +66,18 @@ namespace Tests.Caliburn.Actions
             host.Expect(x => x.GetAction(message)).Return(null);
 
             var result = handler.Handles(message);
-            Assert.That(result, Is.False);
+            result.ShouldBeFalse();
         }
 
-        [Test]
+        [Fact]
         public void cannot_handle_a_non_action_message()
         {
             var result = handler.Handles(new FakeMessage());
 
-            Assert.That(result, Is.False);
+            result.ShouldBeFalse();
         }
 
-        [Test]
+        [Fact]
         public void can_process_an_action_message()
         {
             var handlingNode = Stub<IInteractionNode>();
@@ -94,7 +95,7 @@ namespace Tests.Caliburn.Actions
             handler.Process(message, context);
         }
 
-        [Test]
+        [Fact]
         public void cannot_process_a_non_action_message()
         {
             Assert.Throws<CaliburnException>(() =>{
@@ -105,7 +106,7 @@ namespace Tests.Caliburn.Actions
             });
         }
 
-        [Test]
+        [Fact]
         public void can_update_a_trigger_if_has_trigger_effects_and_true()
         {
             var node = Stub<IInteractionNode>();
@@ -127,7 +128,7 @@ namespace Tests.Caliburn.Actions
             handler.UpdateAvailability(trigger);
         }
 
-        [Test]
+        [Fact]
         public void can_update_a_trigger_if_has_trigger_effects_and_false()
         {
             var node = Stub<IInteractionNode>();
@@ -149,7 +150,7 @@ namespace Tests.Caliburn.Actions
             handler.UpdateAvailability(trigger);
         }
 
-        [Test]
+        [Fact]
         public void cannot_update_a_trigger_if_missing_trigger_effects()
         {
             var message = new ActionMessage { MethodName = MethodName };
@@ -165,7 +166,7 @@ namespace Tests.Caliburn.Actions
             handler.UpdateAvailability(trigger);
         }
 
-        [Test]
+        [Fact]
         public void cannot_update_trigger_for_a_non_action_message()
         {
             Assert.Throws<CaliburnException>(() =>{

@@ -1,4 +1,6 @@
-﻿namespace Tests.Caliburn.RoutedUIMessaging
+﻿using Shouldly;
+
+namespace Tests.Caliburn.RoutedUIMessaging
 {
     using System;
     using System.Collections.Generic;
@@ -14,9 +16,9 @@
     using global::Caliburn.PresentationFramework.RoutedMessaging.Parsers;
     using global::Caliburn.PresentationFramework.ViewModels;
     using global::Caliburn.PresentationFramework.Views;
-    using NUnit.Framework;
+    using Xunit;
 
-    [TestFixture]
+    
     public class The_configuration : TestBase
     {
         PresentationFrameworkConfiguration config;
@@ -28,7 +30,7 @@
             module = config;
         }
 
-        [Test]
+        [Fact]
         public void can_provide_a_custom_method_binder()
         {
             config.Using(x => x.MessageBinder<FakeMessageBinder>());
@@ -37,12 +39,12 @@
 
             var found = (from reg in registrations.OfType<Singleton>()
                          where reg.Service == typeof(IMessageBinder)
-                         select reg).FirstOrDefault();
+                         select reg).First();
 
-            Assert.That(found.Implementation, Is.EqualTo(typeof(FakeMessageBinder)));
+            found.Implementation.ShouldBe(typeof(FakeMessageBinder));
         }
 
-        [Test]
+        [Fact]
         public void can_provide_a_custom_parser()
         {
             config.Using(x => x.Parser<FakeMessageParser>());
@@ -51,12 +53,12 @@
 
             var found = (from reg in registrations.OfType<Singleton>()
                          where reg.Service == typeof(IParser)
-                         select reg).FirstOrDefault();
+                         select reg).First();
 
-            Assert.That(found.Implementation, Is.EqualTo(typeof(FakeMessageParser)));
+            found.Implementation.ShouldBe(typeof(FakeMessageParser));
         }
 
-        [Test]
+        [Fact]
         public void can_provide_a_custom_routed_message_handler()
         {
             config.Using(x => x.RoutedMessageController<FakeRoutedMessageController>());
@@ -65,78 +67,69 @@
 
             var found = (from reg in registrations.OfType<Singleton>()
                          where reg.Service == typeof(IRoutedMessageController)
-                         select reg).FirstOrDefault();
+                         select reg).First();
 
-            Assert.That(found.Implementation, Is.EqualTo(typeof(FakeRoutedMessageController)));
+            found.Implementation.ShouldBe(typeof(FakeRoutedMessageController));
         }
 
-        [Test]
+        [Fact]
         public void when_started_configures_required_components_and_defaults()
         {
             var registrations = module.GetComponents();
 
             var found = (from reg in registrations.OfType<Singleton>()
                          where reg.Service == typeof(IRoutedMessageController)
-                         select reg).FirstOrDefault();
+                         select reg).First();
 
-            Assert.That(found, Is.Not.Null);
-            Assert.That(found.Implementation, Is.Not.Null);
+            found.Implementation.ShouldNotBeNull();
 
             found = (from reg in registrations.OfType<Singleton>()
                      where reg.Service == typeof(IMessageBinder)
-                     select reg).FirstOrDefault();
+                     select reg).First();
 
-            Assert.That(found, Is.Not.Null);
-            Assert.That(found.Implementation, Is.Not.Null);
+            found.Implementation.ShouldNotBeNull();
 
             found = (from reg in registrations.OfType<Singleton>()
                      where reg.Service == typeof(IParser)
-                     select reg).FirstOrDefault();
+                     select reg).First();
 
-            Assert.That(found, Is.Not.Null);
-            Assert.That(found.Implementation, Is.Not.Null);
+            found.Implementation.ShouldNotBeNull();
 
             found = (from reg in registrations.OfType<Singleton>()
                      where reg.Service == typeof(IViewModelDescriptionFactory)
-                     select reg).FirstOrDefault();
+                     select reg).First();
 
-            Assert.That(found, Is.Not.Null);
-            Assert.That(found.Implementation, Is.Not.Null);
+            found.Implementation.ShouldNotBeNull();
 
             found = (from reg in registrations.OfType<Singleton>()
                      where reg.Service == typeof(IActionLocator)
-                     select reg).FirstOrDefault();
+                     select reg).First();
 
-            Assert.That(found, Is.Not.Null);
-            Assert.That(found.Implementation, Is.Not.Null);
+            found.Implementation.ShouldNotBeNull();
 
             found = (from reg in registrations.OfType<Singleton>()
                      where reg.Service == typeof(IViewLocator)
-                     select reg).FirstOrDefault();
+                     select reg).First();
 
-            Assert.That(found, Is.Not.Null);
-            Assert.That(found.Implementation, Is.Not.Null);
+            found.Implementation.ShouldNotBeNull();
 
             found = (from reg in registrations.OfType<Singleton>()
                      where reg.Service == typeof(IViewModelBinder)
-                     select reg).FirstOrDefault();
+                     select reg).First();
 
-            Assert.That(found, Is.Not.Null);
-            Assert.That(found.Implementation, Is.Not.Null);
+            found.Implementation.ShouldNotBeNull();
 
             found = (from reg in registrations.OfType<Singleton>()
                      where reg.Service == typeof(IConventionManager)
-                     select reg).FirstOrDefault();
+                     select reg).First();
 
-            Assert.That(found, Is.Not.Null);
-            Assert.That(found.Implementation, Is.Not.Null);
+            found.Implementation.ShouldNotBeNull();
 
             found = (from reg in registrations.OfType<Singleton>()
                      where reg.Service == typeof(IWindowManager)
-                     select reg).FirstOrDefault();
+                     select reg).First();
 
-            Assert.That(found, Is.Not.Null);
-            Assert.That(found.Implementation, Is.Not.Null);
+            found.Implementation.ShouldNotBeNull();
         }
     }
 

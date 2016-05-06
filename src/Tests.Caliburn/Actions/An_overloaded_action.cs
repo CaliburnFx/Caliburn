@@ -1,4 +1,6 @@
-﻿namespace Tests.Caliburn.Actions
+﻿using Shouldly;
+
+namespace Tests.Caliburn.Actions
 {
     using System.Linq;
     using global::Caliburn.Core;
@@ -7,9 +9,9 @@
     using global::Caliburn.PresentationFramework.Actions;
     using global::Caliburn.PresentationFramework.Filters;
     using global::Caliburn.PresentationFramework.RoutedMessaging;
-    using NUnit.Framework;
+    using Xunit;
 
-    [TestFixture]
+    
     public class An_overloaded_action : TestBase
     {
         OverloadedAction action;
@@ -45,7 +47,7 @@
             public void Test(int number, string text, double value) {}
         }
 
-        [Test]
+        [Fact]
         public void can_determine_overload()
         {
             var message = new ActionMessage();
@@ -53,20 +55,20 @@
             message.Parameters.Add(new Parameter(5));
             var found = action.DetermineOverloadOrFail(message);
 
-            Assert.That(found, Is.Not.Null);
+            found.ShouldNotBeNull();
 
             message.Parameters.Add(new Parameter("hello"));
             found = action.DetermineOverloadOrFail(message);
 
-            Assert.That(found, Is.Not.Null);
+            found.ShouldNotBeNull();
 
             message.Parameters.Add(new Parameter(5d));
             found = action.DetermineOverloadOrFail(message);
 
-            Assert.That(found, Is.Not.Null);
+            found.ShouldNotBeNull();
         }
 
-        [Test]
+        [Fact]
         public void fails_if_no_match_is_found()
         {
             Assert.Throws<CaliburnException>(() =>{

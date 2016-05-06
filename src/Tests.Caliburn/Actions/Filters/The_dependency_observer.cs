@@ -1,4 +1,6 @@
-﻿namespace Tests.Caliburn.Actions.Filters
+﻿using Shouldly;
+
+namespace Tests.Caliburn.Actions.Filters
 {
     using System;
     using System.Collections.Generic;
@@ -7,10 +9,10 @@
     using global::Caliburn.PresentationFramework;
     using global::Caliburn.PresentationFramework.Filters;
     using global::Caliburn.PresentationFramework.RoutedMessaging;
-    using NUnit.Framework;
+    using Xunit;
     using Rhino.Mocks;
 
-    [TestFixture]
+    
     public class The_dependency_observer : TestBase
     {
         IRoutedMessageHandler handler;
@@ -107,7 +109,7 @@
             }
         }
 
-        [Test]
+        [Fact]
         //ref http://caliburn.codeplex.com/WorkItem/View.aspx?WorkItemId=6100
         //see also http://caliburn.codeplex.com/Thread/View.aspx?ThreadId=212171
         public void backreferences_should_not_leak_the_observer()
@@ -131,18 +133,18 @@
             GC.WaitForPendingFinalizers();
 
 
-            Assert.That(handlerRef.IsAlive, Is.False, "message handler has not been released");
+            handlerRef.IsAlive.ShouldBeFalse();
 
 
             //the first time a ppMonitor is notified AFTER the collection of its DependenyObserver,
             //it unregisters the unnecessary handler
             parent.NotifyOfPropertyChange("anyProperty");
 
-            Assert.That(parent.SubscriptionCount, Is.EqualTo(0), "subscription to parent model has not been removed");
+            parent.SubscriptionCount.ShouldBe(0);
         }
 
 
-        [Test, Ignore("NOTE: to make this test pass, the finalizer of DependencyObserver should be in place")]
+        [Fact(Skip="NOTE: to make this test pass, the finalizer of DependencyObserver should be in place")]
         //see http://caliburn.codeplex.com/Thread/View.aspx?ThreadId=212171 for the rationale behind the finalizer removal
         public void backreferences_should_not_leak_the_observer_strict()
         {
@@ -159,11 +161,11 @@
             GC.WaitForFullGCComplete();
             GC.WaitForPendingFinalizers();
 
-            Assert.That(handlerRef.IsAlive, Is.False);
-            Assert.That(parent.SubscriptionCount, Is.EqualTo(0));
+            handlerRef.IsAlive.ShouldBeFalse();
+            parent.SubscriptionCount.ShouldBe(0);
         }
 
-        [Test]
+        [Fact]
         public void should_allow_nodes_collection()
         {
             ExpectTriggerUpdate(1); //strict mock requires expectations
@@ -179,10 +181,10 @@
             GC.WaitForFullGCComplete();
             GC.WaitForPendingFinalizers();
 
-            Assert.That(disconnectedChainRef.IsAlive, Is.False);
+            disconnectedChainRef.IsAlive.ShouldBeFalse();
         }
 
-        [Test]
+        [Fact]
         public void should_detect_changes_on_intermediate_node()
         {
             ExpectTriggerUpdate(1);
@@ -193,7 +195,7 @@
             AssertTriggerUpdateExpectations();
         }
 
-        [Test]
+        [Fact]
         public void should_detect_registered_changes_on_referenced_model()
         {
             ExpectTriggerUpdate(1);
@@ -206,7 +208,7 @@
             AssertTriggerUpdateExpectations();
         }
 
-        [Test]
+        [Fact]
         public void should_detect_registered_changes_on_target()
         {
             ExpectTriggerUpdate(1);
@@ -219,7 +221,7 @@
             AssertTriggerUpdateExpectations();
         }
 
-        [Test]
+        [Fact]
         public void should_detect_star_changes_on_leaf_node()
         {
             ExpectTriggerUpdate(2);
@@ -233,7 +235,7 @@
             AssertTriggerUpdateExpectations();
         }
 
-        [Test]
+        [Fact]
         public void should_detect_star_changes_on_root()
         {
             ExpectTriggerUpdate(2);
@@ -247,7 +249,7 @@
             AssertTriggerUpdateExpectations();
         }
 
-        [Test]
+        [Fact]
         public void should_ignore_changes_on_deeper_path()
         {
             ExpectTriggerUpdate(0);
@@ -260,7 +262,7 @@
             AssertTriggerUpdateExpectations();
         }
 
-        [Test]
+        [Fact]
         public void should_ignore_changes_on_disconnected_chains()
         {
             ExpectTriggerUpdate(1); //first call is expected, second it's not
@@ -276,7 +278,7 @@
             AssertTriggerUpdateExpectations();
         }
 
-        [Test]
+        [Fact]
         public void should_ignore_changes_on_unregistered_path()
         {
             ExpectTriggerUpdate(0);
@@ -289,7 +291,7 @@
             AssertTriggerUpdateExpectations();
         }
 
-        [Test]
+        [Fact]
         public void should_ignore_unregistered_changes_on_target()
         {
             ExpectTriggerUpdate(0);
@@ -302,7 +304,7 @@
             AssertTriggerUpdateExpectations();
         }
 
-        [Test]
+        [Fact]
         public void should_monitor_multiple_paths()
         {
             ExpectTriggerUpdate(2);
@@ -316,7 +318,7 @@
             AssertTriggerUpdateExpectations();
         }
 
-        [Test]
+        [Fact]
         public void should_reconnect_monitor_on_changed_chain()
         {
             ExpectTriggerUpdate(2);
@@ -330,7 +332,7 @@
             AssertTriggerUpdateExpectations();
         }
 
-        [Test]
+        [Fact]
         public void should_reconnect_monitor_on_previously_null_nodes()
         {
             ExpectTriggerUpdate(2);
@@ -347,7 +349,7 @@
             AssertTriggerUpdateExpectations();
         }
 
-        [Test]
+        [Fact]
         public void should_throw_exception_if_property_dose_not_exists_on_target()
         {
             Assert.Throws<CaliburnException>(() =>{
@@ -357,14 +359,15 @@
             });
         }
 
-        [Test]
+        [Fact]
         public void should_throw_on_star_invalid_use()
         {
-            Assert.Throws(Is.InstanceOf<Exception>().And.Message.Contains("'*' marker in path"), () =>{
+            var exception = Assert.Throws<CaliburnException>(() =>{
                 ConfigureObserver(new[] {
                     "*.xxx"
                 });
             });
+            exception.Message.Contains("'*' marker in path").ShouldBeTrue();
         }
     }
 }

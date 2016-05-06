@@ -1,11 +1,13 @@
-﻿namespace Tests.Caliburn.PresentationFramework.PropertyChanged
+﻿using Shouldly;
+
+namespace Tests.Caliburn.PresentationFramework.PropertyChanged
 {
     using System.IO;
     using System.Runtime.Serialization;
     using global::Caliburn.PresentationFramework;
-    using NUnit.Framework;
+    using Xunit;
 
-    [TestFixture]
+    
     public class A_DataContract_PropertyChangedBase_subclass : TestBase
     {
         [DataContract]
@@ -25,7 +27,7 @@
             }
         }
 
-        [Test]
+        [Fact]
         public void can_accept_handlers_after_deserialization()
         {
             var original = new FakeDataContractNotifier();
@@ -41,10 +43,10 @@
             deserialized.PropertyChanged += (o, e) => { handlerCalls++; };
             deserialized.FakeProperty = "some string value";
 
-            Assert.AreEqual(1, handlerCalls);
+            handlerCalls.ShouldBe(1);
         }
 
-        [Test]
+        [Fact]
         public void can_be_serialized_and_deserialized()
         {
             var original = new FakeDataContractNotifier();
@@ -57,11 +59,11 @@
             stream.Position = 0;
             var deserialized = (FakeDataContractNotifier)serializer.ReadObject(stream);
 
-            Assert.AreNotSame(original, deserialized);
-            Assert.AreEqual(original.FakeProperty, deserialized.FakeProperty);
+            original.ShouldNotBeSameAs(deserialized);
+            original.FakeProperty.ShouldBe(deserialized.FakeProperty);
         }
 
-        [Test]
+        [Fact]
         public void can_notify_after_deserialization()
         {
             var original = new FakeDataContractNotifier();

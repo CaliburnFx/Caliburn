@@ -1,11 +1,13 @@
-﻿namespace Tests.Caliburn.RoutedUIMessaging
+﻿using Shouldly;
+
+namespace Tests.Caliburn.RoutedUIMessaging
 {
     using System.Windows.Controls;
     using global::Caliburn.PresentationFramework.Conventions;
     using global::Caliburn.PresentationFramework.RoutedMessaging.Triggers;
-    using NUnit.Framework;
+    using Xunit;
 
-    [TestFixture]
+    
     public class Interaction_defaults : TestBase
     {
         DefaultElementConvention<Button> defaults;
@@ -21,22 +23,22 @@
                 );
         }
 
-        [Test]
+        [Fact]
         public void declare_an_element_type()
         {
-            Assert.That(defaults.Type, Is.EqualTo(typeof(Button)));
+            defaults.Type.ShouldBe(typeof(Button));
         }
 
-        [Test]
+        [Fact]
         public void can_provide_a_default_trigger_as_an_event_trigger()
         {
             var trigger = defaults.CreateTrigger();
 
-            Assert.That(trigger, Is.Not.Null);
-            Assert.That(trigger, Is.InstanceOf<EventMessageTrigger>());
+            trigger.ShouldNotBeNull();
+            trigger.ShouldBeOfType<EventMessageTrigger>();
         }
 
-        [Test]
+        [WpfFact]
         public void can_get_a_default_value()
         {
             var value = new object();
@@ -44,10 +46,10 @@
 
             var result = defaults.GetValue(button);
 
-            Assert.That(result, Is.EqualTo(value));
+            result.ShouldBe(value);
         }
 
-        [Test]
+        [WpfFact]
         public void can_set_a_default_value()
         {
             var value = new object();
@@ -55,7 +57,7 @@
 
             defaults.SetValue(button, value);
 
-            Assert.That(button.DataContext, Is.EqualTo(value));
+            button.DataContext.ShouldBe(value);
         }
     }
 }

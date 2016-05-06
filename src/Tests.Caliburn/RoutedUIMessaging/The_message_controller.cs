@@ -1,12 +1,14 @@
-﻿namespace Tests.Caliburn.RoutedUIMessaging
+﻿using Shouldly;
+
+namespace Tests.Caliburn.RoutedUIMessaging
 {
     using System.Linq;
     using System.Windows.Controls;
     using global::Caliburn.PresentationFramework.RoutedMessaging;
-    using NUnit.Framework;
+    using Xunit;
     using Rhino.Mocks;
 
-    [TestFixture]
+    
     public class The_message_controller : TestBase
     {
         IRoutedMessageController controller;
@@ -16,7 +18,7 @@
             controller = new DefaultRoutedMessageController();
         }
 
-        [Test]
+        [WpfFact]
         public void can_attach_a_trigger_to_a_ui_element()
         {
             var dp = new Button();
@@ -31,11 +33,11 @@
 
             var node = dp.GetValue(DefaultRoutedMessageController.NodeProperty) as InteractionNode;
 
-            Assert.That(node, Is.Not.Null);
-            Assert.That(node.Triggers.Contains(trigger));
+            node.ShouldNotBeNull();
+            node.Triggers.Contains(trigger).ShouldBeTrue();
         }
 
-        [Test]
+        [WpfFact]
         public void can_attach_a_message_handler_to_a_ui_element()
         {
             var dp = new Button();
@@ -52,12 +54,12 @@
 
             var node = dp.GetValue(DefaultRoutedMessageController.NodeProperty) as InteractionNode;
 
-            Assert.That(node, Is.Not.Null);
-            Assert.That(node.MessageHandler, Is.EqualTo(handler));
-            Assert.That(dp.DataContext, Is.EqualTo(handler));
+            node.ShouldNotBeNull();
+            node.MessageHandler.ShouldBe(handler);
+            dp.DataContext.ShouldBe(handler);
         }
 
-        [Test]
+        [WpfFact]
         public void can_attach_a_message_handler_to_a_ui_element_without_data_context()
         {
             var dp = new Button();
@@ -71,12 +73,12 @@
 
             var node = dp.GetValue(DefaultRoutedMessageController.NodeProperty) as InteractionNode;
 
-            Assert.That(node, Is.Not.Null);
-            Assert.That(node.MessageHandler, Is.EqualTo(handler));
-            Assert.That(dp.DataContext, Is.Null);
+            node.ShouldNotBeNull();
+            node.MessageHandler.ShouldBe(handler);
+            dp.DataContext.ShouldBeNull();
         }
 
-        [Test]
+        [WpfFact]
         public void can_find_parent_node_of_ui_element()
         {
             var panel = new StackPanel();
@@ -90,8 +92,8 @@
 
             var parent = controller.GetParent(button);
 
-            Assert.That(parent, Is.Not.Null);
-            Assert.That(parent.UIElement, Is.EqualTo(panel));
+            parent.ShouldNotBeNull();
+            parent.UIElement.ShouldBe(panel);
         }
     }
 }

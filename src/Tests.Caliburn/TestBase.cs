@@ -1,4 +1,4 @@
-﻿using NUnit.Framework;
+﻿using System;
 using Rhino.Mocks;
 
 namespace Tests.Caliburn
@@ -6,10 +6,9 @@ namespace Tests.Caliburn
     using System.Linq;
     using System.Reflection;
 
-    public class TestBase
+    public class TestBase : IDisposable
     {
-        [SetUp]
-        public void SetUp()
+        public TestBase()
         {
             given_the_context_of();
         }
@@ -18,8 +17,7 @@ namespace Tests.Caliburn
         {
         }
 
-        [TearDown]
-        public void TearDown()
+        public void Dispose()
         {
             after_each();
         }
@@ -28,7 +26,7 @@ namespace Tests.Caliburn
         {
         }
 
-        protected T Mock<T>()
+        protected T Mock<T>() where T : class
         {
             return MockRepository.GenerateMock<T>();
         }
@@ -41,12 +39,12 @@ namespace Tests.Caliburn
             return strict;
         }
 
-        protected T Stub<T>()
+        protected T Stub<T>() where T : class
         {
             return MockRepository.GenerateStub<T>();
         }
 
-        protected T Stub<T>(params object[] args)
+        protected T Stub<T>(params object[] args) where T : class
         {
             return MockRepository.GenerateStub<T>(args);
         }

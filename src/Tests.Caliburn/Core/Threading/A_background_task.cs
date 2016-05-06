@@ -1,63 +1,63 @@
 ﻿using System;
-using NUnit.Framework;
+using System.Reflection;
+using System.Threading.Tasks;
+using Shouldly;
+using Xunit;
 
 namespace Tests.Caliburn.Core.Threading
 {
     using System.Threading;
     using global::Caliburn.Core.Invocation;
 
-    [TestFixture]
-    [Ignore]
+    
     public class A_background_task : TestBase
     {
-        [Test]
-        public void can_queue_work()
+        [Fact]
+        public async Task can_queue_work()
         {
-            bool wasExecuted = false;
-            var handle = new ManualResetEvent(false);
+            var taskCompletionSource = new TaskCompletionSource<bool>();
 
             var task = new BackgroundTask(() =>{
-                wasExecuted = true;
-                handle.Set();
+                taskCompletionSource.SetResult(true);
                 return null;
             });
 
             task.Start(null);
 
-            handle.WaitOne(1000);
-            Assert.That(wasExecuted, Is.True);
+            await Task.WhenAny(taskCompletionSource.Task, Task.Delay(250));
+            taskCompletionSource.Task.Result.ShouldBeTrue();
         }
 
-        [Test]
+        [Fact]
         public void sets_up_context_when_executing_queued_work()
         {
             var task = new BackgroundTask(
                 () =>{
-                    Assert.That(BackgroundTask.CurrentContext, Is.Not.Null);
+                    BackgroundTask.CurrentContext.ShouldNotBeNull();
                     return true;
                 });
 
             task.Start(null);
         }
 
-        [Test]
+        [Fact]
         public void tears_down_context_after_executing()
         {
             var task = new BackgroundTask(() => true);
             task.Start(null);
 
-            Assert.That(BackgroundTask.CurrentContext, Is.Null);
+            BackgroundTask.CurrentContext.ShouldBeNull();
         }
 
-        [Test]
+        [Fact]
         public void is_not_busy_before_start()
         {
             var task = new BackgroundTask(() => null);
 
-            Assert.That(task.IsBusy, Is.False);
+            task.IsBusy.ShouldBeFalse();
         }
 
-        [Test]
+        [Fact]
         public void is_busy_during_work()
         {
             BackgroundTask task = null;
@@ -65,30 +65,30 @@ namespace Tests.Caliburn.Core.Threading
             task = new BackgroundTask(
                 () =>
                 {
-                    Assert.That(task.IsBusy, Is.True);
+                    task.IsBusy.ShouldBeTrue();
                     return true;
                 });
 
             task.Start(null);
         }
 
-        [Test]
+        [Fact]
         public void is_not_busy_after_work()
         {
             var task = new BackgroundTask(() => null);
 
-            Assert.That(task.IsBusy, Is.False);
+            task.IsBusy.ShouldBeFalse();
         }
 
-        [Test]
+        [Fact]
         public void is_not_cancelled_at_start()
         {
             var task = new BackgroundTask(() => null);
 
-            Assert.That(task.CancellationPending, Is.False);
+            task.CancellationPending.ShouldBeFalse();
         }
 
-        [Test]
+        [Fact]
         public void when_cancelled_before_start_will_not_execute_the_delegate()
         {
             bool wasExecuted = false;
@@ -97,10 +97,10 @@ namespace Tests.Caliburn.Core.Threading
             task.Cancel();
             task.Start(null);
 
-            Assert.That(wasExecuted, Is.False);
+            wasExecuted.ShouldBeFalse();
         }
 
-        [Test]
+        [Fact]
         public void when_cancelled_during_execution_will_update_context()
         {
             BackgroundTask task = null;
@@ -108,15 +108,15 @@ namespace Tests.Caliburn.Core.Threading
             task = new BackgroundTask(
                 () => {
                     task.Cancel();
-                    Assert.That(BackgroundTask.CurrentContext.CancellationPending, Is.True);
-                    Assert.That(task.CancellationPending, Is.True);
+                    BackgroundTask.CurrentContext.CancellationPending.ShouldBeTrue();
+                    task.CancellationPending.ShouldBeTrue();
                     return null;
                 });
 
             task.Start(null);
         }
 
-        [Test]
+        [Fact]
         public void fires_event_when_progress_is_updated()
         {
             const int percentage = 20;
@@ -133,8 +133,8 @@ namespace Tests.Caliburn.Core.Threading
             task.ProgressChanged +=
                 (s, e) => {
                     wasFired = true;
-                    Assert.That(s, Is.EqualTo(task));
-                    Assert.That(e.ProgressPercentage, Is.EqualTo(percentage));
+                    s.ShouldBe(task);
+                    e.ProgressPercentage.ShouldBe(percentage);
 
                     handle.Set();
                 };
@@ -142,10 +142,10 @@ namespace Tests.Caliburn.Core.Threading
             task.Start(userState);
 
             handle.WaitOne(1000);
-            Assert.That(wasFired, Is.True);
+            wasFired.ShouldBeTrue();
         }
 
-        [Test]
+        [Fact]
         public void fires_event_when_work_is_complete()
         {
             object userState = new object();
@@ -157,9 +157,9 @@ namespace Tests.Caliburn.Core.Threading
             task.Completed +=
                 (s, e) => {
                     wasFired = true;
-                    Assert.That(e.Result, Is.Null);
-                    Assert.That(e.Error, Is.Null);
-                    Assert.That(e.Cancelled, Is.False);
+                    e.Result.ShouldBeNull();
+                    e.Error.ShouldBeNull();
+                    e.Cancelled.ShouldBeFalse();
 
                     handle.Set();
                 };
@@ -167,17 +167,16 @@ namespace Tests.Caliburn.Core.Threading
             task.Start(userState);
 
             handle.WaitOne(1000);
-            Assert.That(wasFired, Is.True);
+            wasFired.ShouldBeTrue();
         }
 
-        [Test]
-        public void fires_complete_event_when_exception_occurs()
+        [Fact]
+        public async Task fires_complete_event_when_exception_occurs()
         {
             object userState = new object();
             var exception = new Exception();
-            bool wasFired = false;
 
-            var handle = new ManualResetEvent(false);
+            var tcs = new TaskCompletionSource<bool>();
 
             var task = new BackgroundTask(
                 () => {
@@ -187,21 +186,25 @@ namespace Tests.Caliburn.Core.Threading
             task.Completed +=
                 (s, e) =>
                 {
-                    wasFired = true;
-                    Assert.That(e.Result, Is.Null);
-                    Assert.That(e.Error, Is.EqualTo(exception));
-                    Assert.That(e.Cancelled, Is.False);
+                    Action resultAction = () =>
+                    {
+                        var result = e.Result;
+                    };
+                    resultAction.ShouldThrow<TargetInvocationException>();
+                    e.Error.ShouldBeSameAs(exception);
+                    e.Cancelled.ShouldBeFalse();
 
-                    handle.Set();
+                    tcs.SetResult(true);
                 };
 
             task.Start(userState);
 
-            handle.WaitOne(1000);
-            Assert.That(wasFired, Is.True);
+            await Task.WhenAny(tcs.Task, Task.Delay(500));
+            tcs.Task.IsCompleted.ShouldBeTrue();
+            tcs.Task.Result.ShouldBeTrue();
         }
 
-        [Test]
+        [Fact]
         public void fires_complete_event_with_result_when_available()
         {
             object userState = new object();
@@ -215,9 +218,9 @@ namespace Tests.Caliburn.Core.Threading
                 (s, e) =>
                 {
                     wasFired = true;
-                    Assert.That(e.Result, Is.EqualTo(result));
-                    Assert.That(e.Error, Is.Null);
-                    Assert.That(e.Cancelled, Is.False);
+                    e.Result.ShouldBe(result);
+                    e.Error.ShouldBeNull();
+                    e.Cancelled.ShouldBeFalse();
 
                     handle.Set();
                 };
@@ -225,13 +228,12 @@ namespace Tests.Caliburn.Core.Threading
             task.Start(userState);
 
             handle.WaitOne(1000);
-            Assert.That(wasFired, Is.True);
+            wasFired.ShouldBeTrue();
         }
 
-        [Test]
+        [Fact]
         public void fires_complete_event_when_work_is_cancelled()
         {
-            object userState = new object();
             bool wasFired = false;
 
             var handle = new ManualResetEvent(false);
@@ -247,19 +249,22 @@ namespace Tests.Caliburn.Core.Threading
                 (s, e) =>
                 {
                     wasFired = true;
-                    Assert.That(s, Is.EqualTo(task));
-                    Assert.That(e.UserState, Is.EqualTo(userState));
-                    Assert.That(e.Result, Is.Null);
-                    Assert.That(e.Error, Is.Null);
-                    Assert.That(e.Cancelled, Is.True);
+                    s.ShouldBe(task);
+                    Action resultAction = () =>
+                    {
+                        var result = e.Result;
+                    };
+                    resultAction.ShouldThrow<Exception>();
+                    e.Error.ShouldBeNull();
+                    e.Cancelled.ShouldBeTrue();
 
                     handle.Set();
                 };
 
-            task.Start(userState);
+            task.Start(null);
 
             handle.WaitOne(1000);
-            Assert.That(wasFired, Is.True);
+            wasFired.ShouldBeTrue();
         }
     }
 }

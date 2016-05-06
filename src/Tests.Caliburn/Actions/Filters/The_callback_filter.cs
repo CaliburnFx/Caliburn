@@ -6,10 +6,10 @@
     using global::Caliburn.Core.InversionOfControl;
     using global::Caliburn.PresentationFramework.Actions;
     using global::Caliburn.PresentationFramework.RoutedMessaging;
-    using NUnit.Framework;
+    using Xunit;
     using Rhino.Mocks;
 
-    [TestFixture]
+    
     public class The_async_attribute_filter : TestBase
     {
         AsyncActionAttribute attribute;
@@ -25,7 +25,7 @@
                 Callback = "Callback"
             };
             container = Stub<IServiceLocator>();
-            container.Stub(x => x.GetInstance<IMethodFactory>()).Return(methodFactory).Repeat.Any();
+            container.Stub(x => x.GetInstance(typeof(IMethodFactory), null)).Return(methodFactory).Repeat.Any();
         }
 
         internal class MethodHost
@@ -33,7 +33,7 @@
             public void Callback(object result) {}
         }
 
-        [Test]
+        [WpfFact]
         public void can_execute_a_callback()
         {
             var method = Mock<IMethod>();
@@ -63,7 +63,7 @@
             attribute.Execute(null, handlingNode, outcome);
         }
 
-        [Test]
+        [Fact]
         public void initializes_its_method()
         {
             attribute.Initialize(typeof(MethodHost), null, container);

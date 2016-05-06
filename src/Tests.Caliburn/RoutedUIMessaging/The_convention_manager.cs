@@ -1,12 +1,14 @@
-﻿namespace Tests.Caliburn.RoutedUIMessaging
+﻿using Shouldly;
+
+namespace Tests.Caliburn.RoutedUIMessaging
 {
     using System.Windows.Controls.Primitives;
     using global::Caliburn.Core.Invocation;
     using global::Caliburn.PresentationFramework.Conventions;
-    using NUnit.Framework;
+    using Xunit;
     using System.Windows.Controls;
 
-    [TestFixture]
+    
     public class The_convention_manager : TestBase
     {
         IConventionManager conventionManager;
@@ -21,7 +23,7 @@
                 );
         }
 
-        [Test]
+        [Fact]
         public void can_register_interaction_defaults()
         {
             var defaults = new DefaultElementConvention<TextBox>(
@@ -36,10 +38,10 @@
 
             var found = conventionManager.GetElementConvention(typeof(TextBox));
 
-            Assert.That(found, Is.SameAs(defaults));
+            found.ShouldBeSameAs(defaults);
         }
 
-        [Test]
+        [Fact]
         public void can_get_defaults_if_only_a_base_class_is_registered()
         {
             var defaults = new DefaultElementConvention<ButtonBase>(
@@ -54,7 +56,7 @@
 
             var found = conventionManager.GetElementConvention(typeof(MyButton));
 
-            Assert.That(found, Is.SameAs(defaults));
+            found.ShouldBeSameAs(defaults);
         }
 
         private class MyButton : ButtonBase

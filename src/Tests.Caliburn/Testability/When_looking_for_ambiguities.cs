@@ -1,4 +1,6 @@
-﻿namespace Tests.Caliburn.Testability
+﻿using Shouldly;
+
+namespace Tests.Caliburn.Testability
 {
     using System.Linq;
     using System.Windows;
@@ -6,9 +8,9 @@
     using System.Windows.Data;
     using Fakes.Model;
     using global::Caliburn.Testability;
-    using NUnit.Framework;
+    using Xunit;
 
-    [TestFixture]
+    
     public class When_looking_for_ambiguities
     {
         ItemsControl CreateItemsControlWithGroupStyleHeaderAmbiguity()
@@ -114,76 +116,76 @@
             return template;
         }
 
-        [Test]
+        [WpfFact]
         public void can_find_container_style_ambiguity_in_group_styles()
         {
             var validator = Validator.For<ItemsControl, Customer>(CreateItemsControlWithGroupStyleContainerAmbiguity());
             var result = validator.Validate();
 
-            Assert.That(result.Errors.Count(), Is.EqualTo(1));
+            result.Errors.Count().ShouldBe(1);
         }
 
-        [Test]
+        [WpfFact]
         public void can_find_content_template_and_selector_duplication()
         {
             var validator = Validator.For<ContentControl, Customer>(CreateContentControl());
             var result = validator.Validate();
 
-            Assert.That(result.Errors.Count(), Is.EqualTo(1));
+            result.Errors.Count().ShouldBe(1);
         }
 
-        [Test]
+        [WpfFact]
         public void can_find_header_ambiguity_in_group_styles()
         {
             var validator = Validator.For<ItemsControl, Customer>(CreateItemsControlWithGroupStyleHeaderAmbiguity());
             var result = validator.Validate();
 
-            Assert.That(result.Errors.Count(), Is.EqualTo(1));
+            result.Errors.Count().ShouldBe(1);
         }
 
-        [Test]
+        [WpfFact]
         public void can_find_headered_content_template_and_selector_duplication()
         {
             var validator = Validator.For<HeaderedContentControl, Customer>(CreateHeaderedContentControl());
             var result = validator.Validate();
 
-            Assert.That(result.Errors.Count(), Is.EqualTo(1));
+            result.Errors.Count().ShouldBe(1);
         }
 
-        [Test]
+        [WpfFact]
         public void can_find_headered_item_template_and_selector_duplication()
         {
             var validator = Validator.For<ItemsControl, Customer>(CreateItemsControlWithHeaderAmbiguity());
             var result = validator.Validate();
 
-            Assert.That(result.Errors.Count(), Is.EqualTo(1));
+            result.Errors.Count().ShouldBe(1);
         }
 
-        [Test]
+        [WpfFact]
         public void can_find_item_container_style_and_selector_duplication()
         {
             var validator = Validator.For<ItemsControl, Customer>(CreateItemsControlWithStyleAmbiguity());
             var result = validator.Validate();
 
-            Assert.That(result.Errors.Count(), Is.EqualTo(1));
+            result.Errors.Count().ShouldBe(1);
         }
 
-        [Test]
+        [WpfFact]
         public void can_find_item_group_style_and_selector_duplication()
         {
             var validator = Validator.For<ItemsControl, Customer>(CreateItemsControlWithGroupStyleAmbiguity());
             var result = validator.Validate();
 
-            Assert.That(result.Errors.Count(), Is.EqualTo(1));
+            result.Errors.Count().ShouldBe(1);
         }
 
-        [Test]
+        [WpfFact]
         public void can_find_item_template_and_selector_duplication()
         {
             var validator = Validator.For<ItemsControl, Customer>(CreateItemsControlWithTemplateAmbiguity());
             var result = validator.Validate();
 
-            Assert.That(result.Errors.Count(), Is.EqualTo(1));
+            result.Errors.Count().ShouldBe(1);
         }
     }
 }

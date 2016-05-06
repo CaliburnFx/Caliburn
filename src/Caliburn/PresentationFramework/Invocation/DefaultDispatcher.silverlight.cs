@@ -12,7 +12,7 @@ namespace Caliburn.PresentationFramework.Invocation
     using Core.Invocation;
 
     /// <summary>
-    /// An implementation of <see cref="IDispatcher"/> for Silverlight.
+    /// An implementation of <see cref="IDispatcher"/> for SILVERLIGHT.
     /// </summary>
     public class DefaultDispatcher : IDispatcher
     {

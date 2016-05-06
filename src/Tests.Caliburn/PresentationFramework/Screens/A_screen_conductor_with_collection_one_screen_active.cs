@@ -1,10 +1,12 @@
-﻿namespace Tests.Caliburn.PresentationFramework.Screens
+﻿using Shouldly;
+
+namespace Tests.Caliburn.PresentationFramework.Screens
 {
     using global::Caliburn.PresentationFramework.Screens;
     using Fakes;
-    using NUnit.Framework;
+    using Xunit;
 
-    [TestFixture]
+    
     public class A_screen_conductor_with_collection_one_screen_active : A_screen
     {
         protected Conductor<IScreen>.Collection.OneActive ScreenConductor;
@@ -23,32 +25,32 @@
             activeScreen = new FakeScreen();
         }
 
-        [Test]
+        [Fact]
         public void can_shutdown_if_current_item_is_null()
         {
-            ScreenConductor.CanClose(Assert.That);
+            ScreenConductor.CanClose(x => x.ShouldBeTrue());
         }
 
-        [Test]
+        [Fact]
         public void asks_current_item_if_can_shutdown()
         {
             ScreenConductor.ActiveItem = activeScreen;
             ScreenConductor.CanClose(result => { });
 
-            Assert.IsTrue(activeScreen.CanCloseWasCalled);
+            activeScreen.CanCloseWasCalled.ShouldBeTrue();
         }
 
-        [Test]
+        [Fact]
         public void initializes_current_item_during_its_initialization()
         {
             ScreenConductor.ActiveItem = activeScreen;
 
             CallProc(ScreenConductor, "Activate");
 
-            Assert.IsTrue(activeScreen.IsInitialized);
+            activeScreen.IsInitialized.ShouldBeTrue();
         }
 
-        [Test]
+        [Fact]
         public void shuts_down_current_item_during_its_shutdown()
         {
             var wasClosed = false;
@@ -60,20 +62,20 @@
 
             CallProc(ScreenConductor, "Deactivate", true);
 
-            Assert.IsTrue(wasClosed);
+            wasClosed.ShouldBeTrue();
         }
 
-        [Test]
+        [Fact]
         public void activates_current_item_during_its_activation()
         {
             ScreenConductor.ActiveItem = activeScreen;
 
             CallProc(ScreenConductor, "Activate");
 
-            Assert.IsTrue(activeScreen.IsActive);
+            activeScreen.IsActive.ShouldBeTrue();
         }
 
-        [Test]
+        [Fact]
         public void deactivates_current_item_during_its_deactivation()
         {
             ScreenConductor.ActiveItem = activeScreen;
@@ -81,10 +83,10 @@
             CallProc(ScreenConductor, "Activate");
             CallProc(ScreenConductor, "Deactivate", false);
 
-            Assert.IsFalse(activeScreen.IsActive);
+            activeScreen.IsActive.ShouldBeFalse();
         }
 
-        [Test]
+        [Fact]
         public void cannot_shutdown_current_if_current_does_not_allow()
         {
             activeScreen.CanCloseResult = false;
@@ -93,10 +95,10 @@
 
             ScreenConductor.CloseItem(activeScreen);
 
-            Assert.That(activeScreen.IsActive);
+            activeScreen.IsActive.ShouldBeTrue();
         }
 
-        [Test]
+        [Fact]
         public void can_shutdown_current_if_current_allows()
         {
             bool wasClosed = false;
@@ -110,10 +112,10 @@
 
             ScreenConductor.CloseItem(activeScreen);
 
-            Assert.That(wasClosed);
+            wasClosed.ShouldBeTrue();
         }
 
-        [Test]
+        [Fact]
         public void can_open_an_item()
         {
             bool wasOpened = false;
@@ -123,10 +125,10 @@
 
             ScreenConductor.ActivateItem(activeScreen);
 
-            Assert.That(wasOpened);
+            wasOpened.ShouldBeTrue();
         }
 
-        [Test]
+        [Fact]
         public void opens_an_item_when_active_and_current_is_set()
         {
             bool wasOpened = false;
@@ -136,7 +138,7 @@
 
             ScreenConductor.ActiveItem = activeScreen;
 
-            Assert.That(wasOpened);
+            wasOpened.ShouldBeTrue();
         }
     }
 }

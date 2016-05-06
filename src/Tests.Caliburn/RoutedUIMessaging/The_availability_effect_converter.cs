@@ -1,11 +1,13 @@
-﻿namespace Tests.Caliburn.RoutedUIMessaging
+﻿using Shouldly;
+
+namespace Tests.Caliburn.RoutedUIMessaging
 {
     using global::Caliburn.Core.InversionOfControl;
     using global::Caliburn.PresentationFramework.RoutedMessaging;
-    using NUnit.Framework;
+    using Xunit;
     using Rhino.Mocks;
 
-    [TestFixture]
+    
     public class The_availability_effect_converter : TestBase
     {
         AvailabilityEffectConverter converter;
@@ -15,45 +17,45 @@
             converter = new AvailabilityEffectConverter();
         }
 
-        [Test]
+        [Fact]
         public void can_convert_Collapse()
         {
             var result = converter.ConvertFrom("Collapse");
 
-            Assert.That(result, Is.EqualTo(AvailabilityEffect.Collapse));
+            result.ShouldBe(AvailabilityEffect.Collapse);
         }
 
-        [Test]
+        [Fact]
         public void can_convert_Hide()
         {
             var result = converter.ConvertFrom("Hide");
 
-            Assert.That(result, Is.EqualTo(AvailabilityEffect.Hide));
+            result.ShouldBe(AvailabilityEffect.Hide);
         }
 
-        [Test]
+        [Fact]
         public void can_convert_disable()
         {
             var result = converter.ConvertFrom("Disable");
 
-            Assert.That(result, Is.EqualTo(AvailabilityEffect.Disable));
+            result.ShouldBe(AvailabilityEffect.Disable);
         }
 
-        [Test]
+        [Fact]
         public void can_convert_from_string()
         {
-            Assert.That(converter.CanConvertFrom(typeof(string)));
+            converter.CanConvertFrom(typeof(string)).ShouldBeTrue();
         }
 
-        [Test]
+        [Fact]
         public void can_convert_none()
         {
             var result = converter.ConvertFrom("None");
 
-            Assert.That(result, Is.EqualTo(AvailabilityEffect.None));
+            result.ShouldBe(AvailabilityEffect.None);
         }
 
-        [Test]
+        [Fact]
         public void sends_unknown_strings_to_the_container_for_resolution()
         {
             var container = Mock<IServiceLocator>();

@@ -1,10 +1,12 @@
-﻿namespace Tests.Caliburn.RoutedUIMessaging.Parsers
+﻿using Shouldly;
+
+namespace Tests.Caliburn.RoutedUIMessaging.Parsers
 {
     using global::Caliburn.PresentationFramework.RoutedMessaging.Parsers;
     using global::Caliburn.PresentationFramework.RoutedMessaging.Triggers;
-    using NUnit.Framework;
+    using Xunit;
 
-    [TestFixture]
+    
     public class The_event_trigger_parser : TestBase
     {
         EventTriggerParser parser;
@@ -14,15 +16,15 @@
             parser = new EventTriggerParser();
         }
 
-        [Test]
+        [Fact]
         public void can_parse_a_string_into_a_trigger()
         {
             const string eventName = "Click";
 
             var result = parser.Parse(null, eventName) as EventMessageTrigger;
 
-            Assert.That(result, Is.Not.Null);
-            Assert.That(result.EventName, Is.EqualTo(eventName));
+            result.ShouldNotBeNull();
+            result.EventName.ShouldBe(eventName);
         }
     }
 }

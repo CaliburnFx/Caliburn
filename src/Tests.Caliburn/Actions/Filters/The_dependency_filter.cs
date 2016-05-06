@@ -1,4 +1,6 @@
-﻿namespace Tests.Caliburn.Actions.Filters
+﻿using Shouldly;
+
+namespace Tests.Caliburn.Actions.Filters
 {
     using System.Collections.Generic;
     using global::Caliburn.Core;
@@ -6,10 +8,10 @@
     using global::Caliburn.PresentationFramework;
     using global::Caliburn.PresentationFramework.Filters;
     using global::Caliburn.PresentationFramework.RoutedMessaging;
-    using NUnit.Framework;
+    using Xunit;
     using Rhino.Mocks;
 
-    [TestFixture]
+    
     public class The_dependency_filter : TestBase
     {
         IServiceLocator container;
@@ -30,7 +32,7 @@
 
         class TheMethodHost : PropertyChangedBase {}
 
-        [Test]
+        [Fact]
         public void can_initialize_DependencyObserver()
         {
             var metadata = new List<object>();
@@ -41,7 +43,7 @@
             handler.Stub(x => x.Unwrap()).Return(methodHost).Repeat.Any();
             attribute.MakeAwareOf(handler);
 
-            Assert.That(metadata.FirstOrDefaultOfType<DependencyObserver>(), Is.Not.Null);
+            metadata.FirstOrDefaultOfType<DependencyObserver>().ShouldNotBeNull();
 
             attribute.MakeAwareOf(handler, trigger);
             //TODO: assert DependencyObserver.MakeAwareOf(IMessageTrigger trigger, IEnumerable<string> dependencies)

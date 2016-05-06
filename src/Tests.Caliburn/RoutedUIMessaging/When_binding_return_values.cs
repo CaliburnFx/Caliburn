@@ -1,3 +1,5 @@
+using Shouldly;
+
 namespace Tests.Caliburn.RoutedUIMessaging
 {
     using System;
@@ -9,10 +11,10 @@ namespace Tests.Caliburn.RoutedUIMessaging
     using global::Caliburn.Core.InversionOfControl;
     using global::Caliburn.PresentationFramework.Conventions;
     using global::Caliburn.PresentationFramework.RoutedMessaging;
-    using NUnit.Framework;
+    using Xunit;
     using Rhino.Mocks;
 
-    [TestFixture]
+    
     public class When_binding_return_values : TestBase
     {
         DefaultMethodFactory factory;
@@ -106,7 +108,7 @@ namespace Tests.Caliburn.RoutedUIMessaging
             }
         }
 
-        [Test]
+        [WpfFact]
         public void if_no_return_path_is_specified_look_for_special_element()
         {
             var method = factory.CreateFrom(typeof(MethodHost).GetMethod("Method"));
@@ -135,7 +137,7 @@ namespace Tests.Caliburn.RoutedUIMessaging
                 );
         }
 
-        [Test]
+        [WpfFact]
         public void methods_with_void_return_type_return_IResult()
         {
             var method = factory.CreateFrom(typeof(MethodHost).GetMethod("MethodWithVoidReturn"));
@@ -148,10 +150,10 @@ namespace Tests.Caliburn.RoutedUIMessaging
                     )
                 );
 
-            Assert.That(result, Is.Not.Null);
+            result.ShouldNotBeNull();
         }
 
-        [Test]
+        [WpfFact]
         public void recognizes_this_as_self_reference()
         {
             var method = factory.CreateFrom(typeof(MethodHost).GetMethod("Method"));
@@ -173,10 +175,10 @@ namespace Tests.Caliburn.RoutedUIMessaging
                     )
                 );
 
-            Assert.That(host.DataContext, Is.EqualTo(returnValue));
+            host.DataContext.ShouldBe(returnValue);
         }
 
-        [Test]
+        [WpfFact]
         public void use_return_path()
         {
             var method = factory.CreateFrom(typeof(MethodHost).GetMethod("Method"));
@@ -198,7 +200,7 @@ namespace Tests.Caliburn.RoutedUIMessaging
                     )
                 );
 
-            Assert.That(host.Param1.Text, Is.EqualTo(returnValue));
+            host.Param1.Text.ShouldBe(returnValue);
         }
     }
 }

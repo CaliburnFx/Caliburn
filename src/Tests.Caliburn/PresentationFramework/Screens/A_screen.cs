@@ -1,10 +1,12 @@
-﻿namespace Tests.Caliburn.PresentationFramework.Screens
+﻿using Shouldly;
+
+namespace Tests.Caliburn.PresentationFramework.Screens
 {
     using global::Caliburn.PresentationFramework.Screens;
     using global::Caliburn.Testability.Extensions;
-    using NUnit.Framework;
+    using Xunit;
 
-    [TestFixture]
+    
     public class A_screen : TestBase
     {
         protected Screen Screen;
@@ -19,10 +21,10 @@
             Screen = CreateScreen();
         }
 
-        [Test]
+        [Fact]
         public void can_be_initialized()
         {
-            Assert.That(Screen.IsInitialized, Is.False);
+            Screen.IsInitialized.ShouldBeFalse();
 
             bool initializedWasRaised = false;
 
@@ -31,11 +33,11 @@
             Screen.AssertThatChangeNotificationIsRaisedBy(x => x.IsInitialized)
                 .When(() => CallProc(Screen, "Activate"));
 
-            Assert.That(Screen.IsInitialized, Is.True);
-            Assert.That(initializedWasRaised);
+            Screen.IsInitialized.ShouldBeTrue();
+            initializedWasRaised.ShouldBeTrue();
         }
 
-        [Test]
+        [Fact]
         public void can_only_initialize_once()
         {
             CallProc(Screen, "Activate");
@@ -46,10 +48,10 @@
 
             CallProc(Screen, "Activate");
 
-            Assert.That(initializedWasNotRaised);
+            initializedWasNotRaised.ShouldBeTrue();
         }
 
-        [Test]
+        [Fact]
         public void can_shutdown()
         {
             bool shutdownWasRaised = false;
@@ -59,13 +61,13 @@
             CallProc(Screen, "Activate");
             CallProc(Screen, "Deactivate", true);
 
-            Assert.That(shutdownWasRaised);
+            shutdownWasRaised.ShouldBeTrue();
         }
 
-        [Test]
+        [Fact]
         public void can_be_activated()
         {
-            Assert.That(Screen.IsActive, Is.False);
+            Screen.IsInitialized.ShouldBeFalse();
 
             bool activatedWasRaised = false;
 
@@ -74,11 +76,11 @@
             Screen.AssertThatChangeNotificationIsRaisedBy(x => x.IsActive)
                 .When(() => CallProc(Screen, "Activate"));
 
-            Assert.That(Screen.IsActive, Is.True);
-            Assert.That(activatedWasRaised);
+            Screen.IsActive.ShouldBeTrue();
+            activatedWasRaised.ShouldBeTrue();
         }
 
-        [Test]
+        [Fact]
         public void will_only_activate_if_not_already_active()
         {
             CallProc(Screen, "Activate");
@@ -89,10 +91,10 @@
 
             CallProc(Screen, "Activate");
 
-            Assert.That(activateWasNotRaised);
+            activateWasNotRaised.ShouldBeTrue();
         }
 
-        [Test]
+        [Fact]
         public void can_be_deactivated()
         {
             CallProc(Screen, "Activate");
@@ -104,11 +106,11 @@
             Screen.AssertThatChangeNotificationIsRaisedBy(x => x.IsActive)
                 .When(() => CallProc(Screen, "Deactivate", false));
 
-            Assert.That(Screen.IsActive, Is.False);
-            Assert.That(deactivatedWasRaised);
+            Screen.IsActive.ShouldBeFalse();
+            deactivatedWasRaised.ShouldBeTrue();
         }
 
-        [Test]
+        [Fact]
         public void will_only_deactivate_if_already_active()
         {
             bool deactivatedWasRaised = true;
@@ -117,13 +119,13 @@
 
             CallProc(Screen, "Deactivate", false);
 
-            Assert.That(deactivatedWasRaised);
+            deactivatedWasRaised.ShouldBeTrue();
         }
 
-        [Test]
+        [Fact]
         public void has_type_name_as_display_name_by_default()
         {
-            Assert.That(Screen.DisplayName, Is.EqualTo(Screen.GetType().FullName));
+            Screen.DisplayName.ShouldBe(Screen.GetType().FullName);
         }
     }
 }

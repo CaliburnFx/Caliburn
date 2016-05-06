@@ -1,11 +1,13 @@
-﻿namespace Tests.Caliburn.PresentationFramework
+﻿using Shouldly;
+
+namespace Tests.Caliburn.PresentationFramework
 {
     using Fakes;
     using global::Caliburn.PresentationFramework.Converters;
     using global::Caliburn.PresentationFramework.ViewModels;
-    using NUnit.Framework;
+    using Xunit;
 
-    [TestFixture]
+    
     public class An_EnumConverter : TestBase
     {
         EnumConverter theEnumConverter;
@@ -15,49 +17,49 @@
             theEnumConverter = new EnumConverter();
         }
 
-        [Test]
+        [Fact]
         public void can_convert_byte_enum_to_bindable()
         {
             var converted = theEnumConverter.Convert(ByteEnum.Byte1, typeof(object), null, null);
-            Assert.That(converted, Is.InstanceOf<BindableEnum>());
+            converted.ShouldBeOfType<BindableEnum>();
 
             var bindable = (BindableEnum)converted;
-            Assert.That(bindable.UnderlyingValue, Is.EqualTo(1));
-            Assert.That(bindable.Value, Is.EqualTo(ByteEnum.Byte1));
+            bindable.UnderlyingValue.ShouldBe(1);
+            bindable.Value.ShouldBe(ByteEnum.Byte1);
         }
 
-        [Test]
+        [Fact]
         public void can_convert_byte_enum_to_byte()
         {
             var converted = theEnumConverter.Convert(ByteEnum.Byte1, typeof(byte), null, null);
-            Assert.That(converted, Is.InstanceOf<byte>());
-            Assert.That(converted, Is.EqualTo((byte)1));
+            converted.ShouldBeOfType<byte>();
+            converted.ShouldBe((byte)1);
         }
 
-        [Test]
+        [Fact]
         public void can_convert_byte_enum_to_int()
         {
             var converted = theEnumConverter.Convert(ByteEnum.Byte1, typeof(int), null, null);
-            Assert.That(converted, Is.InstanceOf<int>());
-            Assert.That(converted, Is.EqualTo(1));
+            converted.ShouldBeOfType<int>();
+            converted.ShouldBe(1);
         }
 
-        [Test]
+        [Fact]
         public void can_convert_integer_enum_to_bindable()
         {
             var converted = theEnumConverter.Convert(IntegerEnum.Int1, typeof(object), null, null);
-            Assert.That(converted, Is.InstanceOf<BindableEnum>());
+            converted.ShouldBeOfType<BindableEnum>();
 
             var bindable = (BindableEnum)converted;
-            Assert.That(bindable.UnderlyingValue, Is.EqualTo(1));
-            Assert.That(bindable.Value, Is.EqualTo(IntegerEnum.Int1));
+            bindable.UnderlyingValue.ShouldBe(1);
+            bindable.Value.ShouldBe(IntegerEnum.Int1);
         }
 
-        [Test]
+        [Fact]
         public void can_convert_integer_enum_to_int()
         {
             var converted = theEnumConverter.Convert(IntegerEnum.Int1, typeof(int), null, null);
-            Assert.That(converted, Is.EqualTo(1));
+            converted.ShouldBe(1);
         }
     }
 }

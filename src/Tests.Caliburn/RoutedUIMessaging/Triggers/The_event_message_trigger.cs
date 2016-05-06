@@ -1,3 +1,5 @@
+using Shouldly;
+
 namespace Tests.Caliburn.RoutedUIMessaging.Triggers
 {
     using System;
@@ -5,10 +7,10 @@ namespace Tests.Caliburn.RoutedUIMessaging.Triggers
     using Fakes.UI;
     using global::Caliburn.PresentationFramework.RoutedMessaging;
     using global::Caliburn.PresentationFramework.RoutedMessaging.Triggers;
-    using NUnit.Framework;
+    using Xunit;
     using Rhino.Mocks;
 
-    [TestFixture]
+    
     public class The_event_message_trigger : TestBase
     {
         IInteractionNode node;
@@ -23,7 +25,7 @@ namespace Tests.Caliburn.RoutedUIMessaging.Triggers
             message = new FakeMessage {AvailabilityEffect = Mock<IAvailabilityEffect>()};
         }
 
-        [Test]
+        [Fact]
         public void can_attach_itself_to_an_element()
         {
             var trigger = new EventMessageTrigger
@@ -36,12 +38,12 @@ namespace Tests.Caliburn.RoutedUIMessaging.Triggers
 
             trigger.Attach(node);
 
-            Assert.That(trigger.Node, Is.EqualTo(node));
-            Assert.That(message.InvalidatedHandler, Is.Not.Null);
-            Assert.That(message.InitializeCalledWith, Is.EqualTo(node));
+            trigger.Node.ShouldBe(node);
+            message.InvalidatedHandler.ShouldNotBeNull();
+            message.InitializeCalledWith.ShouldBe(node);
         }
 
-        [Test]
+        [Fact]
         public void can_trigger_message_processing()
         {
             var trigger = new EventMessageTrigger
@@ -58,7 +60,7 @@ namespace Tests.Caliburn.RoutedUIMessaging.Triggers
             element.RaiseClick();
         }
 
-        [Test]
+        [Fact]
         public void can_update_availability()
         {
             var trigger = new EventMessageTrigger

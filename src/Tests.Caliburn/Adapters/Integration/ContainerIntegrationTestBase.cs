@@ -1,8 +1,10 @@
-﻿namespace Tests.Caliburn.Adapters.Integration
+﻿using Shouldly;
+
+namespace Tests.Caliburn.Adapters.Integration
 {
     using Components;
     using global::Caliburn.Core.InversionOfControl;
-    using NUnit.Framework;
+    using Xunit;
 
     public abstract class ContainerIntegrationTestBase : TestBase
     {
@@ -42,7 +44,7 @@
             };
         }
 
-        [Test]
+        [Fact]
         public void can_register_PerRequest()
         {
             Registry.Register(new[] {
@@ -50,15 +52,15 @@
             });
 
             var instance1 = Locator.GetInstance<ILogger>();
-            Assert.IsNotNull(instance1);
+            instance1.ShouldNotBeNull();
 
             var instance2 = Locator.GetInstance<ILogger>();
-            Assert.IsNotNull(instance2);
+            instance2.ShouldNotBeNull();
 
-            Assert.AreNotSame(instance1, instance2);
+            instance1.ShouldNotBeSameAs(instance2);
         }
 
-        [Test]
+        [Fact]
         public void can_register_Singleton()
         {
             Registry.Register(new[] {
@@ -66,15 +68,15 @@
             });
 
             var instance1 = Locator.GetInstance<ILogger>();
-            Assert.IsNotNull(instance1);
+            instance1.ShouldNotBeNull();
 
             var instance2 = Locator.GetInstance<ILogger>();
-            Assert.IsNotNull(instance2);
+            instance2.ShouldNotBeNull();
 
-            Assert.AreSame(instance1, instance2);
+            instance1.ShouldBeSameAs(instance2);
         }
 
-        [Test]
+        [Fact]
         public void can_register_Instance()
         {
             ILogger theLogger = new SimpleLogger();
@@ -83,16 +85,16 @@
             });
 
             var instance1 = Locator.GetInstance<ILogger>();
-            Assert.IsNotNull(instance1);
-            Assert.AreSame(instance1, theLogger);
+            instance1.ShouldNotBeNull();
+            instance1.ShouldBeSameAs(theLogger);
 
             var instance2 = Locator.GetInstance<ILogger>();
-            Assert.IsNotNull(instance2);
-            Assert.AreSame(instance2, theLogger);
+            instance2.ShouldNotBeNull();
+            instance2.ShouldBeSameAs(theLogger);
         }
 
 
-        [Test]
+        [Fact]
         public void can_inject_dependencies_on_constructor()
         {
             Registry.Register(new[] {
@@ -101,11 +103,11 @@
             });
 
             var instance = Locator.GetInstance<IMailer>() as SimpleMailer;
-            Assert.IsNotNull(instance.Logger);
-            Assert.IsInstanceOf<SimpleLogger>(instance.Logger);
+            instance.Logger.ShouldNotBeNull();
+            instance.Logger.ShouldBeOfType<SimpleLogger>();
         }
 
-        [Test]
+        [Fact]
         public virtual void can_inject_dependencies_on_public_properties()
         {
             Registry.Register(new[] {
@@ -114,8 +116,8 @@
             });
 
             var instance = Locator.GetInstance<ISampleCommand>() as SampleCommand;
-            Assert.IsNotNull(instance.Logger);
-            Assert.IsInstanceOf<SimpleLogger>(instance.Logger);
+            instance.Logger.ShouldNotBeNull();
+            instance.Logger.ShouldBeOfType<SimpleLogger>();
         }
     }
 }
