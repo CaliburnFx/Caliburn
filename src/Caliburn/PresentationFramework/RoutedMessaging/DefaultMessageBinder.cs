@@ -10,6 +10,7 @@
     using Core;
     using System.Linq;
     using Core.Logging;
+    using System.Threading.Tasks;
 
     /// <summary>
     /// The default implementation of <see cref="IMessageBinder"/>.
@@ -106,6 +107,17 @@
             if (outcome.ResultType == typeof(void))
                 return new EmptyResult();
 
+            if (typeof(Task).IsAssignableFrom(outcome.ResultType))
+            {
+                if (outcome.ResultType.IsGenericType)
+                {
+                    var method = GetType().GetMethod("GetGenericTaskResult", BindingFlags.Instance | BindingFlags.NonPublic)
+                        .MakeGenericMethod(outcome.ResultType.GenericTypeArguments);
+                    return new SequentialResult((IEnumerable<IResult>)method.Invoke(this, new[] {outcome.Result}));
+                }
+                return ((Task) outcome.Result).AsResult();
+            }
+
             if(outcome.Result is IEnumerable<IResult>)
                 return new SequentialResult(((IEnumerable<IResult>)outcome.Result).GetEnumerator());
 
@@ -116,6 +128,14 @@
                 return new SequentialResult(new List<IResult>{ (IResult)outcome.Result }.GetEnumerator());
 
             return new DefaultResult(conventionManager, outcome);
+        }
+
+        private IEnumerable<IResult> GetGenericTaskResult<T>(Task<T> task)
+        {
+            var taskResult = task.AsResult();
+            yield return taskResult;
+            if(!task.IsFaulted && !task.IsCanceled)
+                yield return new DefaultResult(conventionManager, new MessageProcessingOutcome(taskResult.Result, taskResult.Result.GetType(), task.IsCanceled));
         }
 
         /// <summary>
