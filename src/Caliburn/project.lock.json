@@ -2,20 +2,20 @@
   "locked": false,
   "version": 2,
   "targets": {
-    ".NETFramework,Version=v4.5": {},
-    ".NETFramework,Version=v4.5/win7-x86": {},
-    ".NETFramework,Version=v4.5/win7-x64": {}
+    ".NETFramework,Version=v4.5.1": {}
   },
   "libraries": {},
   "projectFileDependencyGroups": {
     "": [],
-    ".NETFramework,Version=v4.5": [
-      "fx/PresentationCore ",
-      "fx/PresentationFramework ",
-      "fx/System.ComponentModel.DataAnnotations ",
-      "fx/System.Xaml ",
-      "fx/System.XML ",
-      "fx/WindowsBase "
+    ".NETFramework,Version=v4.5.1": [
+      "PresentationCore",
+      "PresentationFramework",
+      "System.ComponentModel.DataAnnotations",
+      "System.XML",
+      "System.Xaml",
+      "WindowsBase"
     ]
-  }
+  },
+  "tools": {},
+  "projectFileToolGroups": {}
 }

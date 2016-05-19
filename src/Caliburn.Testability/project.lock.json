@@ -2,59 +2,40 @@
   "locked": false,
   "version": 2,
   "targets": {
-    ".NETFramework,Version=v4.5": {
+    ".NETFramework,Version=v4.5.1": {
       "Caliburn/3.0.0-rc1": {
         "type": "project",
-        "framework": ".NETFramework,Version=v4.5",
+        "framework": ".NETFramework,Version=v4.5.1",
         "frameworkAssemblies": [
           "PresentationCore",
           "PresentationFramework",
           "System.ComponentModel.DataAnnotations",
           "System.Xaml",
-          "System.XML",
+          "System.Xml",
           "WindowsBase"
-        ]
-      }
-    },
-    ".NETFramework,Version=v4.5/win7-x86": {
-      "Caliburn/3.0.0-rc1": {
-        "type": "project",
-        "framework": ".NETFramework,Version=v4.5",
-        "frameworkAssemblies": [
-          "PresentationCore",
-          "PresentationFramework",
-          "System.ComponentModel.DataAnnotations",
-          "System.Xaml",
-          "System.XML",
-          "WindowsBase"
-        ]
-      }
-    },
-    ".NETFramework,Version=v4.5/win7-x64": {
-      "Caliburn/3.0.0-rc1": {
-        "type": "project",
-        "framework": ".NETFramework,Version=v4.5",
-        "frameworkAssemblies": [
-          "PresentationCore",
-          "PresentationFramework",
-          "System.ComponentModel.DataAnnotations",
-          "System.Xaml",
-          "System.XML",
-          "WindowsBase"
-        ]
+        ],
+        "compile": {
+          "net451/Caliburn.dll": {}
+        },
+        "runtime": {
+          "net451/Caliburn.dll": {}
+        }
       }
     }
   },
   "libraries": {
     "Caliburn/3.0.0-rc1": {
       "type": "project",
-      "path": "../Caliburn/project.json"
+      "path": "../Caliburn/project.json",
+      "msbuildProject": "../Caliburn/Caliburn.xproj"
     }
   },
   "projectFileDependencyGroups": {
     "": [
-      "Caliburn >= 3.0.0-*"
+      "Caliburn"
     ],
-    ".NETFramework,Version=v4.5": []
-  }
+    ".NETFramework,Version=v4.5.1": []
+  },
+  "tools": {},
+  "projectFileToolGroups": {}
 }

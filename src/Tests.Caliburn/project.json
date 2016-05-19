@@ -1,25 +1,22 @@
 {
-  "version": "1.0.0-*",
+  "testRunner": "xunit",
   "dependencies": {
-    "xunit": "2.1.0-*",
-    "xunit.runner.dnx": "2.1.0-rc1-*",
+    "xunit": "2.1.0",
+    "dotnet-test-xunit": "1.0.0-rc3-build10019",
     "RhinoMocks": "3.6.1",
-    "FakeItEasy": "2.0.0-rc2",
     "Shouldly": "2.7.0",
-    "Caliburn": "3.0.0-*",
-    "Caliburn.Testability": "1.0.0-*"
-  },
-  "commands": {
-    "test": "xunit.runner.dnx -parallel none"
+    "Caliburn": { "target": "project" },
+    "Caliburn.Testability": { "target": "project" }
   },
   "frameworks": {
-    "dnx451": {
+    "net451": {
       "frameworkAssemblies": {
         "System.Runtime.Serialization": ""
       },
       "dependencies": {
-        "Tests.Controls": "1.0.0-*"
+        "Tests.Controls": { "target": "project" },
+        "Microsoft.NETCore.Platforms": "1.0.1-rc2-24027"
       }
-     }
+    }
   }
 }

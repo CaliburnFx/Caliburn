@@ -5,25 +5,25 @@
     "Ilya Lukyanov",
     "Corey Kaylor"
   ],
-  "tags": [
-    "lmdb",
-    "lightning",
-    "storage",
-    "persistance",
-    "key-value",
-    "nosql"
-  ],
-  "projectUrl": "https://github.com/ilyalukyanov/Lightning.NET",
-  "dependencies": {
-  }, 
+  "packOptions": {
+    "tags": [
+      "lmdb",
+      "lightning",
+      "storage",
+      "persistance",
+      "key-value",
+      "nosql"
+    ],
+    "projectUrl": "https://github.com/ilyalukyanov/Lightning.NET"
+  },
   "frameworks": {
-    "net45": {
+    "net451": {
       "frameworkAssemblies": {
         "PresentationCore": "",
         "PresentationFramework": "",
         "System.ComponentModel.DataAnnotations": "",
         "System.Xaml": "",
-        "System.XML": "",
+        "System.Xml": "",
         "WindowsBase": ""
       }
     }
