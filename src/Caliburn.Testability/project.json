@@ -3,6 +3,9 @@
   "dependencies": {
     "Caliburn": { "target": "project" }
   },
+  "buildOptions": {
+    "keyFile": "../Caliburn.snk"
+  },
   "frameworks": {
     "net451": {
     } 

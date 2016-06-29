@@ -9,6 +9,13 @@
       },
       "runtime": {
         "bin/Debug/Tests.Controls.dll": {}
+      },
+      "contentFiles": {
+        "bin/Debug/Tests.Controls.pdb": {
+          "buildAction": "None",
+          "codeLanguage": "any",
+          "copyToOutput": true
+        }
       }
     }
   }

@@ -112,7 +112,7 @@
                 if (outcome.ResultType.IsGenericType)
                 {
                     var method = GetType().GetMethod("GetGenericTaskResult", BindingFlags.Instance | BindingFlags.NonPublic)
-                        .MakeGenericMethod(outcome.ResultType.GenericTypeArguments);
+                        .MakeGenericMethod(outcome.ResultType.GetGenericArguments());
                     return new SequentialResult((IEnumerable<IResult>)method.Invoke(this, new[] {outcome.Result}));
                 }
                 return ((Task) outcome.Result).AsResult();
