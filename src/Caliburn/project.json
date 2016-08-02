@@ -11,7 +11,7 @@
       "mvp",
       "wpf"
     ],
-    "projectUrl": "https://github.com/CoreyKaylor/Caliburn"
+    "projectUrl": "https://github.com/CaliburnFx/Caliburn"
   },
   "buildOptions": {
     "keyFile": "../Caliburn.snk"

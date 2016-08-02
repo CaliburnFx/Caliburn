@@ -10,5 +10,6 @@ if %errorlevel% neq 0 exit /b %errorlevel%
 
 echo Packing Caliburn Nuget
 call dotnet pack src/Caliburn --configuration Release --output artifacts
+call dotnet pack src/Caliburn.Testability --configuration Release --output artifacts
 
 popd

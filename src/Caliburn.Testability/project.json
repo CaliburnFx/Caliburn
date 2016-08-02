@@ -1,5 +1,18 @@
 {
-  "version": "1.0.0-*",
+  "version": "3.0.0-rc1-*",
+  "description": "Caliburn",
+  "authors": [
+    "Rob Eisenberg",
+    "Marco Amendola"
+  ],
+  "packOptions": {
+    "tags": [
+      "mvvm",
+      "mvp",
+      "wpf"
+    ],
+    "projectUrl": "https://github.com/CaliburnFx/Caliburn"
+  },
   "dependencies": {
     "Caliburn": { "target": "project" }
   },
