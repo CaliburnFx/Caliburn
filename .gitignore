@@ -39,3 +39,4 @@ generated-templates
 SharedBuildAssemblyInfo.cs
 .vs/
 .idea*
+artifacts/
