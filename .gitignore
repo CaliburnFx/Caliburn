@@ -38,3 +38,4 @@ glob:desktop.ini
 generated-templates
 SharedBuildAssemblyInfo.cs
 .vs/
+.idea*
