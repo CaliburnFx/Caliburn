@@ -3,6 +3,7 @@
 pushd %~dp0
 
 md artifacts
+call dotnet restore
 call "C:\Program Files (x86)\MSBuild\14.0\Bin\msbuild.exe" src\Caliburn.sln /p:Confiuration=Release
 if %errorlevel% neq 0 exit /b %errorlevel%
 call dotnet test src/Tests.Caliburn

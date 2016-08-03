@@ -420,11 +420,11 @@
           "net451/Caliburn.dll": {}
         }
       },
-      "Caliburn.Testability/1.0.0": {
+      "Caliburn.Testability/3.0.0-rc1": {
         "type": "project",
         "framework": ".NETFramework,Version=v4.5.1",
         "dependencies": {
-          "Caliburn": "1.0.0"
+          "Caliburn": "(, )"
         },
         "compile": {
           "net451/Caliburn.Testability.dll": {}
@@ -434,7 +434,8 @@
         }
       },
       "Tests.Controls/1.0.0": {
-        "type": "project"
+        "type": "project",
+        "framework": ".NETFramework,Version=v4.5"
       }
     }
   },
@@ -1070,14 +1071,14 @@
       "path": "../Caliburn/project.json",
       "msbuildProject": "../Caliburn/Caliburn.xproj"
     },
-    "Caliburn.Testability/1.0.0": {
+    "Caliburn.Testability/3.0.0-rc1": {
       "type": "project",
       "path": "../Caliburn.Testability/project.json",
       "msbuildProject": "../Caliburn.Testability/Caliburn.Testability.xproj"
     },
     "Tests.Controls/1.0.0": {
       "type": "project",
-      "msbuildProject": "../Tests.Controls/Tests.Controls.csproj"
+      "path": "../wrap/Tests.Controls/project.json"
     }
   },
   "projectFileDependencyGroups": {
