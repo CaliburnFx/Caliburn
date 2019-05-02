@@ -1,0 +1,29 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <Description>Caliburn</Description>
+    <VersionPrefix>3.0.0-rc1</VersionPrefix>
+    <Authors>Rob Eisenberg;Marco Amendola</Authors>
+    <TargetFrameworks>net451</TargetFrameworks>
+    <AssemblyName>Caliburn</AssemblyName>
+    <AssemblyOriginatorKeyFile>../Caliburn.snk</AssemblyOriginatorKeyFile>
+    <SignAssembly>true</SignAssembly>
+    <PublicSign Condition=" '$(OS)' != 'Windows_NT' ">true</PublicSign>
+    <PackageId>Caliburn</PackageId>
+    <PackageTags>mvvm;mvp;wpf</PackageTags>
+    <PackageProjectUrl>https://github.com/CaliburnFx/Caliburn</PackageProjectUrl>
+    <GenerateAssemblyTitleAttribute>false</GenerateAssemblyTitleAttribute>
+  </PropertyGroup>
+
+  <ItemGroup Condition=" '$(TargetFramework)' == 'net451' ">
+    <Reference Include="PresentationCore" />
+    <Reference Include="PresentationFramework" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System.Xaml" />
+    <Reference Include="System.Xml" />
+    <Reference Include="WindowsBase" />
+    <Reference Include="System" />
+    <Reference Include="Microsoft.CSharp" />
+  </ItemGroup>
+
+</Project>

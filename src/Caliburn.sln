@@ -1,24 +1,15 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 14
-VisualStudioVersion = 14.0.25420.1
+# Visual Studio 15
+VisualStudioVersion = 15.0.27703.2018
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "Caliburn", "Caliburn\Caliburn.xproj", "{0DF3FE4A-D185-4630-9EB0-98FA09D33D91}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Caliburn", "Caliburn\Caliburn.csproj", "{0DF3FE4A-D185-4630-9EB0-98FA09D33D91}"
 EndProject
-Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "Tests.Caliburn", "Tests.Caliburn\Tests.Caliburn.xproj", "{E626DA48-2FEF-424E-9DFA-3564D96D93E1}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Tests.Caliburn", "Tests.Caliburn\Tests.Caliburn.csproj", "{E626DA48-2FEF-424E-9DFA-3564D96D93E1}"
 EndProject
-Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "Caliburn.Testability", "Caliburn.Testability\Caliburn.Testability.xproj", "{BC116187-ECA3-4A9C-9F90-ED938AF67138}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Caliburn.Testability", "Caliburn.Testability\Caliburn.Testability.csproj", "{BC116187-ECA3-4A9C-9F90-ED938AF67138}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tests.Controls", "Tests.Controls\Tests.Controls.csproj", "{1393063E-5F3E-49DD-9BBB-47B56069E423}"
-EndProject
-Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "System.ComponentModel.DataAnnotations", "libs\System.ComponentModel.DataAnnotations\System.ComponentModel.DataAnnotations.xproj", "{28F93124-42A8-48D6-8DF9-69BCF6B71CC7}"
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "libs", "libs", "{656E2FED-5B9C-4738-9BF7-38A28C419FC2}"
-	ProjectSection(SolutionItems) = preProject
-		libs\readme.txt = libs\readme.txt
-	EndProjectSection
-EndProject
-Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "System.Windows.Controls", "libs\System.Windows.Controls\System.Windows.Controls.xproj", "{B68C9943-6798-4F96-B534-3758A20FE646}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -42,20 +33,11 @@ Global
 		{1393063E-5F3E-49DD-9BBB-47B56069E423}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{1393063E-5F3E-49DD-9BBB-47B56069E423}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{1393063E-5F3E-49DD-9BBB-47B56069E423}.Release|Any CPU.Build.0 = Release|Any CPU
-		{28F93124-42A8-48D6-8DF9-69BCF6B71CC7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{28F93124-42A8-48D6-8DF9-69BCF6B71CC7}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{28F93124-42A8-48D6-8DF9-69BCF6B71CC7}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{28F93124-42A8-48D6-8DF9-69BCF6B71CC7}.Release|Any CPU.Build.0 = Release|Any CPU
-		{B68C9943-6798-4F96-B534-3758A20FE646}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{B68C9943-6798-4F96-B534-3758A20FE646}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{B68C9943-6798-4F96-B534-3758A20FE646}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{B68C9943-6798-4F96-B534-3758A20FE646}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
-	GlobalSection(NestedProjects) = preSolution
-		{28F93124-42A8-48D6-8DF9-69BCF6B71CC7} = {656E2FED-5B9C-4738-9BF7-38A28C419FC2}
-		{B68C9943-6798-4F96-B534-3758A20FE646} = {656E2FED-5B9C-4738-9BF7-38A28C419FC2}
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {314D446B-B426-4283-A2F5-2A03D0F55C67}
 	EndGlobalSection
 EndGlobal
