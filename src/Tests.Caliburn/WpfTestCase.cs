@@ -5,6 +5,7 @@ using System.Diagnostics;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Threading;
+using Xunit;
 using Xunit.Abstractions;
 using Xunit.Sdk;
 
@@ -28,10 +29,9 @@ namespace Tests.Caliburn
         [Obsolete("Called by the de-serializer", error: true)]
         public WpfTestCase() { }
 
-        public IMethodInfo Method
-        {
-            get { return testCase.Method; }
-        }
+        public IMethodInfo Method => testCase.Method;
+
+        public int Timeout => testCase.Timeout;
 
         public async Task<RunSummary> RunAsync(IMessageSink diagnosticMessageSink,
                                          IMessageBus messageBus,
@@ -83,6 +83,8 @@ namespace Tests.Caliburn
             thread.Join();
             return result;
         }
+
+        public Exception InitializationException => testCase.InitializationException;
 
         public string DisplayName
         {

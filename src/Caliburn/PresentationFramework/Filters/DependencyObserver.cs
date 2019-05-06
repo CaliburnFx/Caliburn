@@ -58,15 +58,15 @@ namespace Caliburn.PresentationFramework.Filters
 		}
 
 		//SEE: Tests.Caliburn.Actions.Filters.The_dependency_observer.backreferences_should_not_leak_the_observer_strict
-		//~DependencyObserver()
-		//{
-		//    if (_monitoringInfos != null)
-		//    {
-		//        foreach (var info in _monitoringInfos.Values)
-		//        {
-		//            info.Dispose();
-		//        }
-		//    }
-		//}
+//		~DependencyObserver()
+//		{
+//		    if (_monitoringInfos != null)
+//		    {
+//		        foreach (var info in _monitoringInfos.Values)
+//		        {
+//		            info.Dispose();
+//		        }
+//		    }
+//		}
 	}
 }

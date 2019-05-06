@@ -165,7 +165,8 @@ namespace Tests.Caliburn.Actions.Filters
             parent.SubscriptionCount.ShouldBe(0);
         }
 
-        [Fact]
+        [Fact(Skip = "NOTE: to make this test pass, the finalizer of DependencyObserver should be in place")]
+        //see http://caliburn.codeplex.com/Thread/View.aspx?ThreadId=212171 for the rationale behind the finalizer removal
         public void should_allow_nodes_collection()
         {
             ExpectTriggerUpdate(1); //strict mock requires expectations

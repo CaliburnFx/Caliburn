@@ -1,4 +1,5 @@
-version: Caliburn-{branch}-{build}
+version: 3.0.{build}
+image: Visual Studio 2017
 
 test: off
 
@@ -6,7 +7,20 @@ install:
   - ps: $env:DOTNET_BUILD_VERSION = $env:APPVEYOR_BUILD_NUMBER
 
 build_script:
-  - cmd: build.cmd
-  
+  - cmd: build.sh
+
 artifacts:
   - path: artifacts\*.nupkg
+
+deploy:
+- provider: NuGet
+  server: https://www.myget.org/F/caliburn/api/v2/package
+  api_key:
+    secure: MHSwoqrZDNsSLy1cV1hGsuRu8LO0pVqo/oT3X1GrA+8YvmaUU7cBQTC/0lr/m3Ia
+  skip_symbols: false
+  symbol_server: https://www.myget.org/F/caliburn/symbols/api/v2/package
+  on:
+    branch:
+      - master
+      - update
+

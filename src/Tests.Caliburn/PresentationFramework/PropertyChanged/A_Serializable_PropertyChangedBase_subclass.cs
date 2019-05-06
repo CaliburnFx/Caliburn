@@ -1,4 +1,5 @@
-﻿using Shouldly;
+﻿using System.Reflection;
+using Shouldly;
 
 namespace Tests.Caliburn.PresentationFramework.PropertyChanged
 {
@@ -27,12 +28,28 @@ namespace Tests.Caliburn.PresentationFramework.PropertyChanged
             }
         }
 
+        sealed class AllowAllAssemblyVersionsDeserializationBinder : System.Runtime.Serialization.SerializationBinder
+        {
+            public override Type BindToType(string assemblyName, string typeName)
+            {
+                Type typeToDeserialize = null;
+
+                var currentAssembly = Assembly.GetExecutingAssembly().FullName;
+
+                // Get the type using the typeName and assemblyName
+                typeToDeserialize = Type.GetType($"{typeName}, {currentAssembly}");
+
+                return typeToDeserialize;
+            }
+        }
+
         [Fact]
         public void can_accept_handlers_after_deserialization()
         {
             var original = new FakeSerializableNotifier();
 
             var serializer = new BinaryFormatter();
+            serializer.Binder = new AllowAllAssemblyVersionsDeserializationBinder();
             var stream = new MemoryStream();
             serializer.Serialize(stream, original);
 
@@ -53,6 +70,7 @@ namespace Tests.Caliburn.PresentationFramework.PropertyChanged
             original.FakeProperty = "some string value";
 
             var serializer = new BinaryFormatter();
+            serializer.Binder = new AllowAllAssemblyVersionsDeserializationBinder();
             var stream = new MemoryStream();
             serializer.Serialize(stream, original);
 
@@ -69,6 +87,7 @@ namespace Tests.Caliburn.PresentationFramework.PropertyChanged
             var original = new FakeSerializableNotifier();
 
             var serializer = new BinaryFormatter();
+            serializer.Binder = new AllowAllAssemblyVersionsDeserializationBinder();
             var stream = new MemoryStream();
             serializer.Serialize(stream, original);
 

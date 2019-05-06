@@ -1,1 +1,0 @@
-This only serves to add references to local-only dll's for silverlight 5 sdk.
