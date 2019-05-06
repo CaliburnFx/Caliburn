@@ -117,7 +117,7 @@ namespace Tests.Caliburn.Actions
 
             var result = action.ShouldTriggerBeAvailable(message, handlingNode);
 
-            result.ShouldBeTrue();
+            result.ShouldBeFalse();
         }
 
         [Fact]
