@@ -1,6 +1,6 @@
 ![Caliburn](https://raw.githubusercontent.com/CaliburnFx/Caliburn/master/assets/Caliburn-cropped.png "Caliburn")
 
-[![Build status](https://ci.appveyor.com/api/projects/status/x08nw5asybe82ry9?svg=true)](https://ci.appveyor.com/project/CoreyKaylor/caliburn)
+[![Build status](https://ci.appveyor.com/api/projects/status/mns4fl41htp6wcn0/branch/master?svg=true)](https://ci.appveyor.com/project/joemcbride/caliburn/branch/master)
 
 **Building**
 
@@ -21,5 +21,5 @@ Of course using a DI container is still not necessary, as Caliburn has a simple 
 Unit tests for Caliburn's features can be found in Tests.Caliburn.
 You can run them either in VS Test runner, or from the test project directory by `dotnet test`
 
-Please see the samples folder for examples of how to use the most prominent features of Caliburn.  
-There are identical samples for both WPF and Silverlight.  You can also find some how to's and larger examples there.  
+Please see the samples folder for examples of how to use the most prominent features of Caliburn.
+There are identical samples for both WPF and Silverlight.  You can also find some how to's and larger examples there.
