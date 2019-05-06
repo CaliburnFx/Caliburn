@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <Description>Caliburn</Description>
-    <VersionPrefix>3.0.0-rc1</VersionPrefix>
+    <VersionPrefix>3.0.0-rc2</VersionPrefix>
     <Authors>Rob Eisenberg;Marco Amendola</Authors>
     <TargetFramework>net451</TargetFramework>
     <AssemblyName>Caliburn.Testability</AssemblyName>
