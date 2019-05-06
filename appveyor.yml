@@ -11,3 +11,16 @@ build_script:
 
 artifacts:
   - path: artifacts\*.nupkg
+
+deploy:
+- provider: NuGet
+  server: https://www.myget.org/F/caliburn/api/v2/package
+  api_key:
+    secure: MHSwoqrZDNsSLy1cV1hGsuRu8LO0pVqo/oT3X1GrA+8YvmaUU7cBQTC/0lr/m3Ia
+  skip_symbols: false
+  symbol_server: https://www.myget.org/F/caliburn/symbols/api/v2/package
+  on:
+    branch:
+      - master
+      - update
+
