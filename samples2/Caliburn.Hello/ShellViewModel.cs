@@ -7,25 +7,25 @@ namespace Caliburn.Hello
     {
         string name;
 
-        public string Name
+        public string NameIs
         {
             get { return name; }
             set
             {
                 name = value;
-                NotifyOfPropertyChange(() => Name);
+                NotifyOfPropertyChange(() => NameIs);
                 NotifyOfPropertyChange(() => CanSayHello);
             }
         }
 
         public bool CanSayHello
         {
-            get { return !string.IsNullOrWhiteSpace(Name); }
+            get { return !string.IsNullOrWhiteSpace(NameIs); }
         }
 
         public void SayHello()
         {
-            MessageBox.Show(string.Format("Hello {0}!", Name)); //Don't do this in real life :)
+            MessageBox.Show(string.Format("Hello {0}!", NameIs)); //Don't do this in real life :)
         }
     }
 }
