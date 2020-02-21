@@ -2,11 +2,6 @@ namespace Caliburn.PresentationFramework.RoutedMessaging
 {
     using System.Windows;
 
-#if SILVERLIGHT
-    using System.Collections.Generic;
-#endif
-
-#if !SILVERLIGHT
     /// <summary>
     /// A collection of triggers for routing messages through the UI.
     /// </summary>
@@ -21,12 +16,4 @@ namespace Caliburn.PresentationFramework.RoutedMessaging
             return new RoutedMessageTriggerCollection();
         }
     }
-#else
-    /// <summary>
-    /// A collection of triggers for routing messages through the UI.
-    /// </summary>
-    public class RoutedMessageTriggerCollection : List<BaseMessageTrigger>
-    {
-    }
-#endif
 }

@@ -40,10 +40,6 @@
         {
             var element = view.FindName(elementName);
 
-#if SILVERLIGHT
-            element.SetValue(View.IsLoadedProperty, isLoaded);
-#endif
-
             if(!string.IsNullOrEmpty(actionTargetPath))
             {
                 var binding = new Binding(actionTargetPath);

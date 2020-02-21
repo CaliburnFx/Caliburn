@@ -7,9 +7,9 @@
     using global::Caliburn.PresentationFramework.Actions;
     using global::Caliburn.PresentationFramework.RoutedMessaging;
     using Xunit;
-    using Rhino.Mocks;
+    using NSubstitute;
 
-    
+
     public class The_async_attribute_filter : TestBase
     {
         AsyncActionAttribute attribute;
@@ -24,8 +24,8 @@
             attribute = new AsyncActionAttribute {
                 Callback = "Callback"
             };
-            container = Stub<IServiceLocator>();
-            container.Stub(x => x.GetInstance(typeof(IMethodFactory), null)).Return(methodFactory).Repeat.Any();
+            container = Mock<IServiceLocator>();
+            container.GetInstance(typeof(IMethodFactory), null).Returns(methodFactory);
         }
 
         internal class MethodHost
@@ -33,7 +33,7 @@
             public void Callback(object result) {}
         }
 
-        [WpfFact]
+        [StaFact]
         public void can_execute_a_callback()
         {
             var method = Mock<IMethod>();
@@ -47,16 +47,16 @@
 
             handlingNode.RegisterHandler(Mock<IRoutedMessageHandler>());
 
-            handlingNode.MessageHandler.Stub(x => x.Unwrap())
-                .Return(target);
+            handlingNode.MessageHandler.Unwrap()
+                .Returns(target);
 
-            methodFactory.Expect(x => x.CreateFrom(info))
-                .Return(method);
+            methodFactory.CreateFrom(info)
+                .Returns(method);
 
             attribute.Initialize(typeof(MethodHost), null, container);
 
-            method.Expect(x => x.Invoke(target, result)).Return(typeof(string));
-            method.Stub(x => x.Info).Return(typeof(object).GetMethod("ToString"));
+            method.Invoke(target, result).Returns(typeof(string));
+            method.Info.Returns(typeof(object).GetMethod("ToString"));
 
             var outcome = new MessageProcessingOutcome(result, result.GetType(), false);
 
@@ -67,7 +67,7 @@
         public void initializes_its_method()
         {
             attribute.Initialize(typeof(MethodHost), null, container);
-            methodFactory.AssertWasCalled(x => x.CreateFrom(info));
+            methodFactory.Received().CreateFrom(info);
         }
     }
 }

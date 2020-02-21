@@ -1,5 +1,5 @@
 ﻿using System;
-using Rhino.Mocks;
+using NSubstitute;
 
 namespace Tests.Caliburn
 {
@@ -28,25 +28,7 @@ namespace Tests.Caliburn
 
         protected T Mock<T>() where T : class
         {
-            return MockRepository.GenerateMock<T>();
-        }
-
-        protected T StrictMock<T>()
-        {
-            var repository = new MockRepository();
-            var strict = repository.StrictMock<T>();
-            repository.Replay(strict);
-            return strict;
-        }
-
-        protected T Stub<T>() where T : class
-        {
-            return MockRepository.GenerateStub<T>();
-        }
-
-        protected T Stub<T>(params object[] args) where T : class
-        {
-            return MockRepository.GenerateStub<T>(args);
+            return Substitute.For<T>();
         }
 
         protected void CallProc(object instance, string name, params object[] parameters)

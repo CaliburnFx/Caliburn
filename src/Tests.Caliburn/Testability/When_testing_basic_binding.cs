@@ -8,10 +8,10 @@ namespace Tests.Caliburn.Testability
     using global::Caliburn.Testability;
     using Xunit;
 
-    
+
     public class When_testing_basic_binding : TestBase
     {
-        [WpfFact]
+        [StaFact]
         public void can_confirm_bindings_on_attached_properties()
         {
             var validator = Validator.For<SimpleUIBoundToCustomerByAttachedPorperty, Customer>();
@@ -21,7 +21,7 @@ namespace Tests.Caliburn.Testability
             result.WasNotBoundTo(x => x.Age).ShouldBeTrue();
         }
 
-        [WpfFact]
+        [StaFact]
         public void can_confirm_simple_bound_properties()
         {
             var validator = Validator.For<SimpleUIBoundToCustomer, Customer>();
@@ -31,7 +31,7 @@ namespace Tests.Caliburn.Testability
             result.WasNotBoundTo(x => x.LastName).ShouldBeTrue();
         }
 
-        [WpfFact]
+        [StaFact]
         public void can_detect_bad_attached_property_bindings()
         {
             var validator = Validator.For<SimpleUIBoundToCustomerByAttachedPorperty, Customer>();
@@ -40,7 +40,7 @@ namespace Tests.Caliburn.Testability
             result.Errors.Count().ShouldBe(1);
         }
 
-        [WpfFact]
+        [StaFact]
         public void can_detect_bad_bindings_in_hierarchicl_paths()
         {
             var validator = Validator.For<UIWithHierarchicalPath, MyDataSource>();
@@ -49,7 +49,7 @@ namespace Tests.Caliburn.Testability
             result.Errors.Count().ShouldBe(0);
         }
 
-        [WpfFact]
+        [StaFact]
         public void can_detect_bad_bindings_with_indexers()
         {
             var validator = Validator.For<UIBoundToCustomerIndexer, Customer>();
@@ -58,7 +58,7 @@ namespace Tests.Caliburn.Testability
             result.Errors.Count().ShouldBe(1);
         }
 
-        [WpfFact]
+        [StaFact]
         public void can_detect_bad_property_paths()
         {
             var validator = Validator.For<SimpleUIBoundToCustomer, Customer>();

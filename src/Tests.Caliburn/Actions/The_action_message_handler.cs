@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using Caliburn.Core;
 using Xunit;
-using Rhino.Mocks;
+using NSubstitute;
 using Shouldly;
 using Tests.Caliburn.Fakes;
 
@@ -11,7 +11,7 @@ namespace Tests.Caliburn.Actions
     using global::Caliburn.PresentationFramework.Filters;
     using global::Caliburn.PresentationFramework.RoutedMessaging;
 
-    
+
     public class The_action_message_handler : TestBase
     {
         const string MethodName = "MyAction";
@@ -25,18 +25,15 @@ namespace Tests.Caliburn.Actions
             target = new object();
             host = Mock<IActionHost>();
 
-            var filterManager = Stub<IFilterManager>();
-            filterManager.Stub(x => x.HandlerAware)
-                .Return(new IHandlerAware[]{})
-                .Repeat.Any();
+            var filterManager = Mock<IFilterManager>();
+            filterManager.HandlerAware
+                .Returns(new IHandlerAware[] { });
 
-            host.Stub(x => x.Filters)
-                .Return(filterManager)
-                .Repeat.Any();
+            host.Filters
+                .Returns(filterManager);
 
-            host.Stub(x => x.Actions)
-                .Return(new List<IAction>())
-                .Repeat.Any();
+            host.Actions
+                .Returns(new List<IAction>());
 
             handler = new ActionMessageHandler(host, target);
         }
@@ -52,7 +49,7 @@ namespace Tests.Caliburn.Actions
         {
             var message = new ActionMessage {MethodName = MethodName};
 
-            host.Expect(x => x.GetAction(message)).Return(Stub<IAction>());
+            host.GetAction(message).Returns(Mock<IAction>());
 
             var result = handler.Handles(message);
             result.ShouldBeTrue();
@@ -63,7 +60,7 @@ namespace Tests.Caliburn.Actions
         {
             var message = new ActionMessage {MethodName = MethodName};
 
-            host.Expect(x => x.GetAction(message)).Return(null);
+            host.GetAction(message).Returns(null as IAction);
 
             var result = handler.Handles(message);
             result.ShouldBeFalse();
@@ -80,8 +77,7 @@ namespace Tests.Caliburn.Actions
         [Fact]
         public void can_process_an_action_message()
         {
-            var handlingNode = Stub<IInteractionNode>();
-            var sourceNode = Stub<IInteractionNode>();
+            var sourceNode = Mock<IInteractionNode>();
             var context = new object();
 
             var message = new ActionMessage {MethodName = MethodName};
@@ -89,10 +85,10 @@ namespace Tests.Caliburn.Actions
 
             var action = Mock<IAction>();
 
-            host.Expect(x => x.GetAction(message)).Return(action);
-            action.Expect(x => x.Execute(message, handlingNode, context));
-
+            host.GetAction(message).Returns(action);
             handler.Process(message, context);
+
+            action.Received().Execute(message, null, context);
         }
 
         [Fact]
@@ -109,45 +105,43 @@ namespace Tests.Caliburn.Actions
         [Fact]
         public void can_update_a_trigger_if_has_trigger_effects_and_true()
         {
-            var node = Stub<IInteractionNode>();
+            var node = Mock<IInteractionNode>();
             var message = new ActionMessage { MethodName = MethodName };
             var action = Mock<IAction>();
             var trigger = Mock<IMessageTrigger>();
 
-            var filters = Stub<IFilterManager>();
-            filters.Stub(x => x.TriggerEffects).Return(new[] {Stub<IPreProcessor>()}).Repeat.Any();
-            action.Stub(x => x.Filters).Return(filters).Repeat.Any();
-            trigger.Stub(x => x.Message).Return(message);
+            var filters = Mock<IFilterManager>();
+            filters.TriggerEffects.Returns(new[] {Mock<IPreProcessor>()});
+            action.Filters.Returns(filters);
+            trigger.Message.Returns(message);
 
-            host.Expect(x => x.GetAction(message)).Return(action);
+            host.GetAction(message).Returns(action);
 
-            action.Expect(x => x.ShouldTriggerBeAvailable(message, node)).Return(true);
-
-            trigger.Expect(x => x.UpdateAvailabilty(true));
+            action.ShouldTriggerBeAvailable(message, node).ReturnsForAnyArgs(true);
 
             handler.UpdateAvailability(trigger);
+
+            trigger.Received().UpdateAvailabilty(true);
         }
 
         [Fact]
         public void can_update_a_trigger_if_has_trigger_effects_and_false()
         {
-            var node = Stub<IInteractionNode>();
+            var node = Mock<IInteractionNode>();
             var message = new ActionMessage { MethodName = MethodName };
             var action = Mock<IAction>();
             var trigger = Mock<IMessageTrigger>();
-            var filters = Stub<IFilterManager>();
-            filters.Stub(x => x.TriggerEffects).Return(new[] { Stub<IPreProcessor>() }).Repeat.Any();
-            action.Stub(x => x.Filters).Return(filters).Repeat.Any();
-            trigger.Stub(x => x.Message).Return(message);
+            var filters = Mock<IFilterManager>();
+            filters.TriggerEffects.Returns(new[] { Mock<IPreProcessor>() });
+            action.Filters.Returns(filters);
+            trigger.Message.Returns(message);
 
-            host.Expect(x => x.GetAction(message)).Return(action);
+            host.GetAction(message).Returns(action);
 
-            action.Expect(x => x.ShouldTriggerBeAvailable(message, node)).Return(false);
-
-            trigger.Expect(x => x.UpdateAvailabilty(false));
-
+            action.ShouldTriggerBeAvailable(message, node).Returns(false);
 
             handler.UpdateAvailability(trigger);
+            trigger.Received().UpdateAvailabilty(false);
         }
 
         [Fact]
@@ -156,12 +150,12 @@ namespace Tests.Caliburn.Actions
             var message = new ActionMessage { MethodName = MethodName };
             var action = Mock<IAction>();
             var trigger = Mock<IMessageTrigger>();
-            var filters = Stub<IFilterManager>();
-            filters.Stub(x => x.TriggerEffects).Return(new IPreProcessor[]{}).Repeat.Any();
-            action.Stub(x => x.Filters).Return(filters).Repeat.Any();
-            trigger.Stub(x => x.Message).Return(message);
+            var filters = Mock<IFilterManager>();
+            filters.TriggerEffects.Returns(new IPreProcessor[]{});
+            action.Filters.Returns(filters);
+            trigger.Message.Returns(message);
 
-            host.Expect(x => x.GetAction(message)).Return(action);
+            host.GetAction(message).Returns(action);
 
             handler.UpdateAvailability(trigger);
         }
@@ -172,7 +166,7 @@ namespace Tests.Caliburn.Actions
             Assert.Throws<CaliburnException>(() =>{
                 var message = new FakeMessage();
                 var trigger = Mock<IMessageTrigger>();
-                trigger.Stub(x => x.Message).Return(message);
+                trigger.Message.Returns(message);
 
                 handler.UpdateAvailability(trigger);
             });

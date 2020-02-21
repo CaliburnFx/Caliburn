@@ -12,10 +12,6 @@
     using Resources;
     using Results;
 
-#if SILVERLIGHT
-    using ShellFramework.History;
-#endif
-
     /// <summary>
     /// The shell framework module.
     /// </summary>
@@ -67,23 +63,6 @@
             ResourceExtensions.DetermineIconPath = displayNameToResourcePath;
             return this;
         }
-
-#if SILVERLIGHT
-        /// <summary>
-        /// Configures deep linking.
-        /// </summary>
-        /// <typeparam name="TState">The type of the state manager.</typeparam>
-        /// <typeparam name="TCoordinator">The type of the history coordinator.</typeparam>
-        /// <returns>The configuration.</returns>
-        public ShellFrameworkConfiguration ConfigureDeepLinking<TState, TCoordinator>()
-            where TState : IStateManager
-            where TCoordinator : IHistoryCoordinator
-        {
-            AddService<Singleton, TState>(typeof(IStateManager));
-            AddService<PerRequest, TCoordinator>(typeof(IHistoryCoordinator));
-            return this;
-        }
-#endif
 
         /// <summary>
         /// Determines the default implementation.

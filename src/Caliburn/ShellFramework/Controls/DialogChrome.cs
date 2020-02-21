@@ -4,19 +4,11 @@
     using System.Windows;
     using PresentationFramework;
 
-#if SILVERLIGHT
-    using System.Windows.Controls;
-#endif
-
     /// <summary>
     /// A custom chrome for dialogs.
     /// </summary>
-    public class DialogChrome 
-#if SILVERLIGHT
-        : ChildWindow
-#else
+    public class DialogChrome
         : Window
-#endif
     {
         /// <summary>
         /// The Buttons dependency property.

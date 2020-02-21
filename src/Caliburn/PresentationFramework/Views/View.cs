@@ -98,11 +98,7 @@
         {
             var fe = element as FrameworkElement;
             if(fe != null){
-#if SILVERLIGHT
-                if((bool)fe.GetValue(IsLoadedProperty))
-#else
                 if(fe.IsLoaded)
-#endif
                 {
                     handler(fe, new RoutedEventArgs());
                     return true;
@@ -110,9 +106,6 @@
                 else {
                     RoutedEventHandler loaded = null;
                     loaded = (s, e) => {
-#if SILVERLIGHT
-                        fe.SetValue(IsLoadedProperty, true);
-#endif
                         handler(s, e);
                         fe.Loaded -= loaded;
                     };
@@ -121,7 +114,6 @@
                     return false;
                 }
             }
-#if !SILVERLIGHT
             else
             {
                 var fce = element as FrameworkContentElement;
@@ -141,10 +133,9 @@
 
                         fce.Loaded += loaded;
                         return false;
-                    }                    
+                    }
                 }
             }
-#endif
             return false;
         }
 
@@ -156,7 +147,7 @@
         /// <remarks>In certain instances the services create UI elements.
         /// For example, if you ask the window manager to show a UserControl as a dialog, it creates a window to host the UserControl in.
         /// The WindowManager marks that element as a framework-created element so that it can determine what it created vs. what was intended by the developer.
-        /// Calling GetFirstNonGeneratedView allows the framework to discover what the original element was. 
+        /// Calling GetFirstNonGeneratedView allows the framework to discover what the original element was.
         /// </remarks>
         public static Func<object, object> GetFirstNonGeneratedView = view =>
         {

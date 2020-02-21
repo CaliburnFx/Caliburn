@@ -40,7 +40,7 @@ namespace Caliburn.PresentationFramework.Conventions
         readonly Dictionary<Type, IElementConvention> elementConventions = new Dictionary<Type, IElementConvention>();
         readonly List<IViewConventionCategory> viewConventions = new List<IViewConventionCategory>();
         readonly List<ConverterConvention> converters = new List<ConverterConvention>();
-        
+
         /// <summary>
         /// Initializes a new instance of the <see cref="DefaultConventionManager"/> class.
         /// </summary>
@@ -82,7 +82,7 @@ namespace Caliburn.PresentationFramework.Conventions
         /// <returns>The convention.</returns>
         public IElementConvention GetElementConvention(Type elementType)
         {
-            if (elementType == null) 
+            if (elementType == null)
                 return null;
 
             IElementConvention convention;
@@ -116,8 +116,8 @@ namespace Caliburn.PresentationFramework.Conventions
         {
             converters.Add(new ConverterConvention
             {
-                Target = target, 
-                Source = source, 
+                Target = target,
+                Source = source,
                 Converter = converter
             });
         }
@@ -284,22 +284,12 @@ namespace Caliburn.PresentationFramework.Conventions
                 yield return ElementConvention<ItemsControl>("Loaded", ItemsControl.ItemsSourceProperty, (c, o) => c.DataContext = o, c => c.DataContext);
                 yield return new DefaultElementConvention<ContentControl>("Loaded", ContentControl.ContentProperty, (c, o) => c.DataContext = o, c => c.DataContext,
                     (element, property) =>{
-#if SILVERLIGHT
-                        return element.ContentTemplate == null && !(element.Content is DependencyObject)
-                            ? View.ModelProperty
-                            : property;
-#else
                         return element.ContentTemplate == null && element.ContentTemplateSelector == null && !(element.Content is DependencyObject)
                             ? View.ModelProperty
                             : property;
-#endif
                     });
 
-#if SILVERLIGHT
-                yield return ElementConvention<PasswordBox>("PasswordChanged", PasswordBox.PasswordProperty, (c, o) => c.Password = o.SafeToString(), c => c.Password);
-#else
                 yield return ElementConvention<PasswordBox>("PasswordChanged", PasswordBox.DataContextProperty, (c, o) => c.Password = o.SafeToString(), c => c.Password);
-#endif
                 yield return ElementConvention<Shape>("MouseLeftButtonUp", Shape.VisibilityProperty, (c, o) => c.DataContext = o, c => c.DataContext);
                 yield return ElementConvention<FrameworkElement>("Loaded", FrameworkElement.VisibilityProperty, (c, o) => c.DataContext = o, c => c.DataContext);
         }

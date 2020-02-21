@@ -8,10 +8,10 @@ namespace Tests.Caliburn.Testability
     using global::Caliburn.Testability;
     using Xunit;
 
-    
+
     public class When_testing_styles : TestBase
     {
-        [WpfFact]
+        [StaFact]
         public void can_locate_errors_in_container_styles()
         {
             var validator = Validator.For<UIWithItemsControlContainerStyle, Customer>();
@@ -20,7 +20,7 @@ namespace Tests.Caliburn.Testability
             result.Errors.Count().ShouldBe(1);
         }
 
-        [WpfFact]
+        [StaFact]
         public void can_locate_errors_in_group_styles()
         {
             var validator = Validator.For<UIWithItemsControlGroupStyle, Customer>();
@@ -29,7 +29,7 @@ namespace Tests.Caliburn.Testability
             result.Errors.Count().ShouldBe(1);
         }
 
-        [WpfFact]
+        [StaFact]
         public void can_locate_errors_in_multi_triggers()
         {
             var validator = Validator.For<UIBoundToCustomerWithStyleAndMultiTriggers, Customer>();
@@ -38,7 +38,7 @@ namespace Tests.Caliburn.Testability
             result.Errors.Count().ShouldBe(1);
         }
 
-        [WpfFact]
+        [StaFact]
         public void can_locate_errors_in_setters()
         {
             var validator = Validator.For<UIBoundToCustomerWithStyle, Customer>();
@@ -47,7 +47,7 @@ namespace Tests.Caliburn.Testability
             result.Errors.Count().ShouldBe(1);
         }
 
-        [WpfFact]
+        [StaFact]
         public void can_locate_errors_in_triggers()
         {
             var validator = Validator.For<UIBoundToCustomerWithStyleAndTriggers, Customer>();

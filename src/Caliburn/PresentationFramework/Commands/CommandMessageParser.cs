@@ -94,14 +94,6 @@
                 case CommandSource.Bound:
                     var binding = new Binding(coreOfMessage);
                     message.SetBinding(CommandMessage.CommandProperty, binding);
-#if SILVERLIGHT
-                    View.ExecuteOnLoad(target, delegate{
-                        var fe = (FrameworkElement)target;
-
-                        if (fe.DataContext != null)
-                            message.DataContext = fe.DataContext;
-                    });     
-#endif
                     break;
                 default:
                     var ex = new NotSupportedException(commandSource + " is not a supported command source.");

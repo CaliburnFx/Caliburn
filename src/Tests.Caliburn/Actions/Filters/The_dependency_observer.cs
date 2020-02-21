@@ -10,24 +10,21 @@ namespace Tests.Caliburn.Actions.Filters
     using global::Caliburn.PresentationFramework.Filters;
     using global::Caliburn.PresentationFramework.RoutedMessaging;
     using Xunit;
-    using Rhino.Mocks;
+    using NSubstitute;
 
-    
+
     public class The_dependency_observer : TestBase
     {
         IRoutedMessageHandler handler;
         TheNotifierClass notifier;
         DependencyObserver observer;
         IMessageTrigger trigger;
-        bool expectationsWasSet;
 
         protected override void given_the_context_of()
         {
-            expectationsWasSet = false;
-
             var methodFactory = new DefaultMethodFactory();
 
-            handler = StrictMock<IRoutedMessageHandler>();
+            handler = Mock<IRoutedMessageHandler>();
             notifier = new TheNotifierClass();
             observer = new DependencyObserver(handler, methodFactory, notifier);
             trigger = Mock<IMessageTrigger>();
@@ -40,15 +37,7 @@ namespace Tests.Caliburn.Actions.Filters
 
         void ExpectTriggerUpdate(int count)
         {
-            handler.Expect(x => x.UpdateAvailability(trigger)).Repeat.Times(count);
-            expectationsWasSet = true;
-        }
-
-        void AssertTriggerUpdateExpectations()
-        {
-            if(!expectationsWasSet)
-                throw new Exception("Expectations was not set");
-            handler.VerifyAllExpectations();
+            handler.Received(count).UpdateAvailability(trigger);
         }
 
         internal class TheNotifierClass : PropertyChangedBase
@@ -124,7 +113,7 @@ namespace Tests.Caliburn.Actions.Filters
                 "Model.SomeModelProperty"
             });
 
-            //emulates the collection of the cluster composed by Screen, View, MessageHandler and ancillary filters 
+            //emulates the collection of the cluster composed by Screen, View, MessageHandler and ancillary filters
             //(included Dependecies along with its internal PropertyPathMonitor)
             observer = null;
             handler = null;
@@ -169,8 +158,6 @@ namespace Tests.Caliburn.Actions.Filters
         //see http://caliburn.codeplex.com/Thread/View.aspx?ThreadId=212171 for the rationale behind the finalizer removal
         public void should_allow_nodes_collection()
         {
-            ExpectTriggerUpdate(1); //strict mock requires expectations
-
             var disconnectedChainRef = new WeakReference(notifier.Model);
 
             ConfigureObserver(new[] {
@@ -182,92 +169,80 @@ namespace Tests.Caliburn.Actions.Filters
             GC.WaitForFullGCComplete();
             GC.WaitForPendingFinalizers();
 
+            ExpectTriggerUpdate(1);
             disconnectedChainRef.IsAlive.ShouldBeFalse();
         }
 
         [Fact]
         public void should_detect_changes_on_intermediate_node()
         {
-            ExpectTriggerUpdate(1);
             ConfigureObserver(new[] {
                 "Model.SomeModelProperty"
             });
             notifier.Model = new TheReferencedClass();
-            AssertTriggerUpdateExpectations();
+            ExpectTriggerUpdate(1);
         }
 
         [Fact]
         public void should_detect_registered_changes_on_referenced_model()
         {
-            ExpectTriggerUpdate(1);
-
             ConfigureObserver(new[] {
                 "Model.SomeModelProperty"
             });
             notifier.Model.NotifyOfPropertyChange("SomeModelProperty");
 
-            AssertTriggerUpdateExpectations();
+            ExpectTriggerUpdate(1);
         }
 
         [Fact]
         public void should_detect_registered_changes_on_target()
         {
-            ExpectTriggerUpdate(1);
-
             ConfigureObserver(new[] {
                 "SomeProperty"
             });
             notifier.NotifyOfPropertyChange("SomeProperty");
 
-            AssertTriggerUpdateExpectations();
+            ExpectTriggerUpdate(1);
         }
 
         [Fact]
         public void should_detect_star_changes_on_leaf_node()
         {
-            ExpectTriggerUpdate(2);
-
             ConfigureObserver(new[] {
                 "Model.*"
             });
             notifier.Model.NotifyOfPropertyChange("SomeModelProperty");
             notifier.Model.NotifyOfPropertyChange("AnotherModelProperty");
 
-            AssertTriggerUpdateExpectations();
+            ExpectTriggerUpdate(2);
         }
 
         [Fact]
         public void should_detect_star_changes_on_root()
         {
-            ExpectTriggerUpdate(2);
-
             ConfigureObserver(new[] {
                 "*"
             });
             notifier.NotifyOfPropertyChange("SomeProperty");
             notifier.NotifyOfPropertyChange("SomeOtherProperty");
 
-            AssertTriggerUpdateExpectations();
+            ExpectTriggerUpdate(2);
         }
 
         [Fact]
         public void should_ignore_changes_on_deeper_path()
         {
-            ExpectTriggerUpdate(0);
-
             ConfigureObserver(new[] {
                 "Model"
             });
             notifier.Model.NotifyOfPropertyChange("SomeModelProperty");
 
-            AssertTriggerUpdateExpectations();
+            ExpectTriggerUpdate(0);
         }
 
         [Fact]
         public void should_ignore_changes_on_disconnected_chains()
         {
-            ExpectTriggerUpdate(1); //first call is expected, second it's not
-
             var disconnectedChain = notifier.Model;
 
             ConfigureObserver(new[] {
@@ -276,68 +251,58 @@ namespace Tests.Caliburn.Actions.Filters
             notifier.Model = new TheReferencedClass();
             disconnectedChain.NotifyOfPropertyChange("SomeModelProperty");
 
-            AssertTriggerUpdateExpectations();
+            ExpectTriggerUpdate(1); //first call is expected, second it's not
         }
 
         [Fact]
         public void should_ignore_changes_on_unregistered_path()
         {
-            ExpectTriggerUpdate(0);
-
             ConfigureObserver(new[] {
                 "AnotherModel.SomeModelProperty"
             });
             notifier.Model.NotifyOfPropertyChange("SomeModelProperty");
 
-            AssertTriggerUpdateExpectations();
+            ExpectTriggerUpdate(0);
         }
 
         [Fact]
         public void should_ignore_unregistered_changes_on_target()
         {
-            ExpectTriggerUpdate(0);
-
             ConfigureObserver(new[] {
                 "SomeProperty"
             });
             notifier.NotifyOfPropertyChange("SomeOtherProperty");
 
-            AssertTriggerUpdateExpectations();
+            ExpectTriggerUpdate(0);
         }
 
         [Fact]
         public void should_monitor_multiple_paths()
         {
-            ExpectTriggerUpdate(2);
-
             ConfigureObserver(new[] {
                 "Model.*", "AnotherModel.SomeModelProperty"
             });
             notifier.Model.NotifyOfPropertyChange("AnotherModelProperty");
             notifier.AnotherModel.NotifyOfPropertyChange("SomeModelProperty");
 
-            AssertTriggerUpdateExpectations();
+            ExpectTriggerUpdate(2);
         }
 
         [Fact]
         public void should_reconnect_monitor_on_changed_chain()
         {
-            ExpectTriggerUpdate(2);
-
             ConfigureObserver(new[] {
                 "Model.SomeModelProperty"
             });
             notifier.Model = new TheReferencedClass();
             notifier.Model.NotifyOfPropertyChange("SomeModelProperty");
 
-            AssertTriggerUpdateExpectations();
+            ExpectTriggerUpdate(2);
         }
 
         [Fact]
         public void should_reconnect_monitor_on_previously_null_nodes()
         {
-            ExpectTriggerUpdate(2);
-
             notifier.Model = null;
 
             ConfigureObserver(new[] {
@@ -347,7 +312,7 @@ namespace Tests.Caliburn.Actions.Filters
 
             notifier.Model.NotifyOfPropertyChange("SomeModelProperty");
 
-            AssertTriggerUpdateExpectations();
+            ExpectTriggerUpdate(2);
         }
 
         [Fact]

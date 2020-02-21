@@ -7,7 +7,7 @@ namespace Tests.Caliburn.RoutedUIMessaging
     using global::Caliburn.PresentationFramework.RoutedMessaging.Triggers;
     using Xunit;
 
-    
+
     public class Interaction_defaults : TestBase
     {
         DefaultElementConvention<Button> defaults;
@@ -38,7 +38,7 @@ namespace Tests.Caliburn.RoutedUIMessaging
             trigger.ShouldBeOfType<EventMessageTrigger>();
         }
 
-        [WpfFact]
+        [StaFact]
         public void can_get_a_default_value()
         {
             var value = new object();
@@ -49,7 +49,7 @@ namespace Tests.Caliburn.RoutedUIMessaging
             result.ShouldBe(value);
         }
 
-        [WpfFact]
+        [StaFact]
         public void can_set_a_default_value()
         {
             var value = new object();

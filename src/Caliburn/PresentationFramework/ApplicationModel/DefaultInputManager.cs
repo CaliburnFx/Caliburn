@@ -59,7 +59,7 @@ namespace Caliburn.PresentationFramework.ApplicationModel
 
                 foreach(var path in paths)
                 {
-                    if(string.Compare(path, propertyPath, StringComparison.InvariantCultureIgnoreCase) != 0) 
+                    if(string.Compare(path, propertyPath, StringComparison.InvariantCultureIgnoreCase) != 0)
                         continue;
 
                     if (!element.IsEnabled)
@@ -142,128 +142,8 @@ namespace Caliburn.PresentationFramework.ApplicationModel
 
         public string GetDisplayString(Key key, ModifierKeys modifierKeys)
         {
-#if !SILVERLIGHT
             return new KeyGesture(key, modifierKeys).GetDisplayStringForCulture(CultureInfo.CurrentUICulture);
-#else
-            return CreateGestureText(key, modifierKeys);
-#endif
         }
-
-#if SILVERLIGHT
-
-        string CreateGestureText(Key key, ModifierKeys modifierKeys)
-        {
-            if (key == Key.None)
-                return string.Empty;
-            
-            string gestureText = string.Empty;
-            string keyText = CreateKeyText(key);
-
-            if (!string.IsNullOrEmpty(keyText))
-            {
-                gestureText += CreateModifierText(modifierKeys);
-
-                if (gestureText != string.Empty)
-                    gestureText = gestureText + '+';
-
-                gestureText = gestureText + keyText;
-            }
-
-            return gestureText;
-        }
-
-        string CreateKeyText(Key key)
-        {
-            if (key == Key.None)
-                return string.Empty;
-
-            //if ((key >= Key.D0) && (key <= Key.D9))
-            //    return char.ToString((char)((ushort)((key - 0x22) + 0x30)));
-
-            //if ((key >= Key.A) && (key <= Key.Z))
-            //    return char.ToString((char)((ushort)((key - 0x2c) + 0x41)));
-
-            //string str = Abbreviate(key);
-
-            //if ((str != null) && ((str.Length != 0) || (str == string.Empty)))
-            //    return str;
-
-            return key.ToString();
-        }
-
-        string CreateModifierText(ModifierKeys modifiers)
-        {
-            string str = "";
-
-            if ((modifiers & ModifierKeys.Control) == ModifierKeys.Control)
-                str = str + Abbreviate(ModifierKeys.Control);
-
-            if ((modifiers & ModifierKeys.Alt) == ModifierKeys.Alt)
-            {
-                if (str.Length > 0)
-                    str = str + '+';
-                str = str + Abbreviate(ModifierKeys.Alt);
-            }
-
-            if ((modifiers & ModifierKeys.Windows) == ModifierKeys.Windows)
-            {
-                if (str.Length > 0)
-                    str = str + '+';
-                str = str + Abbreviate(ModifierKeys.Windows);
-            }
-
-            if ((modifiers & ModifierKeys.Shift) != ModifierKeys.Shift)
-                return str;
-
-            if (str.Length > 0)
-                str = str + '+';
-
-            return (str + Abbreviate(ModifierKeys.Shift));
-        }
-
-        static string Abbreviate(ModifierKeys modifierKeys)
-        {
-            string str = string.Empty;
-
-            switch (modifierKeys)
-            {
-                case ModifierKeys.Alt:
-                    return "Alt";
-
-                case ModifierKeys.Control:
-                    return "Ctrl";
-
-                case (ModifierKeys.Control | ModifierKeys.Alt):
-                    return str;
-
-                case ModifierKeys.Shift:
-                    return "Shift";
-
-                case ModifierKeys.Windows:
-                    return "Windows";
-            }
-
-            return str;
-        }
-
-        //static string Abbreviate(Key key)
-        //{
-        //    switch (key)
-        //    {
-        //        case Key.Back:
-        //            return "Backspace";
-
-        //        case Key.Escape:
-        //            return "Esc";
-
-        //        case Key.None:
-        //            return string.Empty;
-        //    }
-
-        //    return null;
-        //}
-
-#endif
 
         void OnKeyUp(object s, KeyEventArgs e)
         {

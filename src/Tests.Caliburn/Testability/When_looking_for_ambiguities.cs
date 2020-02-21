@@ -10,7 +10,7 @@ namespace Tests.Caliburn.Testability
     using global::Caliburn.Testability;
     using Xunit;
 
-    
+
     public class When_looking_for_ambiguities
     {
         ItemsControl CreateItemsControlWithGroupStyleHeaderAmbiguity()
@@ -116,7 +116,7 @@ namespace Tests.Caliburn.Testability
             return template;
         }
 
-        [WpfFact]
+        [StaFact]
         public void can_find_container_style_ambiguity_in_group_styles()
         {
             var validator = Validator.For<ItemsControl, Customer>(CreateItemsControlWithGroupStyleContainerAmbiguity());
@@ -125,7 +125,7 @@ namespace Tests.Caliburn.Testability
             result.Errors.Count().ShouldBe(1);
         }
 
-        [WpfFact]
+        [StaFact]
         public void can_find_content_template_and_selector_duplication()
         {
             var validator = Validator.For<ContentControl, Customer>(CreateContentControl());
@@ -134,7 +134,7 @@ namespace Tests.Caliburn.Testability
             result.Errors.Count().ShouldBe(1);
         }
 
-        [WpfFact]
+        [StaFact]
         public void can_find_header_ambiguity_in_group_styles()
         {
             var validator = Validator.For<ItemsControl, Customer>(CreateItemsControlWithGroupStyleHeaderAmbiguity());
@@ -143,7 +143,7 @@ namespace Tests.Caliburn.Testability
             result.Errors.Count().ShouldBe(1);
         }
 
-        [WpfFact]
+        [StaFact]
         public void can_find_headered_content_template_and_selector_duplication()
         {
             var validator = Validator.For<HeaderedContentControl, Customer>(CreateHeaderedContentControl());
@@ -152,7 +152,7 @@ namespace Tests.Caliburn.Testability
             result.Errors.Count().ShouldBe(1);
         }
 
-        [WpfFact]
+        [StaFact]
         public void can_find_headered_item_template_and_selector_duplication()
         {
             var validator = Validator.For<ItemsControl, Customer>(CreateItemsControlWithHeaderAmbiguity());
@@ -161,7 +161,7 @@ namespace Tests.Caliburn.Testability
             result.Errors.Count().ShouldBe(1);
         }
 
-        [WpfFact]
+        [StaFact]
         public void can_find_item_container_style_and_selector_duplication()
         {
             var validator = Validator.For<ItemsControl, Customer>(CreateItemsControlWithStyleAmbiguity());
@@ -170,7 +170,7 @@ namespace Tests.Caliburn.Testability
             result.Errors.Count().ShouldBe(1);
         }
 
-        [WpfFact]
+        [StaFact]
         public void can_find_item_group_style_and_selector_duplication()
         {
             var validator = Validator.For<ItemsControl, Customer>(CreateItemsControlWithGroupStyleAmbiguity());
@@ -179,7 +179,7 @@ namespace Tests.Caliburn.Testability
             result.Errors.Count().ShouldBe(1);
         }
 
-        [WpfFact]
+        [StaFact]
         public void can_find_item_template_and_selector_duplication()
         {
             var validator = Validator.For<ItemsControl, Customer>(CreateItemsControlWithTemplateAmbiguity());

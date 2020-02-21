@@ -6,9 +6,9 @@ namespace Tests.Caliburn.RoutedUIMessaging
     using System.Windows.Controls;
     using global::Caliburn.PresentationFramework.RoutedMessaging;
     using Xunit;
-    using Rhino.Mocks;
+    using NSubstitute;
 
-    
+
     public class The_message_controller : TestBase
     {
         IRoutedMessageController controller;
@@ -18,13 +18,11 @@ namespace Tests.Caliburn.RoutedUIMessaging
             controller = new DefaultRoutedMessageController();
         }
 
-        [WpfFact]
+        [StaFact]
         public void can_attach_a_trigger_to_a_ui_element()
         {
             var dp = new Button();
             var trigger = Mock<IMessageTrigger>();
-
-            trigger.Expect(x => x.Attach(Arg<InteractionNode>.Is.NotNull));
 
             controller.AttachTrigger(
                 dp,
@@ -35,17 +33,17 @@ namespace Tests.Caliburn.RoutedUIMessaging
 
             node.ShouldNotBeNull();
             node.Triggers.Contains(trigger).ShouldBeTrue();
+
+            trigger.Received().Attach(Arg.Is<InteractionNode>(x => x != null));
         }
 
-        [WpfFact]
+        [StaFact]
         public void can_attach_a_message_handler_to_a_ui_element()
         {
             var dp = new Button();
             var handler = Mock<IRoutedMessageHandler>();
 
-            handler.Expect(x => x.Unwrap()).Return(handler);
-            handler.Expect(x => x.Initialize(Arg<IInteractionNode>.Is.NotNull));
-
+            handler.Unwrap().Returns(handler);
             controller.AddHandler(
                 dp,
                 handler,
@@ -57,9 +55,10 @@ namespace Tests.Caliburn.RoutedUIMessaging
             node.ShouldNotBeNull();
             node.MessageHandler.ShouldBe(handler);
             dp.DataContext.ShouldBe(handler);
+            handler.Received().Initialize(Arg.Is<IInteractionNode>(x => x != null));
         }
 
-        [WpfFact]
+        [StaFact]
         public void can_attach_a_message_handler_to_a_ui_element_without_data_context()
         {
             var dp = new Button();
@@ -78,7 +77,7 @@ namespace Tests.Caliburn.RoutedUIMessaging
             dp.DataContext.ShouldBeNull();
         }
 
-        [WpfFact]
+        [StaFact]
         public void can_find_parent_node_of_ui_element()
         {
             var panel = new StackPanel();

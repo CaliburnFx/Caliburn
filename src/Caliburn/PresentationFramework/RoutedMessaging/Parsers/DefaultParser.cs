@@ -9,10 +9,6 @@
     using Core.Logging;
     using RoutedMessaging;
 
-#if SILVERLIGHT
-    using System.Globalization;
-#endif
-
     /// <summary>
     /// An implementation of <see cref="IParser"/>.
     /// </summary>

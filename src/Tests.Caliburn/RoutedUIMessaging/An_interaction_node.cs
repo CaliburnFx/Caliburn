@@ -10,9 +10,8 @@ namespace Tests.Caliburn.RoutedUIMessaging
     using global::Caliburn.Core;
     using global::Caliburn.PresentationFramework.RoutedMessaging;
     using Xunit;
-    using Rhino.Mocks;
+    using NSubstitute;
 
-    
     public class An_interaction_node : TestBase
     {
         private IRoutedMessageController controller;
@@ -33,35 +32,35 @@ namespace Tests.Caliburn.RoutedUIMessaging
             parent.Children.Add(element);
         }
 
-        [WpfFact]
+        [StaFact]
         public void declares_the_ui_element()
         {
             node.UIElement.ShouldBe(element);
         }
 
-        [WpfFact]
+        [StaFact]
         public void can_find_parent_node()
         {
-            controller.Expect(x => x.GetParent(element)).Return(parentNode);
+            controller.GetParent(element).Returns(parentNode);
 
             var found = node.FindParent();
 
             found.ShouldBe(parentNode);
         }
 
-        [WpfFact]
+        [StaFact]
         public void can_add_a_trigger()
         {
             var trigger = Mock<IMessageTrigger>();
 
-            trigger.Expect(x => x.Attach(Arg<InteractionNode>.Is.Equal(node)));
-
             node.AddTrigger(trigger);
+
+            trigger.Received().Attach(Arg.Is<InteractionNode>(x => x == node));
 
             node.Triggers.Contains(trigger).ShouldBeTrue();
         }
 
-        [WpfFact]
+        [StaFact]
         public void can_have_a_message_handler()
         {
             var handler = Mock<IRoutedMessageHandler>();
@@ -71,38 +70,38 @@ namespace Tests.Caliburn.RoutedUIMessaging
             node.MessageHandler.ShouldBe(handler);
         }
 
-        [WpfFact]
+        [StaFact]
         public void can_determine_if_a_message_is_handled()
         {
             var message = new FakeMessage();
             var handler = Mock<IRoutedMessageHandler>();
 
-            handler.Expect(x => x.Initialize(node));
-            handler.Expect(x => x.Handles(message)).Return(true);
+            handler.Handles(message).Returns(true);
 
             node.RegisterHandler(handler);
 
             bool result = node.Handles(message);
 
+            handler.Received().Initialize(node);
             result.ShouldBeTrue();
         }
 
-        [WpfFact]
+        [StaFact]
         public void can_process_message_if_node_has_handler()
         {
             var context = new object();
             var message = new FakeMessage();
             var handler = Mock<IRoutedMessageHandler>();
 
-            handler.Expect(x => x.Initialize(node));
-            handler.Expect(x => x.Handles(message)).Return(true);
-            handler.Expect(x => x.Process(message, context));
+            handler.Handles(message).Returns(true);
 
             node.RegisterHandler(handler);
             node.ProcessMessage(message, context);
+            handler.Received().Initialize(node);
+            handler.Received().Process(message, context);
         }
 
-        [WpfFact]
+        [StaFact]
         public void can_process_message_if_parent_node_has_handler()
         {
             var context = new object();
@@ -113,16 +112,16 @@ namespace Tests.Caliburn.RoutedUIMessaging
             node.RegisterHandler(handler);
             parentNode.RegisterHandler(parentHandler);
 
-            handler.Expect(x => x.Handles(message)).Return(false);
-            controller.Expect(x => x.GetParent(element)).Return(parentNode);
-            parentHandler.Expect(x => x.Handles(message)).Return(true);
-
-            parentHandler.Expect(x => x.Process(message, context));
+            handler.Handles(message).Returns(false);
+            controller.GetParent(element).Returns(parentNode);
+            parentHandler.Handles(message).Returns(true);
 
             node.ProcessMessage(message, context);
+
+            parentHandler.Received().Process(message, context);
         }
 
-        [WpfFact]
+        [StaFact]
         public void will_throw_exception_if_processing_node_is_not_found()
         {
             Assert.Throws<CaliburnException>(() =>{
@@ -132,31 +131,37 @@ namespace Tests.Caliburn.RoutedUIMessaging
 
                 node.RegisterHandler(handler);
 
-                handler.Expect(x => x.Handles(message)).Return(false);
-                controller.Expect(x => x.GetParent(element)).Return(null);
+                handler.Handles(message).Returns(false);
+                controller.GetParent(element).Returns(null as IInteractionNode);
 
                 node.ProcessMessage(message, context);
             });
         }
 
-        [WpfFact]
+        //Due to an issue with STA Thread differences on dotnetcoreapp we'll comment out until
+        //https://github.com/AArnott/Xunit.StaFact/issues/35 is resolved.
+        #if NET462
+        [StaFact]
+        #endif
         public void can_update_availability_if_node_has_handler()
         {
             var message = new FakeMessage();
             var handler = Mock<IRoutedMessageHandler>();
             var trigger = Mock<IMessageTrigger>();
 
-            handler.Expect(x => x.Initialize(node));
-            trigger.Expect(x => x.Message).Return(message);
-            handler.Expect(x => x.Handles(message)).Return(true);
-            handler.Expect(x => x.UpdateAvailability(trigger));
+            trigger.Message.Returns(message);
+            handler.Handles(message).Returns(true);
 
             node.RegisterHandler(handler);
-
             node.UpdateAvailability(trigger);
+
+            handler.Received().Initialize(node);
+            handler.Received().UpdateAvailability(trigger);
         }
 
-        [WpfFact]
+        #if NET462
+        [StaFact]
+        #endif
         public void can_update_availability_if_parent_node_has_handler()
         {
             var message = new FakeMessage();
@@ -167,16 +172,16 @@ namespace Tests.Caliburn.RoutedUIMessaging
             node.RegisterHandler(handler);
             parentNode.RegisterHandler(parentHandler);
 
-            trigger.Expect(x => x.Message).Return(message);
-            handler.Expect(x => x.Handles(message)).Return(false);
-            controller.Expect(x => x.GetParent(element)).Return(parentNode);
-            parentHandler.Expect(x => x.Handles(message)).Return(true);
-            parentHandler.Expect(x => x.UpdateAvailability(trigger));
+            trigger.Message.Returns(message);
+            handler.Handles(message).Returns(false);
+            controller.GetParent(element).Returns(parentNode);
+            parentHandler.Handles(message).Returns(true);
 
             node.UpdateAvailability(trigger);
+            parentHandler.Received().UpdateAvailability(trigger);
         }
 
-        [WpfFact]
+        [StaFact]
         public void will_throw_exception_if_trigger_update_node_is_not_found()
         {
             RaiseLoadedEvent(element);
@@ -187,9 +192,9 @@ namespace Tests.Caliburn.RoutedUIMessaging
 
                 node.RegisterHandler(handler);
 
-                trigger.Expect(x => x.Message).Return(message);
-                handler.Expect(x => x.Handles(message)).Return(false);
-                controller.Expect(x => x.GetParent(element)).Return(null);
+                trigger.Message.Returns(message);
+                handler.Handles(message).Returns(false);
+                controller.GetParent(element).Returns(null as IInteractionNode);
 
                 node.UpdateAvailability(trigger);
             });

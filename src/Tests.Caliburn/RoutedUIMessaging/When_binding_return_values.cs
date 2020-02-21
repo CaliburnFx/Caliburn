@@ -13,9 +13,9 @@ namespace Tests.Caliburn.RoutedUIMessaging
     using global::Caliburn.PresentationFramework.Conventions;
     using global::Caliburn.PresentationFramework.RoutedMessaging;
     using Xunit;
-    using Rhino.Mocks;
+    using NSubstitute;
 
-    
+
     public class When_binding_return_values : TestBase
     {
         DefaultMethodFactory factory;
@@ -30,11 +30,11 @@ namespace Tests.Caliburn.RoutedUIMessaging
             factory = new DefaultMethodFactory();
             conventionManager = Mock<IConventionManager>();
             binder = new DefaultMessageBinder(conventionManager);
-            handlingNode = Stub<IInteractionNode>();
-            sourceNode = Stub<IInteractionNode>();
+            handlingNode = Mock<IInteractionNode>();
+            sourceNode = Mock<IInteractionNode>();
             host = new ControlHost();
 
-            sourceNode.Stub(x => x.UIElement).Return(host).Repeat.Any();
+            sourceNode.UIElement.Returns(host);
         }
 
         public class FakeMessage : IRoutedMessageWithOutcome
@@ -120,17 +120,15 @@ namespace Tests.Caliburn.RoutedUIMessaging
             }
         }
 
-        [WpfFact]
+        [StaFact]
         public void if_no_return_path_is_specified_look_for_special_element()
         {
             var method = factory.CreateFrom(typeof(MethodHost).GetMethod("Method"));
             var returnValue = new object();
             var defaults = Mock<IElementConvention>();
 
-            conventionManager.Expect(x => x.GetElementConvention(typeof(TextBox)))
-                .Return(defaults);
-
-            defaults.Expect(x => x.SetValue(host.MethodResult, returnValue));
+            conventionManager.GetElementConvention(typeof(TextBox))
+                .Returns(defaults);
 
             var result = binder.CreateResult(
                 new MessageProcessingOutcome(
@@ -142,14 +140,15 @@ namespace Tests.Caliburn.RoutedUIMessaging
 
             result.Execute(
                 new ResultExecutionContext(
-                    Stub<IServiceLocator>(),
+                    Mock<IServiceLocator>(),
                     new FakeMessage(sourceNode, method, string.Empty),
                     handlingNode
                     )
                 );
+            defaults.Received().SetValue(host.MethodResult, returnValue);
         }
 
-        [WpfFact]
+        [StaFact]
         public void methods_with_void_return_type_return_IResult()
         {
             var method = factory.CreateFrom(typeof(MethodHost).GetMethod("MethodWithVoidReturn"));
@@ -165,7 +164,7 @@ namespace Tests.Caliburn.RoutedUIMessaging
             result.ShouldNotBeNull();
         }
 
-        [WpfFact]
+        [StaFact]
         public void methods_with_task_return_type_return_TaskResult()
         {
             var method = factory.CreateFrom(typeof(MethodHost).GetMethod("MethodWithTask"));
@@ -182,7 +181,7 @@ namespace Tests.Caliburn.RoutedUIMessaging
             result.ShouldBeOfType<TaskResult>();
         }
 
-        [WpfFact]
+        [StaFact]
         public async Task methods_with_task_of_T_uses_return_path()
         {
             var method = factory.CreateFrom(typeof(MethodHost).GetMethod("MethodWithTaskOfT"));
@@ -198,7 +197,7 @@ namespace Tests.Caliburn.RoutedUIMessaging
 
             await result.ExecuteAsync(
                 new ResultExecutionContext(
-                    Stub<IServiceLocator>(),
+                    Mock<IServiceLocator>(),
                     new FakeMessage(sourceNode, method, "param1.Text"),
                     handlingNode
                     )
@@ -207,7 +206,7 @@ namespace Tests.Caliburn.RoutedUIMessaging
             host.Param1.Text.ShouldBe("5");
         }
 
-        [WpfFact]
+        [StaFact]
         public void recognizes_this_as_self_reference()
         {
             var method = factory.CreateFrom(typeof(MethodHost).GetMethod("Method"));
@@ -223,7 +222,7 @@ namespace Tests.Caliburn.RoutedUIMessaging
 
             result.Execute(
                 new ResultExecutionContext(
-                    Stub<IServiceLocator>(),
+                    Mock<IServiceLocator>(),
                     new FakeMessage(sourceNode, method, "$this.DataContext"),
                     handlingNode
                     )
@@ -232,7 +231,7 @@ namespace Tests.Caliburn.RoutedUIMessaging
             host.DataContext.ShouldBe(returnValue);
         }
 
-        [WpfFact]
+        [StaFact]
         public void use_return_path()
         {
             var method = factory.CreateFrom(typeof(MethodHost).GetMethod("Method"));
@@ -248,7 +247,7 @@ namespace Tests.Caliburn.RoutedUIMessaging
 
             result.Execute(
                 new ResultExecutionContext(
-                    Stub<IServiceLocator>(),
+                    Mock<IServiceLocator>(),
                     new FakeMessage(sourceNode, method, "param1.Text"),
                     handlingNode
                     )

@@ -8,10 +8,10 @@ namespace Tests.Caliburn.Testability
     using global::Caliburn.Testability;
     using Xunit;
 
-    
+
     public class When_testing_multibindings
     {
-        [WpfFact]
+        [StaFact]
         public void can_detect_bad_multibindings_in_styles()
         {
             var validator = Validator.For<UIWithMultibindingToStyle, Customer>();
@@ -20,7 +20,7 @@ namespace Tests.Caliburn.Testability
             result.Errors.Count().ShouldBe(1);
         }
 
-        [WpfFact]
+        [StaFact]
         public void can_detect_bad_multibindings_in_triggers()
         {
             var validator = Validator.For<UIWithMultibindingStyleAndTriggers, Customer>();
@@ -29,7 +29,7 @@ namespace Tests.Caliburn.Testability
             result.Errors.Count().ShouldBe(1);
         }
 
-        [WpfFact]
+        [StaFact]
         public void can_detect_bad_multibindings_on_elements()
         {
             var validator = Validator.For<SimpleUIWithMultibinding, Customer>();

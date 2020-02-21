@@ -5,9 +5,9 @@ namespace Tests.Caliburn.RoutedUIMessaging
     using global::Caliburn.Core.InversionOfControl;
     using global::Caliburn.PresentationFramework.RoutedMessaging;
     using Xunit;
-    using Rhino.Mocks;
+    using NSubstitute;
 
-    
+
     public class The_availability_effect_converter : TestBase
     {
         AvailabilityEffectConverter converter;
@@ -62,10 +62,10 @@ namespace Tests.Caliburn.RoutedUIMessaging
             IoC.Initialize(container);
 
             var key = "unknown";
-            var effect = Stub<IAvailabilityEffect>();
+            var effect = Mock<IAvailabilityEffect>();
 
-            container.Expect(x => x.GetInstance(null, key))
-                .Return(effect);
+            container.GetInstance(null, key)
+                .Returns(effect);
 
             converter.ConvertFrom(key);
         }

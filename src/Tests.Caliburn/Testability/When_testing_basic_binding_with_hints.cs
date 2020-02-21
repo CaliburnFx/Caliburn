@@ -11,7 +11,7 @@ namespace Tests.Caliburn.Testability
     using global::Caliburn.Testability;
     using Xunit;
 
-    
+
     public class When_testing_basic_binding_with_hints : TestBase
     {
         public class MyUI : UserControl
@@ -47,7 +47,7 @@ namespace Tests.Caliburn.Testability
             }
         }
 
-        [WpfFact]
+        [StaFact]
         public void can_detect_actual_type_of_referenced_object()
         {
             var validator = Validator.For<MyUI, MyPresenter>(new MyUI("Model.MyProperty"))
@@ -58,7 +58,7 @@ namespace Tests.Caliburn.Testability
             result.Errors.Count().ShouldBe(0, result.ErrorSummary);
         }
 
-        [WpfFact]
+        [StaFact]
         public void can_detect_typed_then_untyped()
         {
             var validator = Validator.For<MyUI, MyPresenter>(new MyUI("TypedModel.SubModel.MySubProperty"))
@@ -69,7 +69,7 @@ namespace Tests.Caliburn.Testability
             result.Errors.Count().ShouldBe(0, result.ErrorSummary);
         }
 
-        [WpfFact]
+        [StaFact]
         public void can_detect_untyped_then_typed()
         {
             var validator = Validator.For<MyUI, MyPresenter>(new MyUI("Model.TypedSubModel.MySubProperty"))
@@ -80,7 +80,7 @@ namespace Tests.Caliburn.Testability
             result.Errors.Count().ShouldBe(0, result.ErrorSummary);
         }
 
-        [WpfFact]
+        [StaFact]
         public void can_detect_untyped_then_untyped()
         {
             var validator = Validator.For<MyUI, MyPresenter>(new MyUI("Model.SubModel.MySubProperty"))
@@ -92,7 +92,7 @@ namespace Tests.Caliburn.Testability
             result.Errors.Count().ShouldBe(0, result.ErrorSummary);
         }
 
-        [WpfFact]
+        [StaFact]
         public void can_detect_untyped_then_untyped_in_template()
         {
             var validator = Validator.For<MyUIWithTemplate, MyPresenter>(new MyUIWithTemplate("Model",
@@ -105,7 +105,7 @@ namespace Tests.Caliburn.Testability
             result.Errors.Count().ShouldBe(0, result.ErrorSummary);
         }
 
-        [WpfFact]
+        [StaFact]
         public void cannot_detect_actual_type_if_no_hints_given()
         {
             var validator = Validator.For<MyUI, MyPresenter>(new MyUI("Model.MyProperty"));

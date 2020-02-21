@@ -9,9 +9,9 @@ namespace Tests.Caliburn.Actions.Filters
     using global::Caliburn.PresentationFramework.Filters;
     using global::Caliburn.PresentationFramework.RoutedMessaging;
     using Xunit;
-    using Rhino.Mocks;
+    using NSubstitute;
 
-    
+
     public class The_dependency_filter : TestBase
     {
         IServiceLocator container;
@@ -25,9 +25,9 @@ namespace Tests.Caliburn.Actions.Filters
             container = Mock<IServiceLocator>();
             methodHost = new TheMethodHost();
             handler = Mock<IRoutedMessageHandler>();
-            handler.Stub(x => x.Unwrap()).Return(methodHost);
-            trigger = Stub<IMessageTrigger>();
-            trigger.Message = Stub<IRoutedMessage>();
+            handler.Unwrap().Returns(methodHost);
+            trigger = Mock<IMessageTrigger>();
+            trigger.Message = Mock<IRoutedMessage>();
         }
 
         class TheMethodHost : PropertyChangedBase {}
@@ -38,9 +38,9 @@ namespace Tests.Caliburn.Actions.Filters
             var metadata = new List<object>();
 
             attribute = new DependenciesAttribute("AProperty", "A.Property.Path");
-            handler.Stub(x => x.Metadata).Return(metadata).Repeat.Any();
+            handler.Metadata.Returns(metadata);
             attribute.Initialize(typeof(TheMethodHost), typeof(TheMethodHost), container);
-            handler.Stub(x => x.Unwrap()).Return(methodHost).Repeat.Any();
+            handler.Unwrap().Returns(methodHost);
             attribute.MakeAwareOf(handler);
 
             metadata.FirstOrDefaultOfType<DependencyObserver>().ShouldNotBeNull();

@@ -8,9 +8,9 @@
     using global::Caliburn.PresentationFramework.Filters;
     using global::Caliburn.PresentationFramework.RoutedMessaging;
     using Xunit;
-    using Rhino.Mocks;
+    using NSubstitute;
 
-    
+
     public class Rescue_filter : TestBase
     {
         RescueAttribute attribute;
@@ -23,8 +23,8 @@
             methodFactory = Mock<IMethodFactory>();
             info = typeof(MethodHost).GetMethod("Rescue");
             attribute = new RescueAttribute("Rescue");
-            container = Stub<IServiceLocator>();
-            container.Stub(x => x.GetInstance(typeof(IMethodFactory), null)).Return(methodFactory).Repeat.Any();
+            container = Mock<IServiceLocator>();
+            container.GetInstance(typeof(IMethodFactory), null).Returns(methodFactory);
         }
 
         internal class MethodHost
@@ -32,11 +32,11 @@
             public void Rescue(Exception ex) {}
         }
 
-        [WpfFact]
+        [StaFact]
         public void can_handle_an_exception()
         {
             var method = Mock<IMethod>();
-            method.Stub(x => x.Info).Return(info);
+            method.Info.Returns(info);
 
             var target = new MethodHost();
             var exception = new Exception();
@@ -48,17 +48,17 @@
 
             handlingNode.RegisterHandler(Mock<IRoutedMessageHandler>());
 
-            handlingNode.MessageHandler.Stub(x => x.Unwrap())
-                .Return(target);
+            handlingNode.MessageHandler.Unwrap()
+                .Returns(target);
 
-            methodFactory.Expect(x => x.CreateFrom(info))
-                .Return(method);
+            methodFactory.CreateFrom(info)
+                .Returns(method);
 
             attribute.Initialize(typeof(MethodHost), null, container);
 
             attribute.Handle(null, handlingNode, exception);
 
-            method.AssertWasCalled(x => x.Invoke(target, exception));
+            method.Received().Invoke(target, exception);
         }
 
         [Fact]
@@ -66,7 +66,7 @@
         {
             attribute.Initialize(typeof(MethodHost), null, container);
 
-            methodFactory.AssertWasCalled(x => x.CreateFrom(info));
+            methodFactory.Received().CreateFrom(info);
         }
     }
 }

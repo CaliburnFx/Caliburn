@@ -6,10 +6,6 @@
     using System.Windows.Markup;
     using System.Windows.Media.Imaging;
 
-#if SILVERLIGHT
-    using System.Windows.Documents;
-#endif
-
     /// <summary>
     /// Extensions methods related to resources.
     /// </summary>
@@ -19,7 +15,7 @@
 
         internal static Func<string, string> DetermineIconPath =
             displayName => "Resources/Icons/" + displayName.Replace(" ", string.Empty) + ".png";
-        
+
         /// <summary>
         /// Gets the name of the assembly.
         /// </summary>
@@ -58,14 +54,10 @@
             {
                 var bmp = new BitmapImage();
 
-#if SILVERLIGHT
-                bmp.SetSource(stream);
-#else
                 bmp.BeginInit();
                 bmp.StreamSource = stream;
                 bmp.EndInit();
                 bmp.Freeze();
-#endif
 
                 return bmp;
             }
@@ -111,39 +103,6 @@
             return resourceManager.GetString(relativeUri, DefaultResourceAssembly.GetAssemblyName());
         }
 
-#if SILVERLIGHT
-
-        /// <summary>
-        /// Gets the font source resource.
-        /// </summary>
-        /// <param name="resourceManager">The resource manager.</param>
-        /// <param name="relativeUri">The relative URI.</param>
-        /// <param name="assemblyName">Name of the assembly.</param>
-        /// <returns>The FontSource, or null if not found.</returns>
-        public static FontSource GetFontSource(this IResourceManager resourceManager, string relativeUri, string assemblyName)
-        {
-            var stream = resourceManager.GetStream(relativeUri, assemblyName);
-            if (stream == null) return null;
-
-            using (stream)
-            {
-                return new FontSource(stream);
-            }
-        }
-
-        /// <summary>
-        /// Gets the font source resource from the default resource assembly.
-        /// </summary>
-        /// <param name="resourceManager">The resource manager.</param>
-        /// <param name="relativeUri">The relative URI.</param>
-        /// <returns></returns>
-        public static FontSource GetFontSource(this IResourceManager resourceManager, string relativeUri)
-        {
-            return resourceManager.GetFontSource(relativeUri, DefaultResourceAssembly.GetAssemblyName());
-        }
-
-#endif
-
         /// <summary>
         /// Gets the xaml object resource.
         /// </summary>
@@ -153,12 +112,6 @@
         /// <returns>The xaml object, or null if not found.</returns>
         public static object GetXamlObject(this IResourceManager resourceManager, string relativeUri, string assemblyName)
         {
-#if SILVERLIGHT
-            string str = resourceManager.GetString(relativeUri, assemblyName);
-            if(string.IsNullOrEmpty(str)) return null;
-
-            return XamlReader.Load(str);
-#else
             var stream = resourceManager.GetStream(relativeUri, assemblyName);
             if (stream == null) return null;
 
@@ -166,7 +119,6 @@
             {
                 return XamlReader.Load(stream);
             }
-#endif
         }
 
         /// <summary>

@@ -13,9 +13,9 @@ namespace Tests.Caliburn.Actions.Filters
     using global::Caliburn.PresentationFramework.Filters;
     using global::Caliburn.PresentationFramework.RoutedMessaging;
     using Xunit;
-    using Rhino.Mocks;
+    using NSubstitute;
 
-    
+
     public class The_preview_filter : TestBase
     {
         PreviewAttribute attribute;
@@ -29,30 +29,30 @@ namespace Tests.Caliburn.Actions.Filters
             methodFactory = Mock<IMethodFactory>();
             info = typeof(MethodHost).GetMethod("Preview");
             attribute = new PreviewAttribute("Preview");
-            container = Stub<IServiceLocator>();
-            container.Stub(x => x.GetInstance(typeof(IMethodFactory), null)).Return(methodFactory).Repeat.Any();
+            container = Mock<IServiceLocator>();
+            container.GetInstance(typeof(IMethodFactory), null).Returns(methodFactory);
 
             routedMessageHandler = Mock<IRoutedMessageHandler>();
             var metadata = new List<object>();
-            routedMessageHandler.Stub(x => x.Metadata).Return(metadata).Repeat.Any();
+            routedMessageHandler.Metadata.Returns(metadata);
         }
 
         public void SetupForMakeAwareOf(string memberName, MethodInfo info, object handler)
         {
             var method = Mock<IMethod>();
-            method.Stub(x => x.Info).Return(info).Repeat.Any();
-            methodFactory.Expect(x => x.CreateFrom(info)).Return(method);
+            method.Info.Returns(info);
+            methodFactory.CreateFrom(info).Returns(method);
 
             var attribute = new PreviewAttribute(memberName);
             attribute.Initialize(handler.GetType(), info, container);
 
             if(routedMessageHandler.Unwrap() == null) //prevents double configuration
-                routedMessageHandler.Stub(x => x.Unwrap()).Return(handler).Repeat.Any();
+                routedMessageHandler.Unwrap().Returns(handler);
 
             var message = Mock<IRoutedMessage>();
-            message.Stub(x => x.RelatesTo(info)).Return(true);
+            message.RelatesTo(info).Returns(true);
             var messageTrigger = Mock<IMessageTrigger>();
-            messageTrigger.Stub(x => x.Message).Return(message).Repeat.Any();
+            messageTrigger.Message.Returns(message);
             attribute.MakeAwareOf(routedMessageHandler);
             attribute.MakeAwareOf(routedMessageHandler, messageTrigger);
         }
@@ -133,15 +133,15 @@ namespace Tests.Caliburn.Actions.Filters
             routedMessageHandler.Metadata.FirstOrDefaultOfType<EventMonitor>().ShouldBeNull();
         }
 
-        [WpfFact]
+        [StaFact]
         public void can_execute_a_preview()
         {
             var method = Mock<IMethod>();
             var target = new MethodHost();
             var parameter = new object();
 
-            methodFactory.Expect(x => x.CreateFrom(info))
-                .Return(method);
+            methodFactory.CreateFrom(info)
+                .Returns(method);
 
             var handlingNode = new InteractionNode(
                 new ControlHost(),
@@ -150,25 +150,25 @@ namespace Tests.Caliburn.Actions.Filters
 
             handlingNode.RegisterHandler(Mock<IRoutedMessageHandler>());
 
-            handlingNode.MessageHandler.Stub(x => x.Unwrap())
-                .Return(target);
+            handlingNode.MessageHandler.Unwrap()
+                .Returns(target);
 
             attribute.Initialize(typeof(MethodHost), null, container);
 
-            method.Stub(x => x.Info).Return(info);
+            method.Info.Returns(info);
 
             attribute.Execute(null, handlingNode, new[] {
                 parameter
             });
 
-            method.AssertWasCalled(x => x.Invoke(target, parameter));
+            method.Received().Invoke(target, parameter);
         }
 
         [Fact]
         public void initializes_its_method()
         {
             attribute.Initialize(typeof(MethodHost), null, container);
-            methodFactory.AssertWasCalled(x => x.CreateFrom(info));
+            methodFactory.Received().CreateFrom(info);
         }
     }
 }

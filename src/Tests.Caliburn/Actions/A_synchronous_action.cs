@@ -9,9 +9,9 @@ namespace Tests.Caliburn.Actions
     using global::Caliburn.PresentationFramework.Filters;
     using global::Caliburn.PresentationFramework.RoutedMessaging;
     using Xunit;
-    using Rhino.Mocks;
+    using NSubstitute;
 
-    
+
     public class A_synchronous_action : TestBase
     {
         SynchronousAction action;
@@ -22,13 +22,13 @@ namespace Tests.Caliburn.Actions
         protected override void given_the_context_of()
         {
             method = Mock<IMethod>();
-            method.Stub(x => x.Info).Return(typeof(object).GetMethod("ToString")).Repeat.Any();
+            method.Info.Returns(typeof(object).GetMethod("ToString"));
 
             messageBinder = Mock<IMessageBinder>();
-            filterManager = Stub<IFilterManager>();
+            filterManager = Mock<IFilterManager>();
 
             action = new SynchronousAction(
-                Stub<IServiceLocator>(),
+                Mock<IServiceLocator>(),
                 method,
                 messageBinder,
                 filterManager,
@@ -39,8 +39,8 @@ namespace Tests.Caliburn.Actions
         [Fact]
         public void alters_return_with_post_execute_filters()
         {
-            var handlingNode = Stub<IInteractionNode>();
-            var sourceNode = Stub<IInteractionNode>();
+            var handlingNode = Mock<IInteractionNode>();
+            var sourceNode = Mock<IInteractionNode>();
             var result = Mock<IResult>();
 
             var message = new ActionMessage();
@@ -51,38 +51,36 @@ namespace Tests.Caliburn.Actions
                 5, "param"
             };
             var returnValue = new object();
-            var filter = MockRepository.GenerateMock<IPostProcessor>();
+            var filter = Mock<IPostProcessor>();
             var context = EventArgs.Empty;
 
-            var handler = Stub<IRoutedMessageHandler>();
-            handler.Stub(x => x.Unwrap()).Return(new object());
-            handlingNode.Stub(x => x.MessageHandler).Return(handler);
+            var handler = Mock<IRoutedMessageHandler>();
+            handler.Unwrap().Returns(new object());
+            handlingNode.MessageHandler.Returns(handler);
 
-            messageBinder.Expect(x => x.DetermineParameters(message, null, handlingNode, context))
-                .Return(parameters);
+            messageBinder.DetermineParameters(message, null, handlingNode, context)
+                .Returns(parameters);
 
-            filterManager.Stub(x => x.PreProcessors)
-                .Return(new IPreProcessor[] {});
+            filterManager.PreProcessors
+                .Returns(new IPreProcessor[] {});
 
-            method.Expect(x => x.Invoke(target, parameters))
-                .Return(returnValue);
+            method.Invoke(target, parameters)
+                .Returns(returnValue);
 
-            filterManager.Stub(x => x.PostProcessors)
-                .Return(new[] {
+            filterManager.PostProcessors
+                .Returns(new[] {
                     filter
                 });
 
             var outcome = new MessageProcessingOutcome(returnValue, returnValue.GetType(), false);
 
-            filter.Expect(x => x.Execute(message, handlingNode, outcome));
-
-            messageBinder.Expect(x => x.CreateResult(outcome))
-                .IgnoreArguments()
-                .Return(result);
-
-            result.Expect(x => x.Execute(null)).IgnoreArguments();
+            messageBinder.CreateResult(outcome)
+                .ReturnsForAnyArgs(result);
 
             action.Execute(message, handlingNode, context);
+            filter.Received().Execute(message, handlingNode,
+                Arg.Is<MessageProcessingOutcome>(x => !ReferenceEquals(x, outcome)));
+            result.ReceivedWithAnyArgs().Execute(null);
         }
 
         [Fact]
@@ -90,8 +88,8 @@ namespace Tests.Caliburn.Actions
         {
             var filter1 = Mock<IPreProcessor>();
             var filter2 = Mock<IPreProcessor>();
-            var handlingNode = Stub<IInteractionNode>();
-            var sourceNode = Stub<IInteractionNode>();
+            var handlingNode = Mock<IInteractionNode>();
+            var sourceNode = Mock<IInteractionNode>();
 
             var message = new ActionMessage();
             message.Initialize(sourceNode);
@@ -101,19 +99,19 @@ namespace Tests.Caliburn.Actions
                 5, "param"
             };
 
-            messageBinder.Expect(x => x.DetermineParameters(message, null, handlingNode, null))
-                .Return(parameters);
+            messageBinder.DetermineParameters(message, null, handlingNode, null)
+                .Returns(parameters);
 
-            filterManager.Stub(x => x.TriggerEffects)
-                .Return(new[] {
+            filterManager.TriggerEffects
+                .Returns(new[] {
                     filter1, filter2
-                }).Repeat.Any();
+                });
 
-            filter1.Expect(x => x.Execute(message, handlingNode, parameters))
-                .Return(false);
+            filter1.Execute(message, handlingNode, parameters)
+                .Returns(false);
 
-            filter2.Expect(x => x.Execute(message, handlingNode, parameters))
-                .Return(true);
+            filter2.Execute(message, handlingNode, parameters)
+                .Returns(true);
 
             var result = action.ShouldTriggerBeAvailable(message, handlingNode);
 
@@ -124,28 +122,26 @@ namespace Tests.Caliburn.Actions
         public void can_determine_positive_trigger_effect()
         {
             var filter = Mock<IPreProcessor>();
-            var handlingNode = Stub<IInteractionNode>();
-            var sourceNode = Stub<IInteractionNode>();
+            var handlingNode = Mock<IInteractionNode>();
+            var sourceNode = Mock<IInteractionNode>();
 
             var message = new ActionMessage();
             message.Initialize(sourceNode);
 
-            var target = new object();
             var parameters = new object[] {
                 5, "param"
             };
 
-            messageBinder.Expect(x => x.DetermineParameters(message, null, handlingNode, null))
-                .Return(parameters);
+            messageBinder.DetermineParameters(message, null, handlingNode, null)
+                .Returns(parameters);
 
-            filterManager.Stub(x => x.TriggerEffects)
-                .Return(new[] {
+            filterManager.TriggerEffects
+                .Returns(new[] {
                     filter
-                }).Repeat.Any();
+                });
 
-            filter.Expect(x => x.Execute(message, handlingNode, parameters))
-                .IgnoreArguments()
-                .Return(true);
+            filter.Execute(message, handlingNode, parameters)
+                .ReturnsForAnyArgs(true);
 
             var result = action.ShouldTriggerBeAvailable(message, handlingNode);
 
@@ -155,8 +151,8 @@ namespace Tests.Caliburn.Actions
         [Fact]
         public void can_execute()
         {
-            var handlingNode = Stub<IInteractionNode>();
-            var sourceNode = Stub<IInteractionNode>();
+            var handlingNode = Mock<IInteractionNode>();
+            var sourceNode = Mock<IInteractionNode>();
             var result = Mock<IResult>();
 
             var message = new ActionMessage();
@@ -169,38 +165,38 @@ namespace Tests.Caliburn.Actions
             var returnValue = new object();
             var context = EventArgs.Empty;
 
-            var handler = Stub<IRoutedMessageHandler>();
-            handler.Stub(x => x.Unwrap()).Return(new object());
-            handlingNode.Stub(x => x.MessageHandler).Return(handler);
+            var handler = Mock<IRoutedMessageHandler>();
+            handler.Unwrap().Returns(new object());
+            handlingNode.MessageHandler.Returns(handler);
 
-            messageBinder.Expect(x => x.DetermineParameters(message, null, handlingNode, context))
-                .Return(parameters);
+            messageBinder.DetermineParameters(message, null, handlingNode, context)
+                .Returns(parameters);
 
-            filterManager.Stub(x => x.PreProcessors)
-                .Return(new IPreProcessor[] {});
+            filterManager.PreProcessors
+                .Returns(new IPreProcessor[] {});
 
-            method.Expect(x => x.Invoke(target, parameters))
-                .Return(returnValue);
+            method.Invoke(target, parameters)
+                .Returns(returnValue);
 
-            filterManager.Stub(x => x.PostProcessors)
-                .Return(new IPostProcessor[] {});
+            filterManager.PostProcessors
+                .Returns(new IPostProcessor[] {});
 
-            messageBinder.Expect(x => x.CreateResult(new MessageProcessingOutcome(
+            messageBinder.CreateResult(new MessageProcessingOutcome(
                 null,
                 method.Info.ReturnType,
                 false
-                ))).IgnoreArguments().Return(result);
-
-            result.Expect(x => x.Execute(null)).IgnoreArguments();
+                )).ReturnsForAnyArgs(result);
 
             action.Execute(message, handlingNode, context);
+
+            result.ReceivedWithAnyArgs().Execute(null);
         }
 
         [Fact]
         public void can_throw_exception_on_execute()
         {
-            var handlingNode = Stub<IInteractionNode>();
-            var sourceNode = Stub<IInteractionNode>();
+            var handlingNode = Mock<IInteractionNode>();
+            var sourceNode = Mock<IInteractionNode>();
 
             var message = new ActionMessage();
             message.Initialize(sourceNode);
@@ -212,30 +208,30 @@ namespace Tests.Caliburn.Actions
             var returnValue = new object();
             var context = EventArgs.Empty;
 
-            var handler = Stub<IRoutedMessageHandler>();
-            handler.Stub(x => x.Unwrap()).Return(new object());
-            handlingNode.Stub(x => x.MessageHandler).Return(handler);
+            var handler = Mock<IRoutedMessageHandler>();
+            handler.Unwrap().Returns(new object());
+            handlingNode.MessageHandler.Returns(handler);
 
-            messageBinder.Expect(x => x.DetermineParameters(message, null, handlingNode, context))
-                .Return(parameters);
+            messageBinder.DetermineParameters(message, null, handlingNode, context)
+                .Returns(parameters);
 
-            filterManager.Stub(x => x.PreProcessors)
-                .Return(new IPreProcessor[] {});
+            filterManager.PreProcessors
+                .Returns(new IPreProcessor[] {});
 
-            method.Expect(x => x.Invoke(target, parameters))
-                .Return(returnValue);
+            method.Invoke(target, parameters)
+                .Returns(returnValue);
 
-            filterManager.Stub(x => x.PostProcessors)
-                .Return(new IPostProcessor[] {});
+            filterManager.PostProcessors
+                .Returns(new IPostProcessor[] {});
 
-            filterManager.Stub(x => x.Rescues)
-                .Return(new IRescue[] {});
+            filterManager.Rescues
+                .Returns(new IRescue[] {});
 
-            messageBinder.Expect(x => x.CreateResult(new MessageProcessingOutcome(
+            messageBinder.CreateResult(new MessageProcessingOutcome(
                 null,
                 method.Info.ReturnType,
                 false
-                ))).IgnoreArguments().Throw(new InvalidOperationException("test exception"));
+                )).ReturnsForAnyArgs(x => throw new InvalidOperationException("test exception"));
 
             try
             {
@@ -243,7 +239,7 @@ namespace Tests.Caliburn.Actions
             }
             catch(InvalidOperationException inex)
             {
-                inex.StackTrace.Contains("Rhino.Mocks.Expectations.AbstractExpectation.ReturnOrThrow").ShouldBeTrue();
+                inex.StackTrace.Contains(" NSubstitute.Core.ReturnValueFromFunc").ShouldBeTrue();
                 return;
             }
 
@@ -253,8 +249,8 @@ namespace Tests.Caliburn.Actions
         [Fact]
         public void reports_has_trigger_affects_if_has_trigger_affecting_filters()
         {
-            filterManager.Stub(x => x.TriggerEffects).Return(new[] {
-                Stub<IPreProcessor>()
+            filterManager.TriggerEffects.Returns(new[] {
+                Mock<IPreProcessor>()
             });
 
             var result = action.HasTriggerEffects();
@@ -265,7 +261,7 @@ namespace Tests.Caliburn.Actions
         [Fact]
         public void reports_not_having_trigger_affects_if_no_trigger_affecting_filters()
         {
-            filterManager.Stub(x => x.TriggerEffects).Return(new IPreProcessor[] {});
+            filterManager.TriggerEffects.Returns(new IPreProcessor[] {});
 
             var result = action.HasTriggerEffects();
 
@@ -277,9 +273,9 @@ namespace Tests.Caliburn.Actions
         {
             var filter1 = Mock<IPreProcessor>();
             var filter2 = Mock<IPreProcessor>();
-            var handlingNode = Stub<IInteractionNode>();
+            var handlingNode = Mock<IInteractionNode>();
 
-            var sourceNode = Stub<IInteractionNode>();
+            var sourceNode = Mock<IInteractionNode>();
 
             var message = new ActionMessage();
             message.Initialize(sourceNode);
@@ -290,19 +286,19 @@ namespace Tests.Caliburn.Actions
             };
             var context = EventArgs.Empty;
 
-            messageBinder.Expect(x => x.DetermineParameters(message, null, handlingNode, context))
-                .Return(parameters);
+            messageBinder.DetermineParameters(message, null, handlingNode, context)
+                .Returns(parameters);
 
-            filterManager.Stub(x => x.PreProcessors)
-                .Return(new[] {
+            filterManager.PreProcessors
+                .Returns(new[] {
                     filter1, filter2
                 });
 
-            filter1.Expect(x => x.Execute(message, handlingNode, parameters))
-                .Return(false);
+            filter1.Execute(message, handlingNode, parameters)
+                .Returns(false);
 
-            filter2.Expect(x => x.Execute(message, handlingNode, parameters))
-                .Return(true);
+            filter2.Execute(message, handlingNode, parameters)
+                .Returns(true);
 
             action.Execute(message, handlingNode, context);
         }

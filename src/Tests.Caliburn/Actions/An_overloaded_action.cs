@@ -11,7 +11,7 @@ namespace Tests.Caliburn.Actions
     using global::Caliburn.PresentationFramework.RoutedMessaging;
     using Xunit;
 
-    
+
     public class An_overloaded_action : TestBase
     {
         OverloadedAction action;
@@ -30,10 +30,10 @@ namespace Tests.Caliburn.Actions
             {
                 action.AddOverload(
                     new SynchronousAction(
-                        Stub<IServiceLocator>(),
+                        Mock<IServiceLocator>(),
                         methodFactory.CreateFrom(info),
-                        Stub<IMessageBinder>(),
-                        Stub<IFilterManager>(),
+                        Mock<IMessageBinder>(),
+                        Mock<IFilterManager>(),
                         false
                         )
                     );

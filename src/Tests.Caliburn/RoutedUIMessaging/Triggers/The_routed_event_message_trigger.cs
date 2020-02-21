@@ -10,9 +10,9 @@ namespace Tests.Caliburn.RoutedUIMessaging.Triggers
     using global::Caliburn.PresentationFramework.RoutedMessaging;
     using global::Caliburn.PresentationFramework.RoutedMessaging.Triggers;
     using Xunit;
-    using Rhino.Mocks;
+    using NSubstitute;
 
-    
+
     public class The_routed_event_message_trigger : TestBase
     {
         IInteractionNode node;
@@ -36,8 +36,7 @@ namespace Tests.Caliburn.RoutedUIMessaging.Triggers
                 RoutedEvent = FakeElement.RoutedEvent
             };
 
-            node.Expect(x => x.UIElement).Return(element);
-
+            node.UIElement.Returns(element);
 
             trigger.Attach(node);
 
@@ -55,11 +54,12 @@ namespace Tests.Caliburn.RoutedUIMessaging.Triggers
                     RoutedEvent = FakeElement.RoutedEvent
                 };
 
-                node.Expect(x => x.UIElement).Return(new DependencyObject()).Repeat.Twice();
-
+                node.UIElement.Returns(new DependencyObject());
 
                 trigger.Attach(node);
             });
+            var uiElement = node.Received(2).UIElement;
+            uiElement.ShouldBeNull();
         }
 
         [Fact]
@@ -73,12 +73,12 @@ namespace Tests.Caliburn.RoutedUIMessaging.Triggers
 
             var args = new RoutedEventArgs(FakeElement.RoutedEvent, element);
 
-            node.Expect(x => x.UIElement).Return(element);
-            node.Expect(x => x.ProcessMessage(Arg<IRoutedMessage>.Is.Equal(message), Arg<EventArgs>.Is.Equal(args)));
-
+            node.UIElement.Returns(element);
 
             trigger.Attach(node);
             element.RaiseEvent(args);
+            node.Received().ProcessMessage(Arg.Is<IRoutedMessage>(x => x ==message),
+                Arg.Is<EventArgs>(x => x == args));
         }
 
         [Fact]
@@ -90,14 +90,13 @@ namespace Tests.Caliburn.RoutedUIMessaging.Triggers
                 RoutedEvent = FakeElement.RoutedEvent
             };
 
-            node.Expect(x => x.UIElement).Return(element);
+            node.UIElement.Returns(element);
 
-            node.Expect(x => x.UIElement).Return(element);
-            message.AvailabilityEffect.Expect(x => x.ApplyTo(element, false));
-
+            node.UIElement.Returns(element);
 
             trigger.Attach(node);
             trigger.UpdateAvailabilty(false);
+            message.AvailabilityEffect.Received().ApplyTo(element, false);
         }
     }
 }

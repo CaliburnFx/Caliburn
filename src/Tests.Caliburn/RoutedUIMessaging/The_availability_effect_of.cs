@@ -7,7 +7,7 @@ namespace Tests.Caliburn.RoutedUIMessaging
     using global::Caliburn.PresentationFramework.RoutedMessaging;
     using Xunit;
 
-    
+
     public class The_availability_effect_of : TestBase
     {
         FakeElement element;
@@ -17,7 +17,7 @@ namespace Tests.Caliburn.RoutedUIMessaging
             element = new FakeElement();
         }
 
-        [WpfFact]
+        [StaFact]
         public void disable_can_disable_an_element_if_not_available()
         {
             element.IsEnabled = true;
@@ -27,7 +27,7 @@ namespace Tests.Caliburn.RoutedUIMessaging
             element.IsEnabled.ShouldBeFalse();
         }
 
-        [WpfFact]
+        [StaFact]
         public void disable_can_enable_an_element_if_available()
         {
             element.IsEnabled = false;

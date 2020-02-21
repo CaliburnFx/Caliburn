@@ -10,7 +10,7 @@ namespace Tests.Caliburn.PresentationFramework
     using Fakes.Model;
     using Xunit;
 
-    
+
     public class The_DefaultViewLocator : TestBase
     {
         TestFriendlyDefaultViewLocator defaultViewLocator;
@@ -19,8 +19,8 @@ namespace Tests.Caliburn.PresentationFramework
         {
             base.given_the_context_of();
             defaultViewLocator = new TestFriendlyDefaultViewLocator(
-                Stub<IAssemblySource>(),
-                Stub<IServiceLocator>()
+                Mock<IAssemblySource>(),
+                Mock<IServiceLocator>()
                 );
         }
 

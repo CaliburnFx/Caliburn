@@ -7,9 +7,9 @@ namespace Tests.Caliburn.RoutedUIMessaging.Parsers
     using global::Caliburn.PresentationFramework.Conventions;
     using global::Caliburn.PresentationFramework.RoutedMessaging;
     using Xunit;
-    using Rhino.Mocks;
+    using NSubstitute;
 
-    
+
     public class The_action_message_parser : TestBase
     {
         ActionMessageParser parser;
@@ -17,11 +17,11 @@ namespace Tests.Caliburn.RoutedUIMessaging.Parsers
         protected override void given_the_context_of()
         {
             parser = new ActionMessageParser(
-                MockRepository.GenerateStub<IConventionManager>(),
-                MockRepository.GenerateStub<IMessageBinder>()
+                Mock<IConventionManager>(),
+                Mock<IMessageBinder>()
                 );
 
-            var container = Stub<IServiceLocator>();
+            var container = Mock<IServiceLocator>();
             IoC.Initialize(container);
         }
 

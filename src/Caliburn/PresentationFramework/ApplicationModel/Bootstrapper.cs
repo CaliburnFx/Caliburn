@@ -11,12 +11,6 @@
     using Core.Configuration;
     using Core.InversionOfControl;
 
-#if SILVERLIGHT
-    using Screens;
-    using ViewModels;
-    using Views;
-#endif
-
     /// <summary>
     /// Instantiate this class in order to configure the framework.
     /// </summary>
@@ -79,11 +73,7 @@
         protected virtual void PrepareApplication()
         {
             Application.Startup += OnStartup;
-#if SILVERLIGHT
-            Application.UnhandledException += OnUnhandledException;
-#else
             Application.DispatcherUnhandledException += OnUnhandledException;
-#endif
             Application.Exit += OnExit;
         }
 
@@ -120,11 +110,7 @@
         /// <returns>A list of assemblies to inspect.</returns>
         protected virtual IEnumerable<Assembly> SelectAssemblies()
         {
-#if SILVERLIGHT
-            return new[] { Application.Current.GetType().Assembly };
-#else
             return new[] { Assembly.GetEntryAssembly() };
-#endif
         }
 
         /// <summary>
@@ -160,21 +146,12 @@
         /// </summary>
         protected virtual void DisplayRootView() {}
 
-#if SILVERLIGHT
-    /// <summary>
-    /// Override this to add custom behavior for unhandled exceptions.
-    /// </summary>
-    /// <param name="sender">The sender.</param>
-    /// <param name="e">The event args.</param>
-        protected virtual void OnUnhandledException(object sender, ApplicationUnhandledExceptionEventArgs e) {}
-#else
         /// <summary>
         /// Override this to add custom behavior for unhandled exceptions.
         /// </summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The event args.</param>
         protected virtual void OnUnhandledException(object sender, DispatcherUnhandledExceptionEventArgs e) {}
-#endif
     }
 
     /// <summary>
@@ -189,23 +166,8 @@
         protected override void DisplayRootView()
         {
             var viewModel = Container.GetInstance<TRootModel>();
-#if SILVERLIGHT
-            var locator = Container.GetInstance<IViewLocator>();
-            var view = locator.LocateForModel(viewModel, null, null);
-            
-            var binder = Container.GetInstance<IViewModelBinder>();
-            binder.Bind(viewModel, view, null);
-
-            var activator = viewModel as IActivate;
-            if (activator != null)
-                activator.Activate();
-
-            Mouse.Initialize((UIElement)view);
-            Application.RootVisual = (UIElement)view;
-#else
             Container.GetInstance<IWindowManager>()
                 .ShowWindow(viewModel);
-#endif
         }
     }
 }

@@ -15,7 +15,7 @@
         static IServiceLocator serviceLocator;
 
         /// <summary>
-        /// A property definition representing the target of an <see cref="ActionMessage"/>.  
+        /// A property definition representing the target of an <see cref="ActionMessage"/>.
         /// The DataContext of the element will be set to this instance.
         /// </summary>
         public static readonly DependencyProperty TargetProperty =
@@ -27,7 +27,7 @@
                 );
 
         /// <summary>
-        /// A property definition representing the target of an <see cref="ActionMessage"/>.  
+        /// A property definition representing the target of an <see cref="ActionMessage"/>.
         /// The DataContext of the element is not set to this instance.
         /// </summary>
         public static readonly DependencyProperty TargetWithoutContextProperty =
@@ -110,13 +110,6 @@
             if(e.NewValue != e.OldValue && e.NewValue != null)
             {
                 var target = e.NewValue;
-
-#if SILVERLIGHT
-                var containerKey = e.NewValue as string;
-
-                if(containerKey != null)
-                    target = serviceLocator.GetInstance(null, containerKey);
-#endif
 
                 var handler = new ActionMessageHandler(
                     viewModelDescriptionFactory.Create(target.GetType()),

@@ -8,9 +8,9 @@ namespace Tests.Caliburn.RoutedUIMessaging.Triggers
     using global::Caliburn.PresentationFramework.RoutedMessaging;
     using global::Caliburn.PresentationFramework.RoutedMessaging.Triggers;
     using Xunit;
-    using Rhino.Mocks;
+    using NSubstitute;
 
-    
+
     public class The_event_message_trigger : TestBase
     {
         IInteractionNode node;
@@ -34,7 +34,7 @@ namespace Tests.Caliburn.RoutedUIMessaging.Triggers
                 EventName = FakeElement.EventName
             };
 
-            node.Expect(x => x.UIElement).Return(element).Repeat.Any();
+            node.UIElement.Returns(element);
 
             trigger.Attach(node);
 
@@ -52,12 +52,12 @@ namespace Tests.Caliburn.RoutedUIMessaging.Triggers
                 EventName = FakeElement.EventName
             };
 
-            node.Expect(x => x.UIElement).Return(element).Repeat.Any();
-            node.Expect(x => x.ProcessMessage(Arg<IRoutedMessage>.Is.Equal(message), Arg<EventArgs>.Is.TypeOf));
-
+            node.UIElement.Returns(element);
 
             trigger.Attach(node);
             element.RaiseClick();
+            node.Received().ProcessMessage(Arg.Is<IRoutedMessage>(x => x == message),
+                Arg.Any<EventArgs>());
         }
 
         [Fact]
@@ -69,14 +69,14 @@ namespace Tests.Caliburn.RoutedUIMessaging.Triggers
                 EventName = FakeElement.EventName
             };
 
-            node.Expect(x => x.UIElement).Return(element);
+            node.UIElement.Returns(element);
 
-            node.Expect(x => x.UIElement).Return(element);
-            message.AvailabilityEffect.Expect(x => x.ApplyTo(element, false));
+            node.UIElement.Returns(element);
 
 
             trigger.Attach(node);
             trigger.UpdateAvailabilty(false);
+            message.AvailabilityEffect.Received().ApplyTo(element, false);
         }
     }
 }

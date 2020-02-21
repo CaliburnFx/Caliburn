@@ -12,9 +12,9 @@ namespace Tests.Caliburn.RoutedUIMessaging
     using global::Caliburn.PresentationFramework.Conventions;
     using global::Caliburn.PresentationFramework.RoutedMessaging;
     using Xunit;
-    using Rhino.Mocks;
+    using NSubstitute;
 
-    
+
     public class When_determining_method_parameters : TestBase
     {
         DefaultMessageBinder binder;
@@ -26,11 +26,11 @@ namespace Tests.Caliburn.RoutedUIMessaging
         {
             conventionManager = Mock<IConventionManager>();
             binder = new DefaultMessageBinder(conventionManager);
-            handlingNode = Stub<IInteractionNode>();
-            sourceNode = Stub<IInteractionNode>();
+            handlingNode = Mock<IInteractionNode>();
+            sourceNode = Mock<IInteractionNode>();
         }
 
-        [WpfFact]
+        [StaFact]
         public void methods_with_no_parameters_should_yield_an_empty_array()
         {
             var result = binder.DetermineParameters(
@@ -40,7 +40,7 @@ namespace Tests.Caliburn.RoutedUIMessaging
             result.Length.ShouldBe(0);
         }
 
-        [WpfFact]
+        [StaFact]
         public void methods_with_parameters_equal_to_those_provided_should_yield_provided()
         {
             const string param1 = "a string";
@@ -72,7 +72,7 @@ namespace Tests.Caliburn.RoutedUIMessaging
             result.Contains(param2).ShouldBeTrue();
         }
 
-        [WpfFact]
+        [StaFact]
         public void parameters_should_be_coerced_to_the_proper_type()
         {
             const int param1 = 56;
@@ -104,7 +104,7 @@ namespace Tests.Caliburn.RoutedUIMessaging
             result.Contains(Convert.ToInt32(param2)).ShouldBeTrue();
         }
 
-        [WpfFact]
+        [StaFact]
         public void should_resolve_special_parameter_eventArgs()
         {
             const string param1 = "$eventArgs";
@@ -133,7 +133,7 @@ namespace Tests.Caliburn.RoutedUIMessaging
             result.Contains(context).ShouldBeTrue();
         }
 
-        [WpfFact]
+        [StaFact]
         public void should_resolve_special_parameter_parameter()
         {
             const string param1 = "$parameter";
@@ -162,7 +162,7 @@ namespace Tests.Caliburn.RoutedUIMessaging
             result.Contains(context).ShouldBeTrue();
         }
 
-        [WpfFact]
+        [StaFact]
         public void should_resolve_special_parameter_source()
         {
             const string param1 = "$source";
@@ -176,7 +176,7 @@ namespace Tests.Caliburn.RoutedUIMessaging
                 }
             };
 
-            sourceNode.Stub(x => x.UIElement).Return(source);
+            sourceNode.UIElement.Returns(source);
             message.Initialize(sourceNode);
 
             var requirements = new List<RequiredParameter>
@@ -192,7 +192,7 @@ namespace Tests.Caliburn.RoutedUIMessaging
             result.Contains(source).ShouldBeTrue();
         }
 
-        [WpfFact]
+        [StaFact]
         public void should_resolve_special_parameter_dataContext()
         {
             const string param1 = "$dataContext";
@@ -206,7 +206,7 @@ namespace Tests.Caliburn.RoutedUIMessaging
                 }
             };
 
-            sourceNode.Stub(x => x.UIElement).Return(source);
+            sourceNode.UIElement.Returns(source);
             message.Initialize(sourceNode);
 
             var requirements = new List<RequiredParameter>
@@ -222,16 +222,16 @@ namespace Tests.Caliburn.RoutedUIMessaging
             result.Contains(source.DataContext).ShouldBeTrue();
         }
 
-        [WpfFact]
+        [StaFact]
         public void should_resolve_special_parameter_value()
         {
             const string param1 = "$value";
             var source = new TextBox { Text = "the value" };
 
             var convention = Mock<IElementConvention>();
-            conventionManager.Expect(x => x.GetElementConvention(typeof(TextBox)))
-                .Return(convention);
-            convention.Expect(x => x.GetValue(source)).Return(source.Text);
+            conventionManager.GetElementConvention(typeof(TextBox))
+                .Returns(convention);
+            convention.GetValue(source).Returns(source.Text);
 
             var message = new FakeMessage
             {
@@ -241,7 +241,7 @@ namespace Tests.Caliburn.RoutedUIMessaging
                 }
             };
 
-            sourceNode.Stub(x => x.UIElement).Return(source);
+            sourceNode.UIElement.Returns(source);
             message.Initialize(sourceNode);
 
             var requirements = new List<RequiredParameter>
@@ -257,7 +257,7 @@ namespace Tests.Caliburn.RoutedUIMessaging
             result.Contains(source.Text).ShouldBeTrue();
         }
 
-        [WpfFact]
+        [StaFact]
         public void if_none_are_provided_should_search_the_UI()
         {
             const int param1 = 56;
@@ -267,17 +267,17 @@ namespace Tests.Caliburn.RoutedUIMessaging
             element.SetParam1(param1);
             element.SetParam2(param2);
 
-            handlingNode.Stub(x => x.UIElement).Return(element).Repeat.Twice();
+            handlingNode.UIElement.Returns(element);
 
             var defaults = Mock<IElementConvention>();
 
-            conventionManager.Expect(x => x.GetElementConvention(typeof(TextBox)))
-                .Return(defaults).Repeat.Twice();
+            conventionManager.GetElementConvention(typeof(TextBox))
+                .Returns(defaults);
             var stack = new Stack<object>();
             stack.Push(param1);
             stack.Push(param2);
-            defaults.Expect(x => x.GetValue(Arg<DependencyObject>.Is.Anything)).Return(param1).Repeat.Once();
-            defaults.Expect(x => x.GetValue(Arg<DependencyObject>.Is.Anything)).Return(param2).Repeat.Once();
+            defaults.GetValue(null)
+                .ReturnsForAnyArgs(param1, param2);
 
             var message = new FakeMessage();
 
@@ -298,7 +298,7 @@ namespace Tests.Caliburn.RoutedUIMessaging
             result.Contains(Convert.ToInt32(param2)).ShouldBeTrue();
         }
 
-        [WpfFact]
+        [StaFact]
         public void if_none_are_provided_check_for_eventArgs()
         {
             var context = EventArgs.Empty;
@@ -307,7 +307,7 @@ namespace Tests.Caliburn.RoutedUIMessaging
             message.Initialize(sourceNode);
 
             var element = new ControlHost();
-            handlingNode.Stub(x => x.UIElement).Return(element).Repeat.Twice();
+            handlingNode.UIElement.Returns(element);
 
             var requirements = new List<RequiredParameter>
             {
@@ -322,7 +322,7 @@ namespace Tests.Caliburn.RoutedUIMessaging
             result.Contains(context).ShouldBeTrue();
         }
 
-        [WpfFact]
+        [StaFact]
         public void if_none_are_provided_check_for_special_parameter()
         {
             var context = new object();
@@ -331,7 +331,7 @@ namespace Tests.Caliburn.RoutedUIMessaging
             message.Initialize(sourceNode);
 
             var element = new ControlHost();
-            handlingNode.Stub(x => x.UIElement).Return(element).Repeat.Twice();
+            handlingNode.UIElement.Returns(element);
 
             var requirements = new List<RequiredParameter>
             {
@@ -346,18 +346,18 @@ namespace Tests.Caliburn.RoutedUIMessaging
             result.Contains(context).ShouldBeTrue();
         }
 
-        [WpfFact]
+        [StaFact]
         public void if_none_are_provided_check_for_source()
         {
             var source = new Button();
 
-            sourceNode.Stub(x => x.UIElement).Return(source);
+            sourceNode.UIElement.Returns(source);
 
             var message = new FakeMessage();
             message.Initialize(sourceNode);
 
             var element = new ControlHost();
-            handlingNode.Stub(x => x.UIElement).Return(element).Repeat.Twice();
+            handlingNode.UIElement.Returns(element);
 
             var requirements = new List<RequiredParameter>
             {
@@ -372,18 +372,18 @@ namespace Tests.Caliburn.RoutedUIMessaging
             result.Contains(source).ShouldBeTrue();
         }
 
-        [WpfFact]
+        [StaFact]
         public void if_none_are_provided_check_for_dataContext()
         {
             var source = new Button { DataContext = new object() };
 
-            sourceNode.Stub(x => x.UIElement).Return(source);
+            sourceNode.UIElement.Returns(source);
 
             var message = new FakeMessage();
             message.Initialize(sourceNode);
 
             var element = new ControlHost();
-            handlingNode.Stub(x => x.UIElement).Return(element).Repeat.Twice();
+            handlingNode.UIElement.Returns(element);
 
             var requirements = new List<RequiredParameter>
             {
@@ -394,30 +394,29 @@ namespace Tests.Caliburn.RoutedUIMessaging
                 message, requirements, handlingNode, null
                 );
 
-
             result.Length.ShouldBe(1);
             result.Contains(source.DataContext).ShouldBeTrue();
         }
 
-        [WpfFact]
+        [StaFact]
         public void if_none_are_provided_check_for_value()
         {
             var source = new TextBox { Text = "the text" };
 
-            sourceNode.Stub(x => x.UIElement).Return(source);
+            sourceNode.UIElement.Returns(source);
 
-            var defaults = Stub<IElementConvention>();
+            var defaults = Mock<IElementConvention>();
 
-            conventionManager.Expect(x => x.GetElementConvention(typeof(TextBox)))
-                .Return(defaults);
+            conventionManager.GetElementConvention(typeof(TextBox))
+                .Returns(defaults);
 
-            defaults.Expect(x => x.GetValue(source)).Return(source.Text);
+            defaults.GetValue(source).Returns(source.Text);
 
             var message = new FakeMessage();
             message.Initialize(sourceNode);
 
             var element = new ControlHost();
-            handlingNode.Stub(x => x.UIElement).Return(element).Repeat.Twice();
+            handlingNode.UIElement.Returns(element);
 
             var requirements = new List<RequiredParameter>
             {

@@ -23,11 +23,6 @@
     using Views;
     using Action=Actions.Action;
 
-#if SILVERLIGHT
-    using System.Windows.Controls;
-    using RoutedMessaging.Triggers;
-#endif
-
     /// <summary>
     /// The presenation framework module.
     /// </summary>
@@ -52,15 +47,11 @@
             {
                 if (isInDesignMode == null)
                 {
-#if SILVERLIGHT
-                    isInDesignMode = DesignerProperties.IsInDesignTool;
-#else
                     var prop = DesignerProperties.IsInDesignModeProperty;
                     isInDesignMode = (bool)DependencyPropertyDescriptor.FromProperty(prop, typeof(FrameworkElement)).Metadata.DefaultValue;
 
                     if (!isInDesignMode.GetValueOrDefault(false) && Process.GetCurrentProcess().ProcessName.StartsWith("devenv", StringComparison.Ordinal))
                         isInDesignMode = true;
-#endif
                 }
 
                 return isInDesignMode.GetValueOrDefault(false);
@@ -127,21 +118,6 @@
             NotifyPropertyChangedAttribute.DefaultDependencyMode = mode;
             return this;
         }
-
-#if SILVERLIGHT
-
-        /// <summary>
-        /// Sets the double click interval.
-        /// </summary>
-        /// <param name="interval">The interval.</param>
-        /// <returns>The configuration.</returns>
-        public PresentationFrameworkConfiguration SetDoubleClickInterval(TimeSpan interval)
-        {
-            GestureMessageTrigger.DoubleClickInterval = interval;
-            return this;
-        }
-
-#endif
 
         /// <summary>
         /// Initializes the core.

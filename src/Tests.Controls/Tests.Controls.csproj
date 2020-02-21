@@ -4,7 +4,7 @@
     <Description>Tests.Controls</Description>
     <VersionPrefix>3.0.0-rc2</VersionPrefix>
     <Authors>Rob Eisenberg;Marco Amendola</Authors>
-    <TargetFramework>net462</TargetFramework>
+    <TargetFrameworks>net462;netcoreapp3.0</TargetFrameworks>
     <AssemblyName>Tests.Controls</AssemblyName>
     <AssemblyOriginatorKeyFile>../Caliburn.snk</AssemblyOriginatorKeyFile>
     <SignAssembly>true</SignAssembly>

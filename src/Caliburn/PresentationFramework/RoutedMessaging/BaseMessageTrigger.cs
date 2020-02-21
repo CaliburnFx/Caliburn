@@ -4,22 +4,12 @@ namespace Caliburn.PresentationFramework.RoutedMessaging
     using System.Windows.Markup;
     using Core.Logging;
 
-#if SILVERLIGHT
-    using System.Windows.Controls;
-#endif
-
     /// <summary>
     /// A base class to ease the implementation of <see cref="IMessageTrigger"/>.
     /// </summary>
-#if !SILVERLIGHT
     [ContentProperty("Message")]
     public abstract class BaseMessageTrigger : Freezable, IMessageTrigger
     {
-#else
-    [ContentProperty("Message")]
-    public abstract class BaseMessageTrigger : Control, IMessageTrigger
-    {
-#endif
         static readonly ILog Log = LogManager.GetLog(typeof(BaseMessageTrigger));
 
         /// <summary>

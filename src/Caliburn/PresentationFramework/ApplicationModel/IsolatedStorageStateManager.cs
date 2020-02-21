@@ -129,11 +129,7 @@ namespace Caliburn.PresentationFramework.ApplicationModel
         /// <returns></returns>
         protected IsolatedStorageFile GetStorageFile()
         {
-#if SILVERLIGHT
-            return IsolatedStorageFile.GetUserStoreForApplication();
-#else
             return IsolatedStorageFile.GetUserStoreForDomain();
-#endif
         }
 
         /// <summary>

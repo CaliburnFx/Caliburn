@@ -8,10 +8,10 @@ namespace Tests.Caliburn.Testability
     using global::Caliburn.Testability;
     using Xunit;
 
-    
+
     public class When_testing_Xaml_element : TestBase
     {
-        [WpfFact]
+        [StaFact]
         public void Simple_Xaml_is_loaded_correctly()
         {
             var validator = Validator.For<SimpleUIBuiltWithXaml, Customer>();
@@ -20,7 +20,7 @@ namespace Tests.Caliburn.Testability
             result.Errors.Count().ShouldBe(0);
         }
 
-        [WpfFact]
+        [StaFact]
         public void Xaml_with_markup_extensions_is_loaded_correctly()
         {
             var validator = Validator.For<UIWithMarkupExtensionsBuiltWithXaml, Customer>();

@@ -44,19 +44,6 @@ namespace Caliburn.PresentationFramework.RoutedMessaging
             /// <param name="isAvailable">Determines how the effect will be applied to the target.</param>
             public void ApplyTo(DependencyObject target, bool isAvailable)
             {
-#if SILVERLIGHT
-                var control = target as Control;
-                if (control == null)
-                    return;
-
-                if (control.HasBinding(Control.IsEnabledProperty))
-                    return;
-
-                if (control.IsEnabled && !isAvailable)
-                    control.IsEnabled = false;
-                else if (!control.IsEnabled && isAvailable)
-                    control.IsEnabled = true;
-#else
                 var element = target as UIElement;
                 if (element != null)
                 {
@@ -82,7 +69,6 @@ namespace Caliburn.PresentationFramework.RoutedMessaging
                             ce.IsEnabled = true;
                     }
                 }
-#endif
             }
         }
 
@@ -96,16 +82,6 @@ namespace Caliburn.PresentationFramework.RoutedMessaging
         /// </summary>
         private class HideEffect : IAvailabilityEffect
         {
-#if SILVERLIGHT
-            public static readonly DependencyProperty OldOpacityProperty =
-                DependencyProperty.RegisterAttached(
-                    "OldOpacity",
-                    typeof(double),
-                    typeof(HideEffect),
-                    null
-                );
-#endif
-
             /// <summary>
             /// Applies the effect to the target.
             /// </summary>
@@ -113,23 +89,6 @@ namespace Caliburn.PresentationFramework.RoutedMessaging
             /// <param name="isAvailable">Determines how the effect will be applied to the target.</param>
             public void ApplyTo(DependencyObject target, bool isAvailable)
             {
-#if SILVERLIGHT
-                var element = target as UIElement;
-                if(element == null) 
-                    return;
-
-                if (element.Opacity != 0 && !isAvailable) 
-                {
-                    element.SetValue(OldOpacityProperty, element.Opacity);
-                    element.Opacity = 0;
-                }
-                else if (element.Opacity == 0 && isAvailable) 
-                {
-                    object oldValue = element.GetValue(OldOpacityProperty);
-                    double opacity = oldValue == null ? 1 : (double)oldValue;
-                    element.Opacity = opacity;
-                }
-#else
                 var element = target as UIElement;
                 if (element == null)
                     return;
@@ -138,7 +97,6 @@ namespace Caliburn.PresentationFramework.RoutedMessaging
                     element.Visibility = Visibility.Hidden;
                 else if (element.Visibility != Visibility.Visible && isAvailable)
                     element.Visibility = Visibility.Visible;
-#endif
             }
         }
 

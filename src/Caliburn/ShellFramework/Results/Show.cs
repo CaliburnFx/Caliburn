@@ -9,10 +9,6 @@
     using PresentationFramework.Screens;
     using Questions;
 
-#if SILVERLIGHT
-    using System.Windows.Controls;
-#endif
-
     /// <summary>
     /// Factory for display-related <see cref="IResult"/> instances.
     /// </summary>
@@ -127,30 +123,6 @@
             return new PopupResult<TModel>(model, new Dictionary<string, object>());
         }
 
-#if SILVERLIGHT
-
-        /// <summary>
-        /// Shows the SaveFileDialog.
-        /// </summary>
-        /// <param name="dialog">The dialog.</param>
-        /// <returns>The result.</returns>
-        public static SaveFileDialogResult SaveFileDialog(SaveFileDialog dialog)
-        {
-            return new SaveFileDialogResult(dialog);
-        }
-
-        /// <summary>
-        /// Shows the OpenFileDialog.
-        /// </summary>
-        /// <param name="dialog">The dialog.</param>
-        /// <returns>The result.</returns>
-        public static OpenFileDialogResult OpenFileDialog(OpenFileDialog dialog)
-        {
-            return new OpenFileDialogResult(dialog);
-        }
-
-#else
-
         /// <summary>
         /// Shows a CommonDialog.
         /// </summary>
@@ -160,35 +132,6 @@
         {
             return new ShowCommonDialogResult(dialog);
         }
-
-#endif
-
-#if SILVERLIGHT_40
-
-        /// <summary>
-        /// Shows a toast notification for the specified duration in milliseconds.
-        /// </summary>
-        /// <typeparam name="T">The type of the ViewModel to show as a notification.</typeparam>
-        /// <param name="durationInMilliseconds">The duration in milliseconds.</param>
-        /// <returns>The result.</returns>
-        public static NotificationResult<T> Notification<T>(int durationInMilliseconds)
-        {
-            return new NotificationResult<T>(durationInMilliseconds);
-        }
-
-        /// <summary>
-        /// Shows a toast notification for the specified ViewModel for the specified duration in milliseconds.
-        /// </summary>
-        /// <typeparam name="T">The type of the ViewModel.</typeparam>
-        /// <param name="viewModel">The view model.</param>
-        /// <param name="durationInMilliseconds">The duration in milliseconds.</param>
-        /// <returns>The result.</returns>
-        public static NotificationResult<T> Notification<T>(T viewModel, int durationInMilliseconds)
-        {
-            return new NotificationResult<T>(viewModel, durationInMilliseconds);
-        }
-
-#endif
 
         /// <summary>
         /// Marks the current ViewModel as busy.

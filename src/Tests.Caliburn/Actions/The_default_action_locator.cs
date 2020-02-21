@@ -12,9 +12,9 @@ namespace Tests.Caliburn.Actions
     using global::Caliburn.PresentationFramework.Filters;
     using global::Caliburn.PresentationFramework.RoutedMessaging;
     using Xunit;
-    using Rhino.Mocks;
+    using NSubstitute;
 
-    
+
     public class The_default_action_locator : TestBase
     {
         DefaultActionLocator locator;
@@ -44,12 +44,11 @@ namespace Tests.Caliburn.Actions
 
         void ExpectActionCreated<T>()
         {
-            var method = Stub<IMethod>();
+            var method = Mock<IMethod>();
 
-            methodFactory.Expect(x => x.CreateFrom(Arg<MethodInfo>.Is.NotNull))
-                .Return(method);
+            methodFactory.CreateFrom(Arg.Any<MethodInfo>()).Returns(method);//was Arg.NotNull
 
-            method.Stub(x => x.Info).Return(typeof(T).GetMethods().First()).Repeat.Any();
+            method.Info.Returns(typeof(T).GetMethods().First());
         }
 
         public class SimpleActionTarget

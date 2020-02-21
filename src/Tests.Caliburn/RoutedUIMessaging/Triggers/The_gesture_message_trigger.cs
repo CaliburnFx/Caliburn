@@ -11,9 +11,9 @@ namespace Tests.Caliburn.RoutedUIMessaging.Triggers
     using global::Caliburn.PresentationFramework.RoutedMessaging.Triggers;
     using global::Caliburn.PresentationFramework.RoutedMessaging.Triggers.Support;
     using Xunit;
-    using Rhino.Mocks;
+    using NSubstitute;
 
-    
+
     public class The_gesture_message_trigger : TestBase
     {
         IInteractionNode node;
@@ -38,7 +38,7 @@ namespace Tests.Caliburn.RoutedUIMessaging.Triggers
                 Message = message
             };
 
-            node.Expect(x => x.UIElement).Return(element);
+            node.UIElement.Returns(element);
 
 
             trigger.Attach(node);
@@ -65,7 +65,7 @@ namespace Tests.Caliburn.RoutedUIMessaging.Triggers
                 Message = message
             };
 
-            node.Expect(x => x.UIElement).Return(element);
+            node.UIElement.Returns(element);
 
 
             trigger.Attach(node);
@@ -92,11 +92,13 @@ namespace Tests.Caliburn.RoutedUIMessaging.Triggers
                     Message = message
                 };
 
-                node.Expect(x => x.UIElement).Return(new DependencyObject()).Repeat.Twice();
+                node.UIElement.Returns(new DependencyObject());
 
 
                 trigger.Attach(node);
             });
+            var uiElement = node.Received(2).UIElement;
+            uiElement.ShouldBeNull();
         }
 
         [Fact]
@@ -111,12 +113,12 @@ namespace Tests.Caliburn.RoutedUIMessaging.Triggers
 
             object parameter = new object();
 
-            node.Expect(x => x.UIElement).Return(element);
-            node.Expect(x => x.ProcessMessage(Arg<IRoutedMessage>.Is.Equal(message), Arg<object>.Is.Equal(parameter)));
-
+            node.UIElement.Returns(element);
 
             trigger.Attach(node);
             element.InputBindings[0].Command.Execute(parameter);
+            node.Received().ProcessMessage(Arg.Is<IRoutedMessage>(x => x == message),
+                Arg.Is<object>(x => x == parameter));
         }
 
         [Fact]
@@ -129,17 +131,16 @@ namespace Tests.Caliburn.RoutedUIMessaging.Triggers
                 Message = message
             };
 
-            node.Expect(x => x.UIElement).Return(element);
+            node.UIElement.Returns(element);
 
-            node.Expect(x => x.UIElement).Return(element);
-            message.AvailabilityEffect.Expect(x => x.ApplyTo(element, false));
-
+            node.UIElement.Returns(element);
 
             trigger.Attach(node);
             trigger.UpdateAvailabilty(false);
+            message.AvailabilityEffect.Received().ApplyTo(element, false);
         }
 
-        [WpfFact]
+        [StaFact]
         public void represents_availability_consistently_through_ICommand_for_disable_availability_when_not_available()
         {
             message = new FakeMessage {AvailabilityEffect = AvailabilityEffect.Disable};
@@ -151,9 +152,8 @@ namespace Tests.Caliburn.RoutedUIMessaging.Triggers
                 Message = message
             };
 
-            node.Expect(x => x.UIElement).Return(element);
-            node.Expect(x => x.UIElement).Return(element);
-
+            node.UIElement.Returns(element);
+            node.UIElement.Returns(element);
 
             trigger.Attach(node);
             trigger.UpdateAvailabilty(false);
@@ -173,9 +173,8 @@ namespace Tests.Caliburn.RoutedUIMessaging.Triggers
                 Message = message
             };
 
-            node.Expect(x => x.UIElement).Return(element);
-            node.Expect(x => x.UIElement).Return(element);
-
+            node.UIElement.Returns(element);
+            node.UIElement.Returns(element);
 
             trigger.Attach(node);
             trigger.UpdateAvailabilty(true);
@@ -196,9 +195,8 @@ namespace Tests.Caliburn.RoutedUIMessaging.Triggers
                 Message = message
             };
 
-            node.Expect(x => x.UIElement).Return(element);
-            node.Expect(x => x.UIElement).Return(element);
-
+            node.UIElement.Returns(element);
+            node.UIElement.Returns(element);
 
             trigger.Attach(node);
             trigger.UpdateAvailabilty(false);
@@ -218,9 +216,8 @@ namespace Tests.Caliburn.RoutedUIMessaging.Triggers
                 Message = message
             };
 
-            node.Expect(x => x.UIElement).Return(element);
-            node.Expect(x => x.UIElement).Return(element);
-
+            node.UIElement.Returns(element);
+            node.UIElement.Returns(element);
 
             trigger.Attach(node);
             trigger.UpdateAvailabilty(true);

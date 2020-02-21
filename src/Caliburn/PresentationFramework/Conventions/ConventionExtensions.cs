@@ -9,11 +9,6 @@
     using ViewModels;
     using Views;
 
-#if SILVERLIGHT
-    using System.Windows.Media;
-    using System.Linq;
-#endif
-
     /// <summary>
     /// Hosts extension methods related to conventions.
     /// </summary>
@@ -29,14 +24,7 @@
         /// <returns>true if a binding exists; false otherwise</returns>
         public static bool HasBinding(this DependencyObject dependencyObject, DependencyProperty dependencyProperty)
         {
-#if !SILVERLIGHT
             return BindingOperations.GetBindingExpression(dependencyObject, dependencyProperty) != null;
-#else
-            var fe = dependencyObject as FrameworkElement;
-            if (fe != null)
-                return fe.GetBindingExpression(dependencyProperty) != null;
-            return true;
-#endif
         }
 
         /// <summary>

@@ -7,9 +7,9 @@ namespace Tests.Caliburn.Core
     using global::Caliburn.PresentationFramework;
     using global::Caliburn.PresentationFramework.Configuration;
     using Xunit;
-    using Rhino.Mocks;
+    using NSubstitute;
 
-    
+
     public class The_resolve_markup_extension : TestBase
     {
         IServiceLocator container;
@@ -34,7 +34,7 @@ namespace Tests.Caliburn.Core
 
             extension.ProvideValue(null);
 
-            container.AssertWasCalled(x => x.GetInstance(null, "theKey"));
+            container.Received().GetInstance(null, "theKey");
         }
 
         [Fact]
@@ -46,7 +46,7 @@ namespace Tests.Caliburn.Core
 
             extension.ProvideValue(null);
 
-            container.AssertWasCalled(x => x.GetInstance(typeof(ITestService)));
+            container.Received().GetInstance(typeof(ITestService));
         }
 
         [Fact]
@@ -59,7 +59,7 @@ namespace Tests.Caliburn.Core
 
             extension.ProvideValue(null);
 
-            container.AssertWasCalled(x => x.GetInstance(typeof(ITestService), "theKey"));
+            container.Received().GetInstance(typeof(ITestService), "theKey");
         }
 
         protected override void after_each()

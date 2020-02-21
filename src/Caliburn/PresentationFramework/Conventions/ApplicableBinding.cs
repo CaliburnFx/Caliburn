@@ -34,7 +34,7 @@
         /// <param name="validate">Inidicates whether or not to turn on validation for the binding.</param>
         /// <param name="checkTemplate">if set to <c>true</c> [check item template].</param>
         /// <param name="converter">The value converter to apply.</param>
-        public ApplicableBinding(ElementDescription elementDescription, DependencyProperty dependencyProperty, string path, 
+        public ApplicableBinding(ElementDescription elementDescription, DependencyProperty dependencyProperty, string path,
             BindingMode mode, bool validate, bool checkTemplate, IValueConverter converter)
         {
             this.elementDescription = elementDescription;
@@ -55,10 +55,6 @@
         {
             var element = view.FindName(elementDescription.Name);
 
-#if SILVERLIGHT
-            element.SetValue(View.IsLoadedProperty, isLoaded);
-#endif
-
             if (dependencyProperty != null && !element.HasBinding(dependencyProperty))
             {
                 var binding = new Binding(path)
@@ -77,7 +73,7 @@
                 Log.Info("Applied data binding {0} to {1}.", binding, view);
             }
 
-            if(!checkTemplate) 
+            if(!checkTemplate)
                 return;
 
 #if !SILVERLIGHT
@@ -90,7 +86,7 @@
                     Log.Info("Applied DisplayMemberPath to {0}.", view);
                 }
 
-                if(tabControl.ContentTemplate == null 
+                if(tabControl.ContentTemplate == null
                     && tabControl.ContentTemplateSelector == null) {
                     tabControl.ContentTemplate = CreateTemplate(tabControl);
                     Log.Info("Applied content template to {0}.", view);
@@ -194,11 +190,7 @@
 
             template += " /></DataTemplate>";
 
-#if SILVERLIGHT
-            return (DataTemplate)XamlReader.Load(template);
-#else
             return (DataTemplate)XamlReader.Parse(template);
-#endif
         }
     }
 }

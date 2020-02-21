@@ -4,7 +4,7 @@
     <Description>Caliburn.Hello</Description>
     <VersionPrefix>3.0.0-rc2</VersionPrefix>
     <Authors>Rob Eisenberg;Marco Amendola</Authors>
-    <TargetFramework>net462</TargetFramework>
+    <TargetFrameworks>net462;netcoreapp3.0</TargetFrameworks>
     <AssemblyName>Caliburn.Hello</AssemblyName>
     <AssemblyOriginatorKeyFile>../../src/Caliburn.snk</AssemblyOriginatorKeyFile>
     <SignAssembly>true</SignAssembly>
